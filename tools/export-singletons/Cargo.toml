@@ -6,7 +6,6 @@ repository.workspace = true
 license.workspace = true
 
 [dependencies]
-broadsword.workspace = true
 util.workspace = true
 tracing.workspace = true
 tracing-panic.workspace = true

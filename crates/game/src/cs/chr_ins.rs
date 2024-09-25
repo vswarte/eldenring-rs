@@ -26,7 +26,7 @@ pub struct AtkParamLookupResult {
 }
 
 #[repr(C)]
-pub struct ChrInsVftable {
+pub struct ChrInsVMT {
     // Part of FieldInsBase, retrieves reflection metadata for FD4Component derivants.
     pub get_runtime_metadata: fn(&ChrIns) -> usize,
     // Destructor
@@ -50,7 +50,7 @@ pub struct ChrInsVftable {
 
 #[repr(C)]
 pub struct ChrIns<'a> {
-    pub vftable: usize,
+    pub vftable: &'a ChrInsVMT,
     pub field_ins_handle: FieldInsHandle,
     chr_set_entry: usize,
     pub unk18: usize,

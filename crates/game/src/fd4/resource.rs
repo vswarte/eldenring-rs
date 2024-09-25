@@ -12,20 +12,22 @@ use crate::fd4::FD4BasicHashString;
 /// For GParamResCaps that means posting the such data to the gparam blending
 /// system as well as a bunch of other GX structures
 #[repr(C)]
-pub struct FD4ResCap<'a, TRes> {
-    pub header: FD4ResCapHeader<'a, TRes>,
+pub struct FD4ResCap<TRes> {
+    pub header: FD4ResCapHeader<TRes>,
     pub data: TRes,
 }
 
 #[repr(C)]
-pub struct FD4ResCapHeader<'a, TRes> {
-    pub vftable: usize,
+pub struct FD4ResCapHeader<TRes> {
+    vftable: usize,
     pub name: FD4BasicHashString,
-    pub owning_repository: &'a FD4ResCapHolder<'a, TRes>,
-    pub next_item: *const FD4ResCap<'a, TRes>,
-    pub reference_count: u32,
-    pad5c: [u8; 4], // TODO: Actually contains two bools
-    pub debug_menu_item: usize,
+    owning_repository: *const FD4ResCapHolder<TRes>,
+    next_item: *const FD4ResCap<TRes>,
+    reference_count: u32,
+    unk5c: bool,
+    unk5d: bool,
+    _pad5e: u16,
+    debug_menu_item: usize,
 }
 
 /// Represents a collection of ResCaps/FileCaps.
@@ -56,11 +58,50 @@ pub struct FD4ResCapHeader<'a, TRes> {
 /// +------------------+------------------+-----------------+--------------....
 /// ```
 #[repr(C)]
-pub struct FD4ResCapHolder<'a, TRes> {
-    pub vftable: usize,
-    pub allocator: usize,
-    pub owning_repository: usize,
+pub struct FD4ResCapHolder<TRes> {
+    vftable: usize,
+    allocator: usize,
+    owning_repository: usize,
     pub unk18: u32,
     pub capacity: u32,
-    pub map: &'a FD4ResCap<'a, TRes>,
+    map: *const *const FD4ResCap<TRes>,
+}
+
+impl<TRes> FD4ResCapHolder<TRes> {
+    pub fn entries(&self) -> impl Iterator<Item = &FD4ResCap<TRes>> {
+        let map_base = unsafe { *self.map };
+        let capacity = self.capacity as isize;
+        let mut current_bucket = 0isize;
+        let mut cursor = map_base; 
+
+        tracing::info!("map_base = {map_base:x?}");
+
+        std::iter::from_fn(move || unsafe {
+            while cursor.is_null() && current_bucket < capacity {
+                tracing::info!("Seeking next slot. cursor = {cursor:x?}, current_bucket = {current_bucket}");
+                current_bucket += 1;
+                cursor = map_base.offset(current_bucket as isize);
+            }
+
+            tracing::info!("Found entry. entry = {cursor:x?}, current_bucket = {current_bucket}");
+            None
+            // if current_bucket == 0 {
+            //     current_bucket += 1;
+            //     cursor.as_ref()
+            // } else {
+            //     None
+            // }
+            // while cursor.is_null() && current_bucket < capacity {
+            //     cursor = map_base.offset(current_bucket as isize);
+            //     current_bucket += 1;
+            // }
+            //
+            // if let Some(current) = cursor.as_ref() {
+            //     cursor = current.header.next_item;
+            //     Some(current)
+            // } else {
+            //     None
+            // }
+        })
+    }
 }

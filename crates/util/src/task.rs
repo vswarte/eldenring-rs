@@ -2,12 +2,18 @@ use std::pin::Pin;
 
 use game::cs::{CSEzTask, CSEzTaskVMT, CSTaskGroupIndex};
 
-pub struct TaskProxy {
+pub struct FD4TaskHandle {
     vftable: Pin<Box<CSEzTaskVMT>>,
     task: Pin<Box<CSEzTask>>,
 }
 
-pub fn run_task(execute_fn: fn(), task_group: CSTaskGroupIndex) -> TaskProxy {
+impl Drop for FD4TaskHandle {
+    fn drop(&mut self) {
+        todo!("Caught task dropping its vftable. Unregistering a task is currently not implemented.")
+    }
+}
+
+pub fn run_task(execute_fn: fn(), task_group: CSTaskGroupIndex) -> FD4TaskHandle {
     let vftable = Box::pin(CSEzTaskVMT {
         get_runtime_class: || tracing::error!("TEST_TASK::get_runtime_class called!"),
         execute: |_| tracing::error!("TEST_TASK::execute called!"),
@@ -24,10 +30,11 @@ pub fn run_task(execute_fn: fn(), task_group: CSTaskGroupIndex) -> TaskProxy {
         _padc: 0,
     });
 
+    tracing::debug!("Registering task to task group. task_group = {task_group:?}");
     let register_task: extern "C" fn(&CSEzTask, CSTaskGroupIndex) =
         unsafe { std::mem::transmute(0x140eb1650_usize) };
 
     register_task(&task, task_group);
 
-    TaskProxy { vftable, task }
+    FD4TaskHandle { vftable, task }
 }

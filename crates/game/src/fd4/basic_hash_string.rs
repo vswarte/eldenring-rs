@@ -1,4 +1,4 @@
-use std::ffi;
+use std::{ffi, fmt::Display};
 
 use crate::dl::DLWString;
 
@@ -11,4 +11,10 @@ pub struct FD4BasicHashString {
     pub hash: u32,
     pub needs_hashing: u8,
     pub pad: [u8; 7],
+}
+
+impl Display for FD4BasicHashString {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "{}", self.string.to_string())
+    }
 }

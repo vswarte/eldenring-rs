@@ -7,7 +7,6 @@ license.workspace = true
 
 [dependencies]
 tracing.workspace = true
-broadsword.workspace = true
 thiserror.workspace = true
 nalgebra-glm.workspace = true
 nalgebra.workspace = true

@@ -176,6 +176,7 @@ pub struct TaskGroupConcurrencySlot {
 
 #[repr(u32)]
 #[allow(non_camel_case_types)]
+#[derive(Debug)]
 pub enum CSTaskGroupIndex {
     FrameBegin,
     SteamThread0,

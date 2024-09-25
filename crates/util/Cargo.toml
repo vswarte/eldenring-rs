@@ -7,7 +7,6 @@ license.workspace = true
 
 [dependencies]
 thiserror.workspace = true
-broadsword.workspace = true
 game.workspace = true
 tracing.workspace = true
 windows.workspace = true

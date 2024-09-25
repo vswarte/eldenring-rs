@@ -14,8 +14,6 @@ static SINGLETON_MAP: sync::OnceLock<SingletonMap> = sync::OnceLock::new();
 
 #[derive(Error, Debug)]
 pub enum SingletonMapError {
-    #[error("Could not parse pattern. {0:?}")]
-    Pattern(broadsword::scanner::ParserError),
     #[error("Could not find section {0}.")]
     Section(&'static str),
     #[error("Could not parse the discovered singleton's name.")]
@@ -54,13 +52,13 @@ pub fn get_instance<T: DLRFLocatable>() -> Result<Option<&'static mut T>, Lookup
 }
 
 const NULL_CHECK_PATTERN: &str = concat!(
-    //  0 MOV REG, [MEM]
+    //  MOV REG, [MEM]
     "48 8b 0d $ { ' }",
-    //  7 TEST REG, REG
+    //  TEST REG, REG
     "48 85 ? ",
-    // 10 JNZ +2e
+    // JNZ +2e
     "75 ? ",
-    // 12 LEA RCX, [runtime_class_metadata]
+    // LEA RCX, [runtime_class_metadata]
     "48 8d 0d $ { ' }",
     // 19 CALL get_singleton_name
     "e8 $ { ' }"
@@ -85,7 +83,7 @@ pub fn build_singleton_table(program: &Program) -> Result<SingletonMap, Singleto
         .ok_or(SingletonMapError::Section(".data"))?
         .virtual_range();
 
-    tracing::info!("Found sections. text_range = {text_range:x?}, data_range = {data_range:x?}");
+    tracing::debug!("Found sections. text_range = {text_range:x?}, data_range = {data_range:x?}");
 
     let pattern = pattern::parse(NULL_CHECK_PATTERN).unwrap();
     let mut matches = program.scanner().matches_code(&pattern);
@@ -116,9 +114,8 @@ pub fn build_singleton_table(program: &Program) -> Result<SingletonMap, Singleto
         );
 
         let metadata = program.rva_to_va(metadata_rva).unwrap();
-        let get_singleton_name: extern "C" fn(u64) -> *const i8 = unsafe {
-            std::mem::transmute(program.rva_to_va(get_reflection_name_rva).unwrap())
-        };
+        let get_singleton_name: extern "C" fn(u64) -> *const i8 =
+            unsafe { std::mem::transmute(program.rva_to_va(get_reflection_name_rva).unwrap()) };
 
         let cstr = unsafe { std::ffi::CStr::from_ptr(get_singleton_name(metadata)) };
         let singleton_name = cstr
@@ -127,7 +124,11 @@ pub fn build_singleton_table(program: &Program) -> Result<SingletonMap, Singleto
             .to_string();
 
         let singleton_va = program.rva_to_va(static_rva).unwrap();
-        tracing::debug!("Discovered singleton {} at {:x}", singleton_name, singleton_va);
+        tracing::debug!(
+            "Discovered singleton {} at {:x}",
+            singleton_name,
+            singleton_va
+        );
 
         results.insert(singleton_name, singleton_va as usize);
     }

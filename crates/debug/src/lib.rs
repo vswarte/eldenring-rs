@@ -2,11 +2,11 @@
 
 use std::io::Write;
 
-use broadsword::dll;
-
 use crash_handler::CrashEventResult;
+use crash_handler::ExceptionCode;
 use game::cs::CSTaskGroup;
 use game::cs::CSTaskImp;
+use game::fd4::FD4ParamRepository;
 use hudhook::eject;
 use hudhook::hooks::dx12::ImguiDx12Hooks;
 use hudhook::imgui;
@@ -32,51 +32,67 @@ use pelite::pe::Pe;
 
 mod display;
 
-#[dll::entrypoint]
-pub fn entry(hmodule: usize) -> bool {
-    let appender = tracing_appender::rolling::never("./", "chains-bindings.log");
-    tracing_subscriber::fmt().with_writer(appender).init();
+#[no_mangle]
+pub unsafe extern "C" fn DllMain(hmodule: HINSTANCE, reason: u32) -> bool {
+    match reason {
+        // DLL_PROCESS_ATTACH
+        1 => {
+            let appender = tracing_appender::rolling::never("./", "chains-bindings.log");
+            tracing_subscriber::fmt().with_writer(appender).init();
 
 
-    let program = unsafe { Program::current() };
-    let test = find_rtti_classes(&program)
-        .find(|c| c.name.as_str() == "CS::ChrIns");
+            let program = unsafe { Program::current() };
+            let test = find_rtti_classes(&program)
+                .find(|c| c.name.as_str() == "CS::ChrIns");
 
-    for class in find_rtti_classes(&program) {
-        let vmt = program.rva_to_va(class.vtable).unwrap();
+            for class in find_rtti_classes(&program) {
+                let vmt = program.rva_to_va(class.vtable).unwrap();
 
-        tracing::trace!(
-            "Discovered RTTI class. name = {}, vmt = {:x}",
-            &class.name,
-            vmt,
-        );
-    }
+                tracing::trace!(
+                    "Discovered RTTI class. name = {}, vmt = {:x}",
+                    &class.name,
+                    vmt,
+                );
+            }
 
-    tracing::info!("Inited tracing");
-    let crash_handler = crash_handler::CrashHandler::attach(unsafe {
-        crash_handler::make_crash_event(move |crash_context: &crash_handler::CrashContext| {
-            tracing::info!("Handling crash event");
+            tracing::info!("Inited tracing");
+            let crash_handler = crash_handler::CrashHandler::attach(unsafe {
+                crash_handler::make_crash_event(move |crash_context: &crash_handler::CrashContext| unsafe {
+                    tracing::error!("Caught crash event");
+                    tracing::error!("Process ID: {}", crash_context.process_id);
+                    tracing::error!("Thread ID: {}", crash_context.thread_id);
 
-            let mut file = std::fs::File::create("crash.txt").unwrap();
-            write!(file, "Crash event");
-            write!(file, "Process ID: {}", crash_context.process_id);
-            write!(file, "Thread ID: {}", crash_context.thread_id);
+                    let pointers = crash_context.exception_pointers;
+                    let exception_record = &*(*pointers).ExceptionRecord;
+                    tracing::error!("Exception Record ExceptionAddress: {:x}", exception_record.ExceptionAddress as usize);
+                    tracing::error!("Exception Record ExceptionCode: {:x}", exception_record.ExceptionCode);
+                    tracing::error!("Exception Record NumberParameters: {:x}", exception_record.NumberParameters);
 
-            CrashEventResult::Handled(false)
-        })
-    }).expect("failed to attach crash handler");
+                    for (index, entry) in exception_record.ExceptionInformation.iter().enumerate() {
+                        tracing::error!("Exception Record ExceptionInformation[{}]: {:x}", index, entry);
+                    }
 
-    std::thread::spawn(move || {
-        if let Err(e) = Hudhook::builder()
-            .with::<ImguiDx12Hooks>(EldenRingDebugGui::new())
-            .with_hmodule(HINSTANCE(hmodule as isize))
-            .build()
-            .apply()
-        {
-            tracing::error!("Couldn't apply hooks: {e:?}");
-            eject();
+                    CrashEventResult::Handled(false)
+                })
+            }).expect("failed to attach crash handler");
+
+            // Leak it for now...
+            Box::leak(Box::new(crash_handler));
+
+            std::thread::spawn(move || {
+                if let Err(e) = Hudhook::builder()
+                    .with::<ImguiDx12Hooks>(EldenRingDebugGui::new())
+                    .with_hmodule(hmodule)
+                    .build()
+                    .apply()
+                {
+                    tracing::error!("Couldn't apply hooks: {e:?}");
+                    eject();
+                }
+            });
         }
-    });
+        _ => {},
+    }
 
     true
 }
@@ -95,6 +111,7 @@ impl ImguiRenderLoop for EldenRingDebugGui {
             .position([0., 0.], imgui::Condition::FirstUseEver)
             .size([800., 600.], imgui::Condition::FirstUseEver)
             .build(|| {
+                render_debug_singleton::<FD4ParamRepository>(&ui);
                 render_debug_singleton::<WorldChrMan>(&ui);
                 render_debug_singleton::<CSWorldGeomMan>(&ui);
                 render_debug_singleton::<CSCamera>(&ui);

@@ -15,9 +15,9 @@ pub struct CSFile<'a> {
 #[repr(C)]
 pub struct CSFileRepository<'a> {
     // TODO: This is actually embedding an FD4FileRepository of size 0x210
-    pub repository_res_cap: FD4ResCap<'a, [u8; 0x10]>,
-    pub holder1: FD4ResCapHolder<'a, ()>,
-    pub holder2: FD4ResCapHolder<'a, ()>,
+    pub repository_res_cap: FD4ResCap<[u8; 0x10]>,
+    pub holder1: FD4ResCapHolder<()>,
+    pub holder2: FD4ResCapHolder<()>,
 
     // Some type of btree?
     pub unkc8_allocator: usize,

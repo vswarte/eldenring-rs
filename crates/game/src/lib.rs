@@ -1,7 +1,5 @@
 #![feature(once_cell_get_mut)]
 
-use broadsword::dll;
-
 mod stl;
 pub use stl::*;
 

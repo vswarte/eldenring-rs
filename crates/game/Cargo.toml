@@ -6,19 +6,11 @@ edition = "2021"
 [lints.rust]
 unused = "allow"
 
-[profile.release]
-strip = true
-lto = true
-codegen-units = 1
-panic = "abort"
-opt-level = "z"
-
 [dependencies]
 log = "0.4.1"
 toml = "0.7.2"
 rand = "0.8"
 tracing.workspace = true
-broadsword.workspace = true
 thiserror.workspace = true
 nalgebra-glm.workspace = true
 nalgebra.workspace = true

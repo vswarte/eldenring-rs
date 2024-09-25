@@ -11,7 +11,7 @@ pub(crate) mod chr_ins;
 pub(crate) mod world_chr_man;
 pub(crate) mod cs_net_man;
 pub(crate) mod cs_task;
-pub(crate) mod resource;
+pub(crate) mod param;
 
 pub trait DebugDisplay {
     fn render_debug(&self, ui: &&mut Ui);
