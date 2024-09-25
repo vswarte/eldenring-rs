@@ -1,6 +1,5 @@
 pub mod singleton;
 pub mod program;
-pub mod pattern;
 pub mod runtime;
 pub mod task;
 pub mod geometry;

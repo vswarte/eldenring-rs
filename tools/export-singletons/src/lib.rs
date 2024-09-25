@@ -5,6 +5,7 @@ use broadsword::dll;
 use tracing::Level;
 use tracing_panic::panic_hook;
 use tracing_subscriber::fmt::writer::MakeWriterExt;
+use util::program::Program;
 use util::singleton::build_singleton_table;
 
 #[dll::entrypoint]
@@ -17,11 +18,12 @@ pub fn entry(_hmodule: usize) -> bool {
 
     let mut fh = File::create("singleton.csv")
         .expect("Could not create export file");
+    let program = unsafe { Program::current() };
 
     std::thread::spawn(move || {
         std::thread::sleep(std::time::Duration::from_secs(5));
 
-        let table = build_singleton_table();
+        let table = build_singleton_table(&program);
         tracing::debug!("Table result: {table:#x?}");
 
         for entry in table.expect("Could not find singleton table").iter() {

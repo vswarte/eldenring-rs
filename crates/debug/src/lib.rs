@@ -43,7 +43,11 @@ pub fn entry(hmodule: usize) -> bool {
     let appender = tracing_appender::rolling::never("./", "chains-bindings.log");
     tracing_subscriber::fmt().with_writer(appender).init();
 
+
     let program = unsafe { Program::current() };
+    let test = find_rtti_classes(&program)
+        .find(|c| c.name.as_str() == "CS::ChrIns");
+
     for class in find_rtti_classes(&program) {
         let vmt = program.rva_to_va(class.vtable).unwrap();
 
@@ -58,6 +62,7 @@ pub fn entry(hmodule: usize) -> bool {
     let crash_handler = crash_handler::CrashHandler::attach(unsafe {
         crash_handler::make_crash_event(move |crash_context: &crash_handler::CrashContext| {
             tracing::info!("Handling crash event");
+
             let mut file = std::fs::File::create("crash.txt").unwrap();
             write!(file, "Crash event");
             write!(file, "Process ID: {}", crash_context.process_id);

@@ -92,7 +92,7 @@ impl Class<'_> {
     ///
     /// # Safety
     /// Does not validate if the index is actually contained within the VMT.
-    pub unsafe fn vmt_pointer(&self, slot: u32) -> Option<Va> {
-        Some(*self.program.derva(self.vtable + VA_SIZE * slot).ok()?)
+    pub unsafe fn vmt_index(&self, index: u32) -> Option<Va> {
+        Some(*self.program.derva(self.vtable + VA_SIZE * index).ok()?)
     }
 }

@@ -1,6 +1,8 @@
 use broadsword::scanner;
 use game::DLRFLocatable;
+use pelite::pattern;
 use pelite::pe::Pe;
+use pelite::pe::Rva;
 use std::collections;
 use std::fs::File;
 use std::io::Write;
@@ -9,7 +11,6 @@ use std::path::Path;
 use std::sync;
 use thiserror::Error;
 
-use crate::program::get_section;
 use crate::program::Program;
 use crate::program::SectionLookupError;
 
@@ -44,7 +45,7 @@ pub fn get_instance<T: DLRFLocatable>() -> Result<Option<&'static mut T>, Lookup
     let table = SINGLETON_MAP.get_or_init(move || {
         let program = unsafe { Program::current() };
 
-        build_singleton_table(program)
+        build_singleton_table(&program)
             .map_err(LookupError::SingletonMapCreation)
             .expect("Could not create singleton map")
     });
@@ -59,15 +60,15 @@ pub fn get_instance<T: DLRFLocatable>() -> Result<Option<&'static mut T>, Lookup
 
 const NULL_CHECK_PATTERN: &str = concat!(
     //  0 MOV REG, [MEM]
-    "01001... 10001011 00...101 [........ ........ ........ ........]",
+    "48 8b 0d $ { ' }",
     //  7 TEST REG, REG
-    "01001... 10000101 11......",
+    "48 85 ? ",
     // 10 JNZ +2e
-    "01110101 ........",
+    "75 ? ",
     // 12 LEA RCX, [runtime_class_metadata]
-    "01001... 10001101 00001101 [........ ........ ........ ........]",
+    "48 8d 0d $ { ' }",
     // 19 CALL get_singleton_name
-    "11101000 [........ ........ ........ ........]",
+    "e8 $ { ' }"
 );
 
 /// Builds a table of all the singletons. It does so by looking for null checks
@@ -76,94 +77,65 @@ const NULL_CHECK_PATTERN: &str = concat!(
 /// instance's static, a pointer to the reflection metadata and a pointer to
 /// the get_singleton_name fn. Once all checks out we call get_singleton_name
 /// with the metadata to obtain the instance's type name.
-pub fn build_singleton_table<'a>(program: &'a Program) -> Result<SingletonMap, SingletonMapError> {
-    let (text_range, text_slice) = program
+pub fn build_singleton_table(program: &Program) -> Result<SingletonMap, SingletonMapError> {
+    let text_range = program
         .section_headers()
         .by_name(".text")
-        .map(|s| {
-            let virtual_range = s.virtual_range();
-
-            let range = std::ops::Range {
-                start: program.rva_to_va(virtual_range.start).unwrap() as usize,
-                end: program.rva_to_va(virtual_range.end).unwrap() as usize,
-            };
-
-            let slice: &[u8] = program.derva_slice(s.VirtualAddress, s.VirtualSize as usize)
-                .expect("Could not get slice");
-
-            (range, slice)
-        })
-        .ok_or(SingletonMapError::Section(".text"))?;
+        .ok_or(SingletonMapError::Section(".text"))?
+        .virtual_range();
 
     let data_range = program
         .section_headers()
         .by_name(".data")
-        .map(|s| {
-            let virtual_range = s.virtual_range();
+        .ok_or(SingletonMapError::Section(".data"))?
+        .virtual_range();
 
-            std::ops::Range {
-                start: program.rva_to_va(virtual_range.start).unwrap() as usize,
-                end: program.rva_to_va(virtual_range.end).unwrap() as usize,
-            }
-        })
-        .ok_or(SingletonMapError::Section(".data"))?;
+    tracing::info!("Found sections. text_range = {text_range:x?}, data_range = {data_range:x?}");
 
-    tracing::debug!("Found sections: text_range = {text_range:x?}, data_range = {data_range:x?}");
-
-    let pattern = scanner::Pattern::from_bit_pattern(NULL_CHECK_PATTERN)
-        .map_err(SingletonMapError::Pattern)?;
+    let pattern = pattern::parse(NULL_CHECK_PATTERN).unwrap();
+    let mut matches = program.scanner().matches_code(&pattern);
+    let mut captures: [Rva; 4] = [Rva::default(); 4];
+    let mut results: SingletonMap = Default::default();
 
     tracing::debug!("Scanning for singleton nullcheck candidates");
-    let mut results: SingletonMap = Default::default();
-    for candidate in scanner::simple::scan_all(text_slice, &pattern) {
-        let static_offset =
-            u32::from_le_bytes(candidate.captures[0].bytes.as_slice().try_into().unwrap());
+    while matches.next(&mut captures) {
+        tracing::trace!("Singleton nullcheck candidate. captures = {captures:#x?}");
 
-        let metadata_offset =
-            u32::from_le_bytes(candidate.captures[1].bytes.as_slice().try_into().unwrap());
+        let static_rva = captures[1];
+        let metadata_rva = captures[2];
+        let get_reflection_name_rva = captures[3];
 
-        let fn_offset =
-            u32::from_le_bytes(candidate.captures[2].bytes.as_slice().try_into().unwrap());
-
-        let candidate_base = text_range.start + candidate.location;
-
-        // Pointer to the instance of the singleton'd class
-        let static_address = candidate_base + 7 + static_offset as usize;
-        tracing::trace!("Candidate singleton static address. static_address = {static_address:x}");
-        if !data_range.contains(&static_address) {
+        // Check if all RVAs are plausible.
+        if !data_range.contains(&static_rva)
+            || !data_range.contains(&metadata_rva)
+            || !text_range.contains(&get_reflection_name_rva)
+        {
             continue;
         }
 
-        // Pointer to the reflection metadata
-        let metadata_address = candidate_base + 19 + metadata_offset as usize;
-        tracing::trace!("Candidate reflection metadata. metadata_address = {metadata_address:x}");
-        if !data_range.contains(&metadata_address) {
-            continue;
-        }
+        tracing::trace!(
+            "Found singleton null check candidate. {} {} {}",
+            data_range.contains(&static_rva),
+            data_range.contains(&metadata_rva),
+            text_range.contains(&get_reflection_name_rva),
+        );
 
-        // Pointer to the name getter fn. char* get_singleton_name(metadata)
-        let fn_address = candidate_base + 24 + fn_offset as usize;
-        tracing::trace!("Candidate get_singleton_name. fn_address = {fn_address:x}");
-        if !text_range.contains(&fn_address) {
-            continue;
-        }
+        let metadata = program.rva_to_va(metadata_rva).unwrap();
+        let get_singleton_name: extern "C" fn(u64) -> *const i8 = unsafe {
+            std::mem::transmute(program.rva_to_va(get_reflection_name_rva).unwrap())
+        };
 
-        let get_singleton_name: extern "C" fn(usize) -> *const i8 =
-            unsafe { mem::transmute(fn_address) };
-
-        let cstr = unsafe { std::ffi::CStr::from_ptr(get_singleton_name(metadata_address)) };
-
-        let name = cstr
+        let cstr = unsafe { std::ffi::CStr::from_ptr(get_singleton_name(metadata)) };
+        let singleton_name = cstr
             .to_str()
             .map_err(|_| SingletonMapError::MalformedName)?
             .to_string();
 
-        tracing::trace!("Candidate name. name = {name}");
+        let singleton_va = program.rva_to_va(static_rva).unwrap();
+        tracing::debug!("Discovered singleton {} at {:x}", singleton_name, singleton_va);
 
-        results.insert(name, static_address);
+        results.insert(singleton_name, singleton_va as usize);
     }
-
-    tracing::info!("Built singleton table. results.len() = {}", results.len());
 
     Ok(results)
 }
