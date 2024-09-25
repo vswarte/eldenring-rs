@@ -1,4 +1,4 @@
-use game::cs::{CSFD4FadePlate, CSFD4FadePlateColor, CSFade};
+use game::cs::{CSFD4FadePlate, CSFade};
 use hudhook::imgui::{TreeNodeFlags, Ui};
 
 use super::DebugDisplay;

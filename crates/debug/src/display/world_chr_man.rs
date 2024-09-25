@@ -39,14 +39,14 @@ impl DebugDisplay for WorldChrMan<'_> {
             Some(p) => if ui.collapsing_header("Main player", TreeNodeFlags::empty()) {
                 p.render_debug(ui)
             },
-            None => ui.text(format!("No Main player instance")),
+            None => ui.text("No Main player instance"),
         }
 
         match unsafe { self.summon_buddy_manager.as_ref() } {
             Some(s) => if ui.collapsing_header("SummonBuddyManager", TreeNodeFlags::empty()) {
                 s.render_debug(ui)
             },
-            None => ui.text(format!("No SummonBuddyManager instance")),
+            None => ui.text("No SummonBuddyManager instance"),
         }
     }
 }
@@ -79,7 +79,7 @@ impl DebugDisplay for SummonBuddyManager<'_> {
 
         match unsafe { self.warp.as_ref() } {
             Some(s) => s.render_debug(ui),
-            None => ui.text(format!("No SummonBuddyManagerWarp instance")),
+            None => ui.text("No SummonBuddyManagerWarp instance"),
         }
     }
 }

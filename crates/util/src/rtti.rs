@@ -1,6 +1,6 @@
 use pelite::pe::{
-    msvc::{RTTICompleteObjectLocator, TypeDescriptor},
-    Pe, PeView, Rva, Va,
+    msvc::RTTICompleteObjectLocator,
+    Pe, Rva, Va,
 };
 use undname::Flags;
 
@@ -63,7 +63,7 @@ pub fn find_rtti_classes<'a>(program: &'a Program) -> impl Iterator<Item = Class
                 return None;
             }
 
-            let demangled = undname::demangle(ty_name.as_str().into(), Flags::NAME_ONLY)
+            let demangled = undname::demangle(ty_name.as_str(), Flags::NAME_ONLY)
                 .map(|s| s.to_string())
                 .ok()?;
 

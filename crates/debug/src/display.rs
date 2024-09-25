@@ -19,7 +19,7 @@ pub trait DebugDisplay {
 
 pub fn render_debug_singleton<T: DLRFLocatable + DebugDisplay + 'static>(ui: &&mut Ui) {
     let singleton = util::singleton::get_instance::<T>()
-        .expect(&format!("Could not get reflection data for {}", T::DLRF_NAME));
+        .unwrap_or_else(|_| panic!("Could not get reflection data for {}", T::DLRF_NAME));
 
     match singleton {
         Some(instance) => if ui.collapsing_header(T::DLRF_NAME, TreeNodeFlags::empty()) {
@@ -28,7 +28,7 @@ pub fn render_debug_singleton<T: DLRFLocatable + DebugDisplay + 'static>(ui: &&m
             let label = format!("{} instance", T::DLRF_NAME);
             ui.input_text(label.as_str(), &mut pointer_string).read_only(true).build();
 
-            instance.render_debug(&ui);
+            instance.render_debug(ui);
             ui.separator();
         },
         None => ui.text(format!("No instance of {} found", T::DLRF_NAME)),

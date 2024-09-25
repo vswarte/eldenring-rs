@@ -1,11 +1,8 @@
-use std::error::Error;
 use std::fmt::Formatter;
-use std::mem;
 
 use thiserror::Error;
-use crate::singleton::get_instance;
 
-use game::cs::{CSWorldGeomMan, ChrIns, MapId, WorldChrMan};
+use game::cs::MapId;
 
 const SPAWN_GEOMETRY_AOB: &str = concat!(
     // 1406974b0 40 56           PUSH       RSI
@@ -159,6 +156,6 @@ fn get_asset_name(v: &[u16; 0x20]) -> String {
 
 fn set_asset_name(request: &mut GeometrySpawnRequest, name: &str) {
     for (i, char) in name.as_bytes().iter().enumerate() {
-        request.asset_string[i] = char.clone() as u16;
+        request.asset_string[i] = *char as u16;
     }
 }

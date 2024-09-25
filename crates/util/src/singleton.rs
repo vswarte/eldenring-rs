@@ -1,18 +1,13 @@
-use broadsword::scanner;
 use game::DLRFLocatable;
 use pelite::pattern;
 use pelite::pe::Pe;
 use pelite::pe::Rva;
 use std::collections;
-use std::fs::File;
 use std::io::Write;
-use std::mem;
-use std::path::Path;
 use std::sync;
 use thiserror::Error;
 
 use crate::program::Program;
-use crate::program::SectionLookupError;
 
 pub type SingletonMap = collections::HashMap<String, usize>;
 static SINGLETON_MAP: sync::OnceLock<SingletonMap> = sync::OnceLock::new();

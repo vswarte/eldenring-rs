@@ -2,9 +2,7 @@ use std::fs::File;
 use std::io::Write;
 
 use broadsword::dll;
-use tracing::Level;
 use tracing_panic::panic_hook;
-use tracing_subscriber::fmt::writer::MakeWriterExt;
 use util::program::Program;
 use util::singleton::build_singleton_table;
 

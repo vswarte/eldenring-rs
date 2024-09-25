@@ -1,17 +1,12 @@
 #![feature(once_cell_get_mut)]
 
 use std::io::Write;
-use std::marker::PhantomData;
-use std::pin::Pin;
-use std::time::Duration;
 
 use broadsword::dll;
 
 use crash_handler::CrashEventResult;
 use game::cs::CSTaskGroup;
-use game::cs::CSTaskGroupIndex;
 use game::cs::CSTaskImp;
-use game::fd4::FD4Time;
 use hudhook::eject;
 use hudhook::hooks::dx12::ImguiDx12Hooks;
 use hudhook::imgui;
@@ -32,7 +27,6 @@ use display::render_debug_singleton;
 use tracing_subscriber::layer::SubscriberExt;
 use util::program::Program;
 use util::rtti::find_rtti_classes;
-use util::task::run_task;
 
 use pelite::pe::Pe;
 
