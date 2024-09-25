@@ -1,0 +1,14 @@
+[package]
+name = "builder-mode"
+version.workspace = true
+edition.workspace = true
+repository.workspace = true
+license.workspace = true
+
+[dependencies]
+tracing.workspace = true
+broadsword.workspace = true
+thiserror.workspace = true
+nalgebra-glm.workspace = true
+nalgebra.workspace = true
+util.workspace = true

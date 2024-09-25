@@ -1,0 +1,28 @@
+[package]
+name = "debug"
+version.workspace = true
+edition.workspace = true
+repository.workspace = true
+license.workspace = true
+
+[dependencies]
+util.workspace = true
+game.workspace = true
+tracing.workspace = true
+tracing-subscriber.workspace = true
+broadsword.workspace = true
+nalgebra-glm.workspace = true
+nalgebra.workspace = true
+windows.workspace = true
+tracing-appender.workspace = true
+crash-handler = "0.6"
+pelite = "0.10"
+
+[dependencies.hudhook]
+git = "https://github.com/veeenu/hudhook"
+features = [
+    "imgui-tables-api"
+]
+
+[lib]
+crate-type = ["cdylib"]

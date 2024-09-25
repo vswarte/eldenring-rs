@@ -1,0 +1,15 @@
+[package]
+name = "util"
+version.workspace = true
+edition.workspace = true
+repository.workspace = true
+license.workspace = true
+
+[dependencies]
+thiserror.workspace = true
+broadsword.workspace = true
+game.workspace = true
+tracing.workspace = true
+windows.workspace = true
+pelite = "0.10"
+undname = "2"
