@@ -96,14 +96,12 @@ pub struct ChrIns<'a> {
     pub character_id: u32,
     pub unk184: u32,
     pub module_container: &'a mut ChrInsModuleContainer<'a>,
-    pub rest: [u8; 0x3D8], 
+    pub rest: [u8; 0x3E8], 
 }
 
 #[repr(C)]
 pub struct PlayerIns<'a> {
     pub chr_ins: ChrIns<'a>,
-    pub unk570: usize,
-    pub unk578: usize,
     pub player_game_data: usize,
     pub chr_manipulator: usize,
     pub unk590: usize,

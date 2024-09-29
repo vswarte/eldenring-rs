@@ -92,7 +92,7 @@ impl<TRes> FD4ResCapHolder<TRes> {
 
             // Move down the bucket if there is an element
             if let Some(element) = current_element.as_ref() {
-                tracing::debug!("Found element. current_element = {current_element:x?}");
+                tracing::trace!("Found element. current_element = {current_element:x?}");
                 current_element = element.header.next_item;
                 Some(element)
             } else {
