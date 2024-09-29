@@ -1,10 +1,11 @@
 use std::ffi;
 use std::marker::PhantomData;
+use std::mem::transmute;
 
 use crate::cs::ChrIns;
-use crate::DLRFLocatable;
+use crate::{DLRFLocatable, Tree};
 
-use super::PlayerIns;
+use super::{FieldInsHandle, PlayerIns};
 
 #[repr(C)]
 pub struct WorldChrMan<'a> {
@@ -85,60 +86,126 @@ pub struct WorldBlockChr<'a> {
 }
 
 #[repr(C)]
+pub struct ChrSetVMT {
+    /// Gets the max amount of ChrInses this ChrSet can hold.
+    pub get_capacity: extern "C" fn(*const ChrSet) -> u32,
+
+    /// Wrapped version of get_chr_ins_by_index which also validates the 
+    /// index against the ChrSet capacity.
+    pub safe_get_chr_ins_by_index: extern "C" fn(*const ChrSet, u32) -> *mut ChrIns,
+
+    /// Retrieves a ChrIns from the ChrSet by its index. Avoid using this. 
+    /// Prefer using safe_get_chr_ins_by_index.
+    pub get_chr_ins_by_index: extern "C" fn(*const ChrSet, u32) -> *mut ChrIns,
+
+    /// Retrieves a ChrIns from the ChrSet by its FieldIns handle.
+    pub get_chr_ins_by_handle: extern "C" fn(*const ChrSet, u64) -> *mut ChrIns,
+
+    /// Wrapped version of get_chr_ins_by_index which also validates the 
+    /// index against the ChrSet capacity.
+    pub safe_get_chr_set_entry_by_index: extern "C" fn(*const ChrSet, u32) -> *mut ChrSetEntry,
+
+    /// Retrieves a ChrSetEntry from the ChrSet by its index. Avoid using this. 
+    /// Prefer using safe_get_chr_ins_by_index.
+    pub get_chr_set_entry_by_index: extern "C" fn(*const ChrSet, u32) -> *mut ChrSetEntry,
+
+    /// Retrieves a ChrSetEntry from the ChrSet by its index. Avoid using this. 
+    /// Prefer using safe_get_chr_ins_by_index.
+    pub get_chr_set_entry_by_handle: extern "C" fn(*const ChrSet, u64) -> *mut ChrSetEntry,
+
+    /// Retrieves the FieldIns handle of the ChrIns at the index in the ChrSet.
+    pub get_index_by_field_ins_handle: extern "C" fn(*const ChrSet, u64) -> u32,
+
+    /// Deallocates all ChrInses hosted by the ChrSet.
+    pub free_chr_list: extern "C" fn(*const ChrSet),
+
+    unk48: extern "C" fn(*const ChrSet),
+
+    unk50: extern "C" fn(*const ChrSet),
+
+    unk58: extern "C" fn(*const ChrSet, usize),
+
+    unk60: extern "C" fn(*const ChrSet, usize),
+
+    unk68: extern "C" fn(*const ChrSet, usize, usize, u8, u8),
+}
+
+#[repr(C)]
 pub struct ChrSet<'a> {
-    pub vftable: usize,
-    pub unk8: i32,
+    pub vftable: &'a ChrSetVMT,
+    pub index: i32,
     pub unkc: i32,
-    pub capacity: i32,
-    pub unk14: u32,
+    pub capacity: u32,
+    _pad14: u32,
     pub entries: *const ChrSetEntry<'a>,
     pub unk20: i32,
-    pub unk24: u32,
-    pub list1: UnkBtree,
-    pub list2: UnkBtree,
+    _pad24: u32,
+    pub unk30: [u8; 0x30],
 }
 
-pub struct ChrSetIter<'a> {
-    remaining: usize,
-    current: *const ChrSetEntry<'a>,
-}
+impl<'a> ChrSet<'a> {
+    pub unsafe fn characters(&'a self) -> impl Iterator<Item = &'a ChrIns> {
+        let mut current_entry = self.entries;
+        let end = unsafe { current_entry.add(self.capacity as usize) };
 
-impl<'a> Iterator for ChrSetIter<'a> {
-    type Item = ChrSetIterElement<'a>;
+        tracing::info!("current_entry = {current_entry:x?}, end = {end:x?}");
 
-    fn next(&mut self) -> Option<Self::Item> {
-        unsafe {
-            loop {
-                let chr_ins = (*self.current).chr_ins.as_mut();
-
-                self.current = self.current.wrapping_add(1);
-                self.remaining -= 1;
-
-                if let Some(chr_ins) = chr_ins {
-                    return Some(ChrSetIterElement { chr_ins });
-                }
+        std::iter::from_fn(move || {
+            if current_entry == end {
+                None
+            } else {
+                tracing::info!("current_entry = {current_entry:x?}");
+                let chr_ins = (*current_entry).chr_ins;
+                current_entry.add(1);
+                chr_ins.as_ref()
             }
-        }
-
-        None
+        })
     }
 }
 
-pub struct ChrSetIterElement<'a> {
-    pub chr_ins: &'a mut ChrIns<'a>,
-}
+// pub struct ChrSetIter<'a> {
+//     remaining: usize,
+//     current: *const ChrSetEntry<'a>,
+// }
+//
+// impl<'a> Iterator for ChrSetIter<'a> {
+//     type Item = ChrSetIterElement<'a>;
+//
+//     fn next(&mut self) -> Option<Self::Item> {
+//         unsafe {
+//             loop {
+//                 let chr_ins = (*self.current).chr_ins.as_mut();
+//
+//                 self.current = self.current.wrapping_add(1);
+//                 self.remaining -= 1;
+//
+//                 if let Some(chr_ins) = chr_ins {
+//                     return Some(ChrSetIterElement { chr_ins });
+//                 }
+//             }
+//         }
+//
+//         None
+//     }
+// }
+
+// pub struct ChrSetIterElement<'a> {
+//     pub chr_ins: &'a mut ChrIns<'a>,
+// }
 
 #[repr(C)]
 pub struct ChrSetEntry<'a> {
     pub chr_ins: *mut ChrIns<'a>,
-    pub unk8: u32,
-    pub unkc: u32,
+    pub unk8: u16,
+    pub unka: u8,
+    _padb: [u8; 5],
 }
 
 #[repr(C)]
 pub struct OpenFieldChrSet<'a> {
     pub base: ChrSet<'a>,
-    unk58: UnkBtree,
+    // TODO: type needs fact-checking
+    unk58: Tree<()>,
     unk70: f32,
     pad74: u32,
     list1: [OpenFieldChrSetList1Entry<'a>; 1500],
@@ -162,14 +229,6 @@ pub struct OpenFieldChrSetList2Entry {
     pub unk0: u64,
     pub unk8: u32,
     pub unkc: u32,
-}
-
-#[repr(C)]
-pub struct UnkBtree {
-    pub vftable: usize,
-    pub head: usize,
-    pub entry_count: u32,
-    _pad14: u32,
 }
 
 #[repr(C)]

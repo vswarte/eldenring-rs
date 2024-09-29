@@ -1,40 +1,47 @@
 use std::pin::Pin;
 
-use game::cs::{CSEzTask, CSEzTaskVMT, CSTaskGroupIndex};
+use game::cs::{CSTaskGroupIndex, CSTaskImp, FD4TaskBase, FD4TaskBaseVMT, FD4TaskData};
 
-pub struct FD4TaskHandle {
-    vftable: Pin<Box<CSEzTaskVMT>>,
-    task: Pin<Box<CSEzTask>>,
+pub type TaskExecuteFn = fn(*const FD4TaskBase, *const FD4TaskData);
+
+pub trait TaskRuntime {
+    fn run_task(&self, execute: TaskExecuteFn, group: CSTaskGroupIndex) -> TaskHandle;
 }
 
-impl Drop for FD4TaskHandle {
-    fn drop(&mut self) {
-        todo!("Caught task dropping its vftable. Unregistering a task is currently not implemented.")
+impl TaskRuntime for CSTaskImp<'_> {
+    fn run_task(&self, execute: TaskExecuteFn, group: CSTaskGroupIndex) -> TaskHandle {
+        let vmt = Box::pin(FD4TaskBaseVMT {
+            get_runtime_class: |_| unimplemented!(),
+            destructor: |_| unimplemented!(),
+            execute,
+        });
+
+        let task = Box::pin(FD4TaskBase {
+            vftable: vmt.as_ref().get_ref() as *const _,
+        });
+
+        tracing::info!("Registering task to task group. group = {group:?}");
+        let register_task: extern "C" fn(&CSTaskImp, CSTaskGroupIndex, &FD4TaskBase) =
+            unsafe { std::mem::transmute(0x140eb1fd0usize) };
+
+        register_task(self, group, task.as_ref().get_ref());
+
+        TaskHandle {
+            vmt,
+            task,
+            group,
+        }
     }
 }
 
-pub fn run_task(execute_fn: fn(), task_group: CSTaskGroupIndex) -> FD4TaskHandle {
-    let vftable = Box::pin(CSEzTaskVMT {
-        get_runtime_class: || tracing::error!("TEST_TASK::get_runtime_class called!"),
-        execute: |_| tracing::error!("TEST_TASK::execute called!"),
-        eztask_execute: execute_fn,
-        register_task: || tracing::error!("TEST_TASK::register_task called"),
-        free_task: || tracing::error!("TEST_TASK::free_task called"),
-        get_task_group: || tracing::error!("TEST_TASK::get_task_group called"),
-    });
+pub struct TaskHandle {
+    vmt: Pin<Box<FD4TaskBaseVMT>>,
+    task: Pin<Box<FD4TaskBase>>,
+    group: CSTaskGroupIndex,
+}
 
-    let task = Box::pin(CSEzTask {
-        vftable: vftable.as_ref().get_ref() as *const CSEzTaskVMT,
-        task_proxy: 0,
-        unk8: 0,
-        _padc: 0,
-    });
-
-    tracing::debug!("Registering task to task group. task_group = {task_group:?}");
-    let register_task: extern "C" fn(&CSEzTask, CSTaskGroupIndex) =
-        unsafe { std::mem::transmute(0x140eb1650_usize) };
-
-    register_task(&task, task_group);
-
-    FD4TaskHandle { vftable, task }
+impl Drop for TaskHandle {
+    fn drop(&mut self) {
+        todo!()
+    }
 }

@@ -10,6 +10,7 @@ mod session_manager;
 mod world_geom_man;
 mod menu_man;
 mod net_man;
+mod character_type_properties;
 
 pub use camera::*;
 pub use chr_ins::*;
@@ -23,3 +24,4 @@ pub use session_manager::*;
 pub use world_geom_man::*;
 pub use menu_man::*;
 pub use net_man::*;
+pub use character_type_properties::*;

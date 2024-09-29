@@ -5,6 +5,7 @@ use crate::{cs::ChrSetEntry, matrix::Vector4};
 use super::MapId;
 
 #[repr(C)]
+#[derive(Debug, Clone)]
 pub struct WhoID {
     pub map_id: i32,
     pub chr_selector: i32,

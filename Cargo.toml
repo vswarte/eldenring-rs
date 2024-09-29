@@ -4,7 +4,7 @@ members = [
     "crates/game",
     "crates/util",
     "examples/builder-mode",
-    "tools/export-singletons",
+    "tools/export-singletons", "tools/profiler",
 ]
 resolver = "2"
 
@@ -24,6 +24,11 @@ nalgebra-glm = "0.18"
 nalgebra = "0.32"
 tracing-panic = "0.1"
 tracing-appender = "0.2.3"
+zerocopy = "0.7"
+zerocopy-derive = "0.7"
+byteorder = "1"
+pelite = "0.10"
+dataview = "~1.0"
 
 [workspace.dependencies.windows]
 version = "0.54"

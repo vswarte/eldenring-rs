@@ -1,14 +1,17 @@
 [package]
-name = "util"
+name = "profiler"
 version.workspace = true
 edition.workspace = true
 repository.workspace = true
 license.workspace = true
 
 [dependencies]
-thiserror.workspace = true
 game.workspace = true
-tracing.workspace = true
-windows.workspace = true
+util.workspace = true
 pelite.workspace = true
-undname = "2"
+puffin = "0.19"
+puffin_http = "0.16"
+retour = { version = "0.3", features = ["static-detour"] }
+
+[lib]
+crate-type = ["cdylib"]

@@ -23,7 +23,7 @@ impl DebugDisplay for ChrIns<'_> {
         ui.text(format!("Map ID 2: {:?}", self.map_id_2));
         ui.text(format!("Map ID origin 2: {}", self.map_id_origin_2));
         ui.text(format!("Last used item?: {}", self.last_used_item));
-        ui.text(format!("Character ID?: {}", self.character_id));
+        ui.text(format!("Character ID: {}", self.character_id));
 
         if ui.collapsing_header("Modules", TreeNodeFlags::empty()) {
             self.module_container.render_debug(ui);

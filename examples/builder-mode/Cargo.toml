@@ -6,8 +6,15 @@ repository.workspace = true
 license.workspace = true
 
 [dependencies]
-tracing.workspace = true
 thiserror.workspace = true
+game.workspace = true
+util.workspace = true
 nalgebra-glm.workspace = true
 nalgebra.workspace = true
-util.workspace = true
+tracing.workspace = true
+tracing-subscriber.workspace = true
+tracing-appender.workspace = true
+tracing-panic.workspace = true
+
+[lib]
+crate-type = ["cdylib"]

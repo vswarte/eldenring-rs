@@ -8,14 +8,12 @@ license.workspace = true
 [dependencies]
 util.workspace = true
 game.workspace = true
+windows.workspace = true
+pelite.workspace = true
 tracing.workspace = true
 tracing-subscriber.workspace = true
-nalgebra-glm.workspace = true
-nalgebra.workspace = true
-windows.workspace = true
 tracing-appender.workspace = true
-crash-handler = "0.6"
-pelite = "0.10"
+tracing-panic.workspace = true
 
 [dependencies.hudhook]
 git = "https://github.com/veeenu/hudhook"

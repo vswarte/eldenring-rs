@@ -1,7 +1,9 @@
 [package]
 name = "game"
-version = "1.3.0"
-edition = "2021"
+version.workspace = true
+edition.workspace = true
+repository.workspace = true
+license.workspace = true
 
 [lints.rust]
 unused = "allow"
@@ -15,6 +17,11 @@ thiserror.workspace = true
 nalgebra-glm.workspace = true
 nalgebra.workspace = true
 windows.workspace = true
+zerocopy.workspace = true
+zerocopy-derive.workspace = true
+byteorder.workspace = true
+pelite.workspace = true
+dataview.workspace = true
 
 [dependencies.retour]
 version = "0.3"

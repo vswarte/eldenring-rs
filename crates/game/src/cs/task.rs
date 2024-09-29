@@ -1,22 +1,42 @@
 use std::{ffi, marker::PhantomData};
 use windows::core::PCWSTR;
 
+use crate::dl::DLRuntimeClass;
 use crate::DLRFLocatable;
 use crate::{dl::DLPlainLightMutex, fd4::{FD4BasicHashString, FD4Time}, Tree, Vector};
 
 #[repr(C)]
+pub struct FD4TaskBaseVMT  {
+    /// Getter for DLRF runtime metadata.
+    pub get_runtime_class: fn(*const FD4TaskBase) -> *const DLRuntimeClass,
+    /// Destructor
+    pub destructor: fn(*const FD4TaskBase),
+    /// Gets called by the runtime
+    pub execute: fn(*const FD4TaskBase, *const FD4TaskData),
+}
+
+#[repr(C)]
+pub struct FD4TaskBase {
+    pub vftable: *const FD4TaskBaseVMT,
+}
+
+#[derive(Debug)]
+pub struct FD4TaskData {
+    pub delta_time: FD4Time,
+    pub task_group_id: u32,
+    pub seed: i32,
+}
+
+#[repr(C)]
 pub struct CSEzTaskVMT  {
-    // DLRF reflection metadata.
-    pub get_runtime_class: fn(),
-    // Bare execute call (gets called by the dispatcher).
-    pub execute: fn(&FD4TaskData),
-    // Called by execute() in the case of CSEzTask.
+    pub task_base: FD4TaskBaseVMT,
+    /// Called by execute() in the case of CSEzTask.
     pub eztask_execute: fn(),
-    // Called to register the task to the appropriate runtime.
+    /// Called to register the task to the appropriate runtime.
     pub register_task: fn(),
-    // Called to free up the task.
+    /// Called to free up the task.
     pub free_task: fn(),
-    // Getter for the task group.
+    /// Getter for the task group.
     pub get_task_group: fn(),
 }
 
@@ -26,13 +46,6 @@ pub struct CSEzTask {
     pub unk8: u32,
     pub _padc: u32,
     pub task_proxy: usize,
-}
-
-#[derive(Debug)]
-pub struct FD4TaskData {
-    pub delta_time: FD4Time,
-    pub task_group_id: u32,
-    pub seed: i32,
 }
 
 #[repr(C)]
@@ -60,7 +73,7 @@ impl DLRFLocatable for CSTaskGroup<'_> {
 pub struct CSTaskGroupIns {
     pub vftable: usize,
     pub name: FD4BasicHashString,
-    unk48: [u8; 0x10],
+    unk40: [u8; 0x10],
 }
 
 #[repr(C)]
@@ -121,6 +134,7 @@ pub struct CSTaskRunner<'a> {
 
 #[repr(C)]
 pub struct CSTaskRunnerEx {
+    // TODO
 }
 
 #[repr(C)]
@@ -158,6 +172,11 @@ pub struct CSTaskRunnerManager<'a> {
 }
 
 #[repr(C)]
+pub struct FD4TaskRequestEntry {
+    pub task: *const FD4TaskBase,
+}
+
+#[repr(C)]
 pub struct DLPlainConditionSignal {
     pub vftable: usize,
     pub event_handle: usize,
@@ -176,7 +195,7 @@ pub struct TaskGroupConcurrencySlot {
 
 #[repr(u32)]
 #[allow(non_camel_case_types)]
-#[derive(Debug)]
+#[derive(Debug, Clone, Copy)]
 pub enum CSTaskGroupIndex {
     FrameBegin,
     SteamThread0,

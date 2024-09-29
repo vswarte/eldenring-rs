@@ -33,8 +33,7 @@ pub struct FD4ResCapHeader<TRes> {
 /// Represents a collection of ResCaps/FileCaps.
 /// The game relies heavily on traditional hashmaps for asset management.
 /// The resources name gets turned in a u32 using some FNV variant. That hash
-/// is then modulo'd by the repository's capacity to find the appropriate slot 
-/// in the map's first layer.
+/// is then modulo'd by the repository's capacity to find the appropriate bucket. 
 /// In the case of collision on lookups it will start cycling through the 
 /// linked list for the matched slot and compare the full resource name hashes.
 ///
@@ -42,13 +41,13 @@ pub struct FD4ResCapHeader<TRes> {
 /// In the case of a collision on insertion it will make the entry you are 
 /// seeking to insert the new head.
 /// 
-/// Slot# = fnv(resource name) % holder capacity
+/// Bucket # = fnv(resource name) % bucket count
 ///
 /// ```
 /// +----------------------------------------------------------------------....
 /// |                        FD4ResCapHolder<R,T>'s map                    
 /// +-------------------------------------------------------+--------------....
-/// |  Slot 0          |  Slot 1          |  Slot 2         |  Slot 4
+/// |  Bucket 0        |  Bucket 1        |  Bucket 2       |  Bucket 3
 /// +------------------+------------------+-----------------+--------------....
 /// |  FD4ResCap<T>    |  FD4ResCap<T>    |                 |  FD4ResCap<T>
 /// |  FD4ResCap<T>    |                  |                 |  FD4ResCap<T>
@@ -63,45 +62,43 @@ pub struct FD4ResCapHolder<TRes> {
     allocator: usize,
     owning_repository: usize,
     pub unk18: u32,
-    pub capacity: u32,
-    map: *const *const FD4ResCap<TRes>,
+    pub bucket_count: u32,
+    pub buckets: *const *const FD4ResCap<TRes>,
 }
 
 impl<TRes> FD4ResCapHolder<TRes> {
-    pub fn entries(&self) -> impl Iterator<Item = &FD4ResCap<TRes>> {
-        let map_base = unsafe { *self.map };
-        let capacity = self.capacity as isize;
+    pub unsafe fn entries(&self) -> impl Iterator<Item = &FD4ResCap<TRes>> {
+        let bucket_base =  self.buckets;
+        let mut current_element = unsafe { *bucket_base }; 
+        let bucket_count = self.bucket_count as isize;
         let mut current_bucket = 0isize;
-        let mut cursor = map_base; 
 
-        tracing::info!("map_base = {map_base:x?}");
-
+        tracing::info!("bucket_base = {bucket_base:x?}");
         std::iter::from_fn(move || unsafe {
-            while cursor.is_null() && current_bucket < capacity {
-                tracing::info!("Seeking next slot. cursor = {cursor:x?}, current_bucket = {current_bucket}");
+            // If we dont have an element but we haven't finished the map yet
+            // we need to advance to the next bucket until we've found another
+            // element.
+            while current_element.is_null() && current_bucket < bucket_count - 1 {
+                tracing::trace!("Seeking next slot. current_element = {current_element:x?}, current_bucket = {current_bucket}");
                 current_bucket += 1;
-                cursor = map_base.offset(current_bucket as isize);
+
+                let current_bucket_base = bucket_base.offset(current_bucket as isize);
+                current_element = if !current_bucket_base.is_null(){
+                    *bucket_base.offset(current_bucket)
+                } else {
+                    std::ptr::null()
+                };
             }
 
-            tracing::info!("Found entry. entry = {cursor:x?}, current_bucket = {current_bucket}");
-            None
-            // if current_bucket == 0 {
-            //     current_bucket += 1;
-            //     cursor.as_ref()
-            // } else {
-            //     None
-            // }
-            // while cursor.is_null() && current_bucket < capacity {
-            //     cursor = map_base.offset(current_bucket as isize);
-            //     current_bucket += 1;
-            // }
-            //
-            // if let Some(current) = cursor.as_ref() {
-            //     cursor = current.header.next_item;
-            //     Some(current)
-            // } else {
-            //     None
-            // }
+            // Move down the bucket if there is an element
+            if let Some(element) = current_element.as_ref() {
+                tracing::debug!("Found element. current_element = {current_element:x?}");
+                current_element = element.header.next_item;
+                Some(element)
+            } else {
+                current_element = std::ptr::null();
+                None
+            }
         })
     }
 }

@@ -2,10 +2,6 @@
 
 use std::io::Write;
 
-use crash_handler::CrashEventResult;
-use crash_handler::ExceptionCode;
-use game::cs::CSTaskGroup;
-use game::cs::CSTaskImp;
 use game::fd4::FD4ParamRepository;
 use hudhook::eject;
 use hudhook::hooks::dx12::ImguiDx12Hooks;
@@ -15,6 +11,8 @@ use hudhook::windows::Win32::Foundation::HINSTANCE;
 use hudhook::Hudhook;
 use hudhook::ImguiRenderLoop;
 
+use game::cs::CSTaskImp;
+use game::cs::CSTaskGroup;
 use game::cs::CSCamera;
 use game::cs::CSFade;
 use game::cs::CSNetMan;
@@ -24,11 +22,13 @@ use game::cs::WorldChrMan;
 use game::world_area_time::WorldAreaTime;
 
 use display::render_debug_singleton;
+use tracing_panic::panic_hook;
 use tracing_subscriber::layer::SubscriberExt;
 use util::program::Program;
 use util::rtti::find_rtti_classes;
 
 use pelite::pe::Pe;
+use util::singleton::get_instance;
 
 mod display;
 
@@ -37,9 +37,10 @@ pub unsafe extern "C" fn DllMain(hmodule: HINSTANCE, reason: u32) -> bool {
     match reason {
         // DLL_PROCESS_ATTACH
         1 => {
+            std::panic::set_hook(Box::new(panic_hook));
+
             let appender = tracing_appender::rolling::never("./", "chains-bindings.log");
             tracing_subscriber::fmt().with_writer(appender).init();
-
 
             let program = unsafe { Program::current() };
             let test = find_rtti_classes(&program)
@@ -56,28 +57,6 @@ pub unsafe extern "C" fn DllMain(hmodule: HINSTANCE, reason: u32) -> bool {
             }
 
             tracing::info!("Inited tracing");
-            let crash_handler = crash_handler::CrashHandler::attach(unsafe {
-                crash_handler::make_crash_event(move |crash_context: &crash_handler::CrashContext| unsafe {
-                    tracing::error!("Caught crash event");
-                    tracing::error!("Process ID: {}", crash_context.process_id);
-                    tracing::error!("Thread ID: {}", crash_context.thread_id);
-
-                    let pointers = crash_context.exception_pointers;
-                    let exception_record = &*(*pointers).ExceptionRecord;
-                    tracing::error!("Exception Record ExceptionAddress: {:x}", exception_record.ExceptionAddress as usize);
-                    tracing::error!("Exception Record ExceptionCode: {:x}", exception_record.ExceptionCode);
-                    tracing::error!("Exception Record NumberParameters: {:x}", exception_record.NumberParameters);
-
-                    for (index, entry) in exception_record.ExceptionInformation.iter().enumerate() {
-                        tracing::error!("Exception Record ExceptionInformation[{}]: {:x}", index, entry);
-                    }
-
-                    CrashEventResult::Handled(false)
-                })
-            }).expect("failed to attach crash handler");
-
-            // Leak it for now...
-            Box::leak(Box::new(crash_handler));
 
             std::thread::spawn(move || {
                 if let Err(e) = Hudhook::builder()
