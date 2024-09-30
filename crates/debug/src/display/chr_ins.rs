@@ -1,4 +1,4 @@
-use game::cs::{ChrIns, ChrInsModuleContainer, ChrPhysicsModule, FieldInsHandle, PlayerIns};
+use game::cs::{ChrAsm, ChrIns, ChrInsModuleContainer, ChrPhysicsModule, FieldInsHandle, PlayerGameData, PlayerIns};
 use hudhook::imgui::{TreeNodeFlags, Ui};
 
 use super::DebugDisplay;
@@ -8,9 +8,46 @@ impl DebugDisplay for PlayerIns<'_> {
     fn render_debug(&self, ui: &&mut Ui) {
         self.chr_ins.render_debug(ui);
 
+        if ui.collapsing_header("ChrAsm", TreeNodeFlags::empty()) {
+            self.chr_asm.render_debug(ui);
+        }
+
+        if ui.collapsing_header("PlayerGameData", TreeNodeFlags::empty()) {
+            self.player_game_data.render_debug(ui);
+        }
+
         if ui.collapsing_header("Map relative position", TreeNodeFlags::empty()) {
             self.map_relative_position.render_debug(ui);
         }
+    }
+}
+
+impl DebugDisplay for ChrAsm {
+    fn render_debug(&self, ui: &&mut Ui) {
+        ui.text(format!("Arm style: {:?}", self.arm_style));
+        ui.text(format!("Left-hand weapon slot: {:?}", self.left_weapon_slot));
+        ui.text(format!("Right-hand weapon slot: {:?}", self.right_weapon_slot));
+        ui.text(format!("Left-hand arrow slot: {:?}", self.left_arrow_slot));
+        ui.text(format!("Right-hand arrow slot: {:?}", self.right_weapon_slot));
+        ui.text(format!("Left-hand bolt slot: {:?}", self.left_bolt_slot));
+        ui.text(format!("Right-hand bolt slot: {:?}", self.right_bolt_slot));
+
+        for (i, e) in self.gaitem_handles.iter().enumerate() {
+            ui.text(format!("Gaitem {}: {:x?}", i, e));
+        }
+
+        for (i, e) in self.equipment_param_ids.iter().enumerate() {
+            ui.text(format!("Equipment param ID {}: {:?}", i, e));
+        }
+    }
+}
+
+impl DebugDisplay for PlayerGameData {
+    fn render_debug(&self, ui: &&mut Ui) {
+        ui.text(format!("Furlcalling Finger Active: {:?}", self.furlcalling_finger_remedy_active));
+        ui.text(format!("Rune Arc Active: {:?}", self.rune_arc_active));
+        ui.text(format!("White Ring Active: {:?}", self.white_ring_active));
+        ui.text(format!("Blue Ring Active: {:?}", self.blue_ring_active));
     }
 }
 

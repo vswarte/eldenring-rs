@@ -275,3 +275,4 @@ pub struct SummonBuddyManagerWarp {
     pub trigger_threshold_range_path_stacked: f32,
     pub unk28: [u8; 0x10]
 }
+

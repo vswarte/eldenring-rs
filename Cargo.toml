@@ -4,7 +4,9 @@ members = [
     "crates/game",
     "crates/util",
     "examples/builder-mode",
-    "tools/export-singletons", "tools/profiler",
+    "examples/mini-transmog",
+    "tools/export-singletons",
+    "tools/profiler",
 ]
 resolver = "2"
 

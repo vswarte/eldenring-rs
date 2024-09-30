@@ -29,10 +29,6 @@ pub unsafe extern "C" fn DllMain(_hmodule: usize, reason: u32) -> bool {
 }
 
 fn init() -> Result<(), Box<dyn Error>> {
-    while get_instance::<CSTaskImp>().ok().flatten().is_none() {
-        std::thread::sleep(std::time::Duration::from_millis(10));
-    }
-
     let task = get_instance::<CSTaskImp>().unwrap().unwrap();
     std::mem::forget(task.run_task(
         |_, _| {
@@ -63,7 +59,7 @@ const SPAWNABLE_ASSETS: [&'static str; 10] = [
     "AEG221_307", // Fancy wooden chair
     "AEG221_521", // Big bookcase
     "AEG221_533", // Fancy bed
-    "AEG227_005", // Banished knight armor on stand
+    "AEG227_005", // Banished knight armor on standtask_data
     "AEG228_130", // Wooden bed with headrest and messy sheets
     "AEG228_152", // Wooden duo bookcase with golden accents
     "AEG228_245", // Fancy wooden table with books and golden candlesticks
