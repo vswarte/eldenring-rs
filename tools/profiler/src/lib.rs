@@ -40,10 +40,10 @@ pub unsafe extern "C" fn DllMain(_base: usize, reason: u32) -> bool {
 
             let task = get_instance::<CSTaskImp>().unwrap().unwrap();
             // TODO: manage the lifetime around the tasks
-            std::mem::forget(task.run_task(
-                |_, _| puffin::GlobalProfiler::lock().new_frame(),
-                CSTaskGroupIndex::FrameBegin,
-            ));
+            // std::mem::forget(task.run_task(
+            //     |_, _| puffin::GlobalProfiler::lock().new_frame(),
+            //     CSTaskGroupIndex::FrameBegin,
+            // ));
         });
     }
 

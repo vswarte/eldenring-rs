@@ -11,8 +11,8 @@ use super::{FieldInsHandle, PlayerIns};
 pub struct WorldChrMan<'a> {
     pub vftable: usize,
     unk8: usize,
-    pub world_area_chr: [WorldAreaChr<'a>; 28],
-    pub world_block_chr: [WorldBlockChr<'a>; 192],
+    pub world_area_chr: [WorldAreaChr<'a, ChrIns<'a>>; 28],
+    pub world_block_chr: [WorldBlockChr<'a, ChrIns<'a>>; 192],
     pub world_grid_area_chr: [WorldGridAreaChr; 6],
     pub world_area_info_owner: usize,
 
@@ -33,13 +33,13 @@ pub struct WorldChrMan<'a> {
     unk10edc: u32,
 
     // Player characters
-    pub player_chr_set: ChrSet<'a>,
+    pub player_chr_set: ChrSet<'a, PlayerIns<'a>>,
     // Ghosts and such
-    pub ghost_chr_set: ChrSet<'a>,
+    pub ghost_chr_set: ChrSet<'a, ChrIns<'a>>,
     // Spirit ash characters
-    pub summon_buddy_chr_set: ChrSet<'a>,
+    pub summon_buddy_chr_set: ChrSet<'a, ChrIns<'a>>,
     // Debug characters
-    pub debug_chr_set: ChrSet<'a>,
+    pub debug_chr_set: ChrSet<'a, ChrIns<'a>>,
     // All other enemies
     pub open_field_chr_set: OpenFieldChrSet<'a>,
 
@@ -56,12 +56,12 @@ impl DLRFLocatable for WorldChrMan<'_> {
 }
 
 #[repr(C)]
-pub struct WorldAreaChr<'a> {
+pub struct WorldAreaChr<'a, T> {
     pub base: WorldAreaChrBase,
     pub world_area_info: usize,
     pub unk18: u32,
     pub unk1c: u32,
-    pub world_block_chr: &'a WorldBlockChr<'a>,
+    pub world_block_chr: &'a WorldBlockChr<'a, T>,
 }
 
 #[repr(C)]
@@ -71,14 +71,14 @@ pub struct WorldAreaChrBase {
 }
 
 #[repr(C)]
-pub struct WorldBlockChr<'a> {
+pub struct WorldBlockChr<'a, T> {
     pub vftable: usize,
     pub world_block_info1: usize,
     unk10: [u8; 0x68],
-    pub chr_set: ChrSet<'a>,
+    pub chr_set: ChrSet<'a, T>,
     unkd0: [u8; 0x40],
     pub world_block_info2: usize,
-    pub chr_set_ptr: &'a mut ChrSet<'a>,
+    pub chr_set_ptr: &'a mut ChrSet<'a, T>,
     pub allocator: usize,
     unk128: [u8; 0x30],
     pub map_id: MapId,
@@ -86,69 +86,67 @@ pub struct WorldBlockChr<'a> {
 }
 
 #[repr(C)]
-pub struct ChrSetVMT {
+pub struct ChrSetVMT<'a, T> {
     /// Gets the max amount of ChrInses this ChrSet can hold.
-    pub get_capacity: extern "C" fn(*const ChrSet) -> u32,
+    pub get_capacity: extern "C" fn(*const ChrSet<'a, T>) -> u32,
 
     /// Wrapped version of get_chr_ins_by_index which also validates the 
     /// index against the ChrSet capacity.
-    pub safe_get_chr_ins_by_index: extern "C" fn(*const ChrSet, u32) -> *mut ChrIns,
+    pub safe_get_chr_ins_by_index: extern "C" fn(*const ChrSet<'a, T>, u32) -> *mut ChrIns<'a>,
 
     /// Retrieves a ChrIns from the ChrSet by its index. Avoid using this. 
     /// Prefer using safe_get_chr_ins_by_index.
-    pub get_chr_ins_by_index: extern "C" fn(*const ChrSet, u32) -> *mut ChrIns,
+    pub get_chr_ins_by_index: extern "C" fn(*const ChrSet<'a, T>, u32) -> *mut ChrIns<'a>,
 
     /// Retrieves a ChrIns from the ChrSet by its FieldIns handle.
-    pub get_chr_ins_by_handle: extern "C" fn(*const ChrSet, u64) -> *mut ChrIns,
+    pub get_chr_ins_by_handle: extern "C" fn(*const ChrSet<'a, T>, u64) -> *mut ChrIns<'a>,
 
     /// Wrapped version of get_chr_ins_by_index which also validates the 
     /// index against the ChrSet capacity.
-    pub safe_get_chr_set_entry_by_index: extern "C" fn(*const ChrSet, u32) -> *mut ChrSetEntry,
+    pub safe_get_chr_set_entry_by_index: extern "C" fn(*const ChrSet<'a, T>, u32) -> *mut ChrSetEntry<ChrIns<'a>>,
 
     /// Retrieves a ChrSetEntry from the ChrSet by its index. Avoid using this. 
     /// Prefer using safe_get_chr_ins_by_index.
-    pub get_chr_set_entry_by_index: extern "C" fn(*const ChrSet, u32) -> *mut ChrSetEntry,
+    pub get_chr_set_entry_by_index: extern "C" fn(*const ChrSet<'a, T>, u32) -> *mut ChrSetEntry<ChrIns<'a>>,
 
     /// Retrieves a ChrSetEntry from the ChrSet by its index. Avoid using this. 
     /// Prefer using safe_get_chr_ins_by_index.
-    pub get_chr_set_entry_by_handle: extern "C" fn(*const ChrSet, u64) -> *mut ChrSetEntry,
+    pub get_chr_set_entry_by_handle: extern "C" fn(*const ChrSet<'a, T>, u64) -> *mut ChrSetEntry<ChrIns<'a>>,
 
     /// Retrieves the FieldIns handle of the ChrIns at the index in the ChrSet.
-    pub get_index_by_field_ins_handle: extern "C" fn(*const ChrSet, u64) -> u32,
+    pub get_index_by_field_ins_handle: extern "C" fn(*const ChrSet<'a, T>, u64) -> u32,
 
     /// Deallocates all ChrInses hosted by the ChrSet.
-    pub free_chr_list: extern "C" fn(*const ChrSet),
+    pub free_chr_list: extern "C" fn(*const ChrSet<'a, T>),
 
-    unk48: extern "C" fn(*const ChrSet),
+    unk48: extern "C" fn(*const ChrSet<'a, T>),
 
-    unk50: extern "C" fn(*const ChrSet),
+    unk50: extern "C" fn(*const ChrSet<'a, T>),
 
-    unk58: extern "C" fn(*const ChrSet, usize),
+    unk58: extern "C" fn(*const ChrSet<'a, T>, usize),
 
-    unk60: extern "C" fn(*const ChrSet, usize),
+    unk60: extern "C" fn(*const ChrSet<'a, T>, usize),
 
-    unk68: extern "C" fn(*const ChrSet, usize, usize, u8, u8),
+    unk68: extern "C" fn(*const ChrSet<'a, T>, usize, usize, u8, u8),
 }
 
 #[repr(C)]
-pub struct ChrSet<'a> {
-    pub vftable: &'a ChrSetVMT,
+pub struct ChrSet<'a, T> {
+    pub vftable: &'a ChrSetVMT<'a, T>,
     pub index: i32,
     pub unkc: i32,
     pub capacity: u32,
     _pad14: u32,
-    pub entries: *const ChrSetEntry<'a>,
+    pub entries: *const ChrSetEntry<T>,
     pub unk20: i32,
     _pad24: u32,
     pub unk30: [u8; 0x30],
 }
 
-impl<'a> ChrSet<'a> {
-    pub unsafe fn characters(&'a self) -> impl Iterator<Item = &'a ChrIns> {
+impl<'a, T> ChrSet<'a, T> {
+    pub unsafe fn characters(&'a self) -> impl Iterator<Item = &'a mut T> {
         let mut current_entry = self.entries;
         let end = unsafe { current_entry.add(self.capacity as usize) };
-
-        tracing::info!("current_entry = {current_entry:x?}, end = {end:x?}");
 
         std::iter::from_fn(move || {
             if current_entry == end {
@@ -157,45 +155,15 @@ impl<'a> ChrSet<'a> {
                 tracing::info!("current_entry = {current_entry:x?}");
                 let chr_ins = (*current_entry).chr_ins;
                 current_entry.add(1);
-                chr_ins.as_ref()
+                chr_ins.as_mut()
             }
         })
     }
 }
 
-// pub struct ChrSetIter<'a> {
-//     remaining: usize,
-//     current: *const ChrSetEntry<'a>,
-// }
-//
-// impl<'a> Iterator for ChrSetIter<'a> {
-//     type Item = ChrSetIterElement<'a>;
-//
-//     fn next(&mut self) -> Option<Self::Item> {
-//         unsafe {
-//             loop {
-//                 let chr_ins = (*self.current).chr_ins.as_mut();
-//
-//                 self.current = self.current.wrapping_add(1);
-//                 self.remaining -= 1;
-//
-//                 if let Some(chr_ins) = chr_ins {
-//                     return Some(ChrSetIterElement { chr_ins });
-//                 }
-//             }
-//         }
-//
-//         None
-//     }
-// }
-
-// pub struct ChrSetIterElement<'a> {
-//     pub chr_ins: &'a mut ChrIns<'a>,
-// }
-
 #[repr(C)]
-pub struct ChrSetEntry<'a> {
-    pub chr_ins: *mut ChrIns<'a>,
+pub struct ChrSetEntry<T> {
+    pub chr_ins: *mut T,
     pub unk8: u16,
     pub unka: u8,
     _padb: [u8; 5],
@@ -203,7 +171,7 @@ pub struct ChrSetEntry<'a> {
 
 #[repr(C)]
 pub struct OpenFieldChrSet<'a> {
-    pub base: ChrSet<'a>,
+    pub base: ChrSet<'a, ChrIns<'a>>,
     // TODO: type needs fact-checking
     unk58: Tree<()>,
     unk70: f32,
@@ -259,7 +227,7 @@ pub struct SummonBuddyManager<'a> {
     pub to_spawn_buddy_param: i32,
     pub spawned_buddy_param: i32,
     pub unk28: usize,
-    pub chr_set: &'a ChrSet<'a>,
+    pub chr_set: &'a ChrSet<'a, ChrIns<'a>>,
     pub unk38: [u8; 0xb0],
     pub warp: *const SummonBuddyManagerWarp,
 }

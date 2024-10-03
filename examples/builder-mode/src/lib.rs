@@ -5,10 +5,19 @@ use std::{
     sync::{LazyLock, Mutex},
 };
 
-use game::cs::{CSCamera, CSTaskGroupIndex, CSTaskImp};
+use game::{
+    cs::{CSCamera, CSTaskGroupIndex, CSTaskImp, CSWorldGeomMan, WorldChrMan},
+    matrix::Vector4,
+};
 use nalgebra_glm::{Mat4, Vec3};
+use thiserror::Error;
 use tracing_panic::panic_hook;
-use util::{input::is_key_pressed, singleton::get_instance, task::TaskRuntime};
+use util::{
+    geometry::{GeometrySpawnParameters, SpawnGeometryError, WorldGeometryFacade},
+    input::is_key_pressed,
+    singleton::get_instance,
+    task::TaskRuntime,
+};
 
 #[no_mangle]
 pub unsafe extern "C" fn DllMain(_hmodule: usize, reason: u32) -> bool {
@@ -30,28 +39,29 @@ pub unsafe extern "C" fn DllMain(_hmodule: usize, reason: u32) -> bool {
 
 fn init() -> Result<(), Box<dyn Error>> {
     let task = get_instance::<CSTaskImp>().unwrap().unwrap();
-    std::mem::forget(task.run_task(
-        |_, _| {
-            let mut builder_camera = BUILDER_CAMERA.lock().unwrap();
-            is_key_pressed(0x68).then(|| builder_camera.move_camera(Movement::Forward));
-            is_key_pressed(0x62).then(|| builder_camera.move_camera(Movement::Backward));
-            is_key_pressed(0x64).then(|| builder_camera.move_camera(Movement::Left));
-            is_key_pressed(0x66).then(|| builder_camera.move_camera(Movement::Right));
-            is_key_pressed(0x6B).then(|| builder_camera.cycle_asset());
-
-            if let Some(camera) = get_instance::<CSCamera>().unwrap() {
-                is_key_pressed(0x42).then(|| builder_camera.toggle(camera));
-
-                builder_camera.apply(camera);
-            }
-        },
-        CSTaskGroupIndex::CameraStep,
-    ));
+    // std::mem::forget(task.run_task(
+    //     |_, _| {
+    //         let mut builder_camera = BUILDER_CAMERA.lock().unwrap();
+    //         if let Some(camera) = get_instance::<CSCamera>().unwrap() {
+    //             is_key_pressed(0x42).then(|| builder_camera.toggle(camera));
+    //
+    //             builder_camera.apply(camera);
+    //         }
+    //
+    //         is_key_pressed(0x68).then(|| builder_camera.move_camera(Movement::Forward));
+    //         is_key_pressed(0x62).then(|| builder_camera.move_camera(Movement::Backward));
+    //         is_key_pressed(0x64).then(|| builder_camera.move_camera(Movement::Left));
+    //         is_key_pressed(0x66).then(|| builder_camera.move_camera(Movement::Right));
+    //         is_key_pressed(0x6E).then(|| builder_camera.cycle_asset());
+    //         is_key_pressed(0x65).then(|| builder_camera.place_asset());
+    //     },
+    //     CSTaskGroupIndex::CameraStep,
+    // ));
 
     Ok(())
 }
 
-const BUILDER_CAMERA_HEIGHT: f32 = 7.5;
+const BUILDER_CAMERA_HEIGHT: f32 = 10.0;
 const GRID_TILE_SIZE: f32 = 1.0;
 const TIMER_VALUE_PER_UPDATE: f32 = 0.1;
 
@@ -80,7 +90,6 @@ pub static BUILDER_CAMERA: LazyLock<Mutex<BuilderCamera>> = LazyLock::new(|| {
                 PI / 2.0,
             )
         },
-
         interpolation_timer: Default::default(),
         previous_camera_coordinates: Default::default(),
         target_camera_coordinates: Default::default(),
@@ -125,17 +134,11 @@ impl BuilderCamera {
             return;
         };
 
-        if self.interpolation_timer < 1.0 {
-            self.interpolation_timer += 0.10;
-        }
-
-        let animated_delta = (
-            self.target_camera_coordinates - self.previous_camera_coordinates
-        ) * self.interpolation_timer;
+        // let offset = (self.target_camera_coordinates - self.previous_camera_coordinates);
 
         let camera_worldspace = nalgebra_glm::translate(
             &origin,
-            &(self.previous_camera_coordinates + animated_delta),
+            &self.target_camera_coordinates,
         );
 
         let camera_matrix = camera_worldspace * self.lookdown;
@@ -145,7 +148,7 @@ impl BuilderCamera {
         camera.pers_cam_4.matrix = camera_matrix.clone().into();
     }
 
-    pub fn move_camera(&mut self, movement: Movement) {
+    fn move_camera(&mut self, movement: Movement) {
         self.previous_camera_coordinates = self.target_camera_coordinates;
 
         match movement {
@@ -156,11 +159,9 @@ impl BuilderCamera {
             Movement::Up => self.target_camera_coordinates.y += GRID_TILE_SIZE,
             Movement::Down => self.target_camera_coordinates.y -= GRID_TILE_SIZE,
         };
-
-        self.interpolation_timer = 0.0;
     }
 
-    pub fn toggle(&mut self, camera: &mut CSCamera) {
+    fn toggle(&mut self, camera: &mut CSCamera) {
         if self.origin.is_some() {
             self.origin = None;
         } else {
@@ -168,92 +169,77 @@ impl BuilderCamera {
         }
     }
 
-    // pub fn place_asset(&self) -> Result<(), BuilderError> {
-    //     if self.active == false {
-    //         return Err(BuilderError::NotActive);
-    //     }
-    //
-    //     let world_chr_man = get_instance::<WorldChrMan>()
-    //         .unwrap()
-    //         .ok_or(BuilderError::MissingBase(WorldChrMan::DLRF_NAME))?;
-    //
-    //     let main_player = unsafe {
-    //         world_chr_man.main_player
-    //             .as_ref()
-    //             .ok_or(BuilderError::MissingBase("Main player"))?
-    //     };
-    //
-    //     // Get the chr's positon relative to the map center
-    //     let Vector4(
-    //         player_map_pos_x,
-    //         player_map_pos_y,
-    //         player_map_pos_z,
-    //         _,
-    //     ) = main_player.map_relative_position;
-    //
-    //     // Get the chr's position relative to the physics space (broad phase?) center
-    //     let Vector4(
-    //         player_physics_pos_x,
-    //         player_physics_pos_y,
-    //         player_physics_pos_z,
-    //         _,
-    //     ) = main_player.chr_ins.module_container.physics.unk70_position;
-    //
-    //     // Get the camera's position relative to the physics space center
-    //     let camera = get_instance::<CSCamera>().unwrap().ok_or(BuilderError::MissingBase(CSCamera::DLRF_NAME))?;
-    //     let Vector4(
-    //         camera_physics_pos_x,
-    //         camera_physics_pos_y,
-    //         camera_physics_pos_z,
-    //         _,
-    //     ) = camera.pers_cam_1.matrix.3;
-    //
-    //     // Figure out the camera's world coords and use them for the spawn
-    //     // TODO: raycast?
-    //
-    //     let pos_x = player_map_pos_x + (camera_physics_pos_x - player_physics_pos_x);
-    //     let pos_y = player_map_pos_y /*+ (camera_physics_pos_y - player_physics_pos_y)*/;
-    //     let pos_z = player_map_pos_z + (camera_physics_pos_z - player_physics_pos_z);
-    //
-    //     let map_id = main_player.chr_ins.map_id_1;
-    //     let parameters = GeometrySpawnParameters {
-    //         map_id,
-    //         pos_x,
-    //         pos_y,
-    //         pos_z,
-    //         rot_x: 0.0,
-    //         rot_y: 61.0 * (PI / 180.0),
-    //         rot_z: 0.0,
-    //         scale_x: 1.0,
-    //         scale_y: 1.0,
-    //         scale_z: 1.0,
-    //     };
-    //
-    //     spawn_asset(SPAWNABLE_ASSETS[self.selected_asset], Some(parameters))?;
-    //
-    //     Ok(())
-    // }
+    fn place_asset(&self) -> Result<(), AssetPlaceError> {
+        // Dont do shit when we're not in builder mode
+        if self.origin.is_none() {
+            return Ok(());
+        }
 
-    pub fn cycle_asset(&mut self) {
+        let main_player = get_instance::<WorldChrMan>()
+            .unwrap()
+            .map(|w| unsafe { w.main_player.as_ref() })
+            .flatten()
+            .ok_or(AssetPlaceError::MainPlayerMissing)?;
+
+        // Get the camera's position relative to the physics space center
+        let camera = get_instance::<CSCamera>()
+            .unwrap()
+            .ok_or(AssetPlaceError::CSCameraMissing)?;
+
+        let world_geom_man = get_instance::<CSWorldGeomMan>()
+            .unwrap()
+            .ok_or(AssetPlaceError::WorldGeomManMissing)?;
+
+        // Figure out the camera's world coords
+        // TODO: raycast?
+        let player_physics_pos = &main_player.chr_ins.module_container.physics.unk70_position;
+        let player_map_pos = &main_player.map_relative_position;
+        let camera_physics_pos = &camera.pers_cam_1.matrix.3;
+        let camera_map_pos = player_map_pos + &(camera_physics_pos - player_physics_pos);
+
+        // Determine where to place the asset
+        let target_pos = (
+            camera_map_pos.0,
+            player_map_pos.1,
+            camera_map_pos.2,
+        );
+
+        world_geom_man.spawn_geometry(
+            SPAWNABLE_ASSETS[self.selected_asset],
+            &GeometrySpawnParameters {
+                map_id: main_player.chr_ins.map_id_1,
+                pos_x: target_pos.0,
+                pos_y: target_pos.1,
+                pos_z: target_pos.2,
+                rot_x: 0.0,
+                rot_y: 61.0 * (PI / 180.0),
+                rot_z: 0.0,
+                scale_x: 1.0,
+                scale_y: 1.0,
+                scale_z: 1.0,
+            },
+        )?;
+
+        Ok(())
+    }
+
+    fn cycle_asset(&mut self) {
         self.selected_asset = (self.selected_asset + 1) % SPAWNABLE_ASSETS.len();
+        tracing::info!("Cycled asset to {}", SPAWNABLE_ASSETS[self.selected_asset]);
         // unsafe { Self::notify() };
     }
 }
 
-// TODO: move somewhere else
-// pub fn find_pattern(input: &str) -> Option<usize> {
-//     let text_section = broadsword::runtime::get_module_section_range("eldenring.exe", ".text")
-//         .or_else(|_| broadsword::runtime::get_module_section_range("start_protected_game.exe", ".text"))
-//         .unwrap();
-//
-//     let scan_slice = unsafe {
-//         std::slice::from_raw_parts(
-//             text_section.start as *const u8,
-//             text_section.end - text_section.start,
-//         )
-//     };
-//
-//     let pattern = broadsword::scanner::Pattern::from_bit_pattern(input).ok()?;
-//     let result = broadsword::scanner::threaded::scan(scan_slice, &pattern, None)?;
-//     Some(text_section.start + result.location)
-// }
+#[derive(Debug, Error)]
+pub enum AssetPlaceError {
+    #[error("Missing WorldChrMan")]
+    WorldChrManMissing,
+    #[error("Missing WorldGeomMan")]
+    WorldGeomManMissing,
+    #[error("Missing CSCamera")]
+    CSCameraMissing,
+    #[error("Missing main player")]
+    MainPlayerMissing,
+    #[error("Geometry spawn error. {0}.")]
+    GeometrySpawn(#[from] SpawnGeometryError),
+}

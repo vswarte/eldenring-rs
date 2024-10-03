@@ -18,9 +18,11 @@ pub struct FD4TaskBaseVMT  {
 #[repr(C)]
 pub struct FD4TaskBase {
     pub vftable: *const FD4TaskBaseVMT,
+    pub unk8: usize,
 }
 
 #[derive(Debug)]
+#[repr(C)]
 pub struct FD4TaskData {
     pub delta_time: FD4Time,
     pub task_group_id: u32,

@@ -42,22 +42,21 @@ pub unsafe extern "C" fn DllMain(hmodule: HINSTANCE, reason: u32) -> bool {
             let appender = tracing_appender::rolling::never("./", "chains-bindings.log");
             tracing_subscriber::fmt().with_writer(appender).init();
 
-            let program = unsafe { Program::current() };
-            let test = find_rtti_classes(&program)
-                .find(|c| c.name.as_str() == "CS::ChrIns");
+            // let program = unsafe { Program::current() };
+            // let test = find_rtti_classes(&program)
+            //     .find(|c| c.name.as_str() == "CS::ChrIns");
+            //
+            // for class in find_rtti_classes(&program) {
+            //     let vmt = program.rva_to_va(class.vtable).unwrap();
+            //
+            //     tracing::trace!(
+            //         "Discovered RTTI class. name = {}, vmt = {:x}",
+            //         &class.name,
+            //         vmt,
+            //     );
+            // }
 
-            for class in find_rtti_classes(&program) {
-                let vmt = program.rva_to_va(class.vtable).unwrap();
-
-                tracing::trace!(
-                    "Discovered RTTI class. name = {}, vmt = {:x}",
-                    &class.name,
-                    vmt,
-                );
-            }
-
-            tracing::info!("Inited tracing");
-
+            // tracing::info!("Inited tracing");
             std::thread::spawn(move || {
                 if let Err(e) = Hudhook::builder()
                     .with::<ImguiDx12Hooks>(EldenRingDebugGui::new())

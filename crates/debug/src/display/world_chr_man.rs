@@ -1,6 +1,6 @@
 use std::cell::RefCell;
 
-use game::cs::{ChrSet, OpenFieldChrSet, SummonBuddyManager, SummonBuddyManagerWarp, WorldChrMan};
+use game::cs::{PlayerIns, ChrIns, ChrSet, OpenFieldChrSet, SummonBuddyManager, SummonBuddyManagerWarp, WorldChrMan};
 use hudhook::imgui::{TreeNodeFlags, Ui};
 
 use super::DebugDisplay;
@@ -75,7 +75,7 @@ impl DebugDisplay for WorldChrMan<'_> {
     }
 }
 
-impl DebugDisplay for ChrSet<'_> {
+impl DebugDisplay for ChrSet<'_, ChrIns<'_>> {
     fn render_debug(&self, ui: &&mut Ui) {
         ui.text(format!("Character capacity: {}", self.capacity));
 
@@ -91,6 +91,32 @@ impl DebugDisplay for ChrSet<'_> {
                     TreeNodeFlags::empty(),
                 ) {
                     chr_ins.render_debug(ui)
+                }
+            }
+
+            unsafe {
+                current_entry = current_entry.add(1);
+            }
+        }
+    }
+}
+
+impl DebugDisplay for ChrSet<'_, PlayerIns<'_>> {
+    fn render_debug(&self, ui: &&mut Ui) {
+        ui.text(format!("Character capacity: {}", self.capacity));
+
+        // END ME
+        let mut current_entry = self.entries;
+        let end = unsafe { current_entry.add(self.capacity as usize) };
+        while current_entry < end {
+            let entry = unsafe { &*current_entry };
+
+            if let Some(player_ins) = unsafe { entry.chr_ins.as_ref() } {
+                if ui.collapsing_header(
+                    format!("{:?}", player_ins.chr_ins.character_id),
+                    TreeNodeFlags::empty(),
+                ) {
+                    player_ins.render_debug(ui)
                 }
             }
 

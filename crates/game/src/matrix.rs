@@ -1,4 +1,5 @@
-use std::ops::{Mul, MulAssign};
+/// Defines some helper methods around dealing with math
+use std::ops::{Add, Mul, MulAssign, Sub};
 
 use nalgebra::RowVector4;
 use nalgebra_glm::{Mat4, Vec4};
@@ -6,6 +7,22 @@ use nalgebra_glm::{Mat4, Vec4};
 #[repr(C)]
 #[derive(Debug, Clone)]
 pub struct Vector4(pub f32, pub f32, pub f32, pub f32);
+
+impl Sub<&Vector4> for &Vector4 {
+    type Output = Vector4;
+
+    fn sub(self, rhs: &Vector4) -> Self::Output {
+        Vector4(self.0 - rhs.0, self.1 - rhs.1, self.2 - rhs.2, self.3 - rhs.3)
+    }
+}
+
+impl Add<&Vector4> for &Vector4 {
+    type Output = Vector4;
+
+    fn add(self, rhs: &Vector4) -> Self::Output {
+        Vector4(self.0 - rhs.0, self.1 - rhs.1, self.2 - rhs.2, self.3 - rhs.3)
+    }
+}
 
 #[repr(C)]
 #[derive(Debug, Clone)]
