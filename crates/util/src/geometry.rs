@@ -10,10 +10,11 @@ use game::cs::{CSWorldGeomMan, GeometrySpawnRequest, MapId};
 use crate::program::Program;
 
 const CS_WORLD_GEOM_MAN_MAP_DATA_BY_MAP_ID_PATTERN: &[Atom] =
-    pattern!("83 cb 02 89 5c 24 20 48 8d 54 24 38 e8 $ { ' }");
-const INITIALIZE_SPAWN_GEOMETRY_REQUEST_PATTERN: &[Atom] = pattern!("b2 08 48 8d 4d 00 e8 $ { ' }");
+    pelite::pattern!("83 cb 02 89 5c 24 20 48 8d 54 24 38 e8 $ { ' }");
+const INITIALIZE_SPAWN_GEOMETRY_REQUEST_PATTERN: &[Atom] =
+    pelite::pattern!("b2 08 48 8d 4d 00 e8 $ { ' }");
 const SPAWN_GEOMETRY_PATTERN: &[Atom] =
-    pattern!("8b 01 89 85 d8 00 00 00 48 8d 55 00 49 8b ce e8 $ { ' }");
+    pelite::pattern!("8b 01 89 85 d8 00 00 00 48 8d 55 00 49 8b ce e8 $ { ' }");
 
 #[derive(Debug, Error)]
 pub enum SpawnGeometryError {
@@ -34,16 +35,18 @@ pub struct GeometrySpawnParameters {
     pub scale_z: f32,
 }
 
-pub trait WorldGeometryFacade {
+pub trait CSWorldGeomManExt {
     fn spawn_geometry(&self, asset: &str, parameters: &GeometrySpawnParameters) -> Result<(), SpawnGeometryError>;
 }
 
-impl WorldGeometryFacade for CSWorldGeomMan {
+impl CSWorldGeomManExt for CSWorldGeomMan<'_> {
     fn spawn_geometry(
         &self,
         asset: &str,
         parameters: &GeometrySpawnParameters,
     ) -> Result<(), SpawnGeometryError> {
+        tracing::info!("Spawning {asset}");
+
         const CS_WORLD_GEOM_MAN_MAP_DATA_BY_MAP_ID_VA: LazyLock<u64> = LazyLock::new(|| {
             let program = unsafe { Program::current() };
             let mut matches = [0u32; 2];
@@ -86,10 +89,6 @@ impl WorldGeometryFacade for CSWorldGeomMan {
             program.rva_to_va(matches[1]).unwrap()
         });
 
-        tracing::debug!("CS::CSWorldGeomMan::MapDataByMapId VA {:x}", *CS_WORLD_GEOM_MAN_MAP_DATA_BY_MAP_ID_VA);
-        tracing::debug!("InitializeSpawnGeometryRequest VA {:x}", *INITIALIZE_SPAWN_GEOMETRY_REQUEST_VA);
-        tracing::debug!("SpawnGeometry VA {:x}", *SPAWN_GEOMETRY_VA);
-
         let map_data_by_map_id = unsafe {
             transmute::<_, fn(&CSWorldGeomMan, &MapId) -> u64>(*CS_WORLD_GEOM_MAN_MAP_DATA_BY_MAP_ID_VA)
         };
@@ -105,6 +104,7 @@ impl WorldGeometryFacade for CSWorldGeomMan {
         let mut request = GeometrySpawnRequest {
             asset_string: [0u16; 0x20],
             unk0x40: 0,
+            unk0x44: 0,
             asset_string_ptr: 0,
             unk0x50: 0,
             unk0x54: 0,
@@ -138,7 +138,7 @@ impl WorldGeometryFacade for CSWorldGeomMan {
         request.scale_y = parameters.scale_y;
         request.scale_z = parameters.scale_z;
 
-        tracing::info!("Populated spawn request: {request:#?}");
+        tracing::info!("Populated spawn request: {request:#?} for map {}", &parameters.map_id);
 
         // TODO: make this a nice as_ref call or something
         let map_data_ptr = map_data_by_map_id(self, &parameters.map_id);
@@ -148,7 +148,6 @@ impl WorldGeometryFacade for CSWorldGeomMan {
         }
 
         let geom = spawn_geometry(map_data_ptr, &request);
-        tracing::info!("GeomIns: {geom:#x?}");
 
         Ok(())
     }

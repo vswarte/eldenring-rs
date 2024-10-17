@@ -1,6 +1,9 @@
 use std::ffi;
 
 #[repr(C)]
+/// Part of the DLRF namespace, describes some aspects of a tracked class.
+///
+/// Source of name: RTTI
 pub struct DLRuntimeClass {
     pub vftable: *const ffi::c_void,
     pub base_class: *const DLRuntimeClass,
@@ -11,9 +14,4 @@ pub struct DLRuntimeClass {
     pub unk30: usize,
     pub allocator1: usize,
     pub allocator2: usize,
-
-    // This is me praying these are always laid out the same way since these
-    // two fields are not part of the DLRuntimeClass strictly.
-    pub class_name: windows::core::PCSTR,
-    pub class_name_wide: windows::core::PWSTR,
 }

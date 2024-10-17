@@ -1,5 +1,6 @@
+/// Implements a minimal armor visual-appearance changer similar to the transmogrify mod by Thomas
+/// J Clark.
 use std::cell::{Cell, RefCell};
-/// Implements a minimal armor visual-appearance changer.
 use std::collections::HashMap;
 use std::sync::{Arc, LazyLock, RwLock};
 use std::thread::sleep;
@@ -18,10 +19,10 @@ use game::cs::{
     CHR_ASM_SLOT_PROTECTOR_LEGS,
 };
 use util::program::Program;
-use util::{arxan, input};
 use util::steam::{self, networking_messages, register_callback, SteamCallbackImpl};
 use util::task::FD4Task;
-use util::{singleton::get_instance, task::TaskRuntime};
+use util::{arxan, input};
+use util::{singleton::get_instance, task::CSTaskImpExt};
 
 const STEAM_MESSAGE_CHANNEL: u32 = 123;
 
@@ -85,6 +86,60 @@ fn init() -> Result<(), Box<dyn Error>> {
     };
     std::mem::forget(chr_asm_patch_task);
 
+    let mdoel_param_modifier_task = task.run_task(
+        |_: &FD4TaskData| {
+            let Some(player) = get_instance::<WorldChrMan>()
+                .unwrap()
+                .map(|w| unsafe { w.main_player.as_ref() })
+                .flatten()
+            else {
+                return;
+            };
+
+            unsafe {
+                player
+                    .chr_ins
+                    .module_container
+                    .model_param_modifier
+                    .modifiers
+                    .iter()
+            }
+            // .filter(|modifier| {
+            //     unsafe { modifier.name.to_string() }
+            //         .unwrap()
+            //         .contains("Phantom")
+            // })
+            .for_each(|modifier| {
+                modifier.unk28.value1 = 1.0;
+                modifier.unk28.value2 = 1.0;
+                modifier.unk28.value3 = 1.0;
+                modifier.unk28.value4 = 1.0;
+
+                modifier.unk40.value1 = 1.0;
+                modifier.unk40.value2 = 1.0;
+                modifier.unk40.value3 = 1.0;
+                modifier.unk40.value4 = 1.0;
+
+                modifier.unk58.value1 = 1.0;
+                modifier.unk58.value2 = 1.0;
+                modifier.unk58.value3 = 1.0;
+                modifier.unk58.value4 = 1.0;
+
+                modifier.unk88.value1 = 1.0;
+                modifier.unk88.value2 = 1.0;
+                modifier.unk88.value3 = 1.0;
+                modifier.unk88.value4 = 1.0;
+
+                modifier.unka0.value1 = 1.0;
+                modifier.unka0.value2 = 1.0;
+                modifier.unka0.value3 = 1.0;
+                modifier.unka0.value4 = 1.0;
+            });
+        },
+        CSTaskGroupIndex::Draw_Pre,
+    );
+    std::mem::forget(mdoel_param_modifier_task);
+
     // WHY
     std::mem::forget(register_callback::<SyncMappingLobbyUpdateCallback>());
     // std::mem::forget(register_callback::<SyncMessageRequestCallback>());
@@ -95,7 +150,8 @@ fn init() -> Result<(), Box<dyn Error>> {
             for message in steam::client()
                 .networking_messages()
                 .receive_messages_on_channel(STEAM_MESSAGE_CHANNEL, 0x5)
-                .into_iter() {
+                .into_iter()
+            {
                 let mapping = bincode::deserialize::<'_, HashMap<i32, i32>>(message.data());
                 tracing::info!("Received mapping: {mapping:#?}");
             }

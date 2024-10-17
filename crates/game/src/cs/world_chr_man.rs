@@ -1,4 +1,5 @@
 use std::ffi;
+use std::fmt::Display;
 use std::marker::PhantomData;
 use std::mem::transmute;
 
@@ -8,6 +9,7 @@ use crate::{DLRFLocatable, Tree};
 use super::{FieldInsHandle, PlayerIns};
 
 #[repr(C)]
+/// Source of name: RTTI
 pub struct WorldChrMan<'a> {
     pub vftable: usize,
     unk8: usize,
@@ -56,6 +58,7 @@ impl DLRFLocatable for WorldChrMan<'_> {
 }
 
 #[repr(C)]
+/// Source of name: RTTI
 pub struct WorldAreaChr<'a, T> {
     pub base: WorldAreaChrBase,
     pub world_area_info: usize,
@@ -65,12 +68,14 @@ pub struct WorldAreaChr<'a, T> {
 }
 
 #[repr(C)]
+/// Source of name: RTTI
 pub struct WorldAreaChrBase {
     pub vftable: usize,
     pub world_area_info: usize,
 }
 
 #[repr(C)]
+/// Source of name: RTTI
 pub struct WorldBlockChr<'a, T> {
     pub vftable: usize,
     pub world_block_info1: usize,
@@ -131,6 +136,7 @@ pub struct ChrSetVMT<'a, T> {
 }
 
 #[repr(C)]
+/// Source of name: RTTI
 pub struct ChrSet<'a, T> {
     pub vftable: &'a ChrSetVMT<'a, T>,
     pub index: i32,
@@ -170,6 +176,7 @@ pub struct ChrSetEntry<T> {
 }
 
 #[repr(C)]
+/// Source of name: RTTI
 pub struct OpenFieldChrSet<'a> {
     pub base: ChrSet<'a, ChrIns<'a>>,
     // TODO: type needs fact-checking
@@ -200,6 +207,7 @@ pub struct OpenFieldChrSetList2Entry {
 }
 
 #[repr(C)]
+/// Source of name: RTTI
 pub struct WorldGridAreaChr {
     pub base: WorldAreaChrBase,
     pub world_grid_area_info: usize,
@@ -218,7 +226,14 @@ pub struct MapId {
     pub area: u8,
 }
 
+impl Display for MapId {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "m{}_{}_{}_{}", self.area, self.block, self.region, self.index)
+    }
+}
+
 #[repr(C)]
+/// Source of name: "SummonBuddy" mentioned in DLRF metadata for the update fn.
 pub struct SummonBuddyManager<'a> {
     pub vftable: usize,
     pub unk8: usize,
@@ -243,4 +258,3 @@ pub struct SummonBuddyManagerWarp {
     pub trigger_threshold_range_path_stacked: f32,
     pub unk28: [u8; 0x10]
 }
-

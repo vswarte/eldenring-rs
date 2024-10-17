@@ -13,12 +13,6 @@ use pelite::pe::Pe;
 use pelite::{pattern, pattern::Atom};
 use std::sync::LazyLock;
 
-pub type TaskExecuteFn = fn(*const FD4TaskBase, *const FD4TaskData);
-
-pub trait TaskRuntime {
-    fn run_task<T: Into<FD4Task>>(&self, execute: T, group: CSTaskGroupIndex) -> TaskHandle;
-}
-
 const REGISTER_TASK_PATTERN: &[Atom] =
     pattern!("e8 ? ? ? ? 48 8b 0d ? ? ? ? 4c 8b c7 8b d3 e8 $ { ' }");
 
@@ -38,7 +32,11 @@ const REGISTER_TASK_VA: LazyLock<u64> = LazyLock::new(|| {
         .expect("Call target for REGISTER_TASK_PATTERN was not in exe")
 });
 
-impl TaskRuntime for CSTaskImp<'_> {
+pub trait CSTaskImpExt {
+    fn run_task<T: Into<FD4Task>>(&self, execute: T, group: CSTaskGroupIndex) -> TaskHandle;
+}
+
+impl CSTaskImpExt for CSTaskImp<'_> {
     fn run_task<T: Into<FD4Task>>(&self, task: T, group: CSTaskGroupIndex) -> TaskHandle {
         tracing::debug!("Registering task to task group. group = {group:?}");
         let register_task: extern "C" fn(&CSTaskImp, CSTaskGroupIndex, &FD4Task) =

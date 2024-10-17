@@ -11,6 +11,7 @@ mod world_geom_man;
 mod menu_man;
 mod net_man;
 mod character_type_properties;
+mod ez_state;
 
 pub use camera::*;
 pub use chr_ins::*;
@@ -25,3 +26,4 @@ pub use world_geom_man::*;
 pub use menu_man::*;
 pub use net_man::*;
 pub use character_type_properties::*;
+pub use ez_state::*;

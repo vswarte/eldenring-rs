@@ -22,6 +22,7 @@ zerocopy-derive.workspace = true
 byteorder.workspace = true
 pelite.workspace = true
 dataview.workspace = true
+vtable-rs.workspace = true
 
 [dependencies.retour]
 version = "0.3"

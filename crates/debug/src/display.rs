@@ -2,15 +2,15 @@ use hudhook::imgui::{TreeNodeFlags, Ui};
 use game::DLRFLocatable;
 
 pub(crate) mod shared;
-pub(crate) mod cs_session_manager;
-pub(crate) mod world_area_time;
-pub(crate) mod cs_world_geom_man;
-pub(crate) mod cs_camera;
-pub(crate) mod cs_fade;
-pub(crate) mod chr_ins;
-pub(crate) mod world_chr_man;
-pub(crate) mod cs_net_man;
-pub(crate) mod cs_task;
+pub(crate) mod session_manager;
+pub(crate) mod area_time;
+pub(crate) mod geometry;
+pub(crate) mod camera;
+pub(crate) mod fade;
+pub(crate) mod chr;
+pub(crate) mod chr_man;
+pub(crate) mod net_man;
+pub(crate) mod task;
 pub(crate) mod param;
 
 pub trait DebugDisplay {

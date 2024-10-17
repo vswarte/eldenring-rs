@@ -1,6 +1,7 @@
 use crate::{matrix::Matrix4X4, DLRFLocatable};
 
 #[repr(C)]
+/// Source of name: RTTI
 pub struct CSCamera<'a> {
     pub vftable: usize,
     pub pers_cam_1: &'a mut CSPersCam,
@@ -25,6 +26,7 @@ impl DLRFLocatable for CSCamera<'_> {
 }
 
 #[repr(C)]
+/// Source of name: RTTI
 pub struct CSCam {
     pub vftable: usize,
     pub unk8: u32,

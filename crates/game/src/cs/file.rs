@@ -24,7 +24,6 @@ pub struct CSFileRepository<'a> {
     pub unkd0_tree_pointer: usize,
     pub unkd8_tree_size: u32,
     pub unkdc_tree_pad: u32,
-
     pub mutexes: [&'a CSFileRepositoryMutex; 5],
     pub unk108: usize,
     pub unk110: usize,

@@ -16,8 +16,8 @@ pub struct CSNetMan<'a> {
     unka0: usize,
     unka8: usize,
     unk_quickmatch: usize,
-    unkb8: usize,
-    penalty_manager: usize,
+    pub visitor_db: usize,
+    pub penalty_manager: usize,
     pub update_task: CSEzUpdateTask<'a, Self>,
     unkf0: u32,
     unkf4: u32, // Probably padding
@@ -32,16 +32,16 @@ impl DLRFLocatable for CSNetMan<'_> {
 pub struct CSNetBloodMessageDb<'a> {
     pub vftable: usize,
     // Contains all CSNetBloodMessageDbItem?
-    pub entries: DoublyLinkedList<'a, &'a CSNetBloodMessageDbItem>,
+    pub entries: DoublyLinkedList<&'a CSNetBloodMessageDbItem>,
     pub unk20: usize,
     // Seemingly contains message data for messages created by local user
-    pub created_data: DoublyLinkedList<'a, usize>,
+    pub created_data: DoublyLinkedList<usize>,
     // Contains ???
-    pub unk40: DoublyLinkedList<'a, usize>,
+    pub unk40: DoublyLinkedList<usize>,
     pub unk58: usize,
     pub blood_message_ins_man_1: usize,
     pub blood_message_ins_man_2: usize,
-    pub discovered_messages: DoublyLinkedList<'a, &'a &'a CSNetBloodMessageDbItem>,
+    pub discovered_messages: DoublyLinkedList<&'a &'a CSNetBloodMessageDbItem>,
     pub unk88: [u8; 0xD0],
     pub evaluate_job: usize,
     pub unk160: usize,

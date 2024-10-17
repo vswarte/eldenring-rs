@@ -1,5 +1,5 @@
-use game::cs::{ChrAsm, ChrIns, ChrInsModuleContainer, ChrPhysicsModule, FieldInsHandle, PlayerGameData, PlayerIns};
-use hudhook::imgui::{TreeNodeFlags, Ui};
+use game::cs::{CSChrModelParamModifierModule, ChrAsm, ChrIns, ChrInsModuleContainer, ChrPhysicsModule, FieldInsHandle, PlayerGameData, PlayerIns};
+use hudhook::imgui::{TableColumnSetup, TreeNodeFlags, Ui};
 
 use super::DebugDisplay;
 
@@ -55,9 +55,9 @@ impl DebugDisplay for ChrIns<'_> {
     fn render_debug(&self, ui: &&mut Ui) {
         self.field_ins_handle.render_debug(ui);
 
-        ui.text(format!("Map ID 1: {:?}", self.map_id_1));
+        ui.text(format!("Map ID 1: {}", self.map_id_1));
         ui.text(format!("Map ID origin 1: {}", self.map_id_origin_1));
-        ui.text(format!("Map ID 2: {:?}", self.map_id_2));
+        ui.text(format!("Map ID 2: {}", self.map_id_2));
         ui.text(format!("Map ID origin 2: {}", self.map_id_origin_2));
         ui.text(format!("Last used item?: {}", self.last_used_item));
         ui.text(format!("Character ID: {}", self.character_id));
@@ -71,7 +71,7 @@ impl DebugDisplay for ChrIns<'_> {
 impl DebugDisplay for FieldInsHandle {
     fn render_debug(&self, ui: &&mut Ui) {
         ui.text(format!("Field Ins ID: {}", self.instance_id));
-        ui.text(format!("Field Ins map ID: {:?}", self.map_id));
+        ui.text(format!("Field Ins map ID: {}", self.map_id));
     }
 }
 
@@ -79,6 +79,10 @@ impl DebugDisplay for ChrInsModuleContainer<'_> {
     fn render_debug(&self, ui: &&mut Ui) {
         if ui.collapsing_header("Physics", TreeNodeFlags::empty()) {
             self.physics.render_debug(ui);
+        }
+
+        if ui.collapsing_header("Model param modifier", TreeNodeFlags::empty()) {
+            self.model_param_modifier.render_debug(ui);
         }
     }
 }
@@ -91,6 +95,27 @@ impl DebugDisplay for ChrPhysicsModule<'_> {
 
         if ui.collapsing_header("Unk80 position", TreeNodeFlags::empty()) {
             self.unk80_position.render_debug(ui);
+        }
+    }
+}
+
+impl DebugDisplay for CSChrModelParamModifierModule<'_> {
+    fn render_debug(&self, ui: &&mut Ui) {
+        let modifiers = unsafe { self.modifiers.iter() };
+        if let Some(_t) = ui.begin_table_header(
+            "chr-ins-model-param-modifier",
+            [
+                TableColumnSetup::new("Unk0"),
+                TableColumnSetup::new("Name"),
+            ],
+        ) {
+            modifiers.for_each(|modifier| {
+                ui.table_next_column();
+                ui.text(format!("{:x}", modifier.unk0));
+
+                ui.table_next_column();
+                ui.text(unsafe { modifier.name.to_string() } .unwrap());
+            });
         }
     }
 }

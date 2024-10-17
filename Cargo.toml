@@ -5,6 +5,7 @@ members = [
     "crates/util",
     "examples/builder-mode",
     "examples/mini-transmog",
+    "examples/procedural-dungeons",
     "tools/export-singletons",
     "tools/profiler",
 ]
@@ -31,6 +32,7 @@ zerocopy-derive = "0.7"
 byteorder = "1"
 pelite = "0.10"
 dataview = "~1.0"
+vtable-rs = "0.1"
 
 [workspace.dependencies.windows]
 version = "0.54"

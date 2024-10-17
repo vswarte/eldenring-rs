@@ -1,8 +1,5 @@
-#![feature(once_cell_get_mut)]
-
-use std::io::Write;
-
 use game::fd4::FD4ParamRepository;
+use game::world_area_time::WorldAreaTime;
 use hudhook::eject;
 use hudhook::hooks::dx12::ImguiDx12Hooks;
 use hudhook::imgui;
@@ -11,24 +8,13 @@ use hudhook::windows::Win32::Foundation::HINSTANCE;
 use hudhook::Hudhook;
 use hudhook::ImguiRenderLoop;
 
-use game::cs::CSTaskImp;
-use game::cs::CSTaskGroup;
-use game::cs::CSCamera;
-use game::cs::CSFade;
-use game::cs::CSNetMan;
-use game::cs::CSSessionManager;
-use game::cs::CSWorldGeomMan;
-use game::cs::WorldChrMan;
-use game::world_area_time::WorldAreaTime;
+use game::cs::{
+    CSCamera, CSFade, CSNetMan, CSSessionManager, CSTaskGroup, CSTaskImp, CSWorldGeomMan,
+    WorldChrMan,
+};
 
 use display::render_debug_singleton;
 use tracing_panic::panic_hook;
-use tracing_subscriber::layer::SubscriberExt;
-use util::program::Program;
-use util::rtti::find_rtti_classes;
-
-use pelite::pe::Pe;
-use util::singleton::get_instance;
 
 mod display;
 
@@ -39,24 +25,9 @@ pub unsafe extern "C" fn DllMain(hmodule: HINSTANCE, reason: u32) -> bool {
         1 => {
             std::panic::set_hook(Box::new(panic_hook));
 
-            let appender = tracing_appender::rolling::never("./", "chains-bindings.log");
+            let appender = tracing_appender::rolling::never("./", "chains-debug.log");
             tracing_subscriber::fmt().with_writer(appender).init();
 
-            // let program = unsafe { Program::current() };
-            // let test = find_rtti_classes(&program)
-            //     .find(|c| c.name.as_str() == "CS::ChrIns");
-            //
-            // for class in find_rtti_classes(&program) {
-            //     let vmt = program.rva_to_va(class.vtable).unwrap();
-            //
-            //     tracing::trace!(
-            //         "Discovered RTTI class. name = {}, vmt = {:x}",
-            //         &class.name,
-            //         vmt,
-            //     );
-            // }
-
-            // tracing::info!("Inited tracing");
             std::thread::spawn(move || {
                 if let Err(e) = Hudhook::builder()
                     .with::<ImguiDx12Hooks>(EldenRingDebugGui::new())
@@ -69,7 +40,7 @@ pub unsafe extern "C" fn DllMain(hmodule: HINSTANCE, reason: u32) -> bool {
                 }
             });
         }
-        _ => {},
+        _ => {}
     }
 
     true

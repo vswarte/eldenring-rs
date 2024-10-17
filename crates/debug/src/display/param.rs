@@ -1,5 +1,6 @@
 use game::fd4::FD4ParamRepository;
 use hudhook::imgui::{TableColumnSetup, TreeNodeFlags};
+use util::resource::FD4ResCapHolderExt;
 
 use super::DebugDisplay;
 

@@ -1,43 +1,89 @@
-// Based on https://github.com/microsoft/STL/blob/8dc4faadafb52e3e0a627e046b41258032d9bc6a/stl/inc/list#L289-L292
 #[repr(C)]
-pub struct DoublyLinkedListNode<'a, T> {
-    pub next: *mut DoublyLinkedListNode<'a, T>,
-    pub prev: *mut DoublyLinkedListNode<'a, T>,
+pub struct DoublyLinkedListNode<T> {
+    pub next: *mut DoublyLinkedListNode<T>,
+    pub previous: *mut DoublyLinkedListNode<T>,
     pub value: T,
 }
 
 #[repr(C)]
-pub struct DoublyLinkedList<'a, T> {
+pub struct DoublyLinkedList<T> {
     pub allocator: usize,
-    pub head: &'a DoublyLinkedListNode<'a, T>,
+    pub head: *mut DoublyLinkedListNode<T>,
     pub count: u32,
     _pad14: u32,
 }
 
-#[repr(C)]
-pub struct Vector<T> {
-    pub allocator: usize,
-    pub begin: *const T,
-    pub end: *const T,
-    pub cap: *const T,
+impl<T> DoublyLinkedList<T> {
+    /// # Safety
+    /// This will produce bad results if:
+    /// - The list is projected onto something that isn't actually a list.
+    /// - Access is not exclusive and the list gets updated while reading.
+    pub unsafe fn iter(&self) -> impl Iterator<Item = &T> {
+        let mut count = self.count;
+        let mut current = self.head.as_ref().unwrap().next;
+
+        std::iter::from_fn(move || {
+            current = (*current).next;
+            if count == 0 {
+                None
+            } else {
+                count -= 1;
+                current.as_ref()?.previous.as_ref().map(|f| &f.value)
+            }
+        })
+    }
+
+    /// # Safety
+    /// This will produce bad results if:
+    /// - The list is projected onto something that isn't actually a list.
+    /// - Access is not exclusive and the list gets updated while reading.
+    pub unsafe fn len(&self) -> usize {
+        self.count as usize
+    }
 }
 
-impl<T> Vector<T> {
+#[repr(C)]
+pub struct Vector<T>
+where
+    T: Sized,
+{
+    pub allocator: usize,
+    pub begin: *mut T,
+    pub end: *mut T,
+    pub capacity: *mut T,
+}
+
+impl<T> Vector<T>
+where
+    T: Sized,
+{
     /// # Safety
-    /// This fn does not validate that the memory pointer at is a valid MSVC
-    /// vector.
-    pub unsafe fn iter(&self) -> impl Iterator<Item = &T> {
+    /// This will produce bad results if:
+    /// - The vector is projected onto something that isn't actually a vector.
+    /// - The size of T is incorrect.
+    /// - Access is not exclusive and the vector gets updated while reading.
+    pub unsafe fn iter(&self) -> impl Iterator<Item = &mut T> {
         let mut current = self.begin;
         let end = self.end;
 
         std::iter::from_fn(move || {
-            current = current.add(1);
-            if current.sub(1) == end {
+            let result = if current >= end {
                 None
             } else {
-                Some(current.as_ref().unwrap())
-            }
+                Some(current.as_mut().unwrap())
+            };
+            current = current.add(1);
+            result
         })
+    }
+
+    /// # Safety
+    /// This will produce bad results if:
+    /// - The vector is projected onto something that isn't actually a vector.
+    /// - The size of T is incorrect.
+    /// - Access is not exclusive and the vector gets updated while reading.
+    pub unsafe fn len(&self) -> usize {
+        (self.end as usize - self.begin as usize) / size_of::<T>()
     }
 }
 
@@ -46,6 +92,16 @@ pub struct Tree<T> {
     pub allocator: usize,
     pub head: *const TreeNode<T>,
     pub size: usize,
+}
+
+impl<T> Tree<T> {
+    /// # Safety
+    /// This will produce bad results if:
+    /// - The tree is projected onto something that isn't actually a tree.
+    /// - Access is not exclusive and the tree gets updated while reading.
+    pub unsafe fn len(&self) -> usize {
+        self.size
+    }
 }
 
 #[repr(C)]

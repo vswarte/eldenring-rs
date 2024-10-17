@@ -1,5 +1,6 @@
 use game::cs::{CSFD4FadePlate, CSFade};
 use hudhook::imgui::{TreeNodeFlags, Ui};
+use util::fade::CSFD4FadePlateExt;
 
 use super::DebugDisplay;
 
@@ -16,7 +17,10 @@ impl DebugDisplay for CSFade<'_> {
             if ui.collapsing_header(title, TreeNodeFlags::empty()) {
                 fade_plate.render_debug(ui);
 
-                let fade_plate = unsafe { &mut *((*fade_plate) as *const CSFD4FadePlate as *mut CSFD4FadePlate) };
+                let fade_plate = unsafe {
+                    &mut *((*fade_plate) as *const CSFD4FadePlate as *mut CSFD4FadePlate)
+                };
+
                 if ui.button("Fade out") {
                     fade_plate.fade_out(2.0);
                 }
@@ -31,31 +35,24 @@ impl DebugDisplay for CSFade<'_> {
 
 impl DebugDisplay for CSFD4FadePlate {
     fn render_debug(&self, ui: &&mut Ui) {
-        ui.text(format!(
-            "Current color: ({}, {}, {}, {})",
-            self.current_color.r,
-            self.current_color.g,
-            self.current_color.b,
-            self.current_color.a,
-        ));
-        ui.text(format!(
-            "Transition color: ({}, {}, {}, {})",
-            self.transition_color.r,
-            self.transition_color.g,
-            self.transition_color.b,
-            self.transition_color.a,
-        ));
-        ui.text(format!(
-            "Target color: ({}, {}, {}, {})",
-            self.target_color.r,
-            self.target_color.g,
-            self.target_color.b,
-            self.target_color.a,
-        ));
+        let mut current_color: [f32; 4] = (&self.current_color).into();
+        if ui.color_edit4("current_color", &mut current_color) {
+            // TODO
+        }
+
+        let mut start_color: [f32; 4] = (&self.start_color).into();
+        if ui.color_edit4("start_color", &mut start_color) {
+            // TODO
+        }
+
+        let mut end_color: [f32; 4] = (&self.end_color).into();
+        if ui.color_edit4("end_color", &mut end_color) {
+            // TODO
+        }
+
         ui.text(format!("Fade timer: {}", self.fade_timer.time));
         ui.text(format!("Fade duration: {}", self.fade_duration.time));
         ui.text(format!("Unk60: {}", self.unk60));
         ui.text(format!("UnkA8: {}", self.unka8.time));
     }
 }
-

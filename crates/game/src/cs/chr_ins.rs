@@ -1,17 +1,27 @@
 use std::ffi;
 
-use crate::{cs::ChrSetEntry, matrix::Vector4};
+use windows::core::PCWSTR;
+
+use crate::{cs::ChrSetEntry, matrix::Vector4, Vector};
 
 use super::MapId;
 
 #[repr(C)]
 #[derive(Debug, Clone)]
+/// Used for communicating about characters in the networking layer. Used for enemy HP, position
+/// and animation sync among a few other things.
+///
+/// Source of name: Assert statement in Sekiro. TODO: grab actual string
 pub struct WhoID {
     pub map_id: i32,
     pub chr_selector: i32,
 }
 
 #[repr(C)]
+/// Used throughout the game engine to refer to characters, geometry, bullets, hits and more.
+///
+/// Source of name: Destructor reveals this being a field in FieldIns and it's used as a means of
+/// naming some FieldIns derivant everywhere where raw pointers cannot be shared.
 pub struct FieldInsHandle {
     pub instance_id: i32,
     pub map_id: MapId,
@@ -26,32 +36,36 @@ pub struct AtkParamLookupResult {
     param_row: usize,
 }
 
-#[repr(C)]
-pub struct ChrInsVMT {
-    // Part of FieldInsBase, retrieves reflection metadata for FD4Component derivants.
-    pub get_runtime_metadata: fn(&ChrIns) -> usize,
-    // Destructor
-    pub destructor: fn(&ChrIns, u32) -> usize,
-    // Part of FieldInsBase, ChrIns = 1, CSBulletIns = 3, CSWorldGeomIns = 6, MapIns = 7, CSWorldGeomHitIns = 8, 
-    pub get_field_ins_type: fn(&ChrIns) -> u32,
-    // Part of FieldInsBase.
-    pub use_npc_atk_param: fn(&ChrIns) -> bool,
-    // Part of FieldInsBase
-    pub get_atk_param_for_behavior: fn(&ChrIns, u32, &mut AtkParamLookupResult) -> u32,
-    // Part of FieldInsBase. ChrIns = 0, PlayerIns = 1, EnemyIns = 0, ReplayGhostIns = 1,
-    // ReplayEnemyIns = 0, CSBulletIns = 0, CSWorldGeomIns = 0, CSFieldInsBase = 0,
-    // CSHamariSimulateChrIns = 0, MapIns = 0, HitIns = 0, CSWorldGeomStaticIns = 0, HitInsBase =
-    // 0, CSWorldGeomHitIns = 0, CSWorldGeomDynamicIns = 0, 
-    pub use_player_behavior_param: fn(&ChrIns) -> bool,
-    // Obfuscated beyond recognition
-    pub unk6: fn(&ChrIns),
-    // Obfuscated beyond recognition
-    pub unk7: fn(&ChrIns),
-}
+// #[repr(C)]
+// pub struct ChrInsVMT {
+//     // Part of FieldInsBase, retrieves reflection metadata for FD4Component derivants.
+//     pub get_runtime_metadata: fn(&ChrIns) -> usize,
+//     // Destructor
+//     pub destructor: fn(&ChrIns, u32) -> usize,
+//     // Part of FieldInsBase, ChrIns = 1, CSBulletIns = 3, CSWorldGeomIns = 6, MapIns = 7, CSWorldGeomHitIns = 8,
+//     pub get_field_ins_type: fn(&ChrIns) -> u32,
+//     // Part of FieldInsBase.
+//     pub use_npc_atk_param: fn(&ChrIns) -> bool,
+//     // Part of FieldInsBase
+//     pub get_atk_param_for_behavior: fn(&ChrIns, u32, &mut AtkParamLookupResult) -> u32,
+//     // Part of FieldInsBase. ChrIns = 0, PlayerIns = 1, EnemyIns = 0, ReplayGhostIns = 1,
+//     // ReplayEnemyIns = 0, CSBulletIns = 0, CSWorldGeomIns = 0, CSFieldInsBase = 0,
+//     // CSHamariSimulateChrIns = 0, MapIns = 0, HitIns = 0, CSWorldGeomStaticIns = 0, HitInsBase =
+//     // 0, CSWorldGeomHitIns = 0, CSWorldGeomDynamicIns = 0,
+//     pub use_player_behavior_param: fn(&ChrIns) -> bool,
+//     // Obfuscated beyond recognition
+//     pub unk6: fn(&ChrIns),
+//     // Obfuscated beyond recognition
+//     pub unk7: fn(&ChrIns),
+// }
 
 #[repr(C)]
+/// Abstract base class to all characters. NPCs, Enemies, Players, Summons, Ghosts, even gesture
+/// visualizations on bloodmessages all inherit from this.
+///
+/// Source of name: RTTI
 pub struct ChrIns<'a> {
-    pub vftable: &'a ChrInsVMT,
+    pub vftable: usize,
     pub field_ins_handle: FieldInsHandle,
     chr_set_entry: usize,
     pub unk18: usize,
@@ -65,7 +79,7 @@ pub struct ChrIns<'a> {
     pub chr_set_cleanup: u32,
     _pad44: u32,
     pub unk48: usize,
-    pub chr_model_ins: &'a mut ChrCtrl<'a>,
+    pub chr_model_ins: &'a mut CSChrModelIns,
     pub chr_ctrl: &'a mut ChrCtrl<'a>,
     pub think_param_id: i32,
     pub npc_id_1: i32,
@@ -96,10 +110,12 @@ pub struct ChrIns<'a> {
     pub character_id: u32,
     pub unk184: u32,
     pub module_container: &'a mut ChrInsModuleContainer<'a>,
-    pub rest: [u8; 0x3E8], 
+    pub rest: [u8; 0x3E8],
 }
 
 #[repr(C)]
+/// Very similar to an ECS component stack in its usage, hosts a bunch of "additional" data about a
+/// ChrIns.
 pub struct ChrInsModuleContainer<'a> {
     pub data: usize,
     pub action_flag: usize,
@@ -114,7 +130,7 @@ pub struct ChrInsModuleContainer<'a> {
     pub talk: usize,
     pub event: usize,
     pub magic: usize,
-    pub physics: &'a ChrPhysicsModule<'a>,
+    pub physics: &'a mut ChrPhysicsModule<'a>,
     pub fall: usize,
     pub ladder: usize,
     pub action_request: usize,
@@ -127,7 +143,7 @@ pub struct ChrInsModuleContainer<'a> {
     pub vfx: usize,
     pub behavior_data: usize,
     pub unkc8: usize,
-    pub model_param_modifier: usize,
+    pub model_param_modifier: &'a mut CSChrModelParamModifierModule<'a>,
     pub dripping: usize,
     pub unke0: usize,
     pub ride: usize,
@@ -143,6 +159,7 @@ pub struct ChrInsModuleContainer<'a> {
 }
 
 #[repr(C)]
+/// Source of name: RTTI
 pub struct ChrPhysicsModule<'a> {
     pub vftable: usize,
     pub owner: &'a mut ChrIns<'a>,
@@ -158,6 +175,54 @@ pub struct ChrPhysicsModule<'a> {
 }
 
 #[repr(C)]
+/// Source of name: RTTI
+pub struct CSChrModelParamModifierModule<'a> {
+    pub vftable: usize,
+    pub owner: &'a mut ChrIns<'a>,
+    pub modifiers: Vector<CSChrModelParamModifierModuleEntry>,
+}
+
+#[repr(C)]
+#[derive(Debug)]
+pub struct CSChrModelParamModifierModuleEntry {
+    pub unk0: u8,
+    unk1: [u8; 0x3],
+    pub unk4: u32,
+    pub unk8: u32,
+    pub unkc: u32,
+    pub unk10: u64,
+    pub unk18: u32,
+    pub unk1c: u32,
+    pub name: PCWSTR,
+    pub unk28: CSChrModelParamModifierModuleEntryValue,
+    pub unk40: CSChrModelParamModifierModuleEntryValue,
+    pub unk58: CSChrModelParamModifierModuleEntryValue,
+    pub unk70: u32,
+    pub unk74: u32,
+    pub unk78: u32,
+    pub unk7c: u32,
+    pub unk80: u64,
+    pub unk88: CSChrModelParamModifierModuleEntryValue,
+    pub unka0: CSChrModelParamModifierModuleEntryValue,
+    pub unkb0: [u8; 0x20],
+}
+
+unsafe impl Sync for CSChrModelParamModifierModuleEntry {}
+unsafe impl Send for CSChrModelParamModifierModuleEntry {}
+
+#[repr(C)]
+#[derive(Debug)]
+pub struct CSChrModelParamModifierModuleEntryValue {
+    pub unk0: u32,
+    pub value1: f32,
+    pub value2: f32,
+    pub value3: f32,
+    pub value4: f32,
+    pub unk14: u32,
+}
+
+#[repr(C)]
+/// Source of name: RTTI
 pub struct ChrCtrl<'a> {
     pub vftable: usize,
     _unk8: u64,
@@ -171,25 +236,43 @@ pub struct ChrCtrl<'a> {
 }
 
 #[repr(C)]
+/// Source of name: RTTI
+pub struct CSModelIns {
+    pub vftable: usize,
+    pub unk8: usize,
+    pub model_item: usize,
+    pub model_disp_entity: usize,
+    pub location_entity: usize,
+}
+
+#[repr(C)]
+/// Source of name: RTTI
+pub struct CSChrModelIns {
+    pub model_ins: CSModelIns,
+}
+
+#[repr(C)]
+/// Source of name: RTTI
 pub struct PlayerIns<'a> {
     pub chr_ins: ChrIns<'a>,
     pub player_game_data: &'a PlayerGameData,
     pub chr_manipulator: usize,
-    _unk590: usize,
+    unk590: usize,
     pub player_session_holder: usize,
-    _unk5c0: usize,
+    unk5c0: usize,
     pub replay_recorder: usize,
-    _unk5b0: [u8; 0x88],
+    unk5b0: [u8; 0x88],
     pub chr_asm: &'a mut ChrAsm,
     pub chr_asm_model_res: usize,
     pub chr_asm_model_ins: usize,
-    pub wtf: [u8; 0x60],
+    unk650: [u8; 0x60],
     pub locked_on_enemy_field_ins_handle: FieldInsHandle,
     pub session_manager_player_entry: usize,
     pub map_relative_position: Vector4,
 }
 
 #[repr(C)]
+/// Source of name: RTTI
 pub struct PlayerGameData {
     pub vfptr: usize,
     pub character_type: u32,
@@ -342,12 +425,14 @@ pub const CHR_ASM_SLOT_ACCESSORY_4: usize = 20;
 pub const CHR_ASM_SLOT_ACCESSORY_COVENANT: usize = 21;
 
 #[repr(C)]
-/// Describes how the character should be rendered in terms of selecting the 
+/// Describes how the character should be rendered in terms of selecting the
 /// appropriate parts to be rendered.
+///
+/// Source of name: RTTI in earlier games (vmt has been removed from ER after some patch?)
 pub struct ChrAsm {
     _unk0: i32,
     _unk4: i32,
-    /// Determines how you're holding your weapon. 1 is one-handed, 3 is dual wielded. 
+    /// Determines how you're holding your weapon. 1 is one-handed, 3 is dual wielded.
     pub arm_style: u32,
     /// Points to the slot in the equipment list used for rendering the left-hand weapon.
     /// 0 for primary, 1 for secondary, 2 for tertiary.
