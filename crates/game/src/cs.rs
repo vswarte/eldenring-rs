@@ -1,4 +1,5 @@
 mod camera;
+mod field_ins;
 mod chr_ins;
 mod ez_select_bot;
 mod fade;
@@ -14,6 +15,7 @@ mod character_type_properties;
 mod ez_state;
 
 pub use camera::*;
+pub use field_ins::*;
 pub use chr_ins::*;
 pub use ez_select_bot::*;
 pub use file::*;

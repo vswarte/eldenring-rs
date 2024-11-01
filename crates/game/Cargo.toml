@@ -23,6 +23,7 @@ byteorder.workspace = true
 pelite.workspace = true
 dataview.workspace = true
 vtable-rs.workspace = true
+contextual = "0.1.6"
 
 [dependencies.retour]
 version = "0.3"

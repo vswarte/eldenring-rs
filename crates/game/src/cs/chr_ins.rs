@@ -2,9 +2,12 @@ use std::ffi;
 
 use windows::core::PCWSTR;
 
-use crate::{cs::ChrSetEntry, matrix::Vector4, Vector};
+use crate::Vector;
+use crate::position::{ChunkPosition, HavokPosition};
+use crate::matrix::FSVector4;
+use crate::cs::ChrSetEntry;
 
-use super::MapId;
+use super::{FieldInsHandle, MapId};
 
 #[repr(C)]
 #[derive(Debug, Clone)]
@@ -15,16 +18,6 @@ use super::MapId;
 pub struct WhoID {
     pub map_id: i32,
     pub chr_selector: i32,
-}
-
-#[repr(C)]
-/// Used throughout the game engine to refer to characters, geometry, bullets, hits and more.
-///
-/// Source of name: Destructor reveals this being a field in FieldIns and it's used as a means of
-/// naming some FieldIns derivant everywhere where raw pointers cannot be shared.
-pub struct FieldInsHandle {
-    pub instance_id: i32,
-    pub map_id: MapId,
 }
 
 #[repr(C)]
@@ -61,16 +54,16 @@ pub struct AtkParamLookupResult {
 
 #[repr(C)]
 /// Abstract base class to all characters. NPCs, Enemies, Players, Summons, Ghosts, even gesture
-/// visualizations on bloodmessages all inherit from this.
+/// visualizations on bloodmessages also inherit from this.
 ///
 /// Source of name: RTTI
 pub struct ChrIns<'a> {
     pub vftable: usize,
     pub field_ins_handle: FieldInsHandle,
     chr_set_entry: usize,
-    pub unk18: usize,
-    pub unk20: u32,
-    pub unk24: u32,
+    unk18: usize,
+    unk20: u32,
+    unk24: u32,
     pub chr_res: usize,
     pub map_id_1: MapId,
     pub map_id_origin_1: i32,
@@ -78,7 +71,7 @@ pub struct ChrIns<'a> {
     pub map_id_origin_2: i32,
     pub chr_set_cleanup: u32,
     _pad44: u32,
-    pub unk48: usize,
+    unk48: usize,
     pub chr_model_ins: &'a mut CSChrModelIns,
     pub chr_ctrl: &'a mut ChrCtrl<'a>,
     pub think_param_id: i32,
@@ -87,9 +80,9 @@ pub struct ChrIns<'a> {
     pub team_type: i32,
     pub who_id: WhoID,
     pub unk78: usize,
-    pub unk80_position: Vector4,
-    pub unk90_position: Vector4,
-    pub unka0_position: Vector4,
+    pub unk80_position: FSVector4,
+    pub unk90_position: FSVector4,
+    pub unka0_position: FSVector4,
     pub chr_update_delta_time: f32,
     pub render_distance: u32,
     pub frames_per_update: u32,
@@ -97,25 +90,76 @@ pub struct ChrIns<'a> {
     pub target_velocity_recorder: usize,
     pub unkc8: usize,
     pub unkd0_position: usize,
-    pub unkd8: [u8; 0x88],
+    unkd8: [u8; 0x88],
     pub last_used_item: i16,
-    pub unk162: i16,
-    pub unk164: u32,
-    pub unk168: u32,
-    pub unk16c: u32,
-    pub unk170: u32,
-    pub unk174: u32,
-    pub special_effect: usize,
-    pub unk180: usize,
+    unk162: i16,
+    unk164: u32,
+    unk168: u32,
+    unk16c: u32,
+    unk170: u32,
+    unk174: u32,
+    pub special_effect: &'a mut SpecialEffect<'a>,
+    /// Refers to what field ins killed you last.
+    pub last_killed_by: FieldInsHandle,
     pub character_id: u32,
-    pub unk184: u32,
+    unk18c: u32,
     pub module_container: &'a mut ChrInsModuleContainer<'a>,
     pub rest: [u8; 0x3E8],
 }
 
 #[repr(C)]
-/// Very similar to an ECS component stack in its usage, hosts a bunch of "additional" data about a
-/// ChrIns.
+/// Source of name: RTTI
+pub struct SpecialEffect<'a> {
+    pub vftable: usize,
+    pub head: Option<&'a SpecialEffectEntry<'a>>,
+    pub owner: &'a ChrIns<'a>,
+    unk18: usize,
+    unk20: [u8; 0x118],
+}
+
+impl SpecialEffect<'_> {
+    pub unsafe fn entries(&self) -> impl Iterator<Item = &SpecialEffectEntry> {
+        let mut current = self.head;
+
+        std::iter::from_fn(move || {
+            let ret = current;
+            current = ret?.next;
+            ret
+        })
+    }
+}
+
+#[repr(C)]
+#[derive(Debug)]
+/// Source of name: RTTI
+pub struct SpecialEffectEntry<'a> {
+    pub param_data: usize,
+    pub param_id: u32,
+    _padc: u32,
+    pub accumulator_info: SpecialEffectEntryAccumulatorInfo,
+    pub next: Option<&'a SpecialEffectEntry<'a>>,
+    pub previous: Option<&'a SpecialEffectEntry<'a>>,
+    pub duration: f32,
+    pub duration2: f32,
+    pub total_duration: f32,
+    pub interval_timer: f32,
+    unk50: [u8; 0x28],
+}
+
+#[repr(C)]
+#[derive(Debug)]
+/// Source of name: RTTI
+pub struct SpecialEffectEntryAccumulatorInfo {
+    unk0: usize,
+    pub upper_trigger_count: i32,
+    pub effect_on_upper_or_higher: i32,
+    pub lower_trigger_count: i32,
+    pub effect_on_lower_or_below: i32,
+    unk18: i32,
+    unk1c: u32,
+}
+
+#[repr(C)]
 pub struct ChrInsModuleContainer<'a> {
     pub data: usize,
     pub action_flag: usize,
@@ -164,10 +208,10 @@ pub struct ChrPhysicsModule<'a> {
     pub vftable: usize,
     pub owner: &'a mut ChrIns<'a>,
     pub unk10: [u8; 0x40],
-    pub unk50_orientation: Vector4,
-    pub unk60_orientation: Vector4,
-    pub unk70_position: Vector4,
-    pub unk80_position: Vector4,
+    pub unk50_orientation: FSVector4,
+    pub unk60_orientation: FSVector4,
+    pub position: HavokPosition,
+    pub unk80_position: HavokPosition,
     pub unk90: bool,
     pub unk91: bool,
     pub unk92: bool,
@@ -176,10 +220,18 @@ pub struct ChrPhysicsModule<'a> {
 
 #[repr(C)]
 /// Source of name: RTTI
+pub struct CSChrWetModule<'a> {
+    pub vftable: usize,
+    pub owner: &'a mut ChrIns<'a>,
+    pub unk10: [u8; 0x60],
+}
+
+#[repr(C)]
+/// Source of name: RTTI
 pub struct CSChrModelParamModifierModule<'a> {
     pub vftable: usize,
     pub owner: &'a mut ChrIns<'a>,
-    pub modifiers: Vector<CSChrModelParamModifierModuleEntry>,
+    pub modifiers: Vector<'a, CSChrModelParamModifierModuleEntry>,
 }
 
 #[repr(C)]
@@ -268,7 +320,7 @@ pub struct PlayerIns<'a> {
     unk650: [u8; 0x60],
     pub locked_on_enemy_field_ins_handle: FieldInsHandle,
     pub session_manager_player_entry: usize,
-    pub map_relative_position: Vector4,
+    pub chunk_position: ChunkPosition,
 }
 
 #[repr(C)]

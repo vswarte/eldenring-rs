@@ -6,7 +6,7 @@ use std::{
     time::Duration,
 };
 
-use game::cs::{CSTaskGroupIndex, CSTaskImp, CSWorldGeomMan, FD4TaskData, MapId, WorldChrMan};
+use game::{cs::{CSTaskGroupIndex, CSTaskImp, CSWorldGeomMan, FD4TaskData, MapId, WorldChrMan}, position::{ChunkPosition, HavokPosition}};
 use serde::{Deserialize, Serialize};
 use thiserror::Error;
 use tracing_panic::panic_hook;
@@ -70,35 +70,22 @@ fn init() -> Result<(), Box<dyn Error>> {
                     };
 
                     // Generate a dungeon
-                    let pos = &main_player.map_relative_position;
+                    let pos = main_player.chunk_position.xyz();
                     let dungeon = Dungeon::generate(
                         main_player.chr_ins.map_id_1,
                         (pos.0, pos.1 - 200.0, pos.2),
                     )
                     .unwrap();
 
-                    // world_geom_man
-                    //     .spawn_geometry(
-                    //         asset.as_str().strip_suffix("\n").unwrap(),
-                    //         &GeometrySpawnParameters {
-                    //             map_id: main_player.chr_ins.map_id_1,
-                    //             pos_x: player_pos.0,
-                    //             pos_y: player_pos.1 - 100.0,
-                    //             pos_z: player_pos.2,
-                    //             rot_x: 0.0,
-                    //             rot_y: 0.0,
-                    //             rot_z: 0.0,
-                    //             scale_x: 1.0,
-                    //             scale_y: 1.0,
-                    //             scale_z: 1.0,
-                    //         },
-                    //     )
-                    //     .unwrap();
-
                     // Warp player to dungeon
-                    let mut physics_pos =
-                        &mut main_player.chr_ins.module_container.physics.unk70_position;
-                    physics_pos.1 -= 199.8;
+                    let current_pos = main_player.chr_ins.module_container.physics.position.xyz();
+                    let mut new_pos = HavokPosition::from_xyz(
+                        current_pos.0,
+                        current_pos.1 - 199.8,
+                        current_pos.2,
+                    );
+
+                    main_player.chr_ins.module_container.physics.position = new_pos;
                 });
             }
         },
@@ -169,9 +156,11 @@ impl Dungeon {
                     &c.asset,
                     Box::leak(Box::new(GeometrySpawnParameters {
                         map_id: self.map.clone(),
-                        pos_x: prefab_origin.0 + c.position.0,
-                        pos_y: prefab_origin.1 + c.position.1,
-                        pos_z: prefab_origin.2 + c.position.2,
+                        position: ChunkPosition::from_xyz(
+                            prefab_origin.0 + c.position.0,
+                            prefab_origin.1 + c.position.1,
+                            prefab_origin.2 + c.position.2,
+                        ),
                         rot_x: c.rotation.0,
                         rot_y: c.rotation.1,
                         rot_z: c.rotation.2,

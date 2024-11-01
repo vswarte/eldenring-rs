@@ -4,16 +4,13 @@ use std::{
 
 use game::{
     cs::{CSCamera, CSTaskGroupIndex, CSTaskImp, CSWorldGeomMan, FD4TaskData, WorldChrMan},
-    matrix::Vector4,
+    matrix::FSVector4, position::ChunkPosition,
 };
 use nalgebra_glm::{Mat4, Vec3};
 use thiserror::Error;
 use tracing_panic::panic_hook;
 use util::{
-    geometry::{GeometrySpawnParameters, SpawnGeometryError, CSWorldGeomManExt},
-    input::is_key_pressed,
-    singleton::get_instance,
-    task::CSTaskImpExt,
+    camera::CSCamExt, geometry::{CSWorldGeomManExt, GeometrySpawnParameters, SpawnGeometryError}, input::is_key_pressed, singleton::get_instance, task::CSTaskImpExt
 };
 
 #[no_mangle]
@@ -188,27 +185,27 @@ impl BuilderCamera {
             .unwrap()
             .ok_or(AssetPlaceError::WorldGeomManMissing)?;
 
-        // Figure out the camera's world coords
-        // TODO: raycast?
-        let player_physics_pos = &main_player.chr_ins.module_container.physics.unk70_position;
-        let player_map_pos = &main_player.map_relative_position;
-        let camera_physics_pos = &camera.pers_cam_1.matrix.3;
-        let camera_map_pos = player_map_pos + &(camera_physics_pos - player_physics_pos);
+        let player_physics_pos = main_player.chr_ins.module_container.physics.position;
+        let camera_physics_pos = camera.pers_cam_1.position();
+        let player_chunk_pos = &main_player.chunk_position.xyz();
+        let physics_pos_delta = (camera_physics_pos - player_physics_pos).xyz();
 
-        // Determine where to place the asset
-        let target_pos = (
-            camera_map_pos.0,
-            player_map_pos.1,
-            camera_map_pos.2,
-        );
+        // Calculated chunk-relative position of camera
+        let camera_chunk_pos = ChunkPosition::from_xyz(
+            player_chunk_pos.0 + physics_pos_delta.0,
+            player_chunk_pos.1 + physics_pos_delta.1,
+            player_chunk_pos.2 + physics_pos_delta.2,
+        ).xyz();
 
         world_geom_man.spawn_geometry(
             SPAWNABLE_ASSETS[self.selected_asset],
             &GeometrySpawnParameters {
                 map_id: main_player.chr_ins.map_id_1,
-                pos_x: target_pos.0,
-                pos_y: target_pos.1,
-                pos_z: target_pos.2,
+                position: ChunkPosition::from_xyz(
+                    camera_chunk_pos.0,
+                    player_chunk_pos.1,
+                    camera_chunk_pos.2,
+                ),
                 rot_x: 0.0,
                 rot_y: 61.0 * (PI / 180.0),
                 rot_z: 0.0,

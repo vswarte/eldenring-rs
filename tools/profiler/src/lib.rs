@@ -1,13 +1,6 @@
-use std::{
-    cell::{Cell, RefCell},
-    pin::Pin,
-    sync::Arc,
-};
-
-use game::cs::{CSTaskGroupIndex, CSTaskImp, FD4TaskRequestEntry};
-use pelite::pe::*;
+use game::cs::{CSTaskImp, FD4TaskRequestEntry};
 use retour::static_detour;
-use util::{program::Program, rtti::find_rtti_classes, singleton::get_instance, task::CSTaskImpExt};
+use util::singleton::get_instance;
 
 static_detour! {
     static FD4_EXECUTE_TASK_DETOUR: extern "C" fn(usize, *const FD4TaskRequestEntry, u32, u32);

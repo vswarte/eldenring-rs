@@ -11,3 +11,5 @@ pub mod ez_state;
 pub mod fade;
 pub mod resource;
 pub mod world_area_time;
+pub mod field_ins;
+pub mod camera;

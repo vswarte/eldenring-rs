@@ -96,10 +96,10 @@ impl DLRFLocatable for CSTaskImp<'_> {
 }
 
 #[repr(C)]
-pub struct CSTaskBase {
+pub struct CSTaskBase<'a> {
     pub vftable: usize,
     pub allocator1: usize,
-    pub task_groups: Vector<TaskGroupEntry>,
+    pub task_groups: Vector<'a, TaskGroupEntry>,
     pub task_group_index_max: u32,
     _pad34: u32,
 }
@@ -113,7 +113,7 @@ pub struct TaskGroupEntry {
 
 #[repr(C)]
 pub struct CSTask<'a> {
-    pub task_base: CSTaskBase,
+    pub task_base: CSTaskBase<'a>,
     pub allocator2: usize,
     pub unk40: usize,
     pub unk48: [usize; 3],
@@ -140,11 +140,11 @@ pub struct CSTaskRunnerEx {
 }
 
 #[repr(C)]
-pub struct FD4TaskQueue {
+pub struct FD4TaskQueue<'a> {
     pub vftable: usize,
     pub allocator: usize,
     pub entries_tree: Tree<FD4TaskGroup>,
-    pub entries_vector: Vector<FD4TaskGroup>,
+    pub entries_vector: Vector<'a, FD4TaskGroup>,
 }
 
 #[repr(C)]

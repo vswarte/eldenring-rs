@@ -86,7 +86,7 @@ fn init() -> Result<(), Box<dyn Error>> {
     };
     std::mem::forget(chr_asm_patch_task);
 
-    let mdoel_param_modifier_task = task.run_task(
+    let model_param_modifier_task = task.run_task(
         |_: &FD4TaskData| {
             let Some(player) = get_instance::<WorldChrMan>()
                 .unwrap()
@@ -138,7 +138,7 @@ fn init() -> Result<(), Box<dyn Error>> {
         },
         CSTaskGroupIndex::Draw_Pre,
     );
-    std::mem::forget(mdoel_param_modifier_task);
+    std::mem::forget(model_param_modifier_task);
 
     // WHY
     std::mem::forget(register_callback::<SyncMappingLobbyUpdateCallback>());

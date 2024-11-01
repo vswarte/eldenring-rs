@@ -1,4 +1,6 @@
-use std::fmt::Formatter;
+use std::{fmt::Formatter, ptr::NonNull};
+
+use windows::core::PCWSTR;
 
 use crate::{DLRFLocatable, Tree, Vector};
 
@@ -21,26 +23,34 @@ impl DLRFLocatable for CSWorldGeomMan<'_> {
 }
 
 #[repr(C)]
-/// Seems to host any spawned geometry for a given map.
+/// Seems to host any spawned geometry for a given map. It
 pub struct CSWorldGeomManMapData<'a> {
     /// The map ID this container hosts the assets for.
     pub map_id: MapId,
     /// Might be padding?
     unk4: u32,
     pub world_block_info: usize,
-    unk10: [u8; 0x278],
-    /// Holds refs to all geometry instances fopr this map (both dynamic and static). 
-    pub geom_ins_vector: Vector<&'a CSWorldGeomIns<'a>>,
-    unk2a8: [u8; 0x88],
+    unk10: [u8; 0xF0],
+    unk100: Vector<'a, ()>,
+    unk120: Vector<'a, ()>,
+    unk140: Vector<'a, ()>,
+    pub activation_fade_modules: Vector<'a, ()>,
+    unk180: [u8; 0x108],
+    /// Holds refs to some geometry instances for this map. 
+    pub geom_ins_vector: Vector<'a, &'a CSWorldGeomIns<'a>>,
+    unk2a8: [u8; 0x20],
+    pub geometry_array_count: u32,
+    unk2cc: u32,
+    pub geometry_array: NonNull<CSWorldGeomIns<'a>>,
+    unk2d8: [u8; 0x58],
     /// Seems to be the next field ins index that will be assiged.
     pub next_geom_ins_field_ins_index: u32,
     /// Seems to indicate if the geometry_ins vector has reached some hardcoded capacity?
     pub reached_geom_ins_vector_capacity: bool,
     _pad335: [u8; 3],
     unk338: [u8; 0x50],
-    pub sos_sign_geometry: Vector<usize>,
+    pub sos_sign_geometry: Vector<'a, &'a &'a CSWorldGeomIns<'a>>,
     unk3a8: [u8; 0x300],
-    // TODO: need to figure out how big this thing actually is
 }
 
 #[repr(C)]
@@ -67,10 +77,9 @@ pub struct CSWorldGeomInfo<'a> {
     pub map_data: &'a CSWorldGeomManMapData<'a>,
     /// Points to the param row this geometry instance uses. 
     pub asset_geometry_param: usize,
-    unk10: u32,
-    // Might be padding
+    pub unk10: u32,
     unk14: u32,
-    pub msb_parts_geom: CSMsbPartsGeom,
+    pub msb_parts_geom: CSMsbPartsGeom<'a>,
     unk68: u32,
     unk6c: u32,
     unk70: u32,
@@ -96,7 +105,7 @@ pub struct CSWorldGeomInfo<'a> {
     unk168: f32,
     unk16c: f32,
     unk170: f32,
-    sound_obj_enable_dist: f32,
+    pub sound_obj_enable_dist: f32,
     unk178: u8,
     unk179: u8,
     unk17a: u8,
@@ -134,19 +143,25 @@ pub struct CSWorldGeomInfoUnk {
 
 #[repr(C)]
 /// Seems to describe how to draw the MSB part.
-pub struct CSMsbPartsGeom {
-    pub msb_parts: CSMsbParts,
+pub struct CSMsbPartsGeom<'a> {
+    pub msb_parts: CSMsbParts<'a> ,
 }
 
 #[repr(C)]
 /// Seems to describe how to draw the MSB part.
-pub struct CSMsbParts {
+pub struct CSMsbParts<'a> {
     pub vfptr: usize,
     pub draw_flags: u32,
-    unkc: u32,
+    _padc: u32,
     unk10: usize,
-    pub msb_part: usize,
+    pub msb_part: &'a MsbPart,
     unk20: [u8; 0x30],
+}
+
+#[repr(C)]
+pub struct MsbPart {
+    pub name: PCWSTR,
+    // TODO: rest
 }
 
 #[repr(C)]
@@ -157,6 +172,7 @@ pub struct GeometrySpawnRequest {
     pub asset_string: [u16; 0x20],
     pub unk0x40: u32,
     pub unk0x44: u32,
+    /// Contains a pointer to the asset string
     pub asset_string_ptr: u64,
     pub unk0x50: u32,
     pub unk0x54: u32,

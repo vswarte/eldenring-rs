@@ -1,34 +1,36 @@
+use std::{marker::PhantomData, ptr::NonNull};
+
 #[repr(C)]
-pub struct DoublyLinkedListNode<T> {
-    pub next: *mut DoublyLinkedListNode<T>,
-    pub previous: *mut DoublyLinkedListNode<T>,
+pub struct DoublyLinkedListNode<'a, T> {
+    pub next: &'a DoublyLinkedListNode<'a, T>,
+    pub previous: &'a DoublyLinkedListNode<'a, T>,
     pub value: T,
 }
 
 #[repr(C)]
-pub struct DoublyLinkedList<T> {
+pub struct DoublyLinkedList<'a, T> {
     pub allocator: usize,
-    pub head: *mut DoublyLinkedListNode<T>,
+    pub head: &'a DoublyLinkedListNode<'a, T>,
     pub count: u32,
     _pad14: u32,
 }
 
-impl<T> DoublyLinkedList<T> {
+impl<'a, T> DoublyLinkedList<'a, T> {
     /// # Safety
     /// This will produce bad results if:
     /// - The list is projected onto something that isn't actually a list.
     /// - Access is not exclusive and the list gets updated while reading.
     pub unsafe fn iter(&self) -> impl Iterator<Item = &T> {
         let mut count = self.count;
-        let mut current = self.head.as_ref().unwrap().next;
+        let mut current = self.head;
 
         std::iter::from_fn(move || {
-            current = (*current).next;
+            current = current.next;
             if count == 0 {
                 None
             } else {
                 count -= 1;
-                current.as_ref()?.previous.as_ref().map(|f| &f.value)
+                Some(&current.value)
             }
         })
     }
@@ -43,17 +45,18 @@ impl<T> DoublyLinkedList<T> {
 }
 
 #[repr(C)]
-pub struct Vector<T>
+pub struct Vector<'a, T>
 where
     T: Sized,
 {
+    _phantom: PhantomData<&'a mut [T]>,
     pub allocator: usize,
-    pub begin: *mut T,
-    pub end: *mut T,
-    pub capacity: *mut T,
+    pub begin: Option<NonNull<T>>,
+    pub end: Option<NonNull<T>>,
+    pub capacity: Option<NonNull<T>>,
 }
 
-impl<T> Vector<T>
+impl<'a, T> Vector<'a, T>
 where
     T: Sized,
 {
@@ -67,12 +70,13 @@ where
         let end = self.end;
 
         std::iter::from_fn(move || {
-            let result = if current >= end {
+            let result = if current? >= end? {
                 None
             } else {
-                Some(current.as_mut().unwrap())
+                Some(current?.as_mut())
             };
-            current = current.add(1);
+
+            current = Some(current?.add(1));
             result
         })
     }
@@ -83,7 +87,15 @@ where
     /// - The size of T is incorrect.
     /// - Access is not exclusive and the vector gets updated while reading.
     pub unsafe fn len(&self) -> usize {
-        (self.end as usize - self.begin as usize) / size_of::<T>()
+        let Some(end) = self.end else {
+            return 0;
+        };
+
+        let Some(start) = self.begin else {
+            return 0;
+        };
+
+        (end.as_ptr() as usize - start.as_ptr() as usize) / size_of::<T>()
     }
 }
 

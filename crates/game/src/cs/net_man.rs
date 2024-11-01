@@ -32,16 +32,16 @@ impl DLRFLocatable for CSNetMan<'_> {
 pub struct CSNetBloodMessageDb<'a> {
     pub vftable: usize,
     // Contains all CSNetBloodMessageDbItem?
-    pub entries: DoublyLinkedList<&'a CSNetBloodMessageDbItem>,
+    pub entries: DoublyLinkedList<'a, &'a CSNetBloodMessageDbItem>,
     pub unk20: usize,
     // Seemingly contains message data for messages created by local user
-    pub created_data: DoublyLinkedList<usize>,
+    pub created_data: DoublyLinkedList<'a, usize>,
     // Contains ???
-    pub unk40: DoublyLinkedList<usize>,
+    pub unk40: DoublyLinkedList<'a, usize>,
     pub unk58: usize,
     pub blood_message_ins_man_1: usize,
     pub blood_message_ins_man_2: usize,
-    pub discovered_messages: DoublyLinkedList<&'a &'a CSNetBloodMessageDbItem>,
+    pub discovered_messages: DoublyLinkedList<'a, &'a &'a CSNetBloodMessageDbItem>,
     pub unk88: [u8; 0xD0],
     pub evaluate_job: usize,
     pub unk160: usize,

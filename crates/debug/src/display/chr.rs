@@ -1,4 +1,4 @@
-use game::cs::{CSChrModelParamModifierModule, ChrAsm, ChrIns, ChrInsModuleContainer, ChrPhysicsModule, FieldInsHandle, PlayerGameData, PlayerIns};
+use game::cs::{CSChrModelParamModifierModule, ChrAsm, ChrIns, ChrInsModuleContainer, ChrPhysicsModule, FieldInsHandle, PlayerGameData, PlayerIns, SpecialEffect};
 use hudhook::imgui::{TableColumnSetup, TreeNodeFlags, Ui};
 
 use super::DebugDisplay;
@@ -16,9 +16,7 @@ impl DebugDisplay for PlayerIns<'_> {
             self.player_game_data.render_debug(ui);
         }
 
-        if ui.collapsing_header("Map relative position", TreeNodeFlags::empty()) {
-            self.map_relative_position.render_debug(ui);
-        }
+        ui.text(format!("Unk position: {}", self.chunk_position));
     }
 }
 
@@ -53,25 +51,47 @@ impl DebugDisplay for PlayerGameData {
 
 impl DebugDisplay for ChrIns<'_> {
     fn render_debug(&self, ui: &&mut Ui) {
-        self.field_ins_handle.render_debug(ui);
+        // ui.text(format!("Map ID 1: {}", self.map_id_1));
+        // ui.text(format!("Map ID origin 1: {}", self.map_id_origin_1));
+        // ui.text(format!("Map ID 2: {}", self.map_id_2));
+        // ui.text(format!("Map ID origin 2: {}", self.map_id_origin_2));
 
-        ui.text(format!("Map ID 1: {}", self.map_id_1));
-        ui.text(format!("Map ID origin 1: {}", self.map_id_origin_1));
-        ui.text(format!("Map ID 2: {}", self.map_id_2));
-        ui.text(format!("Map ID origin 2: {}", self.map_id_origin_2));
-        ui.text(format!("Last used item?: {}", self.last_used_item));
-        ui.text(format!("Character ID: {}", self.character_id));
+        ui.text(format!("Last killed by: {}", self.last_killed_by));
+        ui.text(format!("Last used item: {}", self.last_used_item));
+
+        if ui.collapsing_header("Special Effect", TreeNodeFlags::empty()) {
+            if let Some(_t) = ui.begin_table_header(
+                "chr-ins-special-effects",
+                [
+                    TableColumnSetup::new("ID"),
+                    TableColumnSetup::new("Timer"),
+                    TableColumnSetup::new("Duration"),
+                    TableColumnSetup::new("Duration2"),
+                    TableColumnSetup::new("Interval Timer"),
+                ],
+            ) {
+                unsafe { self.special_effect.entries() }.for_each(|entry| {
+                    ui.table_next_column();
+                    ui.text(format!("{}", entry.param_id));
+
+                    ui.table_next_column();
+                    ui.text(format!("{}", entry.interval_timer));
+
+                    ui.table_next_column();
+                    ui.text(format!("{}", entry.duration));
+
+                    ui.table_next_column();
+                    ui.text(format!("{}", entry.duration2));
+
+                    ui.table_next_column();
+                    ui.text(format!("{}", entry.interval_timer));
+                });
+            }
+        }
 
         if ui.collapsing_header("Modules", TreeNodeFlags::empty()) {
             self.module_container.render_debug(ui);
         }
-    }
-}
-
-impl DebugDisplay for FieldInsHandle {
-    fn render_debug(&self, ui: &&mut Ui) {
-        ui.text(format!("Field Ins ID: {}", self.instance_id));
-        ui.text(format!("Field Ins map ID: {}", self.map_id));
     }
 }
 
@@ -89,13 +109,8 @@ impl DebugDisplay for ChrInsModuleContainer<'_> {
 
 impl DebugDisplay for ChrPhysicsModule<'_> {
     fn render_debug(&self, ui: &&mut Ui) {
-        if ui.collapsing_header("Unk70 position", TreeNodeFlags::empty()) {
-            self.unk70_position.render_debug(ui);
-        }
-
-        if ui.collapsing_header("Unk80 position", TreeNodeFlags::empty()) {
-            self.unk80_position.render_debug(ui);
-        }
+        ui.text(format!("Position: {}", self.position));
+        ui.text(format!("Unk 80 position: {}", self.unk80_position));
     }
 }
 

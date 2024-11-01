@@ -1,12 +1,12 @@
 use game::{
-    matrix::{Matrix4X4, Vector4},
+    matrix::{FSMatrix4x4, FSVector4},
     DoublyLinkedList,
 };
 use hudhook::imgui::{TreeNodeFlags, Ui};
 
 use super::DebugDisplay;
 
-impl DebugDisplay for Matrix4X4 {
+impl DebugDisplay for FSMatrix4x4 {
     fn render_debug(&self, ui: &&mut Ui) {
         self.0.render_debug(ui);
         ui.separator();
@@ -19,7 +19,7 @@ impl DebugDisplay for Matrix4X4 {
     }
 }
 
-impl DebugDisplay for Vector4 {
+impl DebugDisplay for FSVector4 {
     fn render_debug(&self, ui: &&mut Ui) {
         ui.text(format!("x: {}", self.0));
         ui.text(format!("y: {}", self.1));

@@ -79,7 +79,6 @@ impl DebugDisplay for ChrSet<'_, ChrIns<'_>> {
     fn render_debug(&self, ui: &&mut Ui) {
         ui.text(format!("Character capacity: {}", self.capacity));
 
-        // END ME
         let mut current_entry = self.entries;
         let end = unsafe { current_entry.add(self.capacity as usize) };
         while current_entry < end {
@@ -87,7 +86,13 @@ impl DebugDisplay for ChrSet<'_, ChrIns<'_>> {
 
             if let Some(chr_ins) = unsafe { entry.chr_ins.as_ref() } {
                 if ui.collapsing_header(
-                    format!("{:?}", chr_ins.character_id),
+                    format!(
+                        "c{:0>4} - {} FieldInsSelector({}, {})",
+                        chr_ins.character_id,
+                        chr_ins.field_ins_handle.map_id,
+                        chr_ins.field_ins_handle.selector.container(),
+                        chr_ins.field_ins_handle.selector.index()
+                    ),
                     TreeNodeFlags::empty(),
                 ) {
                     chr_ins.render_debug(ui)
@@ -105,7 +110,6 @@ impl DebugDisplay for ChrSet<'_, PlayerIns<'_>> {
     fn render_debug(&self, ui: &&mut Ui) {
         ui.text(format!("Character capacity: {}", self.capacity));
 
-        // END ME
         let mut current_entry = self.entries;
         let end = unsafe { current_entry.add(self.capacity as usize) };
         while current_entry < end {
@@ -113,7 +117,13 @@ impl DebugDisplay for ChrSet<'_, PlayerIns<'_>> {
 
             if let Some(player_ins) = unsafe { entry.chr_ins.as_ref() } {
                 if ui.collapsing_header(
-                    format!("{:?}", player_ins.chr_ins.character_id),
+                    format!(
+                        "c{:0>4} - {} FieldInsSelector({}, {})",
+                        player_ins.chr_ins.character_id,
+                        player_ins.chr_ins.field_ins_handle.map_id,
+                        player_ins.chr_ins.field_ins_handle.selector.container(),
+                        player_ins.chr_ins.field_ins_handle.selector.index()
+                    ),
                     TreeNodeFlags::empty(),
                 ) {
                     player_ins.render_debug(ui)

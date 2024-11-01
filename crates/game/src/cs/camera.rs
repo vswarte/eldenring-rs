@@ -1,4 +1,4 @@
-use crate::{matrix::Matrix4X4, DLRFLocatable};
+use crate::{matrix::FSMatrix4x4, DLRFLocatable};
 
 #[repr(C)]
 /// Source of name: RTTI
@@ -31,7 +31,7 @@ pub struct CSCam {
     pub vftable: usize,
     pub unk8: u32,
     pub unkc: u32,
-    pub matrix: Matrix4X4,
+    pub matrix: FSMatrix4x4,
     pub fov: f32,
     pub aspect_ratio: f32,
     pub near_plane: f32,

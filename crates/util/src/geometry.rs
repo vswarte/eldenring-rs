@@ -5,7 +5,10 @@ use pelite::pattern::Atom;
 use pelite::pe::Pe;
 use thiserror::Error;
 
-use game::cs::{CSWorldGeomMan, GeometrySpawnRequest, MapId};
+use game::cs::MapId;
+use game::position::ChunkPosition;
+use game::cs::GeometrySpawnRequest;
+use game::cs::CSWorldGeomMan;
 
 use crate::program::Program;
 
@@ -24,9 +27,7 @@ pub enum SpawnGeometryError {
 
 pub struct GeometrySpawnParameters {
     pub map_id: MapId,
-    pub pos_x: f32,
-    pub pos_y: f32,
-    pub pos_z: f32,
+    pub position: ChunkPosition,
     pub rot_x: f32,
     pub rot_y: f32,
     pub rot_z: f32,
@@ -128,9 +129,12 @@ impl CSWorldGeomManExt for CSWorldGeomMan<'_> {
 
         initialize_spawn_geometry_request(&mut request, 0x5);
         request.set_asset(asset);
-        request.pos_x = parameters.pos_x;
-        request.pos_y = parameters.pos_y;
-        request.pos_z = parameters.pos_z;
+
+        let (x, y, z) = parameters.position.xyz();
+        request.pos_x = x;
+        request.pos_y = y;
+        request.pos_z = z;
+
         request.rot_x = parameters.rot_x;
         request.rot_y = parameters.rot_y;
         request.rot_z = parameters.rot_z;
