@@ -11,7 +11,7 @@ use super::{FieldInsHandle, PlayerIns};
 #[repr(C)]
 /// Source of name: RTTI
 pub struct WorldChrMan<'a> {
-    pub vftable: usize,
+    vftable: usize,
     unk8: usize,
     pub world_area_chr: [WorldAreaChr<'a, ChrIns<'a>>; 28],
     pub world_block_chr: [WorldBlockChr<'a, ChrIns<'a>>; 192],
@@ -46,10 +46,10 @@ pub struct WorldChrMan<'a> {
     pub open_field_chr_set: OpenFieldChrSet<'a>,
 
     pub unk1cc58: [u8; 0x18b0],
-    pub main_player: *mut PlayerIns<'a>,
+    pub main_player: Option<&'a mut PlayerIns<'a>>,
 
     pub unk1e510: [u8; 0x28],
-    pub summon_buddy_manager: *mut SummonBuddyManager<'a>,
+    pub summon_buddy_manager: Option<&'a SummonBuddyManager<'a>>,
     // TODO: rest
 }
 
@@ -70,14 +70,14 @@ pub struct WorldAreaChr<'a, T> {
 #[repr(C)]
 /// Source of name: RTTI
 pub struct WorldAreaChrBase {
-    pub vftable: usize,
+    vftable: usize,
     pub world_area_info: usize,
 }
 
 #[repr(C)]
 /// Source of name: RTTI
 pub struct WorldBlockChr<'a, T> {
-    pub vftable: usize,
+    vftable: usize,
     pub world_block_info1: usize,
     unk10: [u8; 0x68],
     pub chr_set: ChrSet<'a, T>,
@@ -138,7 +138,7 @@ pub struct ChrSetVMT<'a, T> {
 #[repr(C)]
 /// Source of name: RTTI
 pub struct ChrSet<'a, T> {
-    pub vftable: &'a ChrSetVMT<'a, T>,
+    vftable: &'a ChrSetVMT<'a, T>,
     pub index: i32,
     pub unkc: i32,
     pub capacity: u32,
@@ -158,7 +158,6 @@ impl<'a, T> ChrSet<'a, T> {
             if current_entry == end {
                 None
             } else {
-                tracing::info!("current_entry = {current_entry:x?}");
                 let chr_ins = (*current_entry).chr_ins;
                 current_entry.add(1);
                 chr_ins.as_mut()
@@ -235,7 +234,7 @@ impl Display for MapId {
 #[repr(C)]
 /// Source of name: "SummonBuddy" mentioned in DLRF metadata for the update fn.
 pub struct SummonBuddyManager<'a> {
-    pub vftable: usize,
+    vftable: usize,
     pub unk8: usize,
     pub unk10: usize,
     pub unk18: usize,

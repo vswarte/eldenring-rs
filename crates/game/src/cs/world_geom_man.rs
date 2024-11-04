@@ -9,7 +9,7 @@ use super::{FieldInsHandle, MapId};
 #[repr(C)]
 /// Source of name: RTTI
 pub struct CSWorldGeomMan<'a> {
-    pub vftable: usize,
+    vftable: usize,
     pub unk8: usize,
     pub world_info_owner: usize,
     /// A tree of geometry containers per map.  

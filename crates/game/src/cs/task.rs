@@ -17,7 +17,7 @@ pub struct FD4TaskBaseVMT  {
 
 #[repr(C)]
 pub struct FD4TaskBase {
-    pub vftable: *const FD4TaskBaseVMT,
+    vftable: *const FD4TaskBaseVMT,
     pub unk8: usize,
 }
 
@@ -44,7 +44,7 @@ pub struct CSEzTaskVMT  {
 
 #[repr(C)]
 pub struct CSEzTask {
-    pub vftable: *const CSEzTaskVMT,
+    vftable: *const CSEzTaskVMT,
     pub unk8: u32,
     pub _padc: u32,
     pub task_proxy: usize,
@@ -63,7 +63,7 @@ pub struct CSEzUpdateTask<'a, TSubject> {
 
 #[repr(C)]
 pub struct CSTaskGroup<'a> {
-    pub vftable: usize,
+    vftable: usize,
     pub task_groups: [&'a CSTimeLineTaskGroupIns; 168],
 }
 
@@ -73,7 +73,7 @@ impl DLRFLocatable for CSTaskGroup<'_> {
 
 #[repr(C)]
 pub struct CSTaskGroupIns {
-    pub vftable: usize,
+    vftable: usize,
     pub name: FD4BasicHashString,
     unk40: [u8; 0x10],
 }
@@ -87,7 +87,7 @@ pub struct CSTimeLineTaskGroupIns {
 
 #[repr(C)]
 pub struct CSTaskImp<'a> {
-    pub vftable: usize,
+    vftable: usize,
     pub inner: &'a CSTask<'a>,
 }
 
@@ -97,7 +97,7 @@ impl DLRFLocatable for CSTaskImp<'_> {
 
 #[repr(C)]
 pub struct CSTaskBase<'a> {
-    pub vftable: usize,
+    vftable: usize,
     pub allocator1: usize,
     pub task_groups: Vector<'a, TaskGroupEntry>,
     pub task_group_index_max: u32,
@@ -126,7 +126,7 @@ pub struct CSTask<'a> {
 
 #[repr(C)]
 pub struct CSTaskRunner<'a> {
-    pub vftable: usize,
+    vftable: usize,
     pub task_queue: usize,
     pub task_runner_manager: &'a CSTaskRunnerManager<'a>,
     pub unk18: u32,
@@ -141,7 +141,7 @@ pub struct CSTaskRunnerEx {
 
 #[repr(C)]
 pub struct FD4TaskQueue<'a> {
-    pub vftable: usize,
+    vftable: usize,
     pub allocator: usize,
     pub entries_tree: Tree<FD4TaskGroup>,
     pub entries_vector: Vector<'a, FD4TaskGroup>,
@@ -149,7 +149,7 @@ pub struct FD4TaskQueue<'a> {
 
 #[repr(C)]
 pub struct FD4TaskGroup {
-    pub vftable: usize,
+    vftable: usize,
 }
 
 #[repr(C)]
@@ -180,7 +180,7 @@ pub struct FD4TaskRequestEntry {
 
 #[repr(C)]
 pub struct DLPlainConditionSignal {
-    pub vftable: usize,
+    vftable: usize,
     pub event_handle: usize,
 }
 

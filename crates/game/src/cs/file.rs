@@ -7,7 +7,7 @@ use crate::fd4::{
 
 #[repr(C)]
 pub struct CSFile<'a> {
-    pub vftable: usize,
+    vftable: usize,
     pub file_repository_1: &'a CSFileRepository<'a>,
     // TODO: Incomplete..
 }

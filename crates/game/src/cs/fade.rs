@@ -6,7 +6,7 @@ use crate::fd4::FD4Time;
 ///
 /// Source of name: RTTI
 pub struct CSFade<'a> {
-    pub vftable: usize,
+    vftable: usize,
     pub fade_system: &'a mut CSFD4FadeSystem,
     /// Holds the individual fade plates, these control the actual drawing of the dimming.
     pub fade_plates: [&'a mut CSFD4FadePlate; 9],
@@ -21,7 +21,7 @@ impl DLRFLocatable for CSFade<'_> {
 #[repr(C)]
 /// Source of name: RTTI
 pub struct CSFD4FadeSystem {
-    pub vftable: usize,
+    vftable: usize,
 }
 
 #[repr(C)]
@@ -29,7 +29,7 @@ pub struct CSFD4FadeSystem {
 ///
 /// Source of name: RTTI
 pub struct CSFD4FadePlate {
-    pub vftable: usize,
+    vftable: usize,
     pub reference_count: u32,
     _padc: u32,
     /// Stores the currently interpolated color.

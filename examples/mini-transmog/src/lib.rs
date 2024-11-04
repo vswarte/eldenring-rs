@@ -1,6 +1,3 @@
-/// Implements a minimal armor visual-appearance changer similar to the transmogrify mod by Thomas
-/// J Clark.
-use std::cell::{Cell, RefCell};
 use std::collections::HashMap;
 use std::sync::{Arc, LazyLock, RwLock};
 use std::thread::sleep;
@@ -68,7 +65,7 @@ fn init() -> Result<(), Box<dyn Error>> {
                 };
 
                 // Apply the main players overrides
-                if let Some(player) = unsafe { world_chr_man.main_player.as_mut() } {
+                if let Some(player) = world_chr_man.main_player.as_mut() {
                     player.chr_asm.equipment_param_ids
                         [CHR_ASM_SLOT_PROTECTOR_HEAD..CHR_ASM_SLOT_PROTECTOR_LEGS]
                         .iter_mut()
@@ -90,7 +87,7 @@ fn init() -> Result<(), Box<dyn Error>> {
         |_: &FD4TaskData| {
             let Some(player) = get_instance::<WorldChrMan>()
                 .unwrap()
-                .map(|w| unsafe { w.main_player.as_ref() })
+                .map(|w| w.main_player.as_ref())
                 .flatten()
             else {
                 return;

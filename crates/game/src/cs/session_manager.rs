@@ -29,7 +29,7 @@ pub enum ProtocolState {
 
 #[repr(C)]
 pub struct CSSessionManager {
-    pub vftable: usize,
+    vftable: usize,
     pub unk0x8: u32,
     pub lobby_state: LobbyState,
     pub protocol_state: ProtocolState,

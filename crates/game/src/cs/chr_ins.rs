@@ -58,7 +58,7 @@ pub struct AtkParamLookupResult {
 ///
 /// Source of name: RTTI
 pub struct ChrIns<'a> {
-    pub vftable: usize,
+    vftable: usize,
     pub field_ins_handle: FieldInsHandle,
     chr_set_entry: usize,
     unk18: usize,
@@ -110,7 +110,7 @@ pub struct ChrIns<'a> {
 #[repr(C)]
 /// Source of name: RTTI
 pub struct SpecialEffect<'a> {
-    pub vftable: usize,
+    vftable: usize,
     pub head: Option<&'a SpecialEffectEntry<'a>>,
     pub owner: &'a ChrIns<'a>,
     unk18: usize,
@@ -205,7 +205,7 @@ pub struct ChrInsModuleContainer<'a> {
 #[repr(C)]
 /// Source of name: RTTI
 pub struct ChrPhysicsModule<'a> {
-    pub vftable: usize,
+    vftable: usize,
     pub owner: &'a mut ChrIns<'a>,
     pub unk10: [u8; 0x40],
     pub unk50_orientation: FSVector4,
@@ -221,7 +221,7 @@ pub struct ChrPhysicsModule<'a> {
 #[repr(C)]
 /// Source of name: RTTI
 pub struct CSChrWetModule<'a> {
-    pub vftable: usize,
+    vftable: usize,
     pub owner: &'a mut ChrIns<'a>,
     pub unk10: [u8; 0x60],
 }
@@ -229,7 +229,7 @@ pub struct CSChrWetModule<'a> {
 #[repr(C)]
 /// Source of name: RTTI
 pub struct CSChrModelParamModifierModule<'a> {
-    pub vftable: usize,
+    vftable: usize,
     pub owner: &'a mut ChrIns<'a>,
     pub modifiers: Vector<'a, CSChrModelParamModifierModuleEntry>,
 }
@@ -276,7 +276,7 @@ pub struct CSChrModelParamModifierModuleEntryValue {
 #[repr(C)]
 /// Source of name: RTTI
 pub struct ChrCtrl<'a> {
-    pub vftable: usize,
+    vftable: usize,
     _unk8: u64,
     pub owner: &'a ChrIns<'a>,
     pub manipulator: usize,
@@ -290,7 +290,7 @@ pub struct ChrCtrl<'a> {
 #[repr(C)]
 /// Source of name: RTTI
 pub struct CSModelIns {
-    pub vftable: usize,
+    vftable: usize,
     pub unk8: usize,
     pub model_item: usize,
     pub model_disp_entity: usize,

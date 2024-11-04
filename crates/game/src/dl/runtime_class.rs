@@ -5,7 +5,7 @@ use std::ffi;
 ///
 /// Source of name: RTTI
 pub struct DLRuntimeClass {
-    pub vftable: *const ffi::c_void,
+    vftable: *const ffi::c_void,
     pub base_class: *const DLRuntimeClass,
     pub unk10: usize,
     pub unk18: usize,
