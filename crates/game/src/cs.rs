@@ -13,6 +13,7 @@ mod menu_man;
 mod net_man;
 mod character_type_properties;
 mod ez_state;
+mod party_member_info;
 
 pub use camera::*;
 pub use field_ins::*;
@@ -29,3 +30,4 @@ pub use menu_man::*;
 pub use net_man::*;
 pub use character_type_properties::*;
 pub use ez_state::*;
+pub use party_member_info::*;
