@@ -26,7 +26,7 @@ impl DebugDisplay for FD4ParamRepository {
                     ui.text(res_cap.header.name.to_string());
 
                     ui.table_next_column();
-                    ui.text(format!("{} bytes", res_cap.data.file_size.to_string()));
+                    ui.text(format!("{} bytes", res_cap.data.file_size));
 
                     ui.table_next_column();
                     let row_count = unsafe { res_cap.data.header.as_ref() }.map(|p| p.row_count);
@@ -38,7 +38,7 @@ impl DebugDisplay for FD4ParamRepository {
 
                     ui.table_next_column();
                     let bytes_ptr = res_cap.data.header as usize;
-                    ui.text(format!("{:x}", bytes_ptr as usize));
+                    ui.text(format!("{:x}", { bytes_ptr }));
                 }
             }
         }

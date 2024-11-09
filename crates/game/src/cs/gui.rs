@@ -23,13 +23,13 @@ pub struct MenuViewItem {
 pub struct ComboItem<T> {
     pub menu_view_item: MenuViewItem,
     pub value: i32,
-    pub unkc: u32,
+    unkc: u32,
     // Used if strings memory is hosted else where (eg: fmg)
     pub string: usize,
     // Used if strings memory is hosted by the combo item itself (player names?)
     pub string_override: usize,
-    pub unk40: i32,
-    pub unk44: u32,
+    unk40: i32,
+    unk44: u32,
 }
 
 #[repr(C)]

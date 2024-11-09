@@ -34,6 +34,10 @@ pelite = "0.10"
 dataview = "~1.0"
 vtable-rs = "0.1"
 
+[workspace.dependencies.tracing-tracy]
+version = "0.11.3"
+features = ["enable"]
+
 [workspace.dependencies.windows]
 version = "0.54"
 features = [

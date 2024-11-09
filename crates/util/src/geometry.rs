@@ -1,14 +1,13 @@
-use std::{fmt::Formatter, mem::transmute, sync::LazyLock};
+use std::{mem::transmute, sync::LazyLock};
 
-use pelite::pattern;
 use pelite::pattern::Atom;
 use pelite::pe::Pe;
 use thiserror::Error;
 
+use game::cs::CSWorldGeomMan;
+use game::cs::GeometrySpawnRequest;
 use game::cs::MapId;
 use game::position::ChunkPosition;
-use game::cs::GeometrySpawnRequest;
-use game::cs::CSWorldGeomMan;
 
 use crate::program::Program;
 
@@ -37,7 +36,11 @@ pub struct GeometrySpawnParameters {
 }
 
 pub trait CSWorldGeomManExt {
-    fn spawn_geometry(&self, asset: &str, parameters: &GeometrySpawnParameters) -> Result<(), SpawnGeometryError>;
+    fn spawn_geometry(
+        &self,
+        asset: &str,
+        parameters: &GeometrySpawnParameters,
+    ) -> Result<(), SpawnGeometryError>;
 }
 
 impl CSWorldGeomManExt for CSWorldGeomMan<'_> {
@@ -70,7 +73,9 @@ impl CSWorldGeomManExt for CSWorldGeomMan<'_> {
                 .scanner()
                 .finds_code(INITIALIZE_SPAWN_GEOMETRY_REQUEST_PATTERN, &mut matches)
             {
-                panic!("Could not find INITIALIZE_SPAWN_GEOMETRY_REQUEST_PATTERN or found duplicates.");
+                panic!(
+                    "Could not find INITIALIZE_SPAWN_GEOMETRY_REQUEST_PATTERN or found duplicates."
+                );
             }
 
             program.rva_to_va(matches[1]).unwrap()
@@ -91,16 +96,19 @@ impl CSWorldGeomManExt for CSWorldGeomMan<'_> {
         });
 
         let map_data_by_map_id = unsafe {
-            transmute::<_, fn(&CSWorldGeomMan, &MapId) -> u64>(*CS_WORLD_GEOM_MAN_MAP_DATA_BY_MAP_ID_VA)
+            transmute::<_, fn(&CSWorldGeomMan, &MapId) -> u64>(
+                *CS_WORLD_GEOM_MAN_MAP_DATA_BY_MAP_ID_VA,
+            )
         };
 
         let initialize_spawn_geometry_request = unsafe {
-            transmute::<_, fn(&mut GeometrySpawnRequest, u32)>(*INITIALIZE_SPAWN_GEOMETRY_REQUEST_VA)
+            transmute::<_, fn(&mut GeometrySpawnRequest, u32)>(
+                *INITIALIZE_SPAWN_GEOMETRY_REQUEST_VA,
+            )
         };
 
-        let spawn_geometry = unsafe {
-            transmute::<_, fn(u64, &GeometrySpawnRequest) -> u64>(*SPAWN_GEOMETRY_VA)
-        };
+        let spawn_geometry =
+            unsafe { transmute::<_, fn(u64, &GeometrySpawnRequest) -> u64>(*SPAWN_GEOMETRY_VA) };
 
         let mut request = GeometrySpawnRequest {
             asset_string: [0u16; 0x20],
@@ -142,13 +150,19 @@ impl CSWorldGeomManExt for CSWorldGeomMan<'_> {
         request.scale_y = parameters.scale_y;
         request.scale_z = parameters.scale_z;
 
-        tracing::info!("Populated spawn request: {request:#?} for map {}", &parameters.map_id);
+        tracing::info!(
+            "Populated spawn request: {request:#?} for map {}",
+            &parameters.map_id
+        );
 
         // TODO: make this a nice as_ref call or something
         let map_data_ptr = map_data_by_map_id(self, &parameters.map_id);
-        tracing::info!("Map Data ptr: {:?} -> {map_data_ptr:#x?}", &parameters.map_id);
+        tracing::info!(
+            "Map Data ptr: {:?} -> {map_data_ptr:#x?}",
+            &parameters.map_id
+        );
         if map_data_ptr == 0x0 {
-            return Err(SpawnGeometryError::MapDataUnavailable)
+            return Err(SpawnGeometryError::MapDataUnavailable);
         }
 
         let geom = spawn_geometry(map_data_ptr, &request);

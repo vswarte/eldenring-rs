@@ -1,6 +1,5 @@
 use std::{
     cell::UnsafeCell,
-    pin::Pin,
     sync::{
         atomic::{AtomicBool, Ordering},
         Arc,
@@ -8,7 +7,7 @@ use std::{
 };
 
 use crate::program::Program;
-use game::cs::{CSTaskGroupIndex, CSTaskImp, FD4TaskBase, FD4TaskBaseVMT, FD4TaskData};
+use game::cs::{CSTaskGroupIndex, CSTaskImp, FD4TaskData};
 use pelite::pe::Pe;
 use pelite::{pattern, pattern::Atom};
 use std::sync::LazyLock;

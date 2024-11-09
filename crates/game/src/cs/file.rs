@@ -20,25 +20,25 @@ pub struct CSFileRepository<'a> {
     pub holder2: FD4ResCapHolder<()>,
 
     // Some type of btree?
-    pub unkc8_allocator: usize,
-    pub unkd0_tree_pointer: usize,
-    pub unkd8_tree_size: u32,
-    pub unkdc_tree_pad: u32,
+    unkc8_allocator: usize,
+    unkd0_tree_pointer: usize,
+    unkd8_tree_size: u32,
+    unkdc_tree_pad: u32,
     pub mutexes: [&'a CSFileRepositoryMutex; 5],
-    pub unk108: usize,
-    pub unk110: usize,
-    pub unk118: usize,
-    pub unk120: usize,
-    pub unk128: usize,
+    unk108: usize,
+    unk110: usize,
+    unk118: usize,
+    unk120: usize,
+    unk128: usize,
 }
 
 #[repr(C)]
 pub struct CSFileRepositoryMutex {
     pub mutex: DLPlainLightMutex,
-    pub unk30: u32,
-    pub unk34: u32,
-    pub unk38: u32,
-    pub unk3c: u32,
-    pub unk40: usize,
-    pub unk48: usize,
+    unk30: u32,
+    unk34: u32,
+    unk38: u32,
+    unk3c: u32,
+    unk40: usize,
+    unk48: usize,
 }

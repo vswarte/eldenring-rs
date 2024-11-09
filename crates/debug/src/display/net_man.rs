@@ -14,19 +14,19 @@ impl<'a> DebugDisplay for CSNetMan<'a> {
 impl<'a> DebugDisplay for CSNetBloodMessageDb<'a> {
     fn render_debug(&self, ui: &&mut Ui) {
         if ui.collapsing_header("Entries", TreeNodeFlags::empty()) {
-            render_message_table(unsafe { self.entries.iter() }.map(|f| *f), ui);
+            render_message_table(self.entries.iter().copied(), ui);
         }
 
         ui.text(format!("Unk20: {}", self.unk20));
 
         if ui.collapsing_header("Created message data", TreeNodeFlags::empty()) {
-            unsafe { self.created_data.iter() }.for_each(|f| ui.text(format!("{f} {f:x}")))
+            self.created_data.iter().for_each(|f| ui.text(format!("{f} {f:x}")))
         }
 
         ui.text(format!("Unk58: {}", self.unk58));
 
         if ui.collapsing_header("Discovered messages", TreeNodeFlags::empty()) {
-            render_message_table(unsafe { self.discovered_messages.iter() }.map(|f| **f), ui);
+            render_message_table(self.discovered_messages.iter().map(|f| **f), ui);
         }
     }
 }

@@ -6,25 +6,16 @@ use super::DebugDisplay;
 
 impl DebugDisplay for WorldAreaTime {
     fn render_debug(&self, ui: &&mut Ui) {
-        let year = self.clock.year();
-        ui.text(format!("Year: {year}"));
+        ui.input_text("Hours", &mut self.clock.hours().to_string())
+            .read_only(true)
+            .build();
 
-        let month = self.clock.month();
-        ui.text(format!("Month: {month}"));
+        ui.input_text("Minutes", &mut self.clock.minutes().to_string())
+            .read_only(true)
+            .build();
 
-        let day_of_week = self.clock.day_of_week();
-        ui.text(format!("Day of week: {day_of_week}"));
-
-        let day = self.clock.day();
-        ui.text(format!("Day: {day}"));
-
-        let hours = self.clock.hours();
-        ui.text(format!("Hours: {hours}"));
-
-        let minutes = self.clock.minutes();
-        ui.text(format!("Minutes: {minutes}"));
-
-        let seconds = self.clock.seconds();
-        ui.text(format!("Seconds: {seconds}"));
+        ui.input_text("Seconds", &mut self.clock.seconds().to_string())
+            .read_only(true)
+            .build();
     }
 }

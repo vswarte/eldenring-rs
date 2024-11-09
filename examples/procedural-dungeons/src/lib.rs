@@ -1,7 +1,6 @@
 use std::{
     error::Error,
     mem::forget,
-    sync::Arc,
     thread::{sleep, spawn},
     time::Duration,
 };
@@ -37,7 +36,7 @@ pub unsafe extern "C" fn DllMain(_hmodule: usize, reason: u32) -> bool {
 }
 
 fn init() -> Result<(), Box<dyn Error>> {
-    let cs_task = get_instance::<CSTaskImp>().unwrap().unwrap();
+    let cs_task = unsafe { get_instance::<CSTaskImp>() }.unwrap().unwrap();
 
     // let prefabs = vec![
     //     Prefab {
@@ -58,13 +57,12 @@ fn init() -> Result<(), Box<dyn Error>> {
 
     let task = cs_task.run_task(
         move |_: &FD4TaskData| {
-            let world_geom_man = get_instance::<CSWorldGeomMan>().unwrap().unwrap();
+            let world_geom_man = unsafe { get_instance::<CSWorldGeomMan>() }.unwrap().unwrap();
             if is_key_pressed(0x68) {
                 spawn(move || {
-                    let Some(mut main_player) = get_instance::<WorldChrMan>()
+                    let Some(main_player) = unsafe { get_instance::<WorldChrMan>() }
                         .unwrap()
-                        .map(|w| unsafe { w.main_player.as_mut() })
-                        .flatten()
+                        .and_then(|w| unsafe { w.main_player.as_mut() })
                     else {
                         return;
                     };
@@ -79,7 +77,7 @@ fn init() -> Result<(), Box<dyn Error>> {
 
                     // Warp player to dungeon
                     let current_pos = main_player.chr_ins.module_container.physics.position.xyz();
-                    let mut new_pos = HavokPosition::from_xyz(
+                    let new_pos = HavokPosition::from_xyz(
                         current_pos.0,
                         current_pos.1 - 199.8,
                         current_pos.2,
@@ -120,9 +118,7 @@ impl Dungeon {
 
         // Always start with a prefab on which the player can spawn.
         let start = prefabs
-            .iter()
-            .filter(|p| p.spawn.is_some())
-            .next()
+            .iter().find(|p| p.spawn.is_some())
             .ok_or(DungeonError::NoStartingPrefab)?;
 
         // Calculate the players entry into the dungeon
@@ -143,11 +139,10 @@ impl Dungeon {
 
     fn spawn_prefab(&self, prefab: &Prefab) {
         // TODO: get this outta here lmao
-        let world_geom_man = get_instance::<CSWorldGeomMan>().unwrap().unwrap();
+        let world_geom_man = unsafe { get_instance::<CSWorldGeomMan>() }.unwrap().unwrap();
         let prefab_origin = &self.center;
 
         tracing::info!("Spawning prefab {}", prefab.name);
-
         prefab
             .components
             .iter()
@@ -155,7 +150,7 @@ impl Dungeon {
                 (
                     &c.asset,
                     Box::leak(Box::new(GeometrySpawnParameters {
-                        map_id: self.map.clone(),
+                        map_id: self.map,
                         position: ChunkPosition::from_xyz(
                             prefab_origin.0 + c.position.0,
                             prefab_origin.1 + c.position.1,

@@ -1,7 +1,4 @@
-use pelite::pe::{
-    msvc::RTTICompleteObjectLocator,
-    Pe, Rva, Va,
-};
+use pelite::pe::{msvc::RTTICompleteObjectLocator, Pe, Rva, Va};
 use undname::Flags;
 
 use crate::program::Program;
@@ -26,30 +23,30 @@ pub fn find_rtti_classes<'a>(program: &'a Program) -> impl Iterator<Item = Class
         .virtual_range()
         .step_by(size_of::<Va>())
         .filter_map(move |candidate_rva| {
-            let vtable_meta_rva = candidate_rva;
-            let vtable_rva = candidate_rva + VA_SIZE;
+            let vftable_meta_rva = candidate_rva;
+            let vftable_rva = candidate_rva + VA_SIZE;
 
-            let vtable_meta_rva = program
-                .derva(vtable_meta_rva)
+            let vftable_meta_rva = program
+                .derva(vftable_meta_rva)
                 .and_then(|va| program.va_to_rva(*va))
                 .ok()?;
 
-            let vtable_entry_rva = program
-                .derva(vtable_rva)
+            let vftable_entry_rva = program
+                .derva(vftable_rva)
                 .and_then(|va| program.va_to_rva(*va))
                 .ok()?;
 
-            if rdata.virtual_range().contains(&vtable_meta_rva)
-                && text.virtual_range().contains(&vtable_entry_rva)
+            if rdata.virtual_range().contains(&vftable_meta_rva)
+                && text.virtual_range().contains(&vftable_entry_rva)
             {
-                let _: &RTTICompleteObjectLocator = program.derva(vtable_meta_rva).ok()?;
+                let _: &RTTICompleteObjectLocator = program.derva(vftable_meta_rva).ok()?;
 
-                Some((vtable_meta_rva, vtable_rva))
+                Some((vftable_meta_rva, vftable_rva))
             } else {
                 None
             }
         })
-        .filter_map(|(meta, vtable)| {
+        .filter_map(|(meta, vftable)| {
             let col: &RTTICompleteObjectLocator = program.derva(meta).ok()?;
 
             let ty_name = program
@@ -70,21 +67,60 @@ pub fn find_rtti_classes<'a>(program: &'a Program) -> impl Iterator<Item = Class
             Some(Class {
                 program,
                 name: demangled,
-                vtable,
+                vftable,
             })
         })
 }
 
+// TODO: use better than usizes.
+/// Attempts to extract the class name for a given vftable.
+pub fn vftable_classname<'a>(program: &'a Program, vftable_va: usize) -> Option<String> {
+    let vftable_rva = program.va_to_rva(vftable_va as u64).ok()?;
+    let vftable_meta_rva = vftable_rva - VA_SIZE;
+
+    let rdata = program
+        .section_headers()
+        .by_name(".rdata")
+        .expect("no .rdata section found");
+
+    let vftable_meta_rva = program
+        .derva(vftable_meta_rva)
+        .and_then(|va| program.va_to_rva(*va))
+        .ok()?;
+
+    if !rdata.virtual_range().contains(&vftable_meta_rva) {
+        return None;
+    }
+
+    let col: &RTTICompleteObjectLocator = program.derva(vftable_meta_rva).ok()?;
+    let ty_name = program
+        .derva_c_str(col.type_descriptor + 16)
+        .ok()?
+        .to_string();
+    if !ty_name
+        .chars()
+        .all(|ch| (0x20..=0x7e).contains(&(ch as u8)))
+    {
+        return None;
+    }
+
+    let demangled = undname::demangle(ty_name.as_str(), Flags::NAME_ONLY)
+        .map(|s| s.to_string())
+        .ok()?;
+
+    Some(demangled)
+}
+
 #[derive(Debug, PartialEq, Eq, Hash, Clone, Copy)]
 struct RttiCandidate {
-    vtable_meta_rva: Rva,
-    vtable_rva: Rva,
+    vftable_meta_rva: Rva,
+    vftable_rva: Rva,
 }
 
 pub struct Class<'a> {
     program: &'a Program<'a>,
     pub name: String,
-    pub vtable: Rva,
+    pub vftable: Rva,
 }
 
 impl Class<'_> {
@@ -93,6 +129,6 @@ impl Class<'_> {
     /// # Safety
     /// Does not validate if the index is actually contained within the VMT.
     pub unsafe fn vmt_index(&self, index: u32) -> Option<Va> {
-        Some(*self.program.derva(self.vtable + VA_SIZE * index).ok()?)
+        Some(*self.program.derva(self.vftable + VA_SIZE * index).ok()?)
     }
 }

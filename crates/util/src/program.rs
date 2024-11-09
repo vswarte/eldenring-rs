@@ -1,7 +1,5 @@
 // TODO: replace with pelite
-use std::{ops, slice};
 
-use thiserror::Error;
 use pelite::pe::{Pe, PeFile, PeObject, PeView};
 use windows::core::PCSTR;
 use windows::Win32::System::LibraryLoader::GetModuleHandleA;

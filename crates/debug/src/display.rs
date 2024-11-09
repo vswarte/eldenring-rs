@@ -12,13 +12,14 @@ pub(crate) mod chr_man;
 pub(crate) mod net_man;
 pub(crate) mod task;
 pub(crate) mod param;
+pub(crate) mod event_flag;
 
 pub trait DebugDisplay {
     fn render_debug(&self, ui: &&mut Ui);
 }
 
 pub fn render_debug_singleton<T: DLRFLocatable + DebugDisplay + 'static>(ui: &&mut Ui) {
-    let singleton = util::singleton::get_instance::<T>()
+    let singleton = unsafe { util::singleton::get_instance::<T>() }
         .unwrap_or_else(|_| panic!("Could not get reflection data for {}", T::DLRF_NAME));
 
     match singleton {

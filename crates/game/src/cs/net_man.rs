@@ -50,11 +50,11 @@ pub struct CSNetBloodMessageDb<'a> {
 #[repr(C)]
 pub struct CSNetBloodMessageDbItem {
     vftable: usize,
-    _unk8: u32,
-    _unkc: u32,
-    _unk10: u32,
+    unk8: u32,
+    unkc: u32,
+    unk10: u32,
     pub map_id: MapId,
-    _unk18: u32,
+    unk18: u32,
     pub position_x: f32,
     pub position_y: f32,
     pub position_z: f32,

@@ -33,6 +33,9 @@ pub struct CSSessionManager {
     pub unk0x8: u32,
     pub lobby_state: LobbyState,
     pub protocol_state: ProtocolState,
+    pub unk14: f32,
+    unk18: u32,
+    unk1c: u32,
 }
 
 impl DLRFLocatable for CSSessionManager {

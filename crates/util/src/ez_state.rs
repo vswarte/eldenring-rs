@@ -19,9 +19,9 @@ impl From<EzStateExternalFuncArg> for EzStateExternalFuncArgSafe {
     }
 }
 
-impl Into<EzStateExternalFuncArg> for EzStateExternalFuncArgSafe {
-    fn into(self) -> EzStateExternalFuncArg {
-        match self {
+impl From<EzStateExternalFuncArgSafe> for EzStateExternalFuncArg {
+    fn from(val: EzStateExternalFuncArgSafe) -> Self {
+        match val {
             EzStateExternalFuncArgSafe::Float32(v) => EzStateExternalFuncArg {
                 value: EzStateExternalFuncArgValue { float32: v },
                 value_type: 1,

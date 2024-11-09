@@ -5,6 +5,7 @@ use pelite::pe::Rva;
 use std::collections;
 use std::io::Write;
 use std::sync;
+use std::sync::LazyLock;
 use thiserror::Error;
 
 use crate::program::Program;
@@ -28,13 +29,16 @@ pub enum LookupError {
     SingletonMapCreation(SingletonMapError),
 }
 
-/// Looks up instances of singleton'd classes by their name.
-/// It builds a singleton map in the by matching an instruction pattern for
-/// some exception creation.
-/// Some singletons aren't necessarily always alive. Hence the
-/// Result<Option<T>, E>. An example of such is WorldChrMan of which an
-/// instance only exists if you're actually in the game world.
-pub fn get_instance<T: DLRFLocatable>() -> Result<Option<&'static mut T>, LookupError> {
+/// Looks up instances of singleton instances by their name.
+/// Some singletons aren't necessarily always instanciated and available.
+/// Discovered singletons are cached so invokes after the first will be much faster.
+///
+/// # SAFETY
+/// All bets are off if you grab a ref to a singleton without understanding the conditions around
+/// shared access like multithreaded access and locking. The best place to use this is from the
+/// task runtime after extensively considering what phases of the game loop update or read a
+/// singleton.
+pub unsafe fn get_instance<T: DLRFLocatable>() -> Result<Option<&'static mut T>, LookupError> {
     let table = SINGLETON_MAP.get_or_init(move || {
         let program = unsafe { Program::current() };
 
@@ -83,17 +87,12 @@ pub fn build_singleton_table(program: &Program) -> Result<SingletonMap, Singleto
         .ok_or(SingletonMapError::Section(".data"))?
         .virtual_range();
 
-    tracing::debug!("Found sections. text_range = {text_range:x?}, data_range = {data_range:x?}");
-
     let pattern = pattern::parse(NULL_CHECK_PATTERN).unwrap();
     let mut matches = program.scanner().matches_code(&pattern);
     let mut captures: [Rva; 4] = [Rva::default(); 4];
     let mut results: SingletonMap = Default::default();
 
-    tracing::debug!("Scanning for singleton nullcheck candidates");
     while matches.next(&mut captures) {
-        tracing::trace!("Singleton nullcheck candidate. captures = {captures:#x?}");
-
         let static_rva = captures[1];
         let metadata_rva = captures[2];
         let get_reflection_name_rva = captures[3];
@@ -106,13 +105,6 @@ pub fn build_singleton_table(program: &Program) -> Result<SingletonMap, Singleto
             continue;
         }
 
-        tracing::trace!(
-            "Found singleton null check candidate. {} {} {}",
-            data_range.contains(&static_rva),
-            data_range.contains(&metadata_rva),
-            text_range.contains(&get_reflection_name_rva),
-        );
-
         let metadata = program.rva_to_va(metadata_rva).unwrap();
         let get_singleton_name: extern "C" fn(u64) -> *const i8 =
             unsafe { std::mem::transmute(program.rva_to_va(get_reflection_name_rva).unwrap()) };
@@ -124,12 +116,6 @@ pub fn build_singleton_table(program: &Program) -> Result<SingletonMap, Singleto
             .to_string();
 
         let singleton_va = program.rva_to_va(static_rva).unwrap();
-        tracing::debug!(
-            "Discovered singleton {} at {:x}",
-            singleton_name,
-            singleton_va
-        );
-
         results.insert(singleton_name, singleton_va as usize);
     }
 
