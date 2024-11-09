@@ -4,6 +4,7 @@ use std::marker::PhantomData;
 use std::mem::transmute;
 
 use crate::cs::ChrIns;
+use crate::matrix::FSVector4;
 use crate::{DLRFLocatable, Tree};
 
 use super::{FieldInsHandle, PlayerIns};
@@ -67,12 +68,63 @@ pub struct WorldChrMan<'a> {
     unk1e550: usize,
     unk1e558: u32,
     unk1e55c: f32,
-    unk1e560: [u8; 0x88],
-    pub net_chr_sync: NetChrSync<'a>,
+    unk1e560: [u8; 0x80],
+    pub net_chr_sync: &'a NetChrSync<'a>,
+    unk1e5e8: usize,
+    unk1e5f0: usize,
+    unk1e5f8: usize,
+    unk1e600: usize,
+    unk1e608: [u8; 0x40],
+    pub debug_chr_creator: CSDebugChrCreator<'a>,
+
+    /// TODO much more....
 }
 
 impl DLRFLocatable for WorldChrMan<'_> {
     const DLRF_NAME: &'static str = "WorldChrMan";
+}
+
+#[repr(C)]
+pub struct CSDebugChrCreator<'a> {
+    vftable: usize,
+    stepper_fns: usize,
+    unk10: usize,
+    unk18_tree: Tree<'a, ()>,
+    unk30: [u8; 0x14],
+    pub spawn: bool,
+    unk45: [u8; 0x3],
+    unk48: [u8; 0x68],
+    pub init_data: CSDebugChrCreatorInitData,
+    pub last_created_chr: Option<&'a ChrIns<'a>>,
+    unk1b8: usize,
+}
+
+#[repr(C)]
+pub struct CSDebugChrCreatorInitData {
+    spawn_position: FSVector4,
+    spawn_rotation: FSVector4,
+    unk20: FSVector4,
+    spawn_scale: FSVector4,
+    npc_param_id: u32,
+    npc_think_param_id: u32,
+    event_entity_id: u32,
+    talk_id: u32,
+    name: [u16; 0x20],
+    unk90: usize,
+    name_pointer: usize,
+    unka0: usize,
+    unka8: usize,
+    name_capacity: usize,
+    unkb8: usize,
+    unkc0: usize,
+    enemy_type: u8,
+    hamari_simulate: bool,
+    unkca: [u8; 0x2],
+    chr_init_param_id: u32,
+    spawn_manipulator_type: u32,
+    unkd4: [u8; 0x18],
+    spawn_count: u32,
+    unkf0: [u8; 0x10],
 }
 
 #[repr(C)]
