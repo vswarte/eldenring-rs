@@ -27,6 +27,18 @@ impl EventFlag {
 #[repr(C)]
 /// Manages the event flags for the game.
 ///
+/// Source of name: DLRF RuntimeClass metadata
+pub struct CSEventFlagMan<'a> {
+    pub virtual_memory_flag: CSFD4VirtualMemoryFlag<'a>,
+    pub world_type: u32,
+    unk7c: [u8; 0x1f4],
+}
+
+impl DLRFLocatable for CSEventFlagMan<'_> {
+    const DLRF_NAME: &'static str = "CSEventFlagMan";
+}
+
+#[repr(C)]
 /// Source of name: RTTI
 pub struct CSFD4VirtualMemoryFlag<'a> {
     vftable: usize,
@@ -44,10 +56,7 @@ pub struct CSFD4VirtualMemoryFlag<'a> {
     pub flag_blocks: *mut FlagBlock,
     /// Describes where to find a flag block.
     pub flag_block_descriptors: Tree<'a, FlagBlockDescriptor<'a>>,
-}
-
-impl DLRFLocatable for CSFD4VirtualMemoryFlag<'_> {
-    const DLRF_NAME: &'static str = "CSEventFlagMan";
+    unk38: [u8; 0x30],
 }
 
 impl<'a> CSFD4VirtualMemoryFlag<'a> {

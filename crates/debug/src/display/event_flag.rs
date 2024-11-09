@@ -1,8 +1,23 @@
-use game::cs::{CSFD4VirtualMemoryFlag, EventFlag};
+use game::cs::{CSEventFlagMan, CSFD4VirtualMemoryFlag, EventFlag};
 use hudhook::imgui::{TableColumnSetup, TreeNodeFlags, Ui};
 use util::singleton::get_instance;
 
 use super::DebugDisplay;
+
+impl<'a> DebugDisplay for CSEventFlagMan<'a> {
+    fn render_debug(&self, ui: &&mut Ui) {
+        ui.input_text(
+            "World type",
+            &mut self.world_type.to_string(),
+        )
+        .read_only(true)
+        .build();
+
+        if ui.collapsing_header("CSFD4VirtualMemory", TreeNodeFlags::empty()) {
+            self.virtual_memory_flag.render_debug(&ui);
+        }
+    }
+}
 
 impl<'a> DebugDisplay for CSFD4VirtualMemoryFlag<'a> {
     fn render_debug(&self, ui: &&mut Ui) {
@@ -45,34 +60,36 @@ impl<'a> DebugDisplay for CSFD4VirtualMemoryFlag<'a> {
             }
         }
 
-        let mut event_flag_man = unsafe { get_instance::<CSFD4VirtualMemoryFlag>() }
+        let mut virtual_memory_flag = &mut unsafe { get_instance::<CSEventFlagMan>() }
             .unwrap()
-            .unwrap();
+            .unwrap()
+            .virtual_memory_flag;
+
         if ui.button("Nuke Caelid") {
-            event_flag_man.set_flag(62040, !event_flag_man.get_flag(62040));
+            virtual_memory_flag.set_flag(62040, !virtual_memory_flag.get_flag(62040));
         }
 
         if ui.button("Toggle Godrick out of existence") {
-            event_flag_man.set_flag(9101, !event_flag_man.get_flag(9101));
+            virtual_memory_flag.set_flag(9101, !virtual_memory_flag.get_flag(9101));
         }
 
         if ui.button("Close door after Godrick") {
-            event_flag_man.set_flag(10008540, !event_flag_man.get_flag(10008540));
+            virtual_memory_flag.set_flag(10008540, !virtual_memory_flag.get_flag(10008540));
         }
 
-        if event_flag_man.get_flag(62040) {
+        if virtual_memory_flag.get_flag(62040) {
             ui.text("Still have to nuke Caelid...");
         } else {
             ui.text("Caelid = nuked");
         }
 
-        if !event_flag_man.get_flag(9101) {
+        if !virtual_memory_flag.get_flag(9101) {
             ui.text("Godrick exists");
         } else {
             ui.text("Godrick doesn't exist");
         }
 
-        if event_flag_man.get_flag(10008540) {
+        if virtual_memory_flag.get_flag(10008540) {
             ui.text("Door behind Godrick open");
         } else {
             ui.text("Door behind Godrick closed");

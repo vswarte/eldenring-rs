@@ -1,3 +1,4 @@
+use game::cs::CSEventFlagMan;
 use game::cs::CSFD4VirtualMemoryFlag;
 use game::fd4::FD4ParamRepository;
 use game::world_area_time::WorldAreaTime;
@@ -59,7 +60,7 @@ impl ImguiRenderLoop for EldenRingDebugGui {
             .build(|| {
                 let tabs = ui.tab_bar("main-tabs").unwrap();
                 if let Some(item) = ui.tab_item("World") {
-                    render_debug_singleton::<CSFD4VirtualMemoryFlag>(&ui);
+                    render_debug_singleton::<CSEventFlagMan>(&ui);
                     render_debug_singleton::<WorldChrMan>(&ui);
                     render_debug_singleton::<CSWorldGeomMan>(&ui);
                     render_debug_singleton::<WorldAreaTime>(&ui);
