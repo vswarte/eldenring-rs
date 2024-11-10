@@ -43,7 +43,7 @@ impl NetChrSetSync<'_> {
         }
     }
 
-    pub fn health_updates(&self) -> &mut [ChrSyncUpdateFlags] {
+    pub fn health_updates(&self) -> &mut [ChrSyncHealthUpdate] {
         unsafe {
             std::slice::from_raw_parts_mut(
                 self.health_readback_values,
