@@ -8,7 +8,7 @@ use crate::dl::DLWString;
 ///
 /// Source of name: RTTI
 pub struct FD4BasicHashString {
-    pub vftable: usize,
+    vftable: usize,
     pub allocator: usize,
     /// The contained string we're hashing for.
     pub string: DLWString,

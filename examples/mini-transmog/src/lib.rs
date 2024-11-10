@@ -1,27 +1,17 @@
-/// Implements a minimal armor visual-appearance changer similar to the transmogrify mod by Thomas
-/// J Clark.
-use std::cell::{Cell, RefCell};
 use std::collections::HashMap;
-use std::sync::{Arc, LazyLock, RwLock};
+use std::sync::Arc;
 use std::thread::sleep;
 use std::time::Duration;
 use std::{error::Error, thread::spawn};
-use steamworks::networking_messages::NetworkingMessages;
 use steamworks::networking_types::{NetworkingIdentity, SendFlags};
-use steamworks::{Client, ClientManager, LobbyId, Matchmaking, SteamId};
-use steamworks_sys::{
-    SteamAPI_ISteamNetworkingMessages_ReceiveMessagesOnChannel, SteamNetworkingMessage_t,
-};
+use steamworks::{LobbyId, SteamId};
 use tracing_panic::panic_hook;
 
 use game::cs::{
-    CSCamera, CSTaskGroupIndex, CSTaskImp, FD4TaskData, WorldChrMan, CHR_ASM_SLOT_PROTECTOR_HEAD,
+    CSTaskGroupIndex, CSTaskImp, FD4TaskData, WorldChrMan, CHR_ASM_SLOT_PROTECTOR_HEAD,
     CHR_ASM_SLOT_PROTECTOR_LEGS,
 };
-use util::program::Program;
 use util::steam::{self, networking_messages, register_callback, SteamCallbackImpl};
-use util::task::FD4Task;
-use util::{arxan, input};
 use util::{singleton::get_instance, task::CSTaskImpExt};
 
 const STEAM_MESSAGE_CHANNEL: u32 = 123;
@@ -46,7 +36,7 @@ pub unsafe extern "C" fn DllMain(_hmodule: usize, reason: u32) -> bool {
 }
 
 fn init() -> Result<(), Box<dyn Error>> {
-    let task = get_instance::<CSTaskImp>().unwrap().unwrap();
+    let task = unsafe { get_instance::<CSTaskImp>() }.unwrap().unwrap();
     let protector_mapping = Arc::new(ProtectorOverrideHolder {
         local_overrides: HashMap::from([
             (640000, 900000),
@@ -63,12 +53,12 @@ fn init() -> Result<(), Box<dyn Error>> {
 
         task.run_task(
             move |_: &FD4TaskData| {
-                let Some(world_chr_man) = get_instance::<WorldChrMan>().unwrap() else {
+                let Some(world_chr_man) = unsafe { get_instance::<WorldChrMan>() }.unwrap() else {
                     return;
                 };
 
                 // Apply the main players overrides
-                if let Some(player) = unsafe { world_chr_man.main_player.as_mut() } {
+                if let Some(player) = world_chr_man.main_player.as_mut() {
                     player.chr_asm.equipment_param_ids
                         [CHR_ASM_SLOT_PROTECTOR_HEAD..CHR_ASM_SLOT_PROTECTOR_LEGS]
                         .iter_mut()
@@ -88,10 +78,9 @@ fn init() -> Result<(), Box<dyn Error>> {
 
     let model_param_modifier_task = task.run_task(
         |_: &FD4TaskData| {
-            let Some(player) = get_instance::<WorldChrMan>()
+            let Some(player) = unsafe { get_instance::<WorldChrMan>() }
                 .unwrap()
-                .map(|w| unsafe { w.main_player.as_ref() })
-                .flatten()
+                .and_then(|w| w.main_player.as_ref())
             else {
                 return;
             };

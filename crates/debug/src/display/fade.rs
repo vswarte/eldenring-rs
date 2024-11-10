@@ -37,22 +37,27 @@ impl DebugDisplay for CSFD4FadePlate {
     fn render_debug(&self, ui: &&mut Ui) {
         let mut current_color: [f32; 4] = (&self.current_color).into();
         if ui.color_edit4("current_color", &mut current_color) {
-            // TODO
         }
 
         let mut start_color: [f32; 4] = (&self.start_color).into();
         if ui.color_edit4("start_color", &mut start_color) {
-            // TODO
         }
 
         let mut end_color: [f32; 4] = (&self.end_color).into();
         if ui.color_edit4("end_color", &mut end_color) {
-            // TODO
         }
 
-        ui.text(format!("Fade timer: {}", self.fade_timer.time));
-        ui.text(format!("Fade duration: {}", self.fade_duration.time));
-        ui.text(format!("Unk60: {}", self.unk60));
-        ui.text(format!("UnkA8: {}", self.unka8.time));
+        ui.input_text("Fade timer", &mut self.fade_timer.time.to_string())
+            .read_only(true)
+            .build();
+        ui.input_text("Fade duration", &mut self.fade_duration.time.to_string())
+            .read_only(true)
+            .build();
+        ui.input_text("Unk60", &mut self.unk60.to_string())
+            .read_only(true)
+            .build();
+        ui.input_text("UnkA8", &mut self.unka8.time.to_string())
+            .read_only(true)
+            .build();
     }
 }

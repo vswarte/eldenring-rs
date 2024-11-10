@@ -1,10 +1,9 @@
 use std::{
-    cell::RefCell, error::Error, f32::consts::PI, mem::forget, sync::{LazyLock, Mutex}
+    error::Error, f32::consts::PI, mem::forget, sync::{LazyLock, Mutex}
 };
 
 use game::{
-    cs::{CSCamera, CSTaskGroupIndex, CSTaskImp, CSWorldGeomMan, FD4TaskData, WorldChrMan},
-    matrix::FSVector4, position::ChunkPosition,
+    cs::{CSCamera, CSTaskGroupIndex, CSTaskImp, CSWorldGeomMan, FD4TaskData, WorldChrMan}, position::ChunkPosition,
 };
 use nalgebra_glm::{Mat4, Vec3};
 use thiserror::Error;
@@ -32,11 +31,11 @@ pub unsafe extern "C" fn DllMain(_hmodule: usize, reason: u32) -> bool {
 }
 
 fn init() -> Result<(), Box<dyn Error>> {
-    let task = get_instance::<CSTaskImp>().unwrap().unwrap();
+    let task = unsafe { get_instance::<CSTaskImp>() }.unwrap().unwrap();
     let task = task.run_task(
         move |_: &FD4TaskData| {
             let mut builder_camera = BUILDER_CAMERA.lock().unwrap();
-            if let Some(camera) = get_instance::<CSCamera>().unwrap() {
+            if let Some(camera) = unsafe { get_instance::<CSCamera>() }.unwrap() {
                 is_key_pressed(0x42).then(|| builder_camera.toggle(camera));
 
                 builder_camera.apply(camera);
@@ -58,9 +57,8 @@ fn init() -> Result<(), Box<dyn Error>> {
 
 const BUILDER_CAMERA_HEIGHT: f32 = 10.0;
 const GRID_TILE_SIZE: f32 = 1.0;
-const TIMER_VALUE_PER_UPDATE: f32 = 0.1;
 
-const SPAWNABLE_ASSETS: [&'static str; 10] = [
+const SPAWNABLE_ASSETS: [&str; 10] = [
     "AEG221_307", // Fancy wooden chair
     "AEG221_521", // Big bookcase
     "AEG221_533", // Fancy bed
@@ -76,29 +74,23 @@ const SPAWNABLE_ASSETS: [&'static str; 10] = [
 // TODO: drop mutex since its not necessary
 pub static BUILDER_CAMERA: LazyLock<Mutex<BuilderCamera>> = LazyLock::new(|| {
     Mutex::new(BuilderCamera {
-        active: Default::default(),
         selected_asset: 0,
         origin: None,
         lookdown: {
             nalgebra_glm::rotate_x(
-                &nalgebra_glm::translation(&&Vec3::new(0.0, BUILDER_CAMERA_HEIGHT, 0.0)),
+                &nalgebra_glm::translation(&Vec3::new(0.0, BUILDER_CAMERA_HEIGHT, 0.0)),
                 PI / 2.0,
             )
         },
-        interpolation_timer: Default::default(),
         previous_camera_coordinates: Default::default(),
         target_camera_coordinates: Default::default(),
     })
 });
 
 pub struct BuilderCamera {
-    active: bool,
     selected_asset: usize,
-
     origin: Option<Mat4>,
     lookdown: Mat4,
-
-    interpolation_timer: f32,
     previous_camera_coordinates: Vec3,
     target_camera_coordinates: Vec3,
 }
@@ -137,10 +129,10 @@ impl BuilderCamera {
         );
 
         let camera_matrix = camera_worldspace * self.lookdown;
-        camera.pers_cam_1.matrix = camera_matrix.clone().into();
-        camera.pers_cam_2.matrix = camera_matrix.clone().into();
-        camera.pers_cam_3.matrix = camera_matrix.clone().into();
-        camera.pers_cam_4.matrix = camera_matrix.clone().into();
+        camera.pers_cam_1.matrix = camera_matrix.into();
+        camera.pers_cam_2.matrix = camera_matrix.into();
+        camera.pers_cam_3.matrix = camera_matrix.into();
+        camera.pers_cam_4.matrix = camera_matrix.into();
     }
 
     fn move_camera(&mut self, movement: Movement) {
@@ -170,18 +162,17 @@ impl BuilderCamera {
             return Ok(());
         }
 
-        let main_player = get_instance::<WorldChrMan>()
+        let main_player = unsafe { get_instance::<WorldChrMan>() }
             .unwrap()
-            .map(|w| unsafe { w.main_player.as_ref() })
-            .flatten()
+            .and_then(|w| w.main_player.as_ref())
             .ok_or(AssetPlaceError::MainPlayerMissing)?;
 
         // Get the camera's position relative to the physics space center
-        let camera = get_instance::<CSCamera>()
+        let camera = unsafe { get_instance::<CSCamera>() }
             .unwrap()
             .ok_or(AssetPlaceError::CSCameraMissing)?;
 
-        let world_geom_man = get_instance::<CSWorldGeomMan>()
+        let world_geom_man = unsafe { get_instance::<CSWorldGeomMan>() }
             .unwrap()
             .ok_or(AssetPlaceError::WorldGeomManMissing)?;
 

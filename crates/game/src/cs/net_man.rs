@@ -4,7 +4,7 @@ use super::{CSEzTask, CSEzUpdateTask, MapId, PlayerIns};
 
 #[repr(C)]
 pub struct CSNetMan<'a> {
-    pub vftable: usize,
+    vftable: usize,
     unk8: [u8; 0x60],
     pub sos_db: usize,
     pub wandering_ghost_db: usize,
@@ -30,7 +30,7 @@ impl DLRFLocatable for CSNetMan<'_> {
 
 #[repr(C)]
 pub struct CSNetBloodMessageDb<'a> {
-    pub vftable: usize,
+    vftable: usize,
     // Contains all CSNetBloodMessageDbItem?
     pub entries: DoublyLinkedList<'a, &'a CSNetBloodMessageDbItem>,
     pub unk20: usize,
@@ -49,12 +49,12 @@ pub struct CSNetBloodMessageDb<'a> {
 
 #[repr(C)]
 pub struct CSNetBloodMessageDbItem {
-    pub vftable: usize,
-    _unk8: u32,
-    _unkc: u32,
-    _unk10: u32,
+    vftable: usize,
+    unk8: u32,
+    unkc: u32,
+    unk10: u32,
     pub map_id: MapId,
-    _unk18: u32,
+    unk18: u32,
     pub position_x: f32,
     pub position_y: f32,
     pub position_z: f32,

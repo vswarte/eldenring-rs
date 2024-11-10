@@ -4,6 +4,7 @@ use std::marker::PhantomData;
 use std::mem::transmute;
 
 use crate::cs::ChrIns;
+use crate::matrix::FSVector4;
 use crate::{DLRFLocatable, Tree};
 
 use super::{FieldInsHandle, PlayerIns};
@@ -11,7 +12,7 @@ use super::{FieldInsHandle, PlayerIns};
 #[repr(C)]
 /// Source of name: RTTI
 pub struct WorldChrMan<'a> {
-    pub vftable: usize,
+    vftable: usize,
     unk8: usize,
     pub world_area_chr: [WorldAreaChr<'a, ChrIns<'a>>; 28],
     pub world_block_chr: [WorldBlockChr<'a, ChrIns<'a>>; 192],
@@ -34,23 +35,49 @@ pub struct WorldChrMan<'a> {
     pub world_area_list_count: u32,
     unk10edc: u32,
 
-    // Player characters
+    /// ChrSet holding the players.
     pub player_chr_set: ChrSet<'a, PlayerIns<'a>>,
-    // Ghosts and such
+    /// ChrSet holding bloodmessage and bloodstain ghosts as well as replay ghosts.
     pub ghost_chr_set: ChrSet<'a, ChrIns<'a>>,
-    // Spirit ash characters
+    /// ChrSet holding spirit ashes as well as Torrent.
     pub summon_buddy_chr_set: ChrSet<'a, ChrIns<'a>>,
-    // Debug characters
+    /// ChrSet holding debug characters.
     pub debug_chr_set: ChrSet<'a, ChrIns<'a>>,
-    // All other enemies
+    /// ChrSet holding the map-based characters.
     pub open_field_chr_set: OpenFieldChrSet<'a>,
+    /// Amount of ChrSets in the chr_set_holder array.
+    pub chr_set_holder_count: u32,
+    /// Array of ChrSet holders.
+    pub chr_set_holders: [ChrSetHolder<'a, ChrIns<'a>>; 196],
+    pub null_chr_set_holder: ChrSetHolder<'a, ChrIns<'a>>,
+    pub chr_sets: [&'a ChrSetHolder<'a, ChrIns<'a>>; 196],
+    pub null_chr_set: Option<&'a ChrSet<'a, ChrIns<'a>>>,
+    pub player_grid_area: &'a WorldGridAreaChr,
+    /// Points to the local player.
+    pub main_player: Option<&'a mut PlayerIns<'a>>,
+    unk_player: Option<&'a mut PlayerIns<'a>>,
 
-    pub unk1cc58: [u8; 0x18b0],
-    pub main_player: *mut PlayerIns<'a>,
+    pub unk_map_id_1: MapId,
+    pub unk_map_id_2: MapId,
 
-    pub unk1e510: [u8; 0x28],
-    pub summon_buddy_manager: *mut SummonBuddyManager<'a>,
-    // TODO: rest
+    unk1e510: [u8; 0x18],
+    /// Manages spirit summons (excluding Torrent).
+    pub summon_buddy_manager: Option<&'a SummonBuddyManager<'a>>,
+    unk1e540: usize,
+    unk1e548: usize,
+    unk1e550: usize,
+    unk1e558: u32,
+    unk1e55c: f32,
+    unk1e560: [u8; 0x80],
+    pub net_chr_sync: &'a NetChrSync<'a>,
+    unk1e5e8: usize,
+    unk1e5f0: usize,
+    unk1e5f8: usize,
+    unk1e600: usize,
+    unk1e608: [u8; 0x40],
+    pub debug_chr_creator: CSDebugChrCreator<'a>,
+
+    /// TODO much more....
 }
 
 impl DLRFLocatable for WorldChrMan<'_> {
@@ -58,26 +85,90 @@ impl DLRFLocatable for WorldChrMan<'_> {
 }
 
 #[repr(C)]
+pub struct CSDebugChrCreator<'a> {
+    vftable: usize,
+    stepper_fns: usize,
+    unk10: usize,
+    unk18_tree: Tree<'a, ()>,
+    unk30: [u8; 0x14],
+    pub spawn: bool,
+    unk45: [u8; 0x3],
+    unk48: [u8; 0x68],
+    pub init_data: CSDebugChrCreatorInitData,
+    pub last_created_chr: Option<&'a ChrIns<'a>>,
+    unk1b8: usize,
+}
+
+#[repr(C)]
+pub struct CSDebugChrCreatorInitData {
+    spawn_position: FSVector4,
+    spawn_rotation: FSVector4,
+    unk20: FSVector4,
+    spawn_scale: FSVector4,
+    npc_param_id: u32,
+    npc_think_param_id: u32,
+    event_entity_id: u32,
+    talk_id: u32,
+    name: [u16; 0x20],
+    unk90: usize,
+    name_pointer: usize,
+    unka0: usize,
+    unka8: usize,
+    name_capacity: usize,
+    unkb8: usize,
+    unkc0: usize,
+    enemy_type: u8,
+    hamari_simulate: bool,
+    unkca: [u8; 0x2],
+    chr_init_param_id: u32,
+    spawn_manipulator_type: u32,
+    unkd4: [u8; 0x18],
+    spawn_count: u32,
+    unkf0: [u8; 0x10],
+}
+
+#[repr(C)]
+pub struct NetChrSync<'a> {
+    pub world_info_owner: usize,
+    pub chr_slot_count: u32,
+    _padc: u32,
+    pub net_chr_set_sync: [&'a NetChrSetSync<'a>; 196],
+}
+
+#[repr(C)]
+pub struct NetChrSetSync<'a> {
+    _p: PhantomData<&'a ()>,
+}
+
+#[repr(C)]
+pub struct ChrSetHolder<'a, T> {
+    pub chr_set: &'a ChrSet<'a, T>,
+    pub chr_set_index: u32,
+    _padc: u32,
+    pub world_block_chr: &'a WorldBlockChr<'a, T>,
+}
+
+#[repr(C)]
 /// Source of name: RTTI
 pub struct WorldAreaChr<'a, T> {
     pub base: WorldAreaChrBase,
     pub world_area_info: usize,
-    pub unk18: u32,
-    pub unk1c: u32,
+    unk18: u32,
+    unk1c: u32,
     pub world_block_chr: &'a WorldBlockChr<'a, T>,
 }
 
 #[repr(C)]
 /// Source of name: RTTI
 pub struct WorldAreaChrBase {
-    pub vftable: usize,
+    vftable: usize,
     pub world_area_info: usize,
 }
 
 #[repr(C)]
 /// Source of name: RTTI
 pub struct WorldBlockChr<'a, T> {
-    pub vftable: usize,
+    vftable: usize,
     pub world_block_info1: usize,
     unk10: [u8; 0x68],
     pub chr_set: ChrSet<'a, T>,
@@ -138,15 +229,15 @@ pub struct ChrSetVMT<'a, T> {
 #[repr(C)]
 /// Source of name: RTTI
 pub struct ChrSet<'a, T> {
-    pub vftable: &'a ChrSetVMT<'a, T>,
+    vftable: &'a ChrSetVMT<'a, T>,
     pub index: i32,
-    pub unkc: i32,
+    unkc: i32,
     pub capacity: u32,
     _pad14: u32,
     pub entries: *const ChrSetEntry<T>,
-    pub unk20: i32,
+    unk20: i32,
     _pad24: u32,
-    pub unk30: [u8; 0x30],
+    unk30: [u8; 0x30],
 }
 
 impl<'a, T> ChrSet<'a, T> {
@@ -158,7 +249,6 @@ impl<'a, T> ChrSet<'a, T> {
             if current_entry == end {
                 None
             } else {
-                tracing::info!("current_entry = {current_entry:x?}");
                 let chr_ins = (*current_entry).chr_ins;
                 current_entry.add(1);
                 chr_ins.as_mut()
@@ -170,8 +260,8 @@ impl<'a, T> ChrSet<'a, T> {
 #[repr(C)]
 pub struct ChrSetEntry<T> {
     pub chr_ins: *mut T,
-    pub unk8: u16,
-    pub unka: u8,
+    unk8: u16,
+    unka: u8,
     _padb: [u8; 5],
 }
 
@@ -180,7 +270,7 @@ pub struct ChrSetEntry<T> {
 pub struct OpenFieldChrSet<'a> {
     pub base: ChrSet<'a, ChrIns<'a>>,
     // TODO: type needs fact-checking
-    unk58: Tree<()>,
+    unk58: Tree<'a, ()>,
     unk70: f32,
     pad74: u32,
     list1: [OpenFieldChrSetList1Entry<'a>; 1500],
@@ -195,15 +285,15 @@ pub struct OpenFieldChrSet<'a> {
 
 #[repr(C)]
 pub struct OpenFieldChrSetList1Entry<'a> {
-    pub unk0: u64,
+    unk0: u64,
     pub chr_ins: &'a mut ChrIns<'a>,
 }
 
 #[repr(C)]
 pub struct OpenFieldChrSetList2Entry {
-    pub unk0: u64,
-    pub unk8: u32,
-    pub unkc: u32,
+    unk0: u64,
+    unk8: u32,
+    unkc: u32,
 }
 
 #[repr(C)]
@@ -235,26 +325,26 @@ impl Display for MapId {
 #[repr(C)]
 /// Source of name: "SummonBuddy" mentioned in DLRF metadata for the update fn.
 pub struct SummonBuddyManager<'a> {
-    pub vftable: usize,
-    pub unk8: usize,
-    pub unk10: usize,
-    pub unk18: usize,
+    vftable: usize,
+    unk8: usize,
+    unk10: usize,
+    unk18: usize,
     pub to_spawn_buddy_param: i32,
     pub spawned_buddy_param: i32,
-    pub unk28: usize,
+    unk28: usize,
     pub chr_set: &'a ChrSet<'a, ChrIns<'a>>,
-    pub unk38: [u8; 0xb0],
-    pub warp: *const SummonBuddyManagerWarp,
+    unk38: [u8; 0xb0],
+    pub warp: &'a SummonBuddyManagerWarp,
 }
 
 #[repr(C)]
 pub struct SummonBuddyManagerWarp {
-    pub allocator: usize,
-    pub root_node: usize,
-    pub unk10: usize,
+    allocator: usize,
+    root_node: usize,
+    unk10: usize,
     pub trigger_time_ray_block: f32,
     pub trigger_dist_to_player: f32,
     pub trigger_threshold_time_path_stacked: f32,
     pub trigger_threshold_range_path_stacked: f32,
-    pub unk28: [u8; 0x10]
+    unk28: [u8; 0x10]
 }

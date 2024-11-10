@@ -15,12 +15,6 @@ pub struct FD4TaskBaseVMT  {
     pub execute: fn(*const FD4TaskBase, *const FD4TaskData),
 }
 
-#[repr(C)]
-pub struct FD4TaskBase {
-    pub vftable: *const FD4TaskBaseVMT,
-    pub unk8: usize,
-}
-
 #[derive(Debug)]
 #[repr(C)]
 pub struct FD4TaskData {
@@ -43,10 +37,17 @@ pub struct CSEzTaskVMT  {
 }
 
 #[repr(C)]
+pub struct FD4TaskBase {
+    pub vftable: *const CSEzTaskVMT,
+    unk8: u32,
+    _padc: u32,
+}
+
+#[repr(C)]
 pub struct CSEzTask {
     pub vftable: *const CSEzTaskVMT,
-    pub unk8: u32,
-    pub _padc: u32,
+    unk8: u32,
+    _padc: u32,
     pub task_proxy: usize,
 }
 
@@ -62,8 +63,16 @@ pub struct CSEzUpdateTask<'a, TSubject> {
 }
 
 #[repr(C)]
+pub struct CSEzTaskProxy<'a> {
+    vftable: *const CSEzTaskVMT,
+    unk8: u32,
+    _padc: u32,
+    pub task: &'a CSEzTask,
+}
+
+#[repr(C)]
 pub struct CSTaskGroup<'a> {
-    pub vftable: usize,
+    vftable: usize,
     pub task_groups: [&'a CSTimeLineTaskGroupIns; 168],
 }
 
@@ -73,7 +82,7 @@ impl DLRFLocatable for CSTaskGroup<'_> {
 
 #[repr(C)]
 pub struct CSTaskGroupIns {
-    pub vftable: usize,
+    vftable: usize,
     pub name: FD4BasicHashString,
     unk40: [u8; 0x10],
 }
@@ -87,7 +96,7 @@ pub struct CSTimeLineTaskGroupIns {
 
 #[repr(C)]
 pub struct CSTaskImp<'a> {
-    pub vftable: usize,
+    vftable: usize,
     pub inner: &'a CSTask<'a>,
 }
 
@@ -97,7 +106,7 @@ impl DLRFLocatable for CSTaskImp<'_> {
 
 #[repr(C)]
 pub struct CSTaskBase<'a> {
-    pub vftable: usize,
+    vftable: usize,
     pub allocator1: usize,
     pub task_groups: Vector<'a, TaskGroupEntry>,
     pub task_group_index_max: u32,
@@ -115,23 +124,23 @@ pub struct TaskGroupEntry {
 pub struct CSTask<'a> {
     pub task_base: CSTaskBase<'a>,
     pub allocator2: usize,
-    pub unk40: usize,
-    pub unk48: [usize; 3],
-    pub unk60: [usize; 3],
+    unk40: usize,
+    unk48: [usize; 3],
+    unk60: [usize; 3],
     pub task_runner_manager: &'a CSTaskRunnerManager<'a>,
     pub task_runners: [&'a CSTaskRunner<'a>; 6],
     pub task_runners_ex: [&'a CSTaskRunnerEx; 6],
-    pub unke0: usize,
+    unke0: usize,
 }
 
 #[repr(C)]
 pub struct CSTaskRunner<'a> {
-    pub vftable: usize,
+    vftable: usize,
     pub task_queue: usize,
     pub task_runner_manager: &'a CSTaskRunnerManager<'a>,
-    pub unk18: u32,
+    unk18: u32,
     _pad1c: u32,
-    pub unk_string: PCWSTR,
+    unk_string: PCWSTR,
 }
 
 #[repr(C)]
@@ -141,15 +150,15 @@ pub struct CSTaskRunnerEx {
 
 #[repr(C)]
 pub struct FD4TaskQueue<'a> {
-    pub vftable: usize,
+    vftable: usize,
     pub allocator: usize,
-    pub entries_tree: Tree<FD4TaskGroup>,
+    pub entries_tree: Tree<'a, FD4TaskGroup>,
     pub entries_vector: Vector<'a, FD4TaskGroup>,
 }
 
 #[repr(C)]
 pub struct FD4TaskGroup {
-    pub vftable: usize,
+    vftable: usize,
 }
 
 #[repr(C)]
@@ -158,19 +167,19 @@ pub struct CSTaskRunnerManager<'a> {
     pub concurrent_task_group_count: usize,
     pub concurrent_task_group_policy: &'a TaskGroupConcurrency,
     pub current_concurrent_task_group: u32,
-    pub unk1c: u32,
-    pub unk20: u32,
+    unk1c: u32,
+    unk20: u32,
     _pad24: u32,
     pub mutex: DLPlainLightMutex,
     pub signals: [DLPlainConditionSignal; 6],
-    pub unkb8: u32,
-    pub unkbc: u32,
-    pub unkc0: u32,
-    pub unkc4: u32,
-    pub unkc8: u32,
-    pub unkcc: u32,
-    pub unkd0: u32,
-    pub unkd4: u32,
+    unkb8: u32,
+    unkbc: u32,
+    unkc0: u32,
+    unkc4: u32,
+    unkc8: u32,
+    unkcc: u32,
+    unkd0: u32,
+    unkd4: u32,
 }
 
 #[repr(C)]
@@ -180,7 +189,7 @@ pub struct FD4TaskRequestEntry {
 
 #[repr(C)]
 pub struct DLPlainConditionSignal {
-    pub vftable: usize,
+    vftable: usize,
     pub event_handle: usize,
 }
 

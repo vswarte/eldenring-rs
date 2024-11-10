@@ -1,4 +1,3 @@
-use std::cell::RefCell;
 
 use game::cs::{PlayerIns, ChrIns, ChrSet, OpenFieldChrSet, SummonBuddyManager, SummonBuddyManagerWarp, WorldChrMan};
 use hudhook::imgui::{TreeNodeFlags, Ui};
@@ -7,16 +6,6 @@ use super::DebugDisplay;
 
 impl DebugDisplay for WorldChrMan<'_> {
     fn render_debug(&self, ui: &&mut Ui) {
-        let mut character_properties = util::character_type_properties::CHARACTER_TYPE_PROPERTIES
-            .write()
-            .unwrap();
-
-        // character_properties
-        //     .table
-        //     .entries
-        //     .iter_mut()
-        //     .for_each(|e| e.can_use_rune_arcs = 0);
-
         let world_area_chr_list_count = self.world_area_chr_list_count;
         ui.text(format!(
             "World Area Chr List Count: {world_area_chr_list_count}"
@@ -55,7 +44,7 @@ impl DebugDisplay for WorldChrMan<'_> {
             self.open_field_chr_set.render_debug(ui);
         }
 
-        match unsafe { self.main_player.as_ref() } {
+        match self.main_player.as_ref() {
             Some(p) => {
                 if ui.collapsing_header("Main player", TreeNodeFlags::empty()) {
                     p.render_debug(ui)
@@ -64,7 +53,7 @@ impl DebugDisplay for WorldChrMan<'_> {
             None => ui.text("No Main player instance"),
         }
 
-        match unsafe { self.summon_buddy_manager.as_ref() } {
+        match self.summon_buddy_manager.as_ref() {
             Some(s) => {
                 if ui.collapsing_header("SummonBuddyManager", TreeNodeFlags::empty()) {
                     s.render_debug(ui)
@@ -151,10 +140,7 @@ impl DebugDisplay for SummonBuddyManager<'_> {
         ));
         ui.text(format!("Spawned buddy param: {}", self.spawned_buddy_param));
 
-        match unsafe { self.warp.as_ref() } {
-            Some(s) => s.render_debug(ui),
-            None => ui.text("No SummonBuddyManagerWarp instance"),
-        }
+        self.warp.render_debug(ui);
     }
 }
 

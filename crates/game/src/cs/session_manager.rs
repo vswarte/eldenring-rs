@@ -29,10 +29,13 @@ pub enum ProtocolState {
 
 #[repr(C)]
 pub struct CSSessionManager {
-    pub vftable: usize,
-    pub unk0x8: u32,
+    vftable: usize,
+    unk8: u32,
     pub lobby_state: LobbyState,
     pub protocol_state: ProtocolState,
+    unk14: f32,
+    unk18: u32,
+    unk1c: u32,
 }
 
 impl DLRFLocatable for CSSessionManager {

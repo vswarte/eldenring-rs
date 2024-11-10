@@ -1,4 +1,4 @@
-use std::{marker::PhantomData, ptr::NonNull};
+use std::{collections::VecDeque, marker::PhantomData, ptr::NonNull};
 
 #[repr(C)]
 pub struct DoublyLinkedListNode<'a, T> {
@@ -16,11 +16,7 @@ pub struct DoublyLinkedList<'a, T> {
 }
 
 impl<'a, T> DoublyLinkedList<'a, T> {
-    /// # Safety
-    /// This will produce bad results if:
-    /// - The list is projected onto something that isn't actually a list.
-    /// - Access is not exclusive and the list gets updated while reading.
-    pub unsafe fn iter(&self) -> impl Iterator<Item = &T> {
+    pub fn iter(&self) -> impl Iterator<Item = &T> {
         let mut count = self.count;
         let mut current = self.head;
 
@@ -35,11 +31,7 @@ impl<'a, T> DoublyLinkedList<'a, T> {
         })
     }
 
-    /// # Safety
-    /// This will produce bad results if:
-    /// - The list is projected onto something that isn't actually a list.
-    /// - Access is not exclusive and the list gets updated while reading.
-    pub unsafe fn len(&self) -> usize {
+    pub fn len(&self) -> usize {
         self.count as usize
     }
 }
@@ -60,12 +52,7 @@ impl<'a, T> Vector<'a, T>
 where
     T: Sized,
 {
-    /// # Safety
-    /// This will produce bad results if:
-    /// - The vector is projected onto something that isn't actually a vector.
-    /// - The size of T is incorrect.
-    /// - Access is not exclusive and the vector gets updated while reading.
-    pub unsafe fn iter(&self) -> impl Iterator<Item = &mut T> {
+    pub fn iter(&self) -> impl Iterator<Item = &mut T> {
         let mut current = self.begin;
         let end = self.end;
 
@@ -73,20 +60,15 @@ where
             let result = if current? >= end? {
                 None
             } else {
-                Some(current?.as_mut())
+                Some(unsafe { current?.as_mut() })
             };
 
-            current = Some(current?.add(1));
+            current = Some(unsafe { current?.add(1) });
             result
         })
     }
 
-    /// # Safety
-    /// This will produce bad results if:
-    /// - The vector is projected onto something that isn't actually a vector.
-    /// - The size of T is incorrect.
-    /// - Access is not exclusive and the vector gets updated while reading.
-    pub unsafe fn len(&self) -> usize {
+    pub fn len(&self) -> usize {
         let Some(end) = self.end else {
             return 0;
         };
@@ -100,29 +82,56 @@ where
 }
 
 #[repr(C)]
-pub struct Tree<T> {
-    pub allocator: usize,
-    pub head: *const TreeNode<T>,
-    pub size: usize,
+pub struct Tree<'a, T> {
+    allocator: usize,
+    head: &'a mut TreeNode<'a, T>,
+    size: usize,
 }
 
-impl<T> Tree<T> {
-    /// # Safety
-    /// This will produce bad results if:
-    /// - The tree is projected onto something that isn't actually a tree.
-    /// - Access is not exclusive and the tree gets updated while reading.
-    pub unsafe fn len(&self) -> usize {
+impl<'a, T> Tree<'a, T> {
+    pub fn len(&self) -> usize {
         self.size
+    }
+
+    pub fn iter(&self) -> impl Iterator<Item = &'a mut T> {
+        let mut pending = VecDeque::new();
+
+        let start = self.head.parent;
+        pending.push_back(start);
+
+        std::iter::from_fn(move || {
+            if let Some(entry) = pending.pop_front() {
+                let entry = unsafe { entry.as_mut() }?;
+
+                if unsafe { entry.left.as_ref() }
+                    .map(|e| e.is_nil == 0)
+                    .unwrap_or_default()
+                {
+                    pending.push_back(entry.left);
+                }
+
+                if unsafe { entry.right.as_ref() }
+                    .map(|e| e.is_nil == 0)
+                    .unwrap_or_default()
+                {
+                    pending.push_back(entry.right);
+                }
+
+                Some(&mut entry.value)
+            } else {
+                None
+            }
+        })
     }
 }
 
 #[repr(C)]
-pub struct TreeNode<T> {
-    pub left: *const TreeNode<T>,
-    pub parent: *const TreeNode<T>,
-    pub right: *const TreeNode<T>,
-    pub black_red: u8,
-    pub is_nil: u8,
-    _pad0x1c: u32,
-    pub value: T,
+pub struct TreeNode<'a, T> {
+    left: *mut TreeNode<'a, T>,
+    parent: *mut TreeNode<'a, T>,
+    right: *mut TreeNode<'a, T>,
+    black_red: u8,
+    is_nil: u8,
+    _pad1a: [u8; 6],
+    value: T,
 }

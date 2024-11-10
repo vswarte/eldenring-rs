@@ -5,13 +5,13 @@ use std::ffi;
 ///
 /// Source of name: RTTI
 pub struct DLRuntimeClass {
-    pub vftable: *const ffi::c_void,
+    vftable: *const ffi::c_void,
     pub base_class: *const DLRuntimeClass,
-    pub unk10: usize,
-    pub unk18: usize,
-    pub unk20: usize,
-    pub unk28: usize,
-    pub unk30: usize,
-    pub allocator1: usize,
-    pub allocator2: usize,
+    unk10: usize,
+    unk18: usize,
+    unk20: usize,
+    unk28: usize,
+    unk30: usize,
+    allocator1: usize,
+    allocator2: usize,
 }

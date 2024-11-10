@@ -9,11 +9,11 @@ use super::{FieldInsHandle, MapId};
 #[repr(C)]
 /// Source of name: RTTI
 pub struct CSWorldGeomMan<'a> {
-    pub vftable: usize,
+    vftable: usize,
     pub unk8: usize,
     pub world_info_owner: usize,
     /// A tree of geometry containers per map.  
-    pub map_geometry: Tree<CSWorldGeomManMapData<'a>>,
+    pub map_geometry: Tree<'a, CSWorldGeomManMapData<'a>>,
     /// Seemingly points to the current overlay world tile's map data
     pub curent_99_map_data: &'a CSWorldGeomManMapData<'a>,
 }

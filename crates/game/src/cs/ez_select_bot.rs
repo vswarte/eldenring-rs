@@ -7,7 +7,7 @@ use crate::dl::DLWString;
 ///
 /// Source of name: RTTI
 pub struct CSEzSelectBot {
-    pub vftable: *const ffi::c_void,
+    vftable: *const ffi::c_void,
     pub property: CSEzSelectBotString,
 }
 
@@ -15,5 +15,5 @@ pub struct CSEzSelectBot {
 pub struct CSEzSelectBotString {
     pub allocator: *const ffi::c_void,
     pub string: DLWString,
-    pub unk28: u64,
+    unk28: u64,
 }

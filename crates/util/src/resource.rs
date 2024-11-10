@@ -24,7 +24,7 @@ impl<T> FD4ResCapHolderExt<T> for FD4ResCapHolder<T> {
                 tracing::trace!("Seeking next slot. current_element = {current_element:x?}, current_bucket = {current_bucket}");
                 current_bucket += 1;
 
-                let current_bucket_base = bucket_base.offset(current_bucket as isize);
+                let current_bucket_base = bucket_base.offset(current_bucket);
                 current_element = if !current_bucket_base.is_null() {
                     *bucket_base.offset(current_bucket)
                 } else {

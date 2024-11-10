@@ -1,8 +1,5 @@
-use game::{
-    matrix::{FSMatrix4x4, FSVector4},
-    DoublyLinkedList,
-};
-use hudhook::imgui::{TreeNodeFlags, Ui};
+use game::matrix::{FSMatrix4x4, FSVector4};
+use hudhook::imgui::Ui;
 
 use super::DebugDisplay;
 

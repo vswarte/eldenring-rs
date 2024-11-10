@@ -22,7 +22,7 @@ impl DebugDisplay for CSTaskImp<'_> {
                     TableColumnSetup::new("Active"),
                 ],
             ) {
-                for task_group in unsafe { self.inner.task_base.task_groups.iter() } {
+                for task_group in self.inner.task_base.task_groups.iter() {
                     ui.table_next_column();
                     ui.text(format!("{:x}", task_group.index));
 
@@ -37,24 +37,6 @@ impl DebugDisplay for CSTaskImp<'_> {
 
                     ui.table_next_column();
                     ui.text(format!("{}", task_group.active));
-                }
-            }
-        }
-
-        if ui.collapsing_header("Runners", TreeNodeFlags::empty()) {
-            if let Some(_t) = ui.begin_table_header(
-                "task-runner-table",
-                [
-                    TableColumnSetup::new("Queue"),
-                    TableColumnSetup::new("Unk string"),
-                ],
-            ) {
-                for runner in self.inner.task_runners.iter() {
-                    ui.table_next_column();
-                    ui.text(format!("{:x}", runner.task_queue));
-
-                    ui.table_next_column();
-                    ui.text(unsafe { runner.unk_string.to_string().unwrap() });
                 }
             }
         }

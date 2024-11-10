@@ -6,6 +6,6 @@ pub trait CSCamExt {
 
 impl CSCamExt for CSCam {
     fn position(&self) -> HavokPosition {
-        self.matrix.3.clone().into()
+        self.matrix.3.into()
     }
 }

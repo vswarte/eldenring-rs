@@ -1,5 +1,4 @@
 use std::sync::Mutex;
-use std::sync::RwLock;
 use std::time;
 use std::sync;
 use std::collections;

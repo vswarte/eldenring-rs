@@ -25,14 +25,7 @@ pub struct ChunkPosition(FSVector4);
 
 impl ChunkPosition {
     pub fn from_xyz(x: f32, y: f32, z: f32) -> Self {
-        Self {
-            0: FSVector4 {
-                0: x,
-                1: y,
-                2: z,
-                3: 0.0,
-            },
-        }
+        Self(FSVector4(x, y, z, 0.0))
     }
 
     pub fn xyz(&self) -> (f32, f32, f32) {
@@ -60,14 +53,7 @@ pub struct HavokPosition(FSVector4);
 
 impl HavokPosition {
     pub fn from_xyz(x: f32, y: f32, z: f32) -> Self {
-        Self {
-            0: FSVector4 {
-                0: x,
-                1: y,
-                2: z,
-                3: 0.0,
-            },
-        }
+        Self(FSVector4(x, y, z, 0.0))
     }
 
     pub fn xyz(&self) -> (f32, f32, f32) {
