@@ -1,6 +1,6 @@
 
-use game::cs::{PlayerIns, ChrIns, ChrSet, OpenFieldChrSet, SummonBuddyManager, SummonBuddyManagerWarp, WorldChrMan};
-use hudhook::imgui::{TreeNodeFlags, Ui};
+use game::cs::{ChrIns, ChrSet, EquipInventoryData, OpenFieldChrSet, PlayerGameData, PlayerIns, SummonBuddyManager, SummonBuddyManagerWarp, WorldChrMan};
+use hudhook::imgui::{TableColumnSetup, TreeNodeFlags, Ui};
 
 use super::DebugDisplay;
 
@@ -125,6 +125,8 @@ impl DebugDisplay for ChrSet<'_, PlayerIns<'_>> {
         }
     }
 }
+
+
 
 impl DebugDisplay for OpenFieldChrSet<'_> {
     fn render_debug(&self, ui: &&mut Ui) {

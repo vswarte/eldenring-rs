@@ -7,7 +7,7 @@ use crate::cs::ChrIns;
 use crate::matrix::FSVector4;
 use crate::{DLRFLocatable, Tree};
 
-use super::{FieldInsHandle, PlayerIns};
+use super::{FieldInsHandle, NetChrSync, PlayerIns};
 
 #[repr(C)]
 /// Source of name: RTTI
@@ -76,8 +76,6 @@ pub struct WorldChrMan<'a> {
     unk1e600: usize,
     unk1e608: [u8; 0x40],
     pub debug_chr_creator: CSDebugChrCreator<'a>,
-
-    /// TODO much more....
 }
 
 impl DLRFLocatable for WorldChrMan<'_> {
@@ -126,20 +124,6 @@ pub struct CSDebugChrCreatorInitData {
     spawn_count: u32,
     unkf0: [u8; 0x10],
 }
-
-#[repr(C)]
-pub struct NetChrSync<'a> {
-    pub world_info_owner: usize,
-    pub chr_slot_count: u32,
-    _padc: u32,
-    pub net_chr_set_sync: [&'a NetChrSetSync<'a>; 196],
-}
-
-#[repr(C)]
-pub struct NetChrSetSync<'a> {
-    _p: PhantomData<&'a ()>,
-}
-
 #[repr(C)]
 pub struct ChrSetHolder<'a, T> {
     pub chr_set: &'a ChrSet<'a, T>,

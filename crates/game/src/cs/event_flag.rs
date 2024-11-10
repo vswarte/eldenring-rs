@@ -1,6 +1,4 @@
-use std::marker::PhantomData;
-
-use crate::{matrix::FSMatrix4x4, DLRFLocatable, Tree};
+use crate::{DLRFLocatable, Tree};
 
 pub struct EventFlag(u32);
 

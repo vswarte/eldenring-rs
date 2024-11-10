@@ -1,4 +1,4 @@
-use game::world_area_time::WorldAreaTime;
+use game::cs::WorldAreaTime;
 use hudhook::imgui::Ui;
 use util::world_area_time::WorldAreaTimeClockExt;
 

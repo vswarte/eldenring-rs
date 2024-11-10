@@ -1,6 +1,5 @@
 use game::cs::{
-    CSChrModelParamModifierModule, ChrAsm, ChrIns, ChrInsModuleContainer, ChrPhysicsModule,
-    PlayerGameData, PlayerIns,
+    CSChrModelParamModifierModule, ChrAsm, ChrIns, ChrInsModuleContainer, ChrPhysicsModule, EquipInventoryData, PlayerGameData, PlayerIns
 };
 use hudhook::imgui::{TableColumnSetup, TreeNodeFlags, Ui};
 
@@ -51,7 +50,7 @@ impl DebugDisplay for ChrAsm {
     }
 }
 
-impl DebugDisplay for PlayerGameData {
+impl DebugDisplay for PlayerGameData<'_> {
     fn render_debug(&self, ui: &&mut Ui) {
         ui.text(format!(
             "Furlcalling Finger Active: {:?}",
@@ -60,6 +59,76 @@ impl DebugDisplay for PlayerGameData {
         ui.text(format!("Rune Arc Active: {:?}", self.rune_arc_active));
         ui.text(format!("White Ring Active: {:?}", self.white_ring_active));
         ui.text(format!("Blue Ring Active: {:?}", self.blue_ring_active));
+
+        if ui.collapsing_header("EquipInventoryData", TreeNodeFlags::empty()) {
+            self.equip_inventory_data.render_debug(ui);
+        }
+    }
+}
+
+impl DebugDisplay for EquipInventoryData {
+    fn render_debug(&self, ui: &&mut Ui) {
+        let label = format!("Normal Items ({}/{})", self.normal_item_count, self.normal_item_capacity);
+        if ui.collapsing_header(label.as_str(), TreeNodeFlags::empty()) {
+            if let Some(_t) = ui.begin_table_header(
+                "equip-inventory-data-normal-items",
+                [
+                    TableColumnSetup::new("Gaitem Handle"),
+                    TableColumnSetup::new("Category"),
+                    TableColumnSetup::new("Item ID"),
+                    TableColumnSetup::new("Quantity"),
+                    TableColumnSetup::new("Display ID"),
+                ],
+            ) {
+                self.normal_items().iter().for_each(|item| {
+                    ui.table_next_column();
+                    ui.text(format!("{:x}", item.gaitem_handle));
+
+                    ui.table_next_column();
+                    ui.text(item.category.to_string());
+
+                    ui.table_next_column();
+                    ui.text(item.item_id.to_string());
+
+                    ui.table_next_column();
+                    ui.text(item.quantity.to_string());
+
+                    ui.table_next_column();
+                    ui.text(item.display_id.to_string());
+                });
+            }
+        }
+
+        let label = format!("Key Items ({}/{})", self.key_item_count, self.key_item_capacity);
+        if ui.collapsing_header(label.as_str(), TreeNodeFlags::empty()) {
+            if let Some(_t) = ui.begin_table_header(
+                "equip-inventory-data-key-items",
+                [
+                    TableColumnSetup::new("Gaitem Handle"),
+                    TableColumnSetup::new("Category"),
+                    TableColumnSetup::new("Item ID"),
+                    TableColumnSetup::new("Quantity"),
+                    TableColumnSetup::new("Display ID"),
+                ],
+            ) {
+                self.key_items().iter().for_each(|item| {
+                    ui.table_next_column();
+                    ui.text(format!("{:x}", item.gaitem_handle));
+
+                    ui.table_next_column();
+                    ui.text(item.category.to_string());
+
+                    ui.table_next_column();
+                    ui.text(item.item_id.to_string());
+
+                    ui.table_next_column();
+                    ui.text(item.quantity.to_string());
+
+                    ui.table_next_column();
+                    ui.text(item.display_id.to_string());
+                });
+            }
+        }
     }
 }
 

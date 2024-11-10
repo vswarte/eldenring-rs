@@ -14,6 +14,9 @@ mod net_man;
 mod character_type_properties;
 mod ez_state;
 mod event_flag;
+mod player_game_data;
+mod world_area_time;
+mod net_chr_sync;
 
 pub use camera::*;
 pub use field_ins::*;
@@ -31,3 +34,6 @@ pub use net_man::*;
 pub use character_type_properties::*;
 pub use ez_state::*;
 pub use event_flag::*;
+pub use player_game_data::*;
+pub use world_area_time::*;
+pub use net_chr_sync::*;

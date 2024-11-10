@@ -1,7 +1,7 @@
 use game::cs::CSEventFlagMan;
 use game::cs::CSFD4VirtualMemoryFlag;
 use game::fd4::FD4ParamRepository;
-use game::world_area_time::WorldAreaTime;
+use game::cs::WorldAreaTime;
 use hudhook::eject;
 use hudhook::hooks::dx12::ImguiDx12Hooks;
 use hudhook::imgui;

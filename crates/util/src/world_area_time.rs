@@ -1,4 +1,4 @@
-use game::world_area_time::{WorldAreaTime, WorldAreaTimeClock};
+use game::cs::{WorldAreaTime, WorldAreaTimeClock};
 
 pub trait WorldAreaTimeExt {
     fn set_target(&mut self, hour: u32, minute: u32, second: u32);
