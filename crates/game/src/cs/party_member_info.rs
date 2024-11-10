@@ -2,7 +2,7 @@ use super::FieldInsHandle;
 
 #[repr(C)]
 pub struct PartyMemberInfoEntry {
-    field_ins_handle: FieldInsHandle,
+    pub field_ins_handle: FieldInsHandle,
     unk8: u32,
     unkc: u32,
     pub ceremony_event_flag: u32,
@@ -26,7 +26,7 @@ pub struct PartyMemberInfoEntry {
 
 #[repr(C)]
 pub struct PartyMemberInfo {
-    pub vftable: usize,
+    vftable: usize,
     pub white_phantom_count: i32,
     pub red_phantom_count: i32,
     pub in_world_player_count: i32,
@@ -49,14 +49,14 @@ pub struct PartyMemberInfo {
     unk185: u8,
     unk186: u8,
     unk187: u8,
-    pub unk188: i32,
+    unk188: i32,
     unk18c: u8,
     unk18d: u8,
     unk18e: u8,
     unk18f: u8,
-    pub unk190: i32,
-    pub unk194: i32,
-    pub unk198: i32,
+    unk190: i32,
+    unk194: i32,
+    unk198: i32,
     unk19c: u8,
     unk19d: u8,
     unk19e: u8,
