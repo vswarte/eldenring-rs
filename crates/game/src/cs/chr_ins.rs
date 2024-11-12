@@ -178,8 +178,8 @@ pub struct ChrInsModuleContainer {
     behavior: usize,
     behavior_sync: usize,
     ai: usize,
-    super_armor: usize,
-    toughness: usize,
+    super_armor: OwningPtr<CSChrSuperArmorModule>,
+    toughness: OwningPtr<CSChrToughnessModule>,
     talk: usize,
     event: OwningPtr<CSChrEventModule>,
     magic: usize,
@@ -304,6 +304,29 @@ pub struct CSChrEventModule {
     unk41: [u8; 0xA],
     pub ez_state_request_ladder_output: i32,
     unk50: [u8; 0x27],
+}
+
+#[repr(C)]
+pub struct CSChrSuperArmorModule {
+    vftable: usize,
+    pub owner: NonNull<ChrIns>,
+    pub sa_durability: f32,
+    pub sa_durability_max: f32,
+    unk18: u32,
+    pub recover_time: f32,
+    unk20: u32,
+    unk24: u32,
+}
+
+#[repr(C)]
+pub struct CSChrToughnessModule {
+    vftable: usize,
+    pub owner: NonNull<ChrIns>,
+    pub toughness: f32,
+    pub toughness_unk: f32,
+    pub toughness_max: f32,
+    pub recover_time: f32,
+    unk20: [u8; 0x108],
 }
 
 #[repr(C)]
