@@ -3,11 +3,11 @@ use std::ptr::NonNull;
 
 use windows::core::PCWSTR;
 
-use crate::pointer::OwningPtr;
-use crate::Vector;
-use crate::position::{ChunkPosition, HavokPosition};
-use crate::matrix::FSVector4;
 use crate::cs::ChrSetEntry;
+use crate::matrix::FSVector4;
+use crate::pointer::OwningPtr;
+use crate::position::{ChunkPosition, HavokPosition};
+use crate::Vector;
 
 use super::player_game_data::PlayerGameData;
 use super::{FieldInsHandle, MapId};
@@ -181,7 +181,7 @@ pub struct ChrInsModuleContainer {
     super_armor: usize,
     toughness: usize,
     talk: usize,
-    event: usize,
+    event: OwningPtr<CSChrEventModule>,
     magic: usize,
     /// Describes the characters physics-related properties.
     pub physics: OwningPtr<ChrPhysicsModule>,
@@ -285,6 +285,25 @@ pub struct CSChrModelParamModifierModuleEntryValue {
     pub value3: f32,
     pub value4: f32,
     pub unk14: u32,
+}
+
+#[repr(C)]
+pub struct CSChrEventModule {
+    vftable: usize,
+    pub owner: NonNull<ChrIns>,
+    unk10: [u8; 0x8],
+    pub event_animation: i32,
+    pub last_animation: i32,
+    pub init_stay_id: i32,
+    unk24: u32,
+    pub ez_state_request_ladder: i32,
+    unk2c: [u8; 0xB],
+    pub msg_map_list_call: i32,
+    unk3c: u32,
+    pub flags: u8, // bit in pos 1 is iframes
+    unk41: [u8; 0xA],
+    pub ez_state_request_ladder_output: i32,
+    unk50: [u8; 0x27],
 }
 
 #[repr(C)]
