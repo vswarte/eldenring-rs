@@ -47,6 +47,20 @@ impl DebugDisplay for WorldChrMan {
             self.open_field_chr_set.render_debug(ui);
         }
 
+        if ui.collapsing_header("All ChrSets", TreeNodeFlags::empty()) {
+            ui.indent();
+            for (i, entry) in self.chr_sets.iter().enumerate() { 
+                let Some(chr_set) = entry else {
+                    continue;
+                };
+
+                if ui.collapsing_header(format!("ChrSet {i}"), TreeNodeFlags::empty()) {
+                    chr_set.render_debug(ui);
+                }
+            }
+            ui.unindent();
+        }
+
         match self.main_player.as_ref() {
             Some(p) => {
                 if ui.collapsing_header("Main player", TreeNodeFlags::empty()) {
@@ -101,19 +115,6 @@ impl DebugDisplay for ChrSet<ChrIns> {
 impl DebugDisplay for ChrSet<PlayerIns> {
     fn render_debug(&self, ui: &&mut Ui) {
         ui.text(format!("Character capacity: {}", self.capacity));
-
-        let test = unsafe { get_instance::<WorldChrMan>() }
-            .unwrap()
-            .map(|w| w.player_chr_set.chr_ins_by_field_ins_handle(
-                FieldInsHandle {
-                    selector: FieldInsSelector(384827392),
-                    map_id: MapId::global(),
-                }
-            ))
-            .flatten()
-            .map(|c| format!("{}", c.field_ins_handle));
-
-        ui.text(format!("Main player handle from VMT {:?}", test));
 
         let mut current_entry = self.entries;
         let end = unsafe { current_entry.add(self.capacity as usize) };

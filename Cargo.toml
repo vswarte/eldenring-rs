@@ -3,7 +3,7 @@ members = [
     "crates/debug",
     "crates/game",
     "crates/util",
-    "examples/builder-mode",
+    "examples/builder-mode", "examples/enemy-control",
     "examples/mini-transmog",
     "examples/procedural-dungeons",
     "tools/export-singletons",
