@@ -2,54 +2,61 @@ use std::{fmt::Formatter, ptr::NonNull};
 
 use windows::core::PCWSTR;
 
-use crate::{DLRFLocatable, Tree, Vector};
+use crate::{pointer::OwningPtr, DLRFLocatable, Tree, Vector};
 
 use super::{FieldInsHandle, MapId};
 
 #[repr(C)]
 /// Source of name: RTTI
-pub struct CSWorldGeomMan<'a> {
+pub struct CSWorldGeomMan {
     vftable: usize,
     pub unk8: usize,
     pub world_info_owner: usize,
-    /// A tree of geometry containers per map.  
-    pub map_geometry: Tree<'a, CSWorldGeomManMapData<'a>>,
+    /// A tree of loaded maps hosting their geometry instances.
+    pub blocks: Tree<CSWorldGeomManBlocksEntry>,
     /// Seemingly points to the current overlay world tile's map data
-    pub curent_99_map_data: &'a CSWorldGeomManMapData<'a>,
+    pub curent_99_block_data: OwningPtr<CSWorldGeomManBlockData>,
 }
 
-impl DLRFLocatable for CSWorldGeomMan<'_> {
+impl DLRFLocatable for CSWorldGeomMan {
     const DLRF_NAME: &'static str = "CSWorldGeomMan";
 }
 
 #[repr(C)]
+pub struct CSWorldGeomManBlocksEntry {
+    pub map_id: MapId,
+    _pad4: u32,
+    pub data: OwningPtr<CSWorldGeomManBlockData>,
+}
+
+#[repr(C)]
 /// Seems to host any spawned geometry for a given map. It
-pub struct CSWorldGeomManMapData<'a> {
+pub struct CSWorldGeomManBlockData {
     /// The map ID this container hosts the assets for.
     pub map_id: MapId,
     /// Might be padding?
     unk4: u32,
     pub world_block_info: usize,
     unk10: [u8; 0xF0],
-    unk100: Vector<'a, ()>,
-    unk120: Vector<'a, ()>,
-    unk140: Vector<'a, ()>,
-    pub activation_fade_modules: Vector<'a, ()>,
+    unk100: Vector<()>,
+    unk120: Vector<()>,
+    unk140: Vector<()>,
+    pub activation_fade_modules: Vector<()>,
     unk180: [u8; 0x108],
     /// Holds refs to some geometry instances for this map. 
-    pub geom_ins_vector: Vector<'a, &'a CSWorldGeomIns<'a>>,
+    pub geom_ins_vector: Vector<OwningPtr<CSWorldGeomIns>>,
     unk2a8: [u8; 0x20],
     pub geometry_array_count: u32,
     unk2cc: u32,
-    pub geometry_array: NonNull<CSWorldGeomIns<'a>>,
+    pub geometry_array: OwningPtr<CSWorldGeomIns>,
     unk2d8: [u8; 0x58],
     /// Seems to be the next field ins index that will be assiged.
     pub next_geom_ins_field_ins_index: u32,
     /// Seems to indicate if the geometry_ins vector has reached some hardcoded capacity?
-    pub reached_geom_ins_vector_capacity: bool,
+    unk334: bool,
     _pad335: [u8; 3],
     unk338: [u8; 0x50],
-    pub sos_sign_geometry: Vector<'a, &'a &'a CSWorldGeomIns<'a>>,
+    pub sos_sign_geometry: Vector<OwningPtr<OwningPtr<CSWorldGeomIns>>>,
     unk3a8: [u8; 0x300],
 }
 
@@ -57,14 +64,13 @@ pub struct CSWorldGeomManMapData<'a> {
 /// Abstract base class for geometry instances.
 ///
 /// Source of name: RTTI
-pub struct CSWorldGeomIns<'a> {
-    pub vfptr: usize,
+pub struct CSWorldGeomIns {
+    vfptr: usize,
     pub field_ins_handle: FieldInsHandle,
     /// Points to the map data hosting this GeomIns.
-    pub map_data: &'a CSWorldGeomManMapData<'a>,
+    pub block_data: NonNull<CSWorldGeomManBlockData>,
     /// Points to the world placement data for this geometry instance.
-    pub info: CSWorldGeomInfo<'a>,
-    // TODO: fill me
+    pub info: CSWorldGeomInfo,
     pub unk1a8: [u8; 0x288],
 }
 
@@ -72,14 +78,14 @@ pub struct CSWorldGeomIns<'a> {
 /// Holds the asset details in regard to placement in the world, drawing, etc.
 ///
 /// Source of name: "..\\..\\Source\\Game\\Geometry\\CSWorldGeomInfo.cpp" in exception.
-pub struct CSWorldGeomInfo<'a> {
+pub struct CSWorldGeomInfo {
     /// Points to the map data hosting the GeomIns for this info struct.
-    pub map_data: &'a CSWorldGeomManMapData<'a>,
+    pub block_data: OwningPtr<CSWorldGeomManBlockData>,
     /// Points to the param row this geometry instance uses. 
     pub asset_geometry_param: usize,
     pub unk10: u32,
     unk14: u32,
-    pub msb_parts_geom: CSMsbPartsGeom<'a>,
+    pub msb_parts_geom: CSMsbPartsGeom,
     unk68: u32,
     unk6c: u32,
     unk70: u32,
@@ -143,18 +149,18 @@ pub struct CSWorldGeomInfoUnk {
 
 #[repr(C)]
 /// Seems to describe how to draw the MSB part.
-pub struct CSMsbPartsGeom<'a> {
-    pub msb_parts: CSMsbParts<'a> ,
+pub struct CSMsbPartsGeom {
+    pub msb_parts: CSMsbParts,
 }
 
 #[repr(C)]
 /// Seems to describe how to draw the MSB part.
-pub struct CSMsbParts<'a> {
+pub struct CSMsbParts {
     pub vfptr: usize,
     pub draw_flags: u32,
     _padc: u32,
     unk10: usize,
-    pub msb_part: &'a MsbPart,
+    pub msb_part: OwningPtr<MsbPart>,
     unk20: [u8; 0x30],
 }
 

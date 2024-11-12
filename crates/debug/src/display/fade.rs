@@ -4,7 +4,7 @@ use util::fade::CSFD4FadePlateExt;
 
 use super::DebugDisplay;
 
-impl DebugDisplay for CSFade<'_> {
+impl DebugDisplay for CSFade {
     fn render_debug(&self, ui: &&mut Ui) {
         ui.text("Fade plates");
         for fade_plate in self.fade_plates.iter() {
@@ -13,22 +13,6 @@ impl DebugDisplay for CSFade<'_> {
                     .to_string()
                     .unwrap()
             };
-
-            if ui.collapsing_header(title, TreeNodeFlags::empty()) {
-                fade_plate.render_debug(ui);
-
-                let fade_plate = unsafe {
-                    &mut *((*fade_plate) as *const CSFD4FadePlate as *mut CSFD4FadePlate)
-                };
-
-                if ui.button("Fade out") {
-                    fade_plate.fade_out(2.0);
-                }
-
-                if ui.button("Fade in") {
-                    fade_plate.fade_in(2.0);
-                }
-            }
         }
     }
 }

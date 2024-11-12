@@ -1,6 +1,8 @@
+use crate::pointer::OwningPtr;
+
 #[repr(C)]
 /// Source of name: RTTI
-pub struct PlayerGameData<'a> {
+pub struct PlayerGameData {
     vftable: usize,
     pub character_type: u32,
     unkc: u32,
@@ -104,7 +106,7 @@ pub struct PlayerGameData<'a> {
     unk2ac: u32,
     pub equip_game_data: [u8; 0x4b0],
     face_data: [u8; 0x170],
-    pub equip_inventory_data: &'a EquipInventoryData,
+    pub equip_inventory_data: OwningPtr<EquipInventoryData>,
     gesture_game_data: usize,
     ride_game_data: usize,
     unk8e8: usize,

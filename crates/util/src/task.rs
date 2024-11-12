@@ -35,7 +35,7 @@ pub trait CSTaskImpExt {
     fn run_task<T: Into<FD4Task>>(&self, execute: T, group: CSTaskGroupIndex) -> TaskHandle;
 }
 
-impl CSTaskImpExt for CSTaskImp<'_> {
+impl CSTaskImpExt for CSTaskImp {
     fn run_task<T: Into<FD4Task>>(&self, task: T, group: CSTaskGroupIndex) -> TaskHandle {
         tracing::debug!("Registering task to task group. group = {group:?}");
         let register_task: extern "C" fn(&CSTaskImp, CSTaskGroupIndex, &FD4Task) =

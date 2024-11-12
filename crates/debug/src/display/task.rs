@@ -3,7 +3,7 @@ use hudhook::imgui::*;
 
 use super::DebugDisplay;
 
-impl DebugDisplay for CSTaskGroup<'_> {
+impl DebugDisplay for CSTaskGroup {
     fn render_debug(&self, ui: &&mut Ui) {
         for task_group in self.task_groups.iter() {
             ui.text(task_group.base.name.string.to_string());
@@ -11,7 +11,7 @@ impl DebugDisplay for CSTaskGroup<'_> {
     }
 }
 
-impl DebugDisplay for CSTaskImp<'_> {
+impl DebugDisplay for CSTaskImp {
     fn render_debug(&self, ui: &&mut Ui) {
         if ui.collapsing_header("Task Groups", TreeNodeFlags::empty()) {
             if let Some(_t) = ui.begin_table_header(

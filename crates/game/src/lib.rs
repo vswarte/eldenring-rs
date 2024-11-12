@@ -8,6 +8,7 @@ pub mod dl;
 pub mod fd4;
 pub mod matrix;
 pub mod position;
+pub mod pointer;
 
 pub trait DLRFLocatable {
     const DLRF_NAME: &'static str;

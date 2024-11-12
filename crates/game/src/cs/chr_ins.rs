@@ -1,7 +1,9 @@
 use std::ffi;
+use std::ptr::NonNull;
 
 use windows::core::PCWSTR;
 
+use crate::pointer::OwningPtr;
 use crate::Vector;
 use crate::position::{ChunkPosition, HavokPosition};
 use crate::matrix::FSVector4;
@@ -58,7 +60,7 @@ pub struct AtkParamLookupResult {
 /// character on bloodmessages inherit from this.
 ///
 /// Source of name: RTTI
-pub struct ChrIns<'a> {
+pub struct ChrIns {
     vftable: usize,
     pub field_ins_handle: FieldInsHandle,
     chr_set_entry: usize,
@@ -73,8 +75,8 @@ pub struct ChrIns<'a> {
     pub chr_set_cleanup: u32,
     _pad44: u32,
     unk48: usize,
-    pub chr_model_ins: &'a mut CSChrModelIns,
-    pub chr_ctrl: &'a mut ChrCtrl<'a>,
+    pub chr_model_ins: OwningPtr<CSChrModelIns>,
+    pub chr_ctrl: OwningPtr<ChrCtrl>,
     pub think_param_id: i32,
     pub npc_id_1: i32,
     pub chr_type: i32,
@@ -100,42 +102,41 @@ pub struct ChrIns<'a> {
     unk170: u32,
     unk174: u32,
     /// Container for the speffects applied to this character.
-    pub special_effect: &'a mut SpecialEffect<'a>,
+    pub special_effect: OwningPtr<SpecialEffect>,
     /// Refers to what field ins you were last killed by.
     pub last_killed_by: FieldInsHandle,
     pub character_id: u32,
     unk18c: u32,
-    pub module_container: &'a mut ChrInsModuleContainer<'a>,
+    pub module_container: OwningPtr<ChrInsModuleContainer>,
     rest: [u8; 0x3E8],
 }
 
 #[repr(C)]
 /// Source of name: RTTI
-pub struct SpecialEffect<'a> {
+pub struct SpecialEffect {
     vftable: usize,
-    head: Option<&'a SpecialEffectEntry<'a>>,
+    head: Option<OwningPtr<SpecialEffectEntry>>,
     /// ChrIns this SpecialEffect structure belongs to.
-    pub owner: &'a ChrIns<'a>,
+    pub owner: NonNull<ChrIns>,
     unk18: usize,
     unk20: [u8; 0x118],
 }
 
-impl SpecialEffect<'_> {
+impl SpecialEffect {
     /// Yields an iterator over all the SpEffect entries contained in this SpecialEffect instance.
     pub fn entries(&self) -> impl Iterator<Item = &SpecialEffectEntry> {
-        let mut current = self.head;
+        let mut current = self.head.as_ref().map(|e| e.as_ptr());
 
         std::iter::from_fn(move || {
-            let ret = current;
-            current = ret?.next;
+            let ret = current.map(|c| unsafe { c.as_ref() }).flatten();
+            current = unsafe { ret?.next.map(|e| e.as_ptr()) };
             ret
         })
     }
 }
 
 #[repr(C)]
-#[derive(Debug)]
-pub struct SpecialEffectEntry<'a> {
+pub struct SpecialEffectEntry {
     /// The param row this speffect entry uses.
     param_data: usize,
     /// The param ID for this speffect entry.
@@ -143,9 +144,9 @@ pub struct SpecialEffectEntry<'a> {
     _padc: u32,
     pub accumulator_info: SpecialEffectEntryAccumulatorInfo,
     /// The next param entry in the doubly linked list.
-    next: Option<&'a SpecialEffectEntry<'a>>,
+    next: Option<NonNull<SpecialEffectEntry>>,
     /// The previous param entry in the doubly linked list.
-    previous: Option<&'a SpecialEffectEntry<'a>>,
+    previous: Option<NonNull<SpecialEffectEntry>>,
     /// Time to go until the speffect is removed.
     pub duration: f32,
     pub duration2: f32,
@@ -156,7 +157,6 @@ pub struct SpecialEffectEntry<'a> {
 }
 
 #[repr(C)]
-#[derive(Debug)]
 /// Source of name: RTTI
 pub struct SpecialEffectEntryAccumulatorInfo {
     unk0: usize,
@@ -169,7 +169,7 @@ pub struct SpecialEffectEntryAccumulatorInfo {
 }
 
 #[repr(C)]
-pub struct ChrInsModuleContainer<'a> {
+pub struct ChrInsModuleContainer {
     data: usize,
     action_flag: usize,
     behavior_script: usize,
@@ -184,7 +184,7 @@ pub struct ChrInsModuleContainer<'a> {
     event: usize,
     magic: usize,
     /// Describes the characters physics-related properties.
-    pub physics: &'a mut ChrPhysicsModule<'a>,
+    pub physics: OwningPtr<ChrPhysicsModule>,
     fall: usize,
     ladder: usize,
     action_request: usize,
@@ -199,7 +199,7 @@ pub struct ChrInsModuleContainer<'a> {
     unkc8: usize,
     /// Describes a number of render-related inputs, like the color for the phantom effect and
     /// equipment coloring effects.
-    pub model_param_modifier: &'a mut CSChrModelParamModifierModule<'a>,
+    pub model_param_modifier: OwningPtr<CSChrModelParamModifierModule>,
     dripping: usize,
     unke0: usize,
     ride: usize,
@@ -217,10 +217,10 @@ pub struct ChrInsModuleContainer<'a> {
 
 #[repr(C)]
 /// Source of name: RTTI
-pub struct ChrPhysicsModule<'a> {
+pub struct ChrPhysicsModule {
     vftable: usize,
     /// ChrIns this ChrModule belongs to.
-    pub owner: &'a mut ChrIns<'a>,
+    pub owner: NonNull<ChrIns>,
     unk10: [u8; 0x40],
     pub orientation: FSVector4,
     unk60_orientation: FSVector4,
@@ -234,24 +234,23 @@ pub struct ChrPhysicsModule<'a> {
 
 #[repr(C)]
 /// Source of name: RTTI
-pub struct CSChrWetModule<'a> {
+pub struct CSChrWetModule {
     vftable: usize,
     /// ChrIns this ChrModule belongs to.
-    pub owner: &'a mut ChrIns<'a>,
+    pub owner: NonNull<ChrIns>,
     pub unk10: [u8; 0x60],
 }
 
 #[repr(C)]
 /// Source of name: RTTI
-pub struct CSChrModelParamModifierModule<'a> {
+pub struct CSChrModelParamModifierModule {
     vftable: usize,
     /// ChrIns this ChrModule belongs to.
-    pub owner: &'a mut ChrIns<'a>,
-    pub modifiers: Vector<'a, CSChrModelParamModifierModuleEntry>,
+    pub owner: NonNull<ChrIns>,
+    pub modifiers: Vector<CSChrModelParamModifierModuleEntry>,
 }
 
 #[repr(C)]
-#[derive(Debug)]
 pub struct CSChrModelParamModifierModuleEntry {
     pub unk0: u8,
     unk1: [u8; 0x3],
@@ -279,7 +278,6 @@ unsafe impl Sync for CSChrModelParamModifierModuleEntry {}
 unsafe impl Send for CSChrModelParamModifierModuleEntry {}
 
 #[repr(C)]
-#[derive(Debug)]
 pub struct CSChrModelParamModifierModuleEntryValue {
     pub unk0: u32,
     pub value1: f32,
@@ -291,11 +289,11 @@ pub struct CSChrModelParamModifierModuleEntryValue {
 
 #[repr(C)]
 /// Source of name: RTTI
-pub struct ChrCtrl<'a> {
+pub struct ChrCtrl {
     vftable: usize,
     unk8: u64,
     /// ChrIns this ChrCtrl belongs to.
-    pub owner: &'a ChrIns<'a>,
+    pub owner: NonNull<ChrIns>,
     pub manipulator: usize,
     unk20: usize,
     pub ragdoll_ins: usize,
@@ -322,16 +320,16 @@ pub struct CSChrModelIns {
 
 #[repr(C)]
 /// Source of name: RTTI
-pub struct PlayerIns<'a> {
-    pub chr_ins: ChrIns<'a>,
-    pub player_game_data: &'a mut PlayerGameData<'a>,
+pub struct PlayerIns {
+    pub chr_ins: ChrIns,
+    pub player_game_data: OwningPtr<PlayerGameData>,
     chr_manipulator: usize,
     unk590: usize,
     player_session_holder: usize,
     unk5c0: usize,
     replay_recorder: usize,
     unk5b0: [u8; 0x88],
-    pub chr_asm: &'a mut ChrAsm,
+    pub chr_asm: OwningPtr<ChrAsm>,
     chr_asm_model_res: usize,
     chr_asm_model_ins: usize,
     unk650: [u8; 0x60],

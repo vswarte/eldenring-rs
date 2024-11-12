@@ -4,7 +4,7 @@ use util::singleton::get_instance;
 
 use super::DebugDisplay;
 
-impl<'a> DebugDisplay for CSEventFlagMan<'a> {
+impl DebugDisplay for CSEventFlagMan {
     fn render_debug(&self, ui: &&mut Ui) {
         ui.input_text(
             "World type",
@@ -19,7 +19,7 @@ impl<'a> DebugDisplay for CSEventFlagMan<'a> {
     }
 }
 
-impl<'a> DebugDisplay for CSFD4VirtualMemoryFlag<'a> {
+impl DebugDisplay for CSFD4VirtualMemoryFlag {
     fn render_debug(&self, ui: &&mut Ui) {
         ui.input_text(
             "Event flag divisor",

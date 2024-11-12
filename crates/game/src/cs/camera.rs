@@ -1,13 +1,13 @@
-use crate::{matrix::FSMatrix4x4, DLRFLocatable};
+use crate::{matrix::FSMatrix4x4, pointer::OwningPtr, DLRFLocatable};
 
 #[repr(C)]
 /// Source of name: RTTI
-pub struct CSCamera<'a> {
+pub struct CSCamera {
     vftable: usize,
-    pub pers_cam_1: &'a mut CSPersCam,
-    pub pers_cam_2: &'a mut CSPersCam,
-    pub pers_cam_3: &'a mut CSPersCam,
-    pub pers_cam_4: &'a mut CSPersCam,
+    pub pers_cam_1: OwningPtr<CSPersCam>,
+    pub pers_cam_2: OwningPtr<CSPersCam>,
+    pub pers_cam_3: OwningPtr<CSPersCam>,
+    pub pers_cam_4: OwningPtr<CSPersCam>,
 
     // 0b00100000 // Copy from pers_cam_4 into pers_cam_1
     // 0b00010000 // Copy from pers_cam_3 into pers_cam_1
@@ -17,11 +17,11 @@ pub struct CSCamera<'a> {
     // 0b00000001 // Copy from pers_cam_2 into pers_cam_1
     pub camera_mask: u32,
 
-    pub unk2c: u32,
-    pub unk30: usize,
+    unk2c: u32,
+    unk30: usize,
 }
 
-impl DLRFLocatable for CSCamera<'_> {
+impl DLRFLocatable for CSCamera {
     const DLRF_NAME: &'static str = "CSCamera";
 }
 
@@ -29,8 +29,8 @@ impl DLRFLocatable for CSCamera<'_> {
 /// Source of name: RTTI
 pub struct CSCam {
     vftable: usize,
-    pub unk8: u32,
-    pub unkc: u32,
+    unk8: u32,
+    unkc: u32,
     pub matrix: FSMatrix4x4,
     pub fov: f32,
     pub aspect_ratio: f32,

@@ -11,7 +11,7 @@ use game::position::ChunkPosition;
 
 use crate::program::Program;
 
-const CS_WORLD_GEOM_MAN_MAP_DATA_BY_MAP_ID_PATTERN: &[Atom] =
+const CS_WORLD_GEOM_MAN_BLOCK_DATA_BY_MAP_ID_PATTERN: &[Atom] =
     pelite::pattern!("83 cb 02 89 5c 24 20 48 8d 54 24 38 e8 $ { ' }");
 const INITIALIZE_SPAWN_GEOMETRY_REQUEST_PATTERN: &[Atom] =
     pelite::pattern!("b2 08 48 8d 4d 00 e8 $ { ' }");
@@ -21,7 +21,7 @@ const SPAWN_GEOMETRY_PATTERN: &[Atom] =
 #[derive(Debug, Error)]
 pub enum SpawnGeometryError {
     #[error("No map data found")]
-    MapDataUnavailable,
+    BlockDataUnavailable,
 }
 
 pub struct GeometrySpawnParameters {
@@ -43,7 +43,7 @@ pub trait CSWorldGeomManExt {
     ) -> Result<(), SpawnGeometryError>;
 }
 
-impl CSWorldGeomManExt for CSWorldGeomMan<'_> {
+impl CSWorldGeomManExt for CSWorldGeomMan {
     fn spawn_geometry(
         &self,
         asset: &str,
@@ -51,15 +51,15 @@ impl CSWorldGeomManExt for CSWorldGeomMan<'_> {
     ) -> Result<(), SpawnGeometryError> {
         tracing::info!("Spawning {asset}");
 
-        const CS_WORLD_GEOM_MAN_MAP_DATA_BY_MAP_ID_VA: LazyLock<u64> = LazyLock::new(|| {
+        const CS_WORLD_GEOM_MAN_BLOCK_DATA_BY_MAP_ID_VA: LazyLock<u64> = LazyLock::new(|| {
             let program = unsafe { Program::current() };
             let mut matches = [0u32; 2];
 
             if !program
                 .scanner()
-                .finds_code(CS_WORLD_GEOM_MAN_MAP_DATA_BY_MAP_ID_PATTERN, &mut matches)
+                .finds_code(CS_WORLD_GEOM_MAN_BLOCK_DATA_BY_MAP_ID_PATTERN, &mut matches)
             {
-                panic!("Could not find CS_WORLD_GEOM_MAN_MAP_DATA_BY_MAP_ID_PATTERN or found duplicates.");
+                panic!("Could not find CS_WORLD_GEOM_MAN_BLOCK_DATA_BY_MAP_ID_PATTERN or found duplicates.");
             }
 
             program.rva_to_va(matches[1]).unwrap()
@@ -95,9 +95,9 @@ impl CSWorldGeomManExt for CSWorldGeomMan<'_> {
             program.rva_to_va(matches[1]).unwrap()
         });
 
-        let map_data_by_map_id = unsafe {
+        let block_data_by_map_id = unsafe {
             transmute::<_, fn(&CSWorldGeomMan, &MapId) -> u64>(
-                *CS_WORLD_GEOM_MAN_MAP_DATA_BY_MAP_ID_VA,
+                *CS_WORLD_GEOM_MAN_BLOCK_DATA_BY_MAP_ID_VA,
             )
         };
 
@@ -150,22 +150,13 @@ impl CSWorldGeomManExt for CSWorldGeomMan<'_> {
         request.scale_y = parameters.scale_y;
         request.scale_z = parameters.scale_z;
 
-        tracing::info!(
-            "Populated spawn request: {request:#?} for map {}",
-            &parameters.map_id
-        );
-
         // TODO: make this a nice as_ref call or something
-        let map_data_ptr = map_data_by_map_id(self, &parameters.map_id);
-        tracing::info!(
-            "Map Data ptr: {:?} -> {map_data_ptr:#x?}",
-            &parameters.map_id
-        );
-        if map_data_ptr == 0x0 {
-            return Err(SpawnGeometryError::MapDataUnavailable);
+        let block_data_ptr = block_data_by_map_id(self, &parameters.map_id);
+        if block_data_ptr == 0x0 {
+            return Err(SpawnGeometryError::BlockDataUnavailable);
         }
 
-        let geom = spawn_geometry(map_data_ptr, &request);
+        let geom = spawn_geometry(block_data_ptr, &request);
 
         Ok(())
     }

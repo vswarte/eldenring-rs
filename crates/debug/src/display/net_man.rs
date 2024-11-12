@@ -3,7 +3,7 @@ use hudhook::imgui::{TableColumnSetup, TreeNodeFlags, Ui};
 
 use super::DebugDisplay;
 
-impl<'a> DebugDisplay for CSNetMan<'a> {
+impl DebugDisplay for CSNetMan {
     fn render_debug(&self, ui: &&mut Ui) {
         if ui.collapsing_header("Blood Messages", TreeNodeFlags::empty()) {
             self.blood_message_db.render_debug(ui);
@@ -11,22 +11,27 @@ impl<'a> DebugDisplay for CSNetMan<'a> {
     }
 }
 
-impl<'a> DebugDisplay for CSNetBloodMessageDb<'a> {
+impl DebugDisplay for CSNetBloodMessageDb {
     fn render_debug(&self, ui: &&mut Ui) {
         if ui.collapsing_header("Entries", TreeNodeFlags::empty()) {
-            render_message_table(self.entries.iter().copied(), ui);
+            render_message_table(self.entries.iter().map(|f| f.as_ref()), ui);
         }
 
         ui.text(format!("Unk20: {}", self.unk20));
 
         if ui.collapsing_header("Created message data", TreeNodeFlags::empty()) {
-            self.created_data.iter().for_each(|f| ui.text(format!("{f} {f:x}")))
+            self.created_data
+                .iter()
+                .for_each(|f| ui.text(format!("{f} {f:x}")))
         }
 
         ui.text(format!("Unk58: {}", self.unk58));
 
         if ui.collapsing_header("Discovered messages", TreeNodeFlags::empty()) {
-            render_message_table(self.discovered_messages.iter().map(|f| **f), ui);
+            render_message_table(
+                self.discovered_messages.iter().map(|f| f.as_ref().as_ref()),
+                ui,
+            );
         }
     }
 }

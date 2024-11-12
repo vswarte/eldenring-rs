@@ -2,6 +2,7 @@ use std::{ffi, marker::PhantomData};
 use windows::core::PCWSTR;
 
 use crate::dl::DLRuntimeClass;
+use crate::pointer::OwningPtr;
 use crate::DLRFLocatable;
 use crate::{dl::DLPlainLightMutex, fd4::{FD4BasicHashString, FD4Time}, Tree, Vector};
 
@@ -52,31 +53,31 @@ pub struct CSEzTask {
 }
 
 #[repr(C)]
-pub struct CSEzUpdateTask<'a, TSubject> {
+pub struct CSEzUpdateTask<TSubject> {
     pub base_task: CSEzTask,
 
     /// Whatever this update task is operating on
-    pub subject: &'a TSubject,
+    pub subject: OwningPtr<TSubject>,
 
     /// Takes in the subject and the delta time
-    pub executor: fn(&'a TSubject, f32),
+    pub executor: fn(&TSubject, f32),
 }
 
 #[repr(C)]
-pub struct CSEzTaskProxy<'a> {
+pub struct CSEzTaskProxy {
     vftable: *const CSEzTaskVMT,
     unk8: u32,
     _padc: u32,
-    pub task: &'a CSEzTask,
+    pub task: OwningPtr<CSEzTask>,
 }
 
 #[repr(C)]
-pub struct CSTaskGroup<'a> {
+pub struct CSTaskGroup {
     vftable: usize,
-    pub task_groups: [&'a CSTimeLineTaskGroupIns; 168],
+    pub task_groups: [OwningPtr<CSTimeLineTaskGroupIns>; 168],
 }
 
-impl DLRFLocatable for CSTaskGroup<'_> {
+impl DLRFLocatable for CSTaskGroup {
     const DLRF_NAME: &'static str = "CSTaskGroup";
 }
 
@@ -95,20 +96,20 @@ pub struct CSTimeLineTaskGroupIns {
 }
 
 #[repr(C)]
-pub struct CSTaskImp<'a> {
+pub struct CSTaskImp {
     vftable: usize,
-    pub inner: &'a CSTask<'a>,
+    pub inner: OwningPtr<CSTask>,
 }
 
-impl DLRFLocatable for CSTaskImp<'_> {
+impl DLRFLocatable for CSTaskImp {
     const DLRF_NAME: &'static str = "CSTask";
 }
 
 #[repr(C)]
-pub struct CSTaskBase<'a> {
+pub struct CSTaskBase {
     vftable: usize,
     pub allocator1: usize,
-    pub task_groups: Vector<'a, TaskGroupEntry>,
+    pub task_groups: Vector<TaskGroupEntry>,
     pub task_group_index_max: u32,
     _pad34: u32,
 }
@@ -121,23 +122,23 @@ pub struct TaskGroupEntry {
 }
 
 #[repr(C)]
-pub struct CSTask<'a> {
-    pub task_base: CSTaskBase<'a>,
+pub struct CSTask {
+    pub task_base: CSTaskBase,
     pub allocator2: usize,
     unk40: usize,
     unk48: [usize; 3],
     unk60: [usize; 3],
-    pub task_runner_manager: &'a CSTaskRunnerManager<'a>,
-    pub task_runners: [&'a CSTaskRunner<'a>; 6],
-    pub task_runners_ex: [&'a CSTaskRunnerEx; 6],
+    pub task_runner_manager: OwningPtr<CSTaskRunnerManager>,
+    pub task_runners: [OwningPtr<CSTaskRunner>; 6],
+    pub task_runners_ex: [OwningPtr<CSTaskRunnerEx>; 6],
     unke0: usize,
 }
 
 #[repr(C)]
-pub struct CSTaskRunner<'a> {
+pub struct CSTaskRunner {
     vftable: usize,
     pub task_queue: usize,
-    pub task_runner_manager: &'a CSTaskRunnerManager<'a>,
+    pub task_runner_manager: OwningPtr<CSTaskRunnerManager>,
     unk18: u32,
     _pad1c: u32,
     unk_string: PCWSTR,
@@ -149,11 +150,11 @@ pub struct CSTaskRunnerEx {
 }
 
 #[repr(C)]
-pub struct FD4TaskQueue<'a> {
+pub struct FD4TaskQueue {
     vftable: usize,
     pub allocator: usize,
-    pub entries_tree: Tree<'a, FD4TaskGroup>,
-    pub entries_vector: Vector<'a, FD4TaskGroup>,
+    pub entries_tree: Tree<FD4TaskGroup>,
+    pub entries_vector: Vector<FD4TaskGroup>,
 }
 
 #[repr(C)]
@@ -162,10 +163,10 @@ pub struct FD4TaskGroup {
 }
 
 #[repr(C)]
-pub struct CSTaskRunnerManager<'a> {
+pub struct CSTaskRunnerManager {
     pub allocator: usize,
     pub concurrent_task_group_count: usize,
-    pub concurrent_task_group_policy: &'a TaskGroupConcurrency,
+    pub concurrent_task_group_policy: OwningPtr<TaskGroupConcurrency>,
     pub current_concurrent_task_group: u32,
     unk1c: u32,
     unk20: u32,

@@ -1,14 +1,14 @@
-use crate::{stl::DoublyLinkedList, DLRFLocatable};
+use crate::{pointer::OwningPtr, stl::DoublyLinkedList, DLRFLocatable};
 
 use super::{CSEzTask, CSEzUpdateTask, MapId, PlayerIns};
 
 #[repr(C)]
-pub struct CSNetMan<'a> {
+pub struct CSNetMan {
     vftable: usize,
     unk8: [u8; 0x60],
     pub sos_db: usize,
     pub wandering_ghost_db: usize,
-    pub blood_message_db: &'a CSNetBloodMessageDb<'a>,
+    pub blood_message_db: OwningPtr<CSNetBloodMessageDb>,
     pub bloodstain_db: usize,
     pub bonfire_db: usize,
     pub spiritual_statue_db: usize,
@@ -18,30 +18,30 @@ pub struct CSNetMan<'a> {
     unk_quickmatch: usize,
     pub visitor_db: usize,
     pub penalty_manager: usize,
-    pub update_task: CSEzUpdateTask<'a, Self>,
+    pub update_task: CSEzUpdateTask<Self>,
     unkf0: u32,
     unkf4: u32, // Probably padding
     unkf8: usize,
 }
 
-impl DLRFLocatable for CSNetMan<'_> {
+impl DLRFLocatable for CSNetMan {
     const DLRF_NAME: &'static str = "CSNetMan";
 }
 
 #[repr(C)]
-pub struct CSNetBloodMessageDb<'a> {
+pub struct CSNetBloodMessageDb {
     vftable: usize,
     // Contains all CSNetBloodMessageDbItem?
-    pub entries: DoublyLinkedList<'a, &'a CSNetBloodMessageDbItem>,
+    pub entries: DoublyLinkedList<OwningPtr<CSNetBloodMessageDbItem>>,
     pub unk20: usize,
     // Seemingly contains message data for messages created by local user
-    pub created_data: DoublyLinkedList<'a, usize>,
+    pub created_data: DoublyLinkedList<usize>,
     // Contains ???
-    pub unk40: DoublyLinkedList<'a, usize>,
+    pub unk40: DoublyLinkedList<usize>,
     pub unk58: usize,
     pub blood_message_ins_man_1: usize,
     pub blood_message_ins_man_2: usize,
-    pub discovered_messages: DoublyLinkedList<'a, &'a &'a CSNetBloodMessageDbItem>,
+    pub discovered_messages: DoublyLinkedList<OwningPtr<OwningPtr<CSNetBloodMessageDbItem>>>,
     pub unk88: [u8; 0xD0],
     pub evaluate_job: usize,
     pub unk160: usize,

@@ -5,7 +5,7 @@ use hudhook::imgui::{TableColumnSetup, TreeNodeFlags, Ui};
 
 use super::DebugDisplay;
 
-impl DebugDisplay for PlayerIns<'_> {
+impl DebugDisplay for PlayerIns {
     fn render_debug(&self, ui: &&mut Ui) {
         self.chr_ins.render_debug(ui);
 
@@ -50,7 +50,7 @@ impl DebugDisplay for ChrAsm {
     }
 }
 
-impl DebugDisplay for PlayerGameData<'_> {
+impl DebugDisplay for PlayerGameData {
     fn render_debug(&self, ui: &&mut Ui) {
         ui.text(format!(
             "Furlcalling Finger Active: {:?}",
@@ -132,7 +132,7 @@ impl DebugDisplay for EquipInventoryData {
     }
 }
 
-impl DebugDisplay for ChrIns<'_> {
+impl DebugDisplay for ChrIns {
     fn render_debug(&self, ui: &&mut Ui) {
         ui.text(format!("Team Type: {}", self.team_type));
         ui.text(format!("Last killed by: {}", self.last_killed_by));
@@ -174,7 +174,7 @@ impl DebugDisplay for ChrIns<'_> {
     }
 }
 
-impl DebugDisplay for ChrInsModuleContainer<'_> {
+impl DebugDisplay for ChrInsModuleContainer {
     fn render_debug(&self, ui: &&mut Ui) {
         if ui.collapsing_header("Physics", TreeNodeFlags::empty()) {
             self.physics.render_debug(ui);
@@ -186,13 +186,13 @@ impl DebugDisplay for ChrInsModuleContainer<'_> {
     }
 }
 
-impl DebugDisplay for ChrPhysicsModule<'_> {
+impl DebugDisplay for ChrPhysicsModule {
     fn render_debug(&self, ui: &&mut Ui) {
         ui.text(format!("Position: {}", self.position));
     }
 }
 
-impl DebugDisplay for CSChrModelParamModifierModule<'_> {
+impl DebugDisplay for CSChrModelParamModifierModule {
     fn render_debug(&self, ui: &&mut Ui) {
         if let Some(_t) = ui.begin_table_header(
             "chr-ins-model-param-modifier",

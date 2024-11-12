@@ -1,27 +1,29 @@
 use std::{collections::VecDeque, marker::PhantomData, ptr::NonNull};
 
+use crate::pointer::OwningPtr;
+
 #[repr(C)]
-pub struct DoublyLinkedListNode<'a, T> {
-    pub next: &'a DoublyLinkedListNode<'a, T>,
-    pub previous: &'a DoublyLinkedListNode<'a, T>,
+pub struct DoublyLinkedListNode<T> {
+    pub next: NonNull<DoublyLinkedListNode<T>>,
+    pub previous: NonNull<DoublyLinkedListNode<T>>,
     pub value: T,
 }
 
 #[repr(C)]
-pub struct DoublyLinkedList<'a, T> {
+pub struct DoublyLinkedList<T> {
     pub allocator: usize,
-    pub head: &'a DoublyLinkedListNode<'a, T>,
+    pub head: NonNull<DoublyLinkedListNode<T>>,
     pub count: u32,
     _pad14: u32,
 }
 
-impl<'a, T> DoublyLinkedList<'a, T> {
+impl<T> DoublyLinkedList<T> {
     pub fn iter(&self) -> impl Iterator<Item = &T> {
         let mut count = self.count;
-        let mut current = self.head;
+        let mut current = unsafe { self.head.as_ref() };
 
         std::iter::from_fn(move || {
-            current = current.next;
+            current = unsafe { current.next.as_ref() };
             if count == 0 {
                 None
             } else {
@@ -37,18 +39,17 @@ impl<'a, T> DoublyLinkedList<'a, T> {
 }
 
 #[repr(C)]
-pub struct Vector<'a, T>
+pub struct Vector<T>
 where
     T: Sized,
 {
-    _phantom: PhantomData<&'a mut [T]>,
     pub allocator: usize,
     pub begin: Option<NonNull<T>>,
     pub end: Option<NonNull<T>>,
     pub capacity: Option<NonNull<T>>,
 }
 
-impl<'a, T> Vector<'a, T>
+impl<T> Vector<T>
 where
     T: Sized,
 {
@@ -57,7 +58,7 @@ where
         let end = self.end;
 
         std::iter::from_fn(move || {
-            let result = if current? >= end? {
+            let result = if current?.as_ptr() >= end?.as_ptr() {
                 None
             } else {
                 Some(unsafe { current?.as_mut() })
@@ -82,38 +83,32 @@ where
 }
 
 #[repr(C)]
-pub struct Tree<'a, T> {
+pub struct Tree<T> {
     allocator: usize,
-    head: &'a mut TreeNode<'a, T>,
+    head: NonNull<TreeNode<T>>,
     size: usize,
 }
 
-impl<'a, T> Tree<'a, T> {
+impl<T> Tree<T> {
     pub fn len(&self) -> usize {
         self.size
     }
 
-    pub fn iter(&self) -> impl Iterator<Item = &'a mut T> {
+    pub fn iter(&self) -> impl Iterator<Item = &mut T> {
         let mut pending = VecDeque::new();
 
-        let start = self.head.parent;
+        let start = unsafe { self.head.as_ref().parent };
         pending.push_back(start);
 
         std::iter::from_fn(move || {
-            if let Some(entry) = pending.pop_front() {
-                let entry = unsafe { entry.as_mut() }?;
+            if let Some(mut entry) = pending.pop_front() {
+                let entry = unsafe { entry.as_mut() };
 
-                if unsafe { entry.left.as_ref() }
-                    .map(|e| e.is_nil == 0)
-                    .unwrap_or_default()
-                {
+                if unsafe { entry.left.as_ref() }.is_nil == 0 {
                     pending.push_back(entry.left);
                 }
 
-                if unsafe { entry.right.as_ref() }
-                    .map(|e| e.is_nil == 0)
-                    .unwrap_or_default()
-                {
+                if unsafe { entry.right.as_ref() }.is_nil == 0 {
                     pending.push_back(entry.right);
                 }
 
@@ -126,10 +121,10 @@ impl<'a, T> Tree<'a, T> {
 }
 
 #[repr(C)]
-pub struct TreeNode<'a, T> {
-    left: *mut TreeNode<'a, T>,
-    parent: *mut TreeNode<'a, T>,
-    right: *mut TreeNode<'a, T>,
+pub struct TreeNode<T> {
+    left: NonNull<TreeNode<T>>,
+    parent: NonNull<TreeNode<T>>,
+    right: NonNull<TreeNode<T>>,
     black_red: u8,
     is_nil: u8,
     _pad1a: [u8; 6],

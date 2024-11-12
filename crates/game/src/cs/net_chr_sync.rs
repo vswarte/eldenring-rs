@@ -1,11 +1,13 @@
+use crate::pointer::OwningPtr;
+
 use super::{ChrIns, ChrSet};
 
 #[repr(C)]
-pub struct NetChrSync<'a> {
+pub struct NetChrSync {
     pub world_info_owner: usize,
     pub chr_slot_count: u32,
     _padc: u32,
-    pub net_chr_set_sync: [&'a NetChrSetSync<'a>; 196],
+    pub net_chr_set_sync: [OwningPtr<NetChrSetSync>; 196],
 }
 
 /// Acts as an update buffer for all the ChrIns sync for a given ChrSet.
@@ -14,10 +16,10 @@ pub struct NetChrSync<'a> {
 ///
 /// Source of name: RTTI
 #[repr(C)]
-pub struct NetChrSetSync<'a> {
+pub struct NetChrSetSync {
     vftable: usize,
     /// ChrSet this NetChrSetSync manages the sync for.
-    pub chr_set: &'a ChrSet<'a, ChrIns<'a>>,
+    pub chr_set: OwningPtr<ChrSet<ChrIns>>,
     /// Max amount of ChrIns's this NetChrSetSync will host.
     pub capacity: u32,
     _pad14: u32,
@@ -33,7 +35,7 @@ pub struct NetChrSetSync<'a> {
     unk48_readback_values: usize,
 }
 
-impl NetChrSetSync<'_> {
+impl NetChrSetSync {
     pub fn update_flags(&self) -> &mut [ChrSyncUpdateFlags] {
         unsafe {
             std::slice::from_raw_parts_mut(

@@ -1,33 +1,42 @@
-use game::cs::{CSWorldGeomIns, CSWorldGeomMan, CSWorldGeomManMapData};
+use game::cs::{CSWorldGeomIns, CSWorldGeomMan, CSWorldGeomManBlockData};
 use hudhook::imgui::{TreeNodeFlags, Ui};
 
 use super::DebugDisplay;
 
-impl DebugDisplay for CSWorldGeomMan<'_> {
+impl DebugDisplay for CSWorldGeomMan {
     fn render_debug(&self, ui: &&mut Ui) {
-        if ui.collapsing_header("Map data", TreeNodeFlags::empty()) {
-            ui.text(format!("Map data count: {}", self.map_geometry.len()));
+        ui.text(format!("Loaded blocks: {}",  self.blocks.len()));
+        if ui.collapsing_header("Loaded blocks", TreeNodeFlags::empty()) {
+            ui.indent();
+            for block in self.blocks.iter() {
+                let label = format!("{}", block.map_id);
+                if ui.collapsing_header(label, TreeNodeFlags::empty()) {
+                    block.data.render_debug(ui);
+                }
+            }
+            ui.unindent();
         }
 
-        if ui.collapsing_header("Current Unk Map", TreeNodeFlags::empty()) {
-            self.curent_99_map_data.render_debug(ui);
+        if ui.collapsing_header("Current Unk Block", TreeNodeFlags::empty()) {
+            self.curent_99_block_data.render_debug(ui);
         }
     }
 }
 
-impl DebugDisplay for CSWorldGeomManMapData<'_> {
+impl DebugDisplay for CSWorldGeomManBlockData {
     fn render_debug(&self, ui: &&mut Ui) {
-        ui.text(format!("Map ID: {}", self.map_id));
+        ui.text(format!("Block ID: {}", self.map_id));
         ui.text(format!("World block info: {:x}", self.world_block_info));
+
         ui.text(format!(
             "Next GeomIns FieldIns index: {}",
             self.next_geom_ins_field_ins_index
         ));
-        ui.text(format!(
-            "Reached GeomIns vector capacity: {}",
-            self.reached_geom_ins_vector_capacity
-        ));
 
+        ui.text(format!(
+            "Objects in vector: {}",
+            self.geom_ins_vector.len()
+        ));
         if ui.collapsing_header("Geometry Vector", TreeNodeFlags::empty()) {
             for geometry_ins in self.geom_ins_vector.iter() {
                 let name = unsafe {
@@ -41,6 +50,7 @@ impl DebugDisplay for CSWorldGeomManMapData<'_> {
                 }
                 .unwrap();
 
+                ui.indent();
                 if ui.collapsing_header(
                     format!(
                         "{} - {} FieldInsSelector({}, {})",
@@ -53,6 +63,7 @@ impl DebugDisplay for CSWorldGeomManMapData<'_> {
                 ) {
                     geometry_ins.render_debug(ui)
                 }
+                ui.unindent();
             }
         }
 
@@ -68,6 +79,7 @@ impl DebugDisplay for CSWorldGeomManMapData<'_> {
                         .to_string()
                 }
                 .unwrap();
+                ui.indent();
                 if ui.collapsing_header(
                     format!(
                         "{} - {} FieldInsSelector({}, {})",
@@ -80,12 +92,13 @@ impl DebugDisplay for CSWorldGeomManMapData<'_> {
                 ) {
                     geometry_ins.render_debug(ui)
                 }
+                ui.unindent();
             }
         }
     }
 }
 
-impl DebugDisplay for CSWorldGeomIns<'_> {
+impl DebugDisplay for CSWorldGeomIns {
     fn render_debug(&self, ui: &&mut Ui) {
         ui.text(format!("Unk10: {}", self.info.unk10));
     }

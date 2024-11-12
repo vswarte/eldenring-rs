@@ -4,16 +4,17 @@ use crate::dl::DLPlainLightMutex;
 use crate::fd4::{
     FD4BasicHashString, FD4ResCap, FD4ResCapHolder
 };
+use crate::pointer::OwningPtr;
 
 #[repr(C)]
-pub struct CSFile<'a> {
+pub struct CSFile {
     vftable: usize,
-    pub file_repository_1: &'a CSFileRepository<'a>,
+    pub file_repository_1: OwningPtr<CSFileRepository>,
     // TODO: Incomplete..
 }
 
 #[repr(C)]
-pub struct CSFileRepository<'a> {
+pub struct CSFileRepository {
     // TODO: This is actually embedding an FD4FileRepository of size 0x210
     pub repository_res_cap: FD4ResCap<[u8; 0x10]>,
     pub holder1: FD4ResCapHolder<()>,
@@ -24,7 +25,7 @@ pub struct CSFileRepository<'a> {
     unkd0_tree_pointer: usize,
     unkd8_tree_size: u32,
     unkdc_tree_pad: u32,
-    pub mutexes: [&'a CSFileRepositoryMutex; 5],
+    pub mutexes: [OwningPtr<CSFileRepositoryMutex>; 5],
     unk108: usize,
     unk110: usize,
     unk118: usize,

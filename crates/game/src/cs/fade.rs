@@ -1,3 +1,4 @@
+use crate::pointer::OwningPtr;
 use crate::DLRFLocatable;
 use crate::fd4::FD4Time;
 
@@ -5,16 +6,16 @@ use crate::fd4::FD4Time;
 /// Controls fades in the game. Used for cutscene transitions and such.
 ///
 /// Source of name: RTTI
-pub struct CSFade<'a> {
+pub struct CSFade {
     vftable: usize,
-    pub fade_system: &'a mut CSFD4FadeSystem,
+    pub fade_system: OwningPtr<CSFD4FadeSystem>,
     /// Holds the individual fade plates, these control the actual drawing of the dimming.
-    pub fade_plates: [&'a mut CSFD4FadePlate; 9],
+    pub fade_plates: [OwningPtr<CSFD4FadePlate>; 9],
     pub unk58: u32,
     pub unk5c: f32,
 }
 
-impl DLRFLocatable for CSFade<'_> {
+impl DLRFLocatable for CSFade {
     const DLRF_NAME: &'static str = "CSFade";
 }
 

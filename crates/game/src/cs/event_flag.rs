@@ -1,4 +1,6 @@
-use crate::{DLRFLocatable, Tree};
+use std::mem::ManuallyDrop;
+
+use crate::{pointer::OwningPtr, DLRFLocatable, Tree};
 
 pub struct EventFlag(u32);
 
@@ -26,19 +28,19 @@ impl EventFlag {
 /// Manages the event flags for the game.
 ///
 /// Source of name: DLRF RuntimeClass metadata
-pub struct CSEventFlagMan<'a> {
-    pub virtual_memory_flag: CSFD4VirtualMemoryFlag<'a>,
+pub struct CSEventFlagMan {
+    pub virtual_memory_flag: CSFD4VirtualMemoryFlag,
     pub world_type: u32,
     unk7c: [u8; 0x1f4],
 }
 
-impl DLRFLocatable for CSEventFlagMan<'_> {
+impl DLRFLocatable for CSEventFlagMan {
     const DLRF_NAME: &'static str = "CSEventFlagMan";
 }
 
 #[repr(C)]
 /// Source of name: RTTI
-pub struct CSFD4VirtualMemoryFlag<'a> {
+pub struct CSFD4VirtualMemoryFlag {
     vftable: usize,
     allocator: usize,
     unk10: u32,
@@ -53,83 +55,82 @@ pub struct CSFD4VirtualMemoryFlag<'a> {
     /// Top of the flag block structure.
     pub flag_blocks: *mut FlagBlock,
     /// Describes where to find a flag block.
-    pub flag_block_descriptors: Tree<'a, FlagBlockDescriptor<'a>>,
+    pub flag_block_descriptors: Tree<FlagBlockDescriptor>,
     unk38: [u8; 0x30],
 }
 
-impl<'a> CSFD4VirtualMemoryFlag<'a> {
-    pub fn set_flag(&self, flag: impl Into<EventFlag>, state: bool) {
+impl CSFD4VirtualMemoryFlag {
+    /// Sets the event flag bit for a given event flag. Does not inherently network set flags.
+    pub fn set_flag(&mut self, flag: impl Into<EventFlag>, state: bool) {
         let flag: EventFlag = flag.into();
         let Some(group) = self
             .flag_block_descriptors
             .iter()
-            .find(|d| d.group == flag.group()) else {
-
+            .find(|d| d.group == flag.group())
+        else {
             return;
         };
 
-        let block = match group.location() {
-            FlagBlockLocation::HolderOffset(offset) => {
-                unsafe { self.flag_blocks.add(offset as usize).as_mut() }.unwrap()
-            },
-            FlagBlockLocation::External(block) => block,
+        let Some(location) = self.flag_block(group) else {
+            return;
         };
 
-        block.set(flag, state)
+        location.set(flag, state)
     }
 
+    /// Retrieves the event flag current state.
     pub fn get_flag(&self, flag: impl Into<EventFlag>) -> bool {
         let flag: EventFlag = flag.into();
         let Some(group) = self
             .flag_block_descriptors
             .iter()
-            .find(|d| d.group == flag.group()) else {
-
+            .find(|d| d.group == flag.group())
+        else {
             return false;
         };
 
-        let block = match group.location() {
-            FlagBlockLocation::HolderOffset(offset) => {
-                unsafe { self.flag_blocks.add(offset as usize).as_mut() }.unwrap()
-            },
-            FlagBlockLocation::External(block) => block,
+        let Some(location) = self.flag_block(group) else {
+            return false;
         };
 
-        block.get(flag)
+        location.get(flag)
+    }
+
+    /// Locates a flag block for a given FlagBlockDescriptor.
+    fn flag_block<'a>(&self, descriptor: &'a mut FlagBlockDescriptor) -> Option<&'a mut FlagBlock> {
+        Some(match descriptor.location_mode {
+            1 => unsafe {
+                self.flag_blocks
+                    .add(descriptor.location.holder_offset as usize)
+                    .as_mut()?
+            }
+            2 => unsafe {
+                (*descriptor.location.external_location).as_mut()
+            }
+            _ => return None,
+        })
     }
 }
 
 #[repr(C)]
 /// Describes where to find a flag block.
-pub struct FlagBlockDescriptor<'a> {
+pub struct FlagBlockDescriptor {
     pub group: u32,
     unk4: u32,
     pub location_mode: u32,
     unkc: u32,
     /// Describes the location of the flag block together with location_mode.
-    location: FlagBlockLocationUnion<'a>,
+    location: FlagBlockLocationUnion,
 }
 
-union FlagBlockLocationUnion<'a> {
+union FlagBlockLocationUnion {
     holder_offset: u32,
-    external_location: &'a mut FlagBlock,
+    external_location: ManuallyDrop<OwningPtr<FlagBlock>>,
 }
 
-impl<'a> FlagBlockDescriptor<'a> {
-    pub fn location(&mut self) -> FlagBlockLocation {
-        unsafe {
-            match self.location_mode {
-                1 => FlagBlockLocation::HolderOffset(self.location.holder_offset),
-                2 => FlagBlockLocation::External(self.location.external_location),
-                _ => panic!("Flag group location_mode was not 1 or 2"),
-            }
-        }
-    }
-}
-
-pub enum FlagBlockLocation<'a> {
+pub enum FlagBlockLocation {
     HolderOffset(u32),
-    External(&'a mut FlagBlock),
+    External(OwningPtr<FlagBlock>),
 }
 
 #[repr(C)]

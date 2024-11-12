@@ -4,7 +4,7 @@ use hudhook::imgui::{TableColumnSetup, TreeNodeFlags, Ui};
 
 use super::DebugDisplay;
 
-impl DebugDisplay for WorldChrMan<'_> {
+impl DebugDisplay for WorldChrMan {
     fn render_debug(&self, ui: &&mut Ui) {
         let world_area_chr_list_count = self.world_area_chr_list_count;
         ui.text(format!(
@@ -64,7 +64,7 @@ impl DebugDisplay for WorldChrMan<'_> {
     }
 }
 
-impl DebugDisplay for ChrSet<'_, ChrIns<'_>> {
+impl DebugDisplay for ChrSet<ChrIns> {
     fn render_debug(&self, ui: &&mut Ui) {
         ui.text(format!("Character capacity: {}", self.capacity));
 
@@ -95,7 +95,7 @@ impl DebugDisplay for ChrSet<'_, ChrIns<'_>> {
     }
 }
 
-impl DebugDisplay for ChrSet<'_, PlayerIns<'_>> {
+impl DebugDisplay for ChrSet<PlayerIns> {
     fn render_debug(&self, ui: &&mut Ui) {
         ui.text(format!("Character capacity: {}", self.capacity));
 
@@ -126,15 +126,13 @@ impl DebugDisplay for ChrSet<'_, PlayerIns<'_>> {
     }
 }
 
-
-
-impl DebugDisplay for OpenFieldChrSet<'_> {
+impl DebugDisplay for OpenFieldChrSet {
     fn render_debug(&self, ui: &&mut Ui) {
         self.base.render_debug(ui)
     }
 }
 
-impl DebugDisplay for SummonBuddyManager<'_> {
+impl DebugDisplay for SummonBuddyManager {
     fn render_debug(&self, ui: &&mut Ui) {
         ui.text(format!(
             "To spawn buddy param: {}",
