@@ -17,7 +17,8 @@ impl DebugDisplay for PlayerIns {
             self.player_game_data.render_debug(ui);
         }
 
-        ui.text(format!("Unk position: {}", self.chunk_position));
+        ui.text(format!("Locked on enemy: {}", self.locked_on_enemy));
+        ui.text(format!("Chunk position: {}", self.chunk_position));
     }
 }
 

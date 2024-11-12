@@ -169,53 +169,8 @@ pub struct WorldBlockChr<T: 'static> {
     unk15c: u32,
 }
 
-// #[repr(C)]
-// pub struct ChrSetVMT<T> {
-//     /// Gets the max amount of ChrInses this ChrSet can hold.
-//     pub get_capacity: extern "C" fn(*const ChrSet<T>) -> u32,
-//
-//     /// Wrapped version of get_chr_ins_by_index which also validates the
-//     /// index against the ChrSet capacity.
-//     pub safe_get_chr_ins_by_index: extern "C" fn(*const ChrSet<T>, u32) -> *mut ChrIns<a>,
-//
-//     /// Retrieves a ChrIns from the ChrSet by its index. Avoid using this.
-//     /// Prefer using safe_get_chr_ins_by_index.
-//     pub get_chr_ins_by_index: extern "C" fn(*const ChrSet<'a, T>, u32) -> *mut ChrIns<'a>,
-//
-//     /// Retrieves a ChrIns from the ChrSet by its FieldIns handle.
-//     pub get_chr_ins_by_handle: extern "C" fn(*const ChrSet<'a, T>, u64) -> *mut ChrIns<'a>,
-//
-//     /// Wrapped version of get_chr_ins_by_index which also validates the
-//     /// index against the ChrSet capacity.
-//     pub safe_get_chr_set_entry_by_index: extern "C" fn(*const ChrSet<'a, T>, u32) -> *mut ChrSetEntry<ChrIns<'a>>,
-//
-//     /// Retrieves a ChrSetEntry from the ChrSet by its index. Avoid using this.
-//     /// Prefer using safe_get_chr_ins_by_index.
-//     pub get_chr_set_entry_by_index: extern "C" fn(*const ChrSet<'a, T>, u32) -> *mut ChrSetEntry<ChrIns<'a>>,
-//
-//     /// Retrieves a ChrSetEntry from the ChrSet by its index. Avoid using this.
-//     /// Prefer using safe_get_chr_ins_by_index.
-//     pub get_chr_set_entry_by_handle: extern "C" fn(*const ChrSet<'a, T>, u64) -> *mut ChrSetEntry<ChrIns<'a>>,
-//
-//     /// Retrieves the FieldIns handle of the ChrIns at the index in the ChrSet.
-//     pub get_index_by_field_ins_handle: extern "C" fn(*const ChrSet<'a, T>, u64) -> u32,
-//
-//     /// Deallocates all ChrInses hosted by the ChrSet.
-//     pub free_chr_list: extern "C" fn(*const ChrSet<'a, T>),
-//
-//     unk48: extern "C" fn(*const ChrSet<'a, T>),
-//
-//     unk50: extern "C" fn(*const ChrSet<'a, T>),
-//
-//     unk58: extern "C" fn(*const ChrSet<'a, T>, usize),
-//
-//     unk60: extern "C" fn(*const ChrSet<'a, T>, usize),
-//
-//     unk68: extern "C" fn(*const ChrSet<'a, T>, usize, usize, u8, u8),
-// }
-
 #[vtable_rs::vtable]
-pub trait ChrSetVmt {
+trait ChrSetVmt {
     /// Gets the max amount of ChrInses this ChrSet can hold.
     fn get_capacity(&self) -> u32;
 
@@ -228,13 +183,36 @@ pub trait ChrSetVmt {
     fn get_chr_ins_by_index(&mut self, index: u32) -> Option<&mut ChrIns>;
 
     /// Retrieves a ChrIns from the ChrSet by its FieldIns handle.
-    fn get_chr_ins_by_handle(&mut self, field_ins_handle: FieldInsHandle) -> Option<&mut ChrIns>;
+    fn get_chr_ins_by_handle(&mut self, handle: FieldInsHandle) -> Option<&mut ChrIns>;
 
     /// Wrapped version of get_chr_ins_by_index which also validates the
     /// index against the ChrSet capacity.
     fn safe_get_chr_set_entry_by_index(&mut self, index: u32) -> Option<&mut ChrSetEntry<ChrIns>>;
 
-    // ...
+    /// Retrieves a ChrSetEntry from the ChrSet by its index. Avoid using this.
+    /// Prefer using safe_get_chr_ins_by_index.
+    fn get_chr_set_entry_by_index(&mut self, index: u32) -> Option<&mut ChrSetEntry<ChrIns>>;
+
+    /// Retrieves a ChrSetEntry from the ChrSet by its index. Avoid using this.
+    /// Prefer using safe_get_chr_ins_by_index.
+    fn get_chr_set_entry_by_handle(&mut self, handle: FieldInsHandle) -> Option<&mut ChrSetEntry<ChrIns>>;
+
+    /// Retrieves a ChrSetEntry from the ChrSet by its index. Avoid using this.
+    /// Prefer using safe_get_chr_ins_by_index.
+    fn get_index_by_handle(&self, handle: FieldInsHandle) -> u32;
+
+    /// Deallocates all ChrInses hosted by the ChrSet.
+    fn free_chr_list(&mut self);
+
+    fn unk48(&mut self);
+
+    fn unk50(&mut self);
+
+    fn unk58(&mut self, param_2: usize);
+
+    fn unk60(&mut self, param_2: usize);
+
+    fn unk68(&mut self, param_2: usize, param_3: usize, param_4: u8, param_5: u8);
 }
 
 #[repr(C)]
@@ -252,7 +230,20 @@ pub struct ChrSet<T: 'static> {
 }
 
 impl<T> ChrSet<T> {
-    pub unsafe fn characters(&self) -> impl Iterator<Item = &mut T> {
+    pub fn get_capacity(&self) -> u32 {
+        (self.vftable.get_capacity)(self)
+    }
+
+    pub fn chr_ins_by_field_ins_handle(
+        &mut self,
+        field_ins_handle: impl Into<FieldInsHandle>,
+    ) -> Option<&mut ChrIns> {
+        (self.vftable.get_chr_ins_by_handle)(self, field_ins_handle.into())
+    }
+}
+
+impl<T> ChrSet<T> {
+    pub fn characters(&self) -> impl Iterator<Item = &mut T> {
         let mut current_entry = self.entries;
         let end = unsafe { current_entry.add(self.capacity as usize) };
 
@@ -260,9 +251,11 @@ impl<T> ChrSet<T> {
             if current_entry == end {
                 None
             } else {
-                let chr_ins = (*current_entry).chr_ins;
-                current_entry.add(1);
-                chr_ins.as_mut()
+                unsafe {
+                    let chr_ins = (*current_entry).chr_ins;
+                    current_entry.add(1);
+                    chr_ins.as_mut()
+                }
             }
         })
     }
@@ -321,10 +314,22 @@ pub struct WorldGridAreaChr {
 #[repr(C)]
 #[derive(Clone, Copy, Debug)]
 pub struct MapId {
-    pub index: u8,
-    pub region: u8,
-    pub block: u8,
-    pub area: u8,
+    pub index: i8,
+    pub region: i8,
+    pub block: i8,
+    pub area: i8,
+}
+
+impl MapId {
+    /// Makes a -1 map id, which is usually used to represent an entity not bound to some map.
+    pub fn global() -> Self {
+        Self {
+            index: -1,
+            region: -1,
+            block: -1,
+            area: -1,
+        }
+    }
 }
 
 impl Display for MapId {

@@ -4,7 +4,7 @@ use super::MapId;
 
 #[derive(Debug)]
 /// Used to reference a specific FieldIns managed by its respective (external) domain.
-pub struct FieldInsSelector(u32);
+pub struct FieldInsSelector(pub u32);
 
 #[repr(C)]
 /// Used throughout the game engine to refer to characters, geometry, bullets, hits and more.

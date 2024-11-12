@@ -1,6 +1,9 @@
-
-use game::cs::{ChrIns, ChrSet, EquipInventoryData, OpenFieldChrSet, PlayerGameData, PlayerIns, SummonBuddyManager, SummonBuddyManagerWarp, WorldChrMan};
+use game::cs::{
+    ChrIns, ChrSet, EquipInventoryData, FieldInsHandle, FieldInsSelector, MapId, OpenFieldChrSet,
+    PlayerGameData, PlayerIns, SummonBuddyManager, SummonBuddyManagerWarp, WorldChrMan,
+};
 use hudhook::imgui::{TableColumnSetup, TreeNodeFlags, Ui};
+use util::singleton::get_instance;
 
 use super::DebugDisplay;
 
@@ -98,6 +101,19 @@ impl DebugDisplay for ChrSet<ChrIns> {
 impl DebugDisplay for ChrSet<PlayerIns> {
     fn render_debug(&self, ui: &&mut Ui) {
         ui.text(format!("Character capacity: {}", self.capacity));
+
+        let test = unsafe { get_instance::<WorldChrMan>() }
+            .unwrap()
+            .map(|w| w.player_chr_set.chr_ins_by_field_ins_handle(
+                FieldInsHandle {
+                    selector: FieldInsSelector(384827392),
+                    map_id: MapId::global(),
+                }
+            ))
+            .flatten()
+            .map(|c| format!("{}", c.field_ins_handle));
+
+        ui.text(format!("Main player handle from VMT {:?}", test));
 
         let mut current_entry = self.entries;
         let end = unsafe { current_entry.add(self.capacity as usize) };
