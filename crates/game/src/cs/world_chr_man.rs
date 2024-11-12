@@ -54,17 +54,17 @@ pub struct WorldChrMan {
     /// Array of ChrSet holders.
     pub chr_set_holders: [ChrSetHolder<ChrIns>; 196],
     pub null_chr_set_holder: ChrSetHolder<ChrIns>,
-    pub chr_sets: [OwningPtr<ChrSetHolder<ChrIns>>; 196],
+    pub chr_sets: [Option<OwningPtr<ChrSet<ChrIns>>>; 196],
     pub null_chr_set: Option<OwningPtr<ChrSet<ChrIns>>>,
     pub player_grid_area: Option<OwningPtr<WorldGridAreaChr>>,
     /// Points to the local player.
     pub main_player: Option<OwningPtr<PlayerIns>>,
-    unk_player: Option<OwningPtr<PlayerIns>>,
+    pub unk_player: Option<OwningPtr<PlayerIns>>,
 
     pub unk_map_id_1: MapId,
     pub unk_map_id_2: MapId,
 
-    unk1e510: [u8; 0x18],
+    unk1e520: [u8; 0x18],
     /// Manages spirit summons (excluding Torrent).
     pub summon_buddy_manager: Option<OwningPtr<SummonBuddyManager>>,
     unk1e540: usize,
@@ -234,11 +234,11 @@ impl<T> ChrSet<T> {
         (self.vftable.get_capacity)(self)
     }
 
-    pub fn chr_ins_by_field_ins_handle(
+    pub fn chr_ins_by_handle(
         &mut self,
-        field_ins_handle: impl Into<FieldInsHandle>,
+        field_ins_handle: &FieldInsHandle,
     ) -> Option<&mut ChrIns> {
-        (self.vftable.get_chr_ins_by_handle)(self, field_ins_handle.into())
+        (self.vftable.get_chr_ins_by_handle)(self, field_ins_handle.to_owned())
     }
 }
 

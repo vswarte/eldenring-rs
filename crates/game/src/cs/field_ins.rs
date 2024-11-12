@@ -1,24 +1,31 @@
 use std::fmt::Display;
 
-use super::MapId;
+use super::{AtkParamLookupResult, MapId};
 
-#[derive(Debug)]
 /// Used to reference a specific FieldIns managed by its respective (external) domain.
+#[derive(Clone, Debug)]
 pub struct FieldInsSelector(pub u32);
 
-#[repr(C)]
 /// Used throughout the game engine to refer to characters, geometry, bullets, hits and more.
 ///
 /// Source of name: Destructor reveals this being a field in FieldIns and it's used as a means of
 /// naming some FieldIns derivant everywhere where raw pointers cannot be shared.
+#[repr(C)]
+#[derive(Clone)]
 pub struct FieldInsHandle {
     pub selector: FieldInsSelector,
     pub map_id: MapId,
 }
 
+impl FieldInsHandle {
+    pub fn is_empty(&self) -> bool {
+        self.selector.0 == u32::MAX 
+    }
+}
+
 impl Display for FieldInsHandle {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        if self.selector.0 == u32::MAX {
+        if self.is_empty() {
             write!(f, "FieldIns(None)")
         } else {
             write!(f, "FieldIns({}, {}, {})", self.map_id, self.selector.container(), self.selector.index())
@@ -47,6 +54,34 @@ impl FieldInsSelector {
     pub fn index(&self) -> u32 {
         (self.mapping().index_mask & self.0) & 0xFFFFF
     }
+}
+
+#[vtable_rs::vtable]
+/// Describes the VMT for the FieldInsBase which ChrIns, GeomIns, BulletIns, etc derive from.
+pub trait FieldInsBaseVmt {
+    /// Part of FieldInsBase, retrieves reflection metadata for FD4Component derivants.
+    fn get_runtime_metadata(&self) -> usize;
+
+    fn destructor(&mut self, param_2: u32);
+
+    /// Part of FieldInsBase, ChrIns = 1, CSBulletIns = 3, CSWorldGeomIns = 6, MapIns = 7, CSWorldGeomHitIns = 8,
+    fn get_field_ins_type(&self) -> u32;
+
+    fn use_npc_atk_param(&self) -> bool;
+
+    fn get_atk_param_for_behavior(&self, param_2: u32, atk_param: &mut AtkParamLookupResult) -> u32;
+
+    /// Part of FieldInsBase. ChrIns = 0, PlayerIns = 1, EnemyIns = 0, ReplayGhostIns = 1,
+    /// ReplayEnemyIns = 0, CSBulletIns = 0, CSWorldGeomIns = 0, CSFieldInsBase = 0,
+    /// CSHamariSimulateChrIns = 0, MapIns = 0, HitIns = 0, CSWorldGeomStaticIns = 0, HitInsBase =
+    /// 0, CSWorldGeomHitIns = 0, CSWorldGeomDynamicIns = 0,
+    fn use_player_behavior_param(&self) -> bool;
+
+    /// Obfuscated beyond recognition
+    fn unk30(&self);
+
+    /// Obfuscated beyond recognition
+    fn unk38(&self);
 }
 
 struct FieldInsMapping {

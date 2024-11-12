@@ -12,3 +12,4 @@ pub mod fade;
 pub mod resource;
 pub mod world_area_time;
 pub mod camera;
+pub mod world_chr_man;

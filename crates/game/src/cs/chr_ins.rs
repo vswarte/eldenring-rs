@@ -10,7 +10,7 @@ use crate::position::{ChunkPosition, HavokPosition};
 use crate::Vector;
 
 use super::player_game_data::PlayerGameData;
-use super::{FieldInsHandle, MapId};
+use super::{FieldInsBaseVmt, FieldInsHandle, MapId};
 
 #[repr(C)]
 #[derive(Debug, Clone)]
@@ -32,28 +32,11 @@ pub struct AtkParamLookupResult {
     param_row: usize,
 }
 
-// #[repr(C)]
-// pub struct ChrInsVMT {
-//     // Part of FieldInsBase, retrieves reflection metadata for FD4Component derivants.
-//     pub get_runtime_metadata: fn(&ChrIns) -> usize,
-//     // Destructor
-//     pub destructor: fn(&ChrIns, u32) -> usize,
-//     // Part of FieldInsBase, ChrIns = 1, CSBulletIns = 3, CSWorldGeomIns = 6, MapIns = 7, CSWorldGeomHitIns = 8,
-//     pub get_field_ins_type: fn(&ChrIns) -> u32,
-//     // Part of FieldInsBase.
-//     pub use_npc_atk_param: fn(&ChrIns) -> bool,
-//     // Part of FieldInsBase
-//     pub get_atk_param_for_behavior: fn(&ChrIns, u32, &mut AtkParamLookupResult) -> u32,
-//     // Part of FieldInsBase. ChrIns = 0, PlayerIns = 1, EnemyIns = 0, ReplayGhostIns = 1,
-//     // ReplayEnemyIns = 0, CSBulletIns = 0, CSWorldGeomIns = 0, CSFieldInsBase = 0,
-//     // CSHamariSimulateChrIns = 0, MapIns = 0, HitIns = 0, CSWorldGeomStaticIns = 0, HitInsBase =
-//     // 0, CSWorldGeomHitIns = 0, CSWorldGeomDynamicIns = 0,
-//     pub use_player_behavior_param: fn(&ChrIns) -> bool,
-//     // Obfuscated beyond recognition
-//     pub unk6: fn(&ChrIns),
-//     // Obfuscated beyond recognition
-//     pub unk7: fn(&ChrIns),
-// }
+#[vtable_rs::vtable]
+pub trait ChrInsVmt : FieldInsBaseVmt {
+    /// Part of FieldInsBase, retrieves reflection metadata for FD4Component derivants.
+    fn unk40(&self) -> usize;
+}
 
 #[repr(C)]
 /// Abstract base class to all characters. NPCs, Enemies, Players, Summons, Ghosts, even gesturing
@@ -355,6 +338,21 @@ pub struct PlayerIns {
     pub locked_on_enemy: FieldInsHandle,
     session_manager_player_entry: usize,
     pub chunk_position: ChunkPosition,
+}
+
+#[repr(C)]
+/// Source of name: RTTI
+pub struct EnemyIns {
+    pub chr_ins: ChrIns,
+    pub com_manipulator: usize,
+    pub net_ai_manipulator: usize,
+    pub ride_manipulator: usize,
+    unk598: usize,
+    pub npc_think_param: i32,
+    unk5a4: u32,
+    npc_sp_effect_equip_ctrl: usize,
+    map_studio_sp_effect_equip_ctrl: usize,
+    unk5b8: [u8; 0x28],
 }
 
 pub const CHR_ASM_SLOT_WEAPON_LEFT_1: usize = 0;
