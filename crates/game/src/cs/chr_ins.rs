@@ -292,8 +292,10 @@ pub struct CSChrEventModule {
     vftable: usize,
     pub owner: NonNull<ChrIns>,
     unk10: [u8; 0x8],
+    /// Animation ID that should be player immediately.
     pub event_animation: i32,
-    pub last_animation: i32,
+    /// Current animation ID.
+    pub current_animation: i32,
     pub init_stay_id: i32,
     unk24: u32,
     pub ez_state_request_ladder: i32,
@@ -307,24 +309,34 @@ pub struct CSChrEventModule {
 }
 
 #[repr(C)]
+/// Source of name: RTTI
 pub struct CSChrSuperArmorModule {
     vftable: usize,
+    /// ChrIns this ChrCtrl belongs to.
     pub owner: NonNull<ChrIns>,
+    /// Current super armor of the character, related to poise.
     pub sa_durability: f32,
+    /// Maximum super armor of the character.
     pub sa_durability_max: f32,
     unk18: u32,
+    /// Time to lost super armor reset.
     pub recover_time: f32,
     unk20: u32,
     unk24: u32,
 }
 
 #[repr(C)]
+/// Source of name: RTTI
 pub struct CSChrToughnessModule {
     vftable: usize,
+    /// ChrIns this ChrCtrl belongs to.
     pub owner: NonNull<ChrIns>,
+    /// Current toughness of the character, related to stance breake
     pub toughness: f32,
-    pub toughness_unk: f32,
+    toughness_unk: f32,
+    /// Maximum toughness of the character
     pub toughness_max: f32,
+    /// Time to lost toughness reset.
     pub recover_time: f32,
     unk20: [u8; 0x108],
 }
