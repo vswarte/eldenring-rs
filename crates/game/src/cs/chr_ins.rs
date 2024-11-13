@@ -161,8 +161,8 @@ pub struct ChrInsModuleContainer {
     behavior: usize,
     behavior_sync: usize,
     ai: usize,
-    super_armor: usize,
-    toughness: usize,
+    pub super_armor: OwningPtr<CSChrSuperArmorModule>,
+    pub toughness: OwningPtr<CSChrToughnessModule>,
     talk: usize,
     event: OwningPtr<CSChrEventModule>,
     magic: usize,
@@ -202,7 +202,6 @@ pub struct ChrInsModuleContainer {
 /// Source of name: RTTI
 pub struct ChrPhysicsModule {
     vftable: usize,
-    /// ChrIns this ChrModule belongs to.
     pub owner: NonNull<ChrIns>,
     unk10: [u8; 0x40],
     pub orientation: FSVector4,
@@ -219,7 +218,6 @@ pub struct ChrPhysicsModule {
 /// Source of name: RTTI
 pub struct CSChrWetModule {
     vftable: usize,
-    /// ChrIns this ChrModule belongs to.
     pub owner: NonNull<ChrIns>,
     pub unk10: [u8; 0x60],
 }
@@ -228,7 +226,6 @@ pub struct CSChrWetModule {
 /// Source of name: RTTI
 pub struct CSChrModelParamModifierModule {
     vftable: usize,
-    /// ChrIns this ChrModule belongs to.
     pub owner: NonNull<ChrIns>,
     pub modifiers: Vector<CSChrModelParamModifierModuleEntry>,
 }
@@ -275,8 +272,10 @@ pub struct CSChrEventModule {
     vftable: usize,
     pub owner: NonNull<ChrIns>,
     unk10: [u8; 0x8],
-    pub event_animation: i32,
-    pub last_animation: i32,
+    /// Animation ID that should be played immediately.
+    pub request_animation_id: i32,
+    /// Current animation ID.
+    pub current_animation: i32,
     pub init_stay_id: i32,
     unk24: u32,
     pub ez_state_request_ladder: i32,
@@ -291,10 +290,40 @@ pub struct CSChrEventModule {
 
 #[repr(C)]
 /// Source of name: RTTI
+pub struct CSChrSuperArmorModule {
+    vftable: usize,
+    pub owner: NonNull<ChrIns>,
+    /// Current super armor of the character, related to poise.
+    pub sa_durability: f32,
+    /// Maximum super armor of the character.
+    pub sa_durability_max: f32,
+    unk18: u32,
+    /// Time to lost super armor reset.
+    pub recover_time: f32,
+    unk20: u32,
+    unk24: u32,
+}
+
+#[repr(C)]
+/// Source of name: RTTI
+pub struct CSChrToughnessModule {
+    vftable: usize,
+    pub owner: NonNull<ChrIns>,
+    /// Current toughness of the character, related to stance break
+    pub toughness: f32,
+    toughness_unk: f32,
+    /// Maximum toughness of the character
+    pub toughness_max: f32,
+    /// Time to lost toughness reset.
+    pub recover_time: f32,
+    unk20: [u8; 0x108],
+}
+
+#[repr(C)]
+/// Source of name: RTTI
 pub struct ChrCtrl {
     vftable: usize,
     unk8: u64,
-    /// ChrIns this ChrCtrl belongs to.
     pub owner: NonNull<ChrIns>,
     pub manipulator: usize,
     unk20: usize,
