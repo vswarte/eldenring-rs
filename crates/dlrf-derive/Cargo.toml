@@ -1,0 +1,13 @@
+[package]
+name = "dlrf-derive"
+version.workspace = true
+edition.workspace = true
+repository.workspace = true
+license.workspace = true
+
+[lib]
+proc-macro = true
+
+[dependencies]
+quote = "1"
+syn = { version= "2", features = ["full"] }

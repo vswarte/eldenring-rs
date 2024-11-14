@@ -17,15 +17,11 @@ impl DebugDisplay for CSNetBloodMessageDb {
             render_message_table(self.entries.iter().map(|f| f.as_ref()), ui);
         }
 
-        ui.text(format!("Unk20: {}", self.unk20));
-
         if ui.collapsing_header("Created message data", TreeNodeFlags::empty()) {
             self.created_data
                 .iter()
                 .for_each(|f| ui.text(format!("{f} {f:x}")))
         }
-
-        ui.text(format!("Unk58: {}", self.unk58));
 
         if ui.collapsing_header("Discovered messages", TreeNodeFlags::empty()) {
             render_message_table(

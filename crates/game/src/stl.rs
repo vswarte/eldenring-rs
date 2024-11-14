@@ -100,8 +100,11 @@ impl<T> Tree<T> {
         let start = unsafe { self.head.as_ref().parent };
         pending.push_back(start);
 
+        // TODO: clean up this code
         std::iter::from_fn(move || {
-            if let Some(mut entry) = pending.pop_front() {
+            if self.size == 0 {
+                None
+            } else if let Some(mut entry) = pending.pop_front() {
                 let entry = unsafe { entry.as_mut() };
 
                 if unsafe { entry.left.as_ref() }.is_nil == 0 {

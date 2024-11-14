@@ -12,6 +12,7 @@ unused = "allow"
 log = "0.4.1"
 toml = "0.7.2"
 rand = "0.8"
+dlrf.workspace = true
 tracing.workspace = true
 thiserror.workspace = true
 nalgebra-glm.workspace = true

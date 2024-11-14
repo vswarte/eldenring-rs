@@ -37,7 +37,6 @@ pub trait CSTaskImpExt {
 
 impl CSTaskImpExt for CSTaskImp {
     fn run_task<T: Into<FD4Task>>(&self, task: T, group: CSTaskGroupIndex) -> TaskHandle {
-        tracing::debug!("Registering task to task group. group = {group:?}");
         let register_task: extern "C" fn(&CSTaskImp, CSTaskGroupIndex, &FD4Task) =
             unsafe { std::mem::transmute(*REGISTER_TASK_VA) };
 

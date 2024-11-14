@@ -16,7 +16,7 @@ pub struct CSFile {
 #[repr(C)]
 pub struct CSFileRepository {
     // TODO: This is actually embedding an FD4FileRepository of size 0x210
-    pub repository_res_cap: FD4ResCap<[u8; 0x10]>,
+    pub repository_res_cap: FD4ResCap<()>,
     pub holder1: FD4ResCapHolder<()>,
     pub holder2: FD4ResCapHolder<()>,
 
