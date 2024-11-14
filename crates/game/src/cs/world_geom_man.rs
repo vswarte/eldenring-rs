@@ -43,7 +43,7 @@ pub struct CSWorldGeomManBlockData {
     unk140: Vector<()>,
     pub activation_fade_modules: Vector<()>,
     unk180: [u8; 0x108],
-    /// Holds refs to some geometry instances for this map. 
+    /// Holds refs to some geometry instances for this map.
     pub geom_ins_vector: Vector<OwningPtr<CSWorldGeomIns>>,
     unk2a8: [u8; 0x20],
     pub geometry_array_count: u32,
@@ -81,7 +81,7 @@ pub struct CSWorldGeomIns {
 pub struct CSWorldGeomInfo {
     /// Points to the map data hosting the GeomIns for this info struct.
     pub block_data: OwningPtr<CSWorldGeomManBlockData>,
-    /// Points to the param row this geometry instance uses. 
+    /// Points to the param row this geometry instance uses.
     pub asset_geometry_param: usize,
     pub unk10: u32,
     unk14: u32,
@@ -165,6 +165,12 @@ pub struct CSMsbParts {
 }
 
 #[repr(C)]
+/// Source of name: RTTI
+pub struct CSMsbPartsEne {
+    pub super_cs_msb_parts: CSMsbParts,
+}
+
+#[repr(C)]
 pub struct MsbPart {
     pub name: PCWSTR,
     // TODO: rest
@@ -172,7 +178,7 @@ pub struct MsbPart {
 
 #[repr(C)]
 /// Used by the game to seperate geometry spawning code (like MSB parser) from the actual GeomIns
-/// construction details. 
+/// construction details.
 pub struct GeometrySpawnRequest {
     /// Contains the asset string, ex. "AEG020_370"
     pub asset_string: [u16; 0x20],
