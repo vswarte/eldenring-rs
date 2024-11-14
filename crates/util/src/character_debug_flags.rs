@@ -1,3 +1,4 @@
+use std::mem::transmute;
 use std::sync::{LazyLock, RwLock};
 
 use crate::program::Program;
@@ -18,22 +19,19 @@ const CHARACTER_DEBUG_FLAGS_PATTERN: &[Atom] = pattern!(
     "
 );
 
-pub static CHARACTER_DEBUG_FLAGS: LazyLock<RwLock<&CharacterDebugFlags>> = LazyLock::new(|| {
-    let program = unsafe { Program::current() };
+pub static CHARACTER_DEBUG_FLAGS: LazyLock<RwLock<&mut CharacterDebugFlags>> =
+    LazyLock::new(|| {
+        let program = unsafe { Program::current() };
 
-    let mut matches = [0; 2];
+        let mut matches = [0; 2];
 
-    if !program
-        .scanner()
-        .finds_code(&CHARACTER_DEBUG_FLAGS_PATTERN, &mut matches)
-    {
-        todo!("need to add error type for this");
-    }
+        if !program
+            .scanner()
+            .finds_code(&CHARACTER_DEBUG_FLAGS_PATTERN, &mut matches)
+        {
+            todo!("need to add error type for this");
+        }
 
-    tracing::debug!("Found character properties pattern");
-    RwLock::new(
-        program
-            .derva::<CharacterDebugFlags>(matches[1])
-            .expect("Unable to get CharacterDebugFlags"),
-    )
-});
+        tracing::debug!("Found character properties pattern");
+        RwLock::new(unsafe { transmute::<_, _>(program.rva_to_va(matches[1]).unwrap()) })
+    });
