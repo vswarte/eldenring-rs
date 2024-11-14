@@ -153,7 +153,7 @@ pub struct SpecialEffectEntryAccumulatorInfo {
 
 #[repr(C)]
 pub struct ChrInsModuleContainer {
-    data: OwningPtr<CSChrDataModule>,
+    pub data: OwningPtr<CSChrDataModule>,
     action_flag: usize,
     behavior_script: usize,
     time_act: usize,
