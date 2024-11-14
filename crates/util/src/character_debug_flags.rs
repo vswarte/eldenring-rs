@@ -12,7 +12,7 @@ const CHARACTER_DEBUG_FLAGS_PATTERN: &[Atom] = pattern!(
     ba b4 00 00 00
     48 8d 0d ? ? ? ?
     e8 ? ? ? ?
-    80 3d $ ' 00
+    80 3d $ { ' } 00
     0f 85 ? ? ? ?
     32 c0
     48 83 c4 20
