@@ -1,4 +1,4 @@
-use game::cs::{CSEventFlagMan, CSFD4VirtualMemoryFlag, EventFlag};
+use game::cs::{CSEventFlagMan, CSFD4VirtualMemoryFlag};
 use hudhook::imgui::{TableColumnSetup, TreeNodeFlags, Ui};
 use util::singleton::get_instance;
 

@@ -1,4 +1,8 @@
+use std::ptr::NonNull;
+
 use crate::pointer::OwningPtr;
+
+use super::ChrAsm;
 
 #[repr(C)]
 /// Source of name: RTTI
@@ -104,10 +108,10 @@ pub struct PlayerGameData {
     /// Level after any buffs and corrections
     pub effective_arcane: u32,
     unk2ac: u32,
-    pub equip_game_data: [u8; 0x4b0],
+    pub equipment: EquipGameData,
     face_data: [u8; 0x170],
     /// Describes the storage box contents.
-    pub equip_inventory_data: OwningPtr<EquipInventoryData>,
+    pub storage: OwningPtr<EquipInventoryData>,
     gesture_game_data: usize,
     ride_game_data: usize,
     unk8e8: usize,
@@ -135,21 +139,65 @@ pub struct PlayerGameDataSpEffect {
 }
 
 #[repr(C)]
+pub struct EquipGameData {
+    vftable: usize,
+    unk8: [u32; 22],
+    unk60: usize,
+    unk68: u32,
+    pub chr_asm: ChrAsm,
+    _pad154: u32,
+    pub equip_inventory_data: EquipInventoryData,
+    pub equip_magic_data: OwningPtr<EquipMagicData>,
+    pub equip_item_data: EquipItemData,
+    unk330: u32,
+    unk334: u32,
+    unk338: u32,
+    unk33c: u32,
+    unk340: u32,
+    unk344: u32,
+    pub weapon_primary_left: i32,
+    pub weapon_primary_right: i32,
+    pub weapon_secondary_left: i32,
+    pub weapon_secondary_right: i32,
+    pub weapon_tertiary_left: i32,
+    pub weapon_tertiary_right: i32,
+    pub arrow_primary: i32,
+    pub bolt_primary: i32,
+    pub arrow_secondary: i32,
+    pub bolt_secondary: i32,
+    pub arrow_tertiary: i32,
+    pub bolt_tertiary: i32,
+    pub protector_head: i32,
+    pub protector_chest: i32,
+    pub protector_hands: i32,
+    pub protector_legs: i32,
+    unk388: i32,
+    pub accessories: [i32; 4],
+    pub covenant: i32,
+    pub quick_tems: [i32; 10],
+    pub pouch: [i32; 6],
+    unk3e0: usize,
+    unk3e8: usize,
+    pub player_game_data: NonNull<PlayerGameData>,
+    unk3f8: [u8; 0xb8], 
+}
+
+#[repr(C)]
 pub struct EquipInventoryData {
     vftable: usize,
     /// How many items can one hold in total?
     pub global_capacity: u32,
 
     pub normal_item_capacity: u32,
-    normal_item_head: *mut EquipInventoryDataListEntry,
+    normal_item_head: OwningPtr<EquipInventoryDataListEntry>,
     pub normal_item_count: u32,
 
     pub key_item_capacity: u32,
-    key_item_head: *mut EquipInventoryDataListEntry,
+    key_item_head: OwningPtr<EquipInventoryDataListEntry>,
     pub key_item_count: u32,
 
     pub secondary_key_item_capacity: u32,
-    secondary_key_item_head: *mut EquipInventoryDataListEntry,
+    secondary_key_item_head: OwningPtr<EquipInventoryDataListEntry>,
     pub secondary_key_item_count: u32,
 
     _pad3c: u32,
@@ -163,24 +211,35 @@ pub struct EquipInventoryData {
     unk_list_1_count: u64,
     unk_list_2_head: *mut u16,
     unk_list_2_count: u64,
+
+    unk80: [u8; 0xa8],
 }
 
 impl EquipInventoryData {
     pub fn normal_items(&self) -> &mut [EquipInventoryDataListEntry] {
         unsafe {
-            std::slice::from_raw_parts_mut(self.normal_item_head, self.normal_item_count as usize)
+            std::slice::from_raw_parts_mut(
+                self.normal_item_head.as_ptr(),
+                self.normal_item_count as usize,
+            )
         }
     }
 
     pub fn key_items(&self) -> &mut [EquipInventoryDataListEntry] {
         unsafe {
-            std::slice::from_raw_parts_mut(self.key_item_head, self.key_item_count as usize)
+            std::slice::from_raw_parts_mut(
+                self.key_item_head.as_ptr(),
+                self.key_item_count as usize,
+            )
         }
     }
 
     pub fn secondary_key_items(&self) -> &mut [EquipInventoryDataListEntry] {
         unsafe {
-            std::slice::from_raw_parts_mut(self.secondary_key_item_head, self.secondary_key_item_count as usize)
+            std::slice::from_raw_parts_mut(
+                self.secondary_key_item_head.as_ptr(),
+                self.secondary_key_item_count as usize,
+            )
         }
     }
 }
@@ -201,4 +260,32 @@ pub struct EquipInventoryDataListEntry {
     unk10: u8,
     _pad11: [u8; 3],
     unk14: i32,
+}
+
+#[repr(C)]
+pub struct EquipMagicData {
+    vftable: usize,
+    pub equip_game_data: NonNull<EquipGameData>,
+    pub entries: [EquipDataItem; 14],
+    pub selected_slot: u32,
+    unk84: u32,
+}
+
+
+#[repr(C)]
+pub struct EquipItemData {
+    vftable: usize,
+    pub quick_slots: [EquipDataItem; 10],
+    pub pouch_slots: [EquipDataItem; 6],
+    pub great_rune: EquipDataItem,
+    unk90: usize,
+    pub inventory: OwningPtr<EquipInventoryData>,
+    unka0: i32,
+    unka4: u32,
+}
+
+#[repr(C)]
+pub struct EquipDataItem {
+    pub id: i32,
+    unk4: i32,
 }

@@ -1,9 +1,9 @@
 use std::{ffi, marker::PhantomData};
 use windows::core::PCWSTR;
 
-use crate::dl::DLRuntimeClass;
+use crate::dlrf::DLRuntimeClass;
 use crate::pointer::OwningPtr;
-use crate::{dl::DLPlainLightMutex, fd4::{FD4BasicHashString, FD4Time}, Tree, Vector};
+use crate::{dlkr::DLPlainLightMutex, fd4::{FD4BasicHashString, FD4Time}, Tree, Vector};
 
 #[repr(C)]
 pub struct FD4TaskBaseVMT  {

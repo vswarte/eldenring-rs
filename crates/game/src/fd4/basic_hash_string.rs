@@ -1,6 +1,6 @@
 use std::{ffi, fmt::Display};
 
-use crate::dl::DLWString;
+use crate::dltx::DLWString;
 
 #[repr(C)]
 /// Wraps a string to make it easier to use with hashmaps. Seemingly mostly used in the resource

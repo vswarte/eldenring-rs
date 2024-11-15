@@ -54,7 +54,7 @@ impl DebugDisplay for WorldChrMan {
             ui.unindent();
         }
 
-        if ui.collapsing_header("Open Field ChrSet", TreeNodeFlags::empty()) {
+        if ui.collapsing_header("OpenField ChrSet", TreeNodeFlags::empty()) {
             ui.indent();
             self.open_field_chr_set.render_debug(ui);
             ui.unindent();

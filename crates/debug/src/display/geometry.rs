@@ -79,6 +79,7 @@ impl DebugDisplay for CSWorldGeomManBlockData {
                         .to_string()
                 }
                 .unwrap();
+
                 ui.indent();
                 if ui.collapsing_header(
                     format!(
