@@ -24,7 +24,6 @@ pub unsafe extern "C" fn DllMain(_base: usize, reason: u32) -> bool {
             std::thread::sleep(std::time::Duration::from_secs(5));
 
             let table = build_singleton_table(&program);
-            tracing::debug!("Table result: {table:#x?}");
 
             for entry in table.expect("Could not find singleton table").iter() {
                 writeln!(fh, "\"{}\", {:x}", entry.0, entry.1)

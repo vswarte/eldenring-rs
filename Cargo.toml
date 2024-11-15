@@ -1,13 +1,15 @@
 [workspace]
 members = [
+    "crates/dlrf-derive",
     "crates/debug",
     "crates/game",
     "crates/util",
-    "examples/builder-mode", "examples/enemy-control",
+    "examples/builder-mode",
+    "examples/enemy-control",
     "examples/mini-transmog",
     "examples/procedural-dungeons",
     "tools/export-singletons",
-    "tools/profiler",
+    "tools/profiler", "crates/dlrf",
 ]
 resolver = "2"
 
@@ -18,6 +20,7 @@ repository = "https://github.com/vswarte/chains-bindings"
 license = "MIT OR Apache-2.0"
 
 [workspace.dependencies]
+dlrf = { path = "crates/dlrf" }
 game = { path = "crates/game" }
 util = { path = "crates/util" }
 thiserror = "1"

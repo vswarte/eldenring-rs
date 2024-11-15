@@ -37,11 +37,5 @@ impl DebugDisplay for CSFD4FadePlate {
         ui.input_text("Fade duration", &mut self.fade_duration.time.to_string())
             .read_only(true)
             .build();
-        ui.input_text("Unk60", &mut self.unk60.to_string())
-            .read_only(true)
-            .build();
-        ui.input_text("UnkA8", &mut self.unka8.time.to_string())
-            .read_only(true)
-            .build();
     }
 }

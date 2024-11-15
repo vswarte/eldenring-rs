@@ -1,24 +1,19 @@
-use crate::DLRFLocatable;
-
 #[repr(C)]
+#[dlrf::singleton("WorldAreaTime")]
 pub struct WorldAreaTime {
-    pub unk0: u64,
+    unk0: u64,
     pub clock: WorldAreaTimeClock,
-    pub unk10: u64,
+    unk10: u64,
     pub previous_tick_clock: WorldAreaTimeClock,
-    pub unk20: f32,
-    pub unk24: f32,
+    unk20: f32,
+    unk24: f32,
     pub target_hour: u32,
     pub target_minute: u32,
     pub target_second: u32,
-    pub unk34: f32,
+    unk34: f32,
     pub time_passage_multiplier: f32,
-    pub unk3c: f32,
+    unk3c: f32,
     // TODO: rest
-}
-
-impl DLRFLocatable for WorldAreaTime {
-    const DLRF_NAME: &'static str = "WorldAreaTime";
 }
 
 #[repr(C)]

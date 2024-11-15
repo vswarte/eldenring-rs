@@ -1,7 +1,3 @@
-use game::cs::CSEventFlagMan;
-use game::cs::CSFD4VirtualMemoryFlag;
-use game::fd4::FD4ParamRepository;
-use game::cs::WorldAreaTime;
 use hudhook::eject;
 use hudhook::hooks::dx12::ImguiDx12Hooks;
 use hudhook::imgui;
@@ -10,10 +6,18 @@ use hudhook::windows::Win32::Foundation::HINSTANCE;
 use hudhook::Hudhook;
 use hudhook::ImguiRenderLoop;
 
-use game::cs::{
-    CSCamera, CSFade, CSNetMan, CSSessionManager, CSTaskGroup, CSTaskImp, CSWorldGeomMan,
-    WorldChrMan,
-};
+use game::cs::CSEventFlagMan;
+use game::cs::MsbRepository;
+use game::fd4::FD4ParamRepository;
+use game::cs::WorldAreaTime;
+use game::cs::CSCamera;
+use game::cs::CSFade;
+use game::cs::CSNetMan;
+use game::cs::CSTaskGroup;
+use game::cs::WorldChrMan;
+use game::cs::CSWorldGeomMan;
+use game::cs::CSTaskImp;
+use game::cs::CSSessionManager;
 
 use display::render_debug_singleton;
 use tracing_panic::panic_hook;
@@ -74,9 +78,10 @@ impl ImguiRenderLoop for EldenRingDebugGui {
                 }
 
                 if let Some(item) = ui.tab_item("Resource") {
-                    render_debug_singleton::<FD4ParamRepository>(&ui);
                     render_debug_singleton::<CSTaskGroup>(&ui);
                     render_debug_singleton::<CSTaskImp>(&ui);
+                    render_debug_singleton::<FD4ParamRepository>(&ui);
+                    render_debug_singleton::<MsbRepository>(&ui);
                     item.end();
                 }
 

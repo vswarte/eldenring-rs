@@ -33,7 +33,6 @@ pub static CHARACTER_TYPE_PROPERTIES: LazyLock<RwLock<CharacterPropertiesHolder>
         todo!("need to add error type for this");
     }
 
-    tracing::debug!("Found character properties pattern");
     RwLock::new(CharacterPropertiesHolder {
         table: unsafe {
             transmute::<_, _>(program.rva_to_va(matches[1]).unwrap())

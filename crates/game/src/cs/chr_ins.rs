@@ -66,16 +66,18 @@ pub struct ChrIns {
     pub team_type: i32,
     pub p2p_entity_handle: P2PEntityHandle,
     unk78: usize,
-    pub unk80_position: FSVector4,
-    pub unk90_position: FSVector4,
-    pub unka0_position: FSVector4,
+    unk80_position: FSVector4,
+    unk90_position: FSVector4,
+    unka0_position: FSVector4,
+    /// Time in seconds since last update ran for the ChrIns.
     pub chr_update_delta_time: f32,
     pub render_distance: u32,
+    /// Amount of frames between updates for this ChrIns.
     pub frames_per_update: u32,
     pub render_visibility: u32,
     pub target_velocity_recorder: usize,
     unkc8: usize,
-    pub unkd0_position: usize,
+    unkd0_position: usize,
     unkd8: [u8; 0x88],
     pub last_used_item: i16,
     unk162: i16,
@@ -219,7 +221,7 @@ pub struct ChrPhysicsModule {
 pub struct CSChrWetModule {
     vftable: usize,
     pub owner: NonNull<ChrIns>,
-    pub unk10: [u8; 0x60],
+    unk10: [u8; 0x60],
 }
 
 #[repr(C)]
@@ -232,26 +234,26 @@ pub struct CSChrModelParamModifierModule {
 
 #[repr(C)]
 pub struct CSChrModelParamModifierModuleEntry {
-    pub unk0: u8,
+    unk0: u8,
     unk1: [u8; 0x3],
-    pub unk4: u32,
-    pub unk8: u32,
-    pub unkc: u32,
-    pub unk10: u64,
-    pub unk18: u32,
-    pub unk1c: u32,
+    unk4: u32,
+    unk8: u32,
+    unkc: u32,
+    unk10: u64,
+    unk18: u32,
+    unk1c: u32,
     pub name: PCWSTR,
-    pub unk28: CSChrModelParamModifierModuleEntryValue,
-    pub unk40: CSChrModelParamModifierModuleEntryValue,
-    pub unk58: CSChrModelParamModifierModuleEntryValue,
-    pub unk70: u32,
-    pub unk74: u32,
-    pub unk78: u32,
-    pub unk7c: u32,
-    pub unk80: u64,
-    pub unk88: CSChrModelParamModifierModuleEntryValue,
-    pub unka0: CSChrModelParamModifierModuleEntryValue,
-    pub unkb0: [u8; 0x20],
+    unk28: CSChrModelParamModifierModuleEntryValue,
+    unk40: CSChrModelParamModifierModuleEntryValue,
+    unk58: CSChrModelParamModifierModuleEntryValue,
+    unk70: u32,
+    unk74: u32,
+    unk78: u32,
+    unk7c: u32,
+    unk80: u64,
+    unk88: CSChrModelParamModifierModuleEntryValue,
+    unka0: CSChrModelParamModifierModuleEntryValue,
+    unkb0: [u8; 0x20],
 }
 
 unsafe impl Sync for CSChrModelParamModifierModuleEntry {}
@@ -259,12 +261,12 @@ unsafe impl Send for CSChrModelParamModifierModuleEntry {}
 
 #[repr(C)]
 pub struct CSChrModelParamModifierModuleEntryValue {
-    pub unk0: u32,
+    unk0: u32,
     pub value1: f32,
     pub value2: f32,
     pub value3: f32,
     pub value4: f32,
-    pub unk14: u32,
+    unk14: u32,
 }
 
 #[repr(C)]
@@ -337,7 +339,7 @@ pub struct ChrCtrl {
 /// Source of name: RTTI
 pub struct CSModelIns {
     vftable: usize,
-    pub unk8: usize,
+    unk8: usize,
     pub model_item: usize,
     pub model_disp_entity: usize,
     pub location_entity: usize,

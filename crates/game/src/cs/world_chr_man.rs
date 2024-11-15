@@ -9,12 +9,13 @@ use vtable_rs::VPtr;
 use crate::cs::ChrIns;
 use crate::matrix::FSVector4;
 use crate::pointer::OwningPtr;
-use crate::{DLRFLocatable, Tree};
+use crate::Tree;
 
 use super::{FieldInsHandle, NetChrSync, PlayerIns};
 
 #[repr(C)]
 /// Source of name: RTTI
+#[dlrf::singleton("WorldChrMan")]
 pub struct WorldChrMan {
     vftable: usize,
     unk8: usize,
@@ -56,13 +57,13 @@ pub struct WorldChrMan {
     pub null_chr_set_holder: ChrSetHolder<ChrIns>,
     pub chr_sets: [Option<OwningPtr<ChrSet<ChrIns>>>; 196],
     pub null_chr_set: Option<OwningPtr<ChrSet<ChrIns>>>,
-    pub player_grid_area: Option<OwningPtr<WorldGridAreaChr>>,
+    pub player_grid_area: Option<NonNull<WorldGridAreaChr>>,
     /// Points to the local player.
     pub main_player: Option<OwningPtr<PlayerIns>>,
-    pub unk_player: Option<OwningPtr<PlayerIns>>,
+    unk_player: Option<OwningPtr<PlayerIns>>,
 
-    pub unk_map_id_1: MapId,
-    pub unk_map_id_2: MapId,
+    unk_map_id_1: MapId,
+    unk_map_id_2: MapId,
 
     unk1e520: [u8; 0x18],
     /// Manages spirit summons (excluding Torrent).
@@ -79,11 +80,7 @@ pub struct WorldChrMan {
     unk1e5f8: usize,
     unk1e600: usize,
     unk1e608: [u8; 0x40],
-    pub debug_chr_creator: CSDebugChrCreator,
-}
-
-impl DLRFLocatable for WorldChrMan {
-    const DLRF_NAME: &'static str = "WorldChrMan";
+    pub debug_chr_creator: OwningPtr<CSDebugChrCreator>,
 }
 
 #[repr(C)]
@@ -97,21 +94,21 @@ pub struct CSDebugChrCreator {
     unk45: [u8; 0x3],
     unk48: [u8; 0x68],
     pub init_data: CSDebugChrCreatorInitData,
-    pub last_created_chr: Option<OwningPtr<ChrIns>>,
+    pub last_created_chr: Option<NonNull<ChrIns>>,
     unk1b8: usize,
 }
 
 #[repr(C)]
 pub struct CSDebugChrCreatorInitData {
-    spawn_position: FSVector4,
+    pub spawn_position: FSVector4,
     spawn_rotation: FSVector4,
     unk20: FSVector4,
     spawn_scale: FSVector4,
-    npc_param_id: u32,
-    npc_think_param_id: u32,
-    event_entity_id: u32,
-    talk_id: u32,
-    name: [u16; 0x20],
+    pub npc_param_id: i32,
+    pub npc_think_param_id: i32,
+    pub event_entity_id: i32,
+    pub talk_id: i32,
+    pub name: [u16; 0x20],
     unk90: usize,
     name_pointer: usize,
     unka0: usize,
@@ -122,7 +119,7 @@ pub struct CSDebugChrCreatorInitData {
     enemy_type: u8,
     hamari_simulate: bool,
     unkca: [u8; 0x2],
-    chr_init_param_id: u32,
+    pub chara_init_param_id: i32,
     spawn_manipulator_type: u32,
     unkd4: [u8; 0x18],
     spawn_count: u32,
@@ -221,12 +218,31 @@ pub struct ChrSet<T: 'static> {
     vftable: VPtr<dyn ChrSetVmt, Self>,
     pub index: i32,
     unkc: i32,
+    /// Max amount of ChrInses that can fit inside of the ChrSet.
     pub capacity: u32,
     _pad14: u32,
-    pub entries: *const ChrSetEntry<T>,
+    /// Entries managed by this ChrSet.
+    pub entries: NonNull<ChrSetEntry<T>>,
     unk20: i32,
     _pad24: u32,
-    unk30: [u8; 0x30],
+    /// Maps ChrSetEntry's to their event entity IDs.
+    pub entity_id_mapping: Tree<ChrSetEntityIdMapping<T>>,
+    /// Maps ChrSetEntry's to a group.
+    pub group_id_mapping: Tree<ChrSetGroupMapping<T>>,
+}
+
+#[repr(C)]
+pub struct ChrSetEntityIdMapping<T> {
+    pub entity_id: u32,
+    _pad4: u32,
+    pub chr_set_entry: NonNull<ChrSetEntry<T>>,
+}
+
+#[repr(C)]
+pub struct ChrSetGroupMapping<T> {
+    pub group_id: u32,
+    _pad4: u32,
+    pub chr_set_entry: NonNull<ChrSetEntry<T>>,
 }
 
 impl<T> ChrSet<T> {
@@ -244,26 +260,28 @@ impl<T> ChrSet<T> {
 
 impl<T> ChrSet<T> {
     pub fn characters(&self) -> impl Iterator<Item = &mut T> {
-        let mut current_entry = self.entries;
-        let end = unsafe { current_entry.add(self.capacity as usize) };
+        let mut current = self.entries;
+        let end = unsafe { current.add(self.capacity as usize) };
 
         std::iter::from_fn(move || {
-            if current_entry == end {
-                None
-            } else {
-                unsafe {
-                    let chr_ins = (*current_entry).chr_ins;
-                    current_entry.add(1);
-                    chr_ins.as_mut()
-                }
+            while current != end {
+                let mut chr_ins = unsafe { current.as_mut().chr_ins };
+                current = unsafe { current.add(1) };
+                let Some(mut chr_ins) = chr_ins else {
+                    continue;
+                };
+
+                return Some(unsafe { chr_ins.as_mut() });
             }
+
+            None
         })
     }
 }
 
 #[repr(C)]
 pub struct ChrSetEntry<T> {
-    pub chr_ins: *mut T,
+    pub chr_ins: Option<NonNull<T>>,
     unk8: u16,
     unka: u8,
     _padb: [u8; 5],
@@ -305,10 +323,7 @@ pub struct OpenFieldChrSetList2Entry {
 pub struct WorldGridAreaChr {
     pub base: WorldAreaChrBase,
     pub world_grid_area_info: usize,
-    pub allocator: usize,
-    pub head: usize,
-    pub capacity: u32,
-    pub size: u32,
+    unk_tree: Tree<()>,
 }
 
 #[repr(C)]

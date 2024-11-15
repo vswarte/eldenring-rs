@@ -1,4 +1,4 @@
-use game::DLRFLocatable;
+use dlrf::DLRFSingleton;
 use pelite::pattern;
 use pelite::pe::Pe;
 use pelite::pe::Rva;
@@ -38,7 +38,7 @@ pub enum LookupError {
 /// shared access like multithreaded access and locking. The best place to use this is from the
 /// task runtime after extensively considering what phases of the game loop update or read a
 /// singleton.
-pub unsafe fn get_instance<T: DLRFLocatable>() -> Result<Option<&'static mut T>, LookupError> {
+pub unsafe fn get_instance<T: DLRFSingleton>() -> Result<Option<&'static mut T>, LookupError> {
     let table = SINGLETON_MAP.get_or_init(move || {
         let program = unsafe { Program::current() };
 

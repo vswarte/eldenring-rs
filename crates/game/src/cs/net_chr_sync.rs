@@ -1,3 +1,5 @@
+use std::ptr::NonNull;
+
 use crate::pointer::OwningPtr;
 
 use super::{ChrIns, ChrSet};
@@ -19,7 +21,7 @@ pub struct NetChrSync {
 pub struct NetChrSetSync {
     vftable: usize,
     /// ChrSet this NetChrSetSync manages the sync for.
-    pub chr_set: OwningPtr<ChrSet<ChrIns>>,
+    pub chr_set: NonNull<ChrSet<ChrIns>>,
     /// Max amount of ChrIns's this NetChrSetSync will host.
     pub capacity: u32,
     _pad14: u32,
@@ -53,7 +55,6 @@ impl NetChrSetSync {
             )
         }
     }
-
 }
 
 /// Holds a set of bits where most bits correspond to a particular type of received sync value.

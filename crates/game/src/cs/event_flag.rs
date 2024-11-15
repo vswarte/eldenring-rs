@@ -1,6 +1,6 @@
 use std::mem::ManuallyDrop;
 
-use crate::{pointer::OwningPtr, DLRFLocatable, Tree};
+use crate::{pointer::OwningPtr, Tree};
 
 pub struct EventFlag(u32);
 
@@ -28,14 +28,11 @@ impl EventFlag {
 /// Manages the event flags for the game.
 ///
 /// Source of name: DLRF RuntimeClass metadata
+#[dlrf::singleton("CSEventFlagMan")]
 pub struct CSEventFlagMan {
     pub virtual_memory_flag: CSFD4VirtualMemoryFlag,
     pub world_type: u32,
     unk7c: [u8; 0x1f4],
-}
-
-impl DLRFLocatable for CSEventFlagMan {
-    const DLRF_NAME: &'static str = "CSEventFlagMan";
 }
 
 #[repr(C)]

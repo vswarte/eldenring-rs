@@ -8,6 +8,7 @@ license.workspace = true
 [dependencies]
 util.workspace = true
 game.workspace = true
+dlrf.workspace = true
 windows.workspace = true
 pelite.workspace = true
 tracing.workspace = true

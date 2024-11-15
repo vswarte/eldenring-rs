@@ -156,4 +156,3 @@ const FIELD_INS_TYPE_MAPPING: &[FieldInsMapping] = &[
         unkc: 0xD,
     },
 ];
-

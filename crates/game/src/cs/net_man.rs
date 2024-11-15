@@ -1,8 +1,9 @@
-use crate::{pointer::OwningPtr, stl::DoublyLinkedList, DLRFLocatable};
+use crate::{pointer::OwningPtr, stl::DoublyLinkedList};
 
 use super::{CSEzTask, CSEzUpdateTask, MapId, PlayerIns};
 
 #[repr(C)]
+#[dlrf::singleton("CSNetMan")]
 pub struct CSNetMan {
     vftable: usize,
     unk8: [u8; 0x60],
@@ -24,27 +25,23 @@ pub struct CSNetMan {
     unkf8: usize,
 }
 
-impl DLRFLocatable for CSNetMan {
-    const DLRF_NAME: &'static str = "CSNetMan";
-}
-
 #[repr(C)]
 pub struct CSNetBloodMessageDb {
     vftable: usize,
     // Contains all CSNetBloodMessageDbItem?
     pub entries: DoublyLinkedList<OwningPtr<CSNetBloodMessageDbItem>>,
-    pub unk20: usize,
+    unk20: usize,
     // Seemingly contains message data for messages created by local user
     pub created_data: DoublyLinkedList<usize>,
     // Contains ???
-    pub unk40: DoublyLinkedList<usize>,
-    pub unk58: usize,
+    unk40: DoublyLinkedList<usize>,
+    unk58: usize,
     pub blood_message_ins_man_1: usize,
     pub blood_message_ins_man_2: usize,
     pub discovered_messages: DoublyLinkedList<OwningPtr<OwningPtr<CSNetBloodMessageDbItem>>>,
-    pub unk88: [u8; 0xD0],
+    unk88: [u8; 0xD0],
     pub evaluate_job: usize,
-    pub unk160: usize,
+    unk160: usize,
 }
 
 #[repr(C)]

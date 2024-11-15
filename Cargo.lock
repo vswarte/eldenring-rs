@@ -150,6 +150,7 @@ dependencies = [
 name = "debug"
 version = "0.1.0"
 dependencies = [
+ "dlrf",
  "game",
  "hudhook",
  "pelite",
@@ -175,6 +176,21 @@ name = "derive_pod"
 version = "0.1.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "c2ea6706d74fca54e15f1d40b5cf7fe7f764aaec61352a9fcec58fe27e042fc8"
+
+[[package]]
+name = "dlrf"
+version = "0.1.0"
+dependencies = [
+ "dlrf-derive",
+]
+
+[[package]]
+name = "dlrf-derive"
+version = "0.1.0"
+dependencies = [
+ "quote",
+ "syn",
+]
 
 [[package]]
 name = "enemy-control"
@@ -213,6 +229,7 @@ dependencies = [
  "byteorder",
  "contextual",
  "dataview",
+ "dlrf",
  "log",
  "nalgebra",
  "nalgebra-glm",
@@ -1190,6 +1207,7 @@ checksum = "e91b56cd4cadaeb79bbf1a5645f6b4f8dc5bde8834ad5894a8db35fda9efa1fe"
 name = "util"
 version = "0.1.0"
 dependencies = [
+ "dlrf",
  "game",
  "pelite",
  "steamworks",
