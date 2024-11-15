@@ -61,8 +61,8 @@ impl DebugDisplay for PlayerGameData {
         ui.text(format!("White Ring Active: {:?}", self.white_ring_active));
         ui.text(format!("Blue Ring Active: {:?}", self.blue_ring_active));
 
-        if ui.collapsing_header("EquipInventoryData", TreeNodeFlags::empty()) {
-            self.equip_inventory_data.render_debug(ui);
+        if ui.collapsing_header("Storage Box EquipInventoryData", TreeNodeFlags::empty()) {
+            self.storage.render_debug(ui);
         }
     }
 }
