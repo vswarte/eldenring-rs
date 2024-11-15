@@ -1,6 +1,6 @@
 use std::ffi;
 
-use crate::dl::DLPlainLightMutex;
+use crate::dlkr::DLPlainLightMutex;
 use crate::fd4::{
     FD4BasicHashString, FD4ResCap, FD4ResCapHolder
 };

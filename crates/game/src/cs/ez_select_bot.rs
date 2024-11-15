@@ -1,6 +1,6 @@
 use std::ffi;
 
-use crate::dl::DLWString;
+use crate::dltx::DLWString;
 
 #[repr(C)]
 /// Seems to be used in some control flow around engine settings and debug options.
