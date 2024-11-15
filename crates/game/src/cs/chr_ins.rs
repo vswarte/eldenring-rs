@@ -1,5 +1,5 @@
-use std::ffi;
 use std::ptr::NonNull;
+use std::{ffi, usize};
 
 use windows::core::PCWSTR;
 
@@ -10,7 +10,7 @@ use crate::position::{ChunkPosition, HavokPosition};
 use crate::Vector;
 
 use super::player_game_data::PlayerGameData;
-use super::{FieldInsBaseVmt, FieldInsHandle, MapId};
+use super::{CSMsbParts, CSMsbPartsEne, FieldInsBaseVmt, FieldInsHandle, MapId, WorldBlockChr};
 
 #[repr(C)]
 #[derive(Debug, Clone)]
@@ -33,7 +33,7 @@ pub struct AtkParamLookupResult {
 }
 
 #[vtable_rs::vtable]
-pub trait ChrInsVmt : FieldInsBaseVmt {
+pub trait ChrInsVmt: FieldInsBaseVmt {
     /// Part of FieldInsBase, retrieves reflection metadata for FD4Component derivants.
     fn unk40(&self) -> usize;
 }
@@ -155,7 +155,7 @@ pub struct SpecialEffectEntryAccumulatorInfo {
 
 #[repr(C)]
 pub struct ChrInsModuleContainer {
-    data: usize,
+    pub data: OwningPtr<CSChrDataModule>,
     action_flag: usize,
     behavior_script: usize,
     time_act: usize,
@@ -166,7 +166,7 @@ pub struct ChrInsModuleContainer {
     pub super_armor: OwningPtr<CSChrSuperArmorModule>,
     pub toughness: OwningPtr<CSChrToughnessModule>,
     talk: usize,
-    event: OwningPtr<CSChrEventModule>,
+    pub event: OwningPtr<CSChrEventModule>,
     magic: usize,
     /// Describes the characters physics-related properties.
     pub physics: OwningPtr<ChrPhysicsModule>,
@@ -319,6 +319,51 @@ pub struct CSChrToughnessModule {
     /// Time to lost toughness reset.
     pub recover_time: f32,
     unk20: [u8; 0x108],
+}
+
+#[repr(C)]
+/// Source of name: RTTI
+pub struct CSChrDataModule {
+    vftable: usize,
+    pub owner: NonNull<ChrIns>,
+    pub msb_parts: CSMsbPartsEne,
+    msb_res_cap: usize,
+    unk68: usize,
+    unk70: u32,
+    unk74: u32,
+    unk78: u32,
+    pub map_id_origin: u32,
+    unk80: u32,
+    unk84: u32,
+    pub world_block_chr: NonNull<WorldBlockChr<ChrIns>>,
+    unk90: [u8; 0x30],
+    pub draw_params: u32,
+    unkc4: u32,
+    // wchar_t[6]
+    unkc8: [u8; 0xc],
+    unkd4: [u8; 0x64],
+    pub hp: i32,
+    pub max_hp: i32,
+    pub max_uncapped_hp: i32,
+    pub base_hp: i32,
+    pub fp: i32,
+    pub max_fp: i32,
+    pub base_fp: i32,
+    pub stamina: i32,
+    pub max_stamina: i32,
+    pub base_stamina: i32,
+    recoverable_hp_1: f32,
+    recoverable_hp_2: f32,
+    pub recoverable_hp_time: f32,
+    unk16c: f32,
+    unk170: [u8; 0x28],
+    unk198: [u8; 0x3],
+    some_debug_bitfield: u8,
+    unk19c: [u8; 0x8c],
+    // wchar_t*
+    character_name: OwningPtr<ffi::OsString>,
+    unk230: [u8; 0x20],
+    dl_string: [u8; 0x30],
 }
 
 #[repr(C)]
