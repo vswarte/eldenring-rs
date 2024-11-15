@@ -21,7 +21,6 @@ impl<T> FD4ResCapHolderExt<T> for FD4ResCapHolder<T> {
             // we need to advance to the next bucket until we've found another
             // element.
             while current_element.is_null() && current_bucket < bucket_count - 1 {
-                tracing::trace!("Seeking next slot. current_element = {current_element:x?}, current_bucket = {current_bucket}");
                 current_bucket += 1;
 
                 let current_bucket_base = bucket_base.offset(current_bucket);
@@ -35,7 +34,7 @@ impl<T> FD4ResCapHolderExt<T> for FD4ResCapHolder<T> {
             // Move down the bucket if there is an element
             if let Some(element) = current_element.as_ref() {
                 tracing::trace!("Found element. current_element = {current_element:x?}");
-                current_element = element.header.next_item;
+                current_element = element.next_item;
                 Some(element)
             } else {
                 current_element = std::ptr::null();

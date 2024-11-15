@@ -100,6 +100,5 @@ impl DebugDisplay for CSWorldGeomManBlockData {
 
 impl DebugDisplay for CSWorldGeomIns {
     fn render_debug(&self, ui: &&mut Ui) {
-        ui.text(format!("Unk10: {}", self.info.unk10));
     }
 }

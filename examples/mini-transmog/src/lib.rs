@@ -85,45 +85,45 @@ fn init() -> Result<(), Box<dyn Error>> {
                 return;
             };
 
-            unsafe {
-                player
-                    .chr_ins
-                    .module_container
-                    .model_param_modifier
-                    .modifiers
-                    .iter()
-            }
-            // .filter(|modifier| {
-            //     unsafe { modifier.name.to_string() }
-            //         .unwrap()
-            //         .contains("Phantom")
-            // })
-            .for_each(|modifier| {
-                modifier.unk28.value1 = 1.0;
-                modifier.unk28.value2 = 1.0;
-                modifier.unk28.value3 = 1.0;
-                modifier.unk28.value4 = 1.0;
-
-                modifier.unk40.value1 = 1.0;
-                modifier.unk40.value2 = 1.0;
-                modifier.unk40.value3 = 1.0;
-                modifier.unk40.value4 = 1.0;
-
-                modifier.unk58.value1 = 1.0;
-                modifier.unk58.value2 = 1.0;
-                modifier.unk58.value3 = 1.0;
-                modifier.unk58.value4 = 1.0;
-
-                modifier.unk88.value1 = 1.0;
-                modifier.unk88.value2 = 1.0;
-                modifier.unk88.value3 = 1.0;
-                modifier.unk88.value4 = 1.0;
-
-                modifier.unka0.value1 = 1.0;
-                modifier.unka0.value2 = 1.0;
-                modifier.unka0.value3 = 1.0;
-                modifier.unka0.value4 = 1.0;
-            });
+            // unsafe {
+            //     player
+            //         .chr_ins
+            //         .module_container
+            //         .model_param_modifier
+            //         .modifiers
+            //         .iter()
+            // }
+            // // .filter(|modifier| {
+            // //     unsafe { modifier.name.to_string() }
+            // //         .unwrap()
+            // //         .contains("Phantom")
+            // // })
+            // .for_each(|modifier| {
+            //     modifier.unk28.value1 = 1.0;
+            //     modifier.unk28.value2 = 1.0;
+            //     modifier.unk28.value3 = 1.0;
+            //     modifier.unk28.value4 = 1.0;
+            //
+            //     modifier.unk40.value1 = 1.0;
+            //     modifier.unk40.value2 = 1.0;
+            //     modifier.unk40.value3 = 1.0;
+            //     modifier.unk40.value4 = 1.0;
+            //
+            //     modifier.unk58.value1 = 1.0;
+            //     modifier.unk58.value2 = 1.0;
+            //     modifier.unk58.value3 = 1.0;
+            //     modifier.unk58.value4 = 1.0;
+            //
+            //     modifier.unk88.value1 = 1.0;
+            //     modifier.unk88.value2 = 1.0;
+            //     modifier.unk88.value3 = 1.0;
+            //     modifier.unk88.value4 = 1.0;
+            //
+            //     modifier.unka0.value1 = 1.0;
+            //     modifier.unka0.value2 = 1.0;
+            //     modifier.unka0.value3 = 1.0;
+            //     modifier.unka0.value4 = 1.0;
+            // });
         },
         CSTaskGroupIndex::Draw_Pre,
     );

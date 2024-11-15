@@ -112,17 +112,17 @@ impl CSWorldGeomManExt for CSWorldGeomMan {
 
         let mut request = GeometrySpawnRequest {
             asset_string: [0u16; 0x20],
-            unk0x40: 0,
-            unk0x44: 0,
+            unk40: 0,
+            unk44: 0,
             asset_string_ptr: 0,
-            unk0x50: 0,
-            unk0x54: 0,
-            unk0x58: 0,
-            unk0x5c: 0,
-            unk0x60: 0,
-            unk0x64: 0,
-            unk0x68: 0,
-            unk0x6c: 0,
+            unk50: 0,
+            unk54: 0,
+            unk58: 0,
+            unk5c: 0,
+            unk60: 0,
+            unk64: 0,
+            unk68: 0,
+            unk6c: 0,
             pos_x: 0.0,
             pos_y: 0.0,
             pos_z: 0.0,
@@ -132,7 +132,7 @@ impl CSWorldGeomManExt for CSWorldGeomMan {
             scale_x: 0.0,
             scale_y: 0.0,
             scale_z: 0.0,
-            unk0x94: [0u8; 0x6C],
+            unk94: [0u8; 0x6C],
         };
 
         initialize_spawn_geometry_request(&mut request, 0x5);

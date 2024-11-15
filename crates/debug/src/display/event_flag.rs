@@ -60,7 +60,7 @@ impl DebugDisplay for CSFD4VirtualMemoryFlag {
             }
         }
 
-        let mut virtual_memory_flag = &mut unsafe { get_instance::<CSEventFlagMan>() }
+        let virtual_memory_flag = &mut unsafe { get_instance::<CSEventFlagMan>() }
             .unwrap()
             .unwrap()
             .virtual_memory_flag;

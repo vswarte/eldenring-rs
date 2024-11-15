@@ -1,5 +1,3 @@
-use crate::DLRFLocatable;
-
 #[repr(u32)]
 #[derive(Debug)]
 pub enum LobbyState {
@@ -28,6 +26,7 @@ pub enum ProtocolState {
 }
 
 #[repr(C)]
+#[dlrf::singleton("CSSessionManager")]
 pub struct CSSessionManager {
     vftable: usize,
     unk8: u32,
@@ -36,8 +35,4 @@ pub struct CSSessionManager {
     unk14: f32,
     unk18: u32,
     unk1c: u32,
-}
-
-impl DLRFLocatable for CSSessionManager {
-    const DLRF_NAME: &'static str = "CSSessionManager";
 }

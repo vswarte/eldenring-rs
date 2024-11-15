@@ -1,7 +1,9 @@
-use crate::{matrix::FSMatrix4x4, pointer::OwningPtr, DLRFLocatable};
+use crate::matrix::FSMatrix4x4;
+use crate::pointer::OwningPtr;
 
 #[repr(C)]
 /// Source of name: RTTI
+#[dlrf::singleton("CSCamera")]
 pub struct CSCamera {
     vftable: usize,
     pub pers_cam_1: OwningPtr<CSPersCam>,
@@ -19,10 +21,6 @@ pub struct CSCamera {
 
     unk2c: u32,
     unk30: usize,
-}
-
-impl DLRFLocatable for CSCamera {
-    const DLRF_NAME: &'static str = "CSCamera";
 }
 
 #[repr(C)]

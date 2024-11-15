@@ -3,7 +3,6 @@ use windows::core::PCWSTR;
 
 use crate::dl::DLRuntimeClass;
 use crate::pointer::OwningPtr;
-use crate::DLRFLocatable;
 use crate::{dl::DLPlainLightMutex, fd4::{FD4BasicHashString, FD4Time}, Tree, Vector};
 
 #[repr(C)]
@@ -72,13 +71,10 @@ pub struct CSEzTaskProxy {
 }
 
 #[repr(C)]
+#[dlrf::singleton("CSTaskGroup")]
 pub struct CSTaskGroup {
     vftable: usize,
     pub task_groups: [OwningPtr<CSTimeLineTaskGroupIns>; 168],
-}
-
-impl DLRFLocatable for CSTaskGroup {
-    const DLRF_NAME: &'static str = "CSTaskGroup";
 }
 
 #[repr(C)]
@@ -96,13 +92,10 @@ pub struct CSTimeLineTaskGroupIns {
 }
 
 #[repr(C)]
+#[dlrf::singleton("CSTask")]
 pub struct CSTaskImp {
     vftable: usize,
     pub inner: OwningPtr<CSTask>,
-}
-
-impl DLRFLocatable for CSTaskImp {
-    const DLRF_NAME: &'static str = "CSTask";
 }
 
 #[repr(C)]

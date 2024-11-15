@@ -19,6 +19,7 @@ mod event_flag;
 mod player_game_data;
 mod world_area_time;
 mod net_chr_sync;
+mod msb;
 
 pub use camera::*;
 pub use field_ins::*;
@@ -41,3 +42,4 @@ pub use event_flag::*;
 pub use player_game_data::*;
 pub use world_area_time::*;
 pub use net_chr_sync::*;
+pub use msb::*;

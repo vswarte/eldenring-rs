@@ -2,24 +2,21 @@ use std::{fmt::Formatter, ptr::NonNull};
 
 use windows::core::PCWSTR;
 
-use crate::{pointer::OwningPtr, DLRFLocatable, Tree, Vector};
+use crate::{pointer::OwningPtr, Tree, Vector};
 
 use super::{FieldInsHandle, MapId};
 
 #[repr(C)]
 /// Source of name: RTTI
+#[dlrf::singleton("CSWorldGeomMan")]
 pub struct CSWorldGeomMan {
     vftable: usize,
-    pub unk8: usize,
+    unk8: usize,
     pub world_info_owner: usize,
     /// A tree of loaded maps hosting their geometry instances.
     pub blocks: Tree<CSWorldGeomManBlocksEntry>,
     /// Seemingly points to the current overlay world tile's map data
     pub curent_99_block_data: OwningPtr<CSWorldGeomManBlockData>,
-}
-
-impl DLRFLocatable for CSWorldGeomMan {
-    const DLRF_NAME: &'static str = "CSWorldGeomMan";
 }
 
 #[repr(C)]
@@ -71,7 +68,7 @@ pub struct CSWorldGeomIns {
     pub block_data: NonNull<CSWorldGeomManBlockData>,
     /// Points to the world placement data for this geometry instance.
     pub info: CSWorldGeomInfo,
-    pub unk1a8: [u8; 0x288],
+    unk1a8: [u8; 0x288],
 }
 
 #[repr(C)]
@@ -83,7 +80,7 @@ pub struct CSWorldGeomInfo {
     pub block_data: OwningPtr<CSWorldGeomManBlockData>,
     /// Points to the param row this geometry instance uses.
     pub asset_geometry_param: usize,
-    pub unk10: u32,
+    unk10: u32,
     unk14: u32,
     pub msb_parts_geom: CSMsbPartsGeom,
     unk68: u32,
@@ -182,18 +179,18 @@ pub struct MsbPart {
 pub struct GeometrySpawnRequest {
     /// Contains the asset string, ex. "AEG020_370"
     pub asset_string: [u16; 0x20],
-    pub unk0x40: u32,
-    pub unk0x44: u32,
+    pub unk40: u32,
+    pub unk44: u32,
     /// Contains a pointer to the asset string
     pub asset_string_ptr: u64,
-    pub unk0x50: u32,
-    pub unk0x54: u32,
-    pub unk0x58: u32,
-    pub unk0x5c: u32,
-    pub unk0x60: u32,
-    pub unk0x64: u32,
-    pub unk0x68: u32,
-    pub unk0x6c: u32,
+    pub unk50: u32,
+    pub unk54: u32,
+    pub unk58: u32,
+    pub unk5c: u32,
+    pub unk60: u32,
+    pub unk64: u32,
+    pub unk68: u32,
+    pub unk6c: u32,
     pub pos_x: f32,
     pub pos_y: f32,
     pub pos_z: f32,
@@ -203,7 +200,7 @@ pub struct GeometrySpawnRequest {
     pub scale_x: f32,
     pub scale_y: f32,
     pub scale_z: f32,
-    pub unk0x94: [u8; 0x6C],
+    pub unk94: [u8; 0x6C],
 }
 
 impl GeometrySpawnRequest {

@@ -1,28 +1,25 @@
-use crate::{fd4::resource, DLRFLocatable};
+use std::ptr::NonNull;
 
-use super::resource::{FD4ResCap, FD4ResCapHolder};
+use crate::pointer::OwningPtr;
+
+use super::FD4ResRep;
+use super::resource::FD4ResCap;
 
 #[repr(C)]
+#[dlrf::singleton("FD4ParamRepository")]
 pub struct FD4ParamRepository {
-    pub res_cap: FD4ResCap<()>,
-    unk68: [u8; 0x10],
-    pub res_cap_holder: FD4ResCapHolder<FD4ParamResCapBody>,
+    /// Resource repository holding the actual param data.
+    pub res_rep: FD4ResRep<FD4ParamResCapBody>,
     allocator: usize,
-    pub test: FD4ResCap<FD4ParamResCapBody>,
-}
-
-impl DLRFLocatable for FD4ParamRepository {
-    const DLRF_NAME: &'static str = "FD4ParamRepository";
+    test: FD4ResCap<FD4ParamResCapBody>,
 }
 
 #[repr(C)]
 pub struct FD4ParamResCapBody {
-    unk0: [u8; 0x10],
-    pub file_size: u64,
-    pub header: *const ParamFileHeader,
-    unk28: usize,
-    pub allocator: usize,
-    unk38: [u8; 0x10],
+    /// Size of data at pointer.
+    pub size: u64,
+    /// Raw row data for this param file.
+    pub data: Option<OwningPtr<ParamFileHeader>>,
 }
 
 pub struct ParamFileHeader {
