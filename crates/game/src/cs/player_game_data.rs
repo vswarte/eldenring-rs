@@ -106,6 +106,7 @@ pub struct PlayerGameData {
     unk2ac: u32,
     pub equip_game_data: [u8; 0x4b0],
     face_data: [u8; 0x170],
+    /// Describes the storage box contents.
     pub equip_inventory_data: OwningPtr<EquipInventoryData>,
     gesture_game_data: usize,
     ride_game_data: usize,
@@ -147,11 +148,9 @@ pub struct EquipInventoryData {
     key_item_head: *mut EquipInventoryDataListEntry,
     pub key_item_count: u32,
 
-    // This seems to always be 0 so I dont think this thing can actually contain any items?
-    // Seems to be a secondary key-item list.
-    unk_item_capacity: u32,
-    unk_item_head: *mut EquipInventoryDataListEntry,
-    unk_item_count: u32,
+    pub secondary_key_item_capacity: u32,
+    secondary_key_item_head: *mut EquipInventoryDataListEntry,
+    pub secondary_key_item_count: u32,
 
     _pad3c: u32,
 
@@ -176,6 +175,12 @@ impl EquipInventoryData {
     pub fn key_items(&self) -> &mut [EquipInventoryDataListEntry] {
         unsafe {
             std::slice::from_raw_parts_mut(self.key_item_head, self.key_item_count as usize)
+        }
+    }
+
+    pub fn secondary_key_items(&self) -> &mut [EquipInventoryDataListEntry] {
+        unsafe {
+            std::slice::from_raw_parts_mut(self.secondary_key_item_head, self.secondary_key_item_count as usize)
         }
     }
 }

@@ -3,7 +3,10 @@ use game::cs::{
     PlayerGameData, PlayerIns, SummonBuddyManager, SummonBuddyManagerWarp, WorldChrMan,
 };
 use hudhook::imgui::{TableColumnSetup, TreeNodeFlags, Ui};
-use util::{singleton::get_instance, world_chr_man::{ChrDebugSpawnRequest, WorldChrManExt}};
+use util::{
+    singleton::get_instance,
+    world_chr_man::{ChrDebugSpawnRequest, WorldChrManExt},
+};
 
 use super::DebugDisplay;
 
@@ -91,9 +94,12 @@ impl DebugDisplay for WorldChrMan {
 
         if ui.collapsing_header("Debug Character Creator", TreeNodeFlags::empty()) {
             let last_created_characer = self.debug_chr_creator.last_created_chr;
-            ui.input_text("Last Created Character", &mut format!("{:x?}", self.debug_chr_creator.last_created_chr))
-                .read_only(true)
-                .build();
+            ui.input_text(
+                "Last Created Character",
+                &mut format!("{:x?}", self.debug_chr_creator.last_created_chr),
+            )
+            .read_only(true)
+            .build();
 
             if ui.button("Spawn Character Creator") {
                 let world_chr_man = unsafe { get_instance::<WorldChrMan>() }.unwrap().unwrap();
@@ -105,7 +111,7 @@ impl DebugDisplay for WorldChrMan {
                         chara_init_param_id: 0,
                         npc_param_id: 47300000,
                         npc_think_param_id: 47300000,
-                        event_entity_id: 0,
+                        event_entity_id: 123123,
                         talk_id: 0,
                         pos_x: x,
                         pos_y: y,
@@ -155,7 +161,7 @@ impl DebugDisplay for ChrSet<ChrIns> {
 
                     ui.table_next_column();
                     let chr_ins = unsafe { e.chr_set_entry.as_ref().chr_ins.as_ref() };
-                    ui.text(format!("{}", chr_ins.field_ins_handle));
+                    ui.text(format!("{}", unsafe { &chr_ins.unwrap().as_ref().field_ins_handle }));
                 });
             }
             ui.unindent();
@@ -176,7 +182,7 @@ impl DebugDisplay for ChrSet<ChrIns> {
 
                     ui.table_next_column();
                     let chr_ins = unsafe { e.chr_set_entry.as_ref().chr_ins.as_ref() };
-                    ui.text(format!("{}", chr_ins.field_ins_handle));
+                    ui.text(format!("{}", unsafe { &chr_ins.unwrap().as_ref().field_ins_handle }));
                 });
             }
             ui.unindent();
@@ -188,29 +194,65 @@ impl DebugDisplay for ChrSet<PlayerIns> {
     fn render_debug(&self, ui: &&mut Ui) {
         ui.text(format!("Character capacity: {}", self.capacity));
 
-        let mut current_entry = self.entries;
-        let end = unsafe { current_entry.add(self.capacity as usize) };
-        while current_entry < end {
-            let entry = unsafe { current_entry.as_ref() };
+        if ui.collapsing_header("Characters", TreeNodeFlags::empty()) {
+            ui.indent();
+            self.characters().for_each(|player_ins| {
+                if ui.collapsing_header(
+                    format!(
+                        "c{:0>4} - {} FieldInsSelector({}, {})",
+                        player_ins.chr_ins.character_id,
+                        player_ins.chr_ins.field_ins_handle.map_id,
+                        player_ins.chr_ins.field_ins_handle.selector.container(),
+                        player_ins.chr_ins.field_ins_handle.selector.index()
+                    ),
+                    TreeNodeFlags::empty(),
+                ) {
+                    player_ins.chr_ins.render_debug(ui)
+                }
+            });
+            ui.unindent();
+        }
 
-            let player_ins = unsafe { entry.chr_ins.as_ref() };
-
-            if ui.collapsing_header(
-                format!(
-                    "c{:0>4} - {} FieldInsSelector({}, {})",
-                    player_ins.chr_ins.character_id,
-                    player_ins.chr_ins.field_ins_handle.map_id,
-                    player_ins.chr_ins.field_ins_handle.selector.container(),
-                    player_ins.chr_ins.field_ins_handle.selector.index()
-                ),
-                TreeNodeFlags::empty(),
+        if ui.collapsing_header("Character event ID mapping", TreeNodeFlags::empty()) {
+            ui.indent();
+            if let Some(_t) = ui.begin_table_header(
+                "event-flags-groups",
+                [
+                    TableColumnSetup::new("Event ID"),
+                    TableColumnSetup::new("Field Ins Handle"),
+                ],
             ) {
-                player_ins.render_debug(ui)
-            }
+                self.entity_id_mapping.iter().for_each(|e| {
+                    ui.table_next_column();
+                    ui.text(e.entity_id.to_string());
 
-            unsafe {
-                current_entry = current_entry.add(1);
+                    ui.table_next_column();
+                    let chr_ins = unsafe { e.chr_set_entry.as_ref().chr_ins.as_ref() };
+                    ui.text(format!("{}", unsafe { &chr_ins.unwrap().as_ref().chr_ins.field_ins_handle }));
+                });
             }
+            ui.unindent();
+        }
+
+        if ui.collapsing_header("Group mapping", TreeNodeFlags::empty()) {
+            ui.indent();
+            if let Some(_t) = ui.begin_table_header(
+                "event-flags-groups",
+                [
+                    TableColumnSetup::new("Group"),
+                    TableColumnSetup::new("Field Ins Handle"),
+                ],
+            ) {
+                self.group_id_mapping.iter().for_each(|e| {
+                    ui.table_next_column();
+                    ui.text(e.group_id.to_string());
+
+                    ui.table_next_column();
+                    let chr_ins = unsafe { e.chr_set_entry.as_ref().chr_ins.as_ref() };
+                    ui.text(format!("{}", unsafe { &chr_ins.unwrap().as_ref().chr_ins.field_ins_handle }));
+                });
+            }
+            ui.unindent();
         }
     }
 }

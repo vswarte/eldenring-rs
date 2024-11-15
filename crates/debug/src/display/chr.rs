@@ -130,6 +130,37 @@ impl DebugDisplay for EquipInventoryData {
                 });
             }
         }
+
+        let label = format!("Secondary Key Items ({}/{})", self.secondary_key_item_count, self.secondary_key_item_capacity);
+        if ui.collapsing_header(label.as_str(), TreeNodeFlags::empty()) {
+            if let Some(_t) = ui.begin_table_header(
+                "equip-inventory-data-secondary-key-items",
+                [
+                    TableColumnSetup::new("Gaitem Handle"),
+                    TableColumnSetup::new("Category"),
+                    TableColumnSetup::new("Item ID"),
+                    TableColumnSetup::new("Quantity"),
+                    TableColumnSetup::new("Display ID"),
+                ],
+            ) {
+                self.secondary_key_items().iter().for_each(|item| {
+                    ui.table_next_column();
+                    ui.text(format!("{:x}", item.gaitem_handle));
+
+                    ui.table_next_column();
+                    ui.text(item.category.to_string());
+
+                    ui.table_next_column();
+                    ui.text(item.item_id.to_string());
+
+                    ui.table_next_column();
+                    ui.text(item.quantity.to_string());
+
+                    ui.table_next_column();
+                    ui.text(item.display_id.to_string());
+                });
+            }
+        }
     }
 }
 

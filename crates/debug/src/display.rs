@@ -8,7 +8,7 @@ pub(crate) mod geometry;
 pub(crate) mod camera;
 pub(crate) mod fade;
 pub(crate) mod chr;
-pub(crate) mod chr_man;
+pub(crate) mod world_chr_man;
 pub(crate) mod net_man;
 pub(crate) mod task;
 pub(crate) mod param;

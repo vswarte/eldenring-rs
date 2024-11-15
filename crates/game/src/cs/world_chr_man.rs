@@ -260,26 +260,28 @@ impl<T> ChrSet<T> {
 
 impl<T> ChrSet<T> {
     pub fn characters(&self) -> impl Iterator<Item = &mut T> {
-        let mut current_entry = self.entries;
-        let end = unsafe { current_entry.add(self.capacity as usize) };
+        let mut current = self.entries;
+        let end = unsafe { current.add(self.capacity as usize) };
 
         std::iter::from_fn(move || {
-            if current_entry == end {
-                None
-            } else {
-                unsafe {
-                    let mut chr_ins = current_entry.as_mut().chr_ins;
-                    current_entry = current_entry.add(1);
-                    Some(chr_ins.as_mut())
-                }
+            while current != end {
+                let mut chr_ins = unsafe { current.as_mut().chr_ins };
+                current = unsafe { current.add(1) };
+                let Some(mut chr_ins) = chr_ins else {
+                    continue;
+                };
+
+                return Some(unsafe { chr_ins.as_mut() });
             }
+
+            None
         })
     }
 }
 
 #[repr(C)]
 pub struct ChrSetEntry<T> {
-    pub chr_ins: NonNull<T>,
+    pub chr_ins: Option<NonNull<T>>,
     unk8: u16,
     unka: u8,
     _padb: [u8; 5],
