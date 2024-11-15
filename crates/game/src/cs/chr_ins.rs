@@ -158,7 +158,7 @@ pub struct ChrInsModuleContainer {
     behavior_script: usize,
     time_act: usize,
     resist: usize,
-    behavior: usize,
+    behavior: OwningPtr<CSChrBehaviorModule>,
     behavior_sync: usize,
     ai: usize,
     pub super_armor: OwningPtr<CSChrSuperArmorModule>,
@@ -197,6 +197,28 @@ pub struct ChrInsModuleContainer {
     cliff_wind: usize,
     navimesh_cost_effect: usize,
 }
+
+pub struct CSChrBehaviorModule {
+    unk0: [u8; 0x30],
+    pub root_motion: FSVector4,
+    unk40: [u8; 0x20],
+    //behavior_module_0x00b: usize, // structure?
+    unk70: [u8; 0x1550],
+    unk15b0: FD4Time,
+    unk15c0: [u8; 0xC0],
+    pub ground_touch_state: u32,
+    unk1684: [u8; 0xE9],
+    unk_db: u8,
+    unk_db_1: u8,
+    unk176f: [u8; 0x1E],
+    unk1790: FSVector4,
+    unk17a0: [u8; 0x10],
+    behavior_debug_anim_helper: usize, //CSChrBehaviorDebugAnimHelper lost
+    unk17b8: [u8; 0x10],
+    pub animation_speed: f32,
+    unk17cc: [u8; 0x1F0],
+}
+
 
 #[repr(C)]
 /// Source of name: RTTI
