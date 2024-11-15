@@ -29,9 +29,9 @@ pub static CHARACTER_DEBUG_FLAGS: LazyLock<RwLock<&mut CharacterDebugFlags>> =
             .scanner()
             .finds_code(&CHARACTER_DEBUG_FLAGS_PATTERN, &mut matches)
         {
-            todo!("need to add error type for this");
+            panic!("Failed to find character debug flags pattern");
         }
 
         tracing::debug!("Found character properties pattern");
-        RwLock::new(unsafe { transmute::<_, _>(program.rva_to_va(matches[1]).unwrap()) })
+        RwLock::new(unsafe { transmute::<_, _>(program.rva_to_va(matches[1] + 1).unwrap()) })
     });

@@ -164,7 +164,7 @@ pub struct ChrInsModuleContainer {
     pub super_armor: OwningPtr<CSChrSuperArmorModule>,
     pub toughness: OwningPtr<CSChrToughnessModule>,
     talk: usize,
-    event: OwningPtr<CSChrEventModule>,
+    pub event: OwningPtr<CSChrEventModule>,
     magic: usize,
     /// Describes the characters physics-related properties.
     pub physics: OwningPtr<ChrPhysicsModule>,
@@ -333,7 +333,7 @@ pub struct CSChrDataModule {
     pub map_id_origin: u32,
     unk80: u32,
     unk84: u32,
-    pub world_block_chr: OwningPtr<WorldBlockChr<ChrIns>>,
+    pub world_block_chr: NonNull<WorldBlockChr<ChrIns>>,
     unk90: [u8; 0x30],
     pub draw_params: u32,
     unkc4: u32,
@@ -359,7 +359,7 @@ pub struct CSChrDataModule {
     some_debug_bitfield: u8,
     unk19c: [u8; 0x8c],
     // wchar_t*
-    pub character_name: OwningPtr<ffi::OsString>,
+    character_name: OwningPtr<ffi::OsString>,
     unk230: [u8; 0x20],
     dl_string: [u8; 0x30],
 }
