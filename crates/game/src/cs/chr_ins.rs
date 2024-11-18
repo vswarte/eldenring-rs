@@ -173,7 +173,7 @@ pub struct ChrInsModuleContainer {
     fall: usize,
     ladder: usize,
     action_request: usize,
-    throw: usize,
+    throw: OwningPtr<CSChrThrowModule>,
     hitstop: usize,
     damage: usize,
     material: usize,
@@ -368,6 +368,19 @@ pub struct CSChrDataModule {
 
 #[repr(C)]
 /// Source of name: RTTI
+pub struct CSChrThrowModule {
+    vftable: usize,
+    pub owner: NonNull<ChrIns>,
+    throw_node: usize,
+    unk18: usize,
+    unk20: u32,
+    p2p_entity_handle: P2PEntityHandle,
+    pub throw_target: usize,
+    unk28: [u8; 0x8],
+}
+
+#[repr(C)]
+/// Source of name: RTTI
 pub struct ChrCtrl {
     vftable: usize,
     unk8: u64,
@@ -403,10 +416,23 @@ pub struct PlayerIns {
     pub player_game_data: OwningPtr<PlayerGameData>,
     chr_manipulator: usize,
     unk590: usize,
-    player_session_holder: usize,
+    player_session_holder: PlayerSessionHolder,
     unk5c0: usize,
     replay_recorder: usize,
-    unk5b0: [u8; 0x88],
+    unk5d0: u32,
+    unk5d4: u32,
+    pub snipe_mode_draw_alpha_fade_timer: f32,
+    unk5bc: u32,
+    unk5e0: usize,
+    fg_model: usize,
+    npc_param: usize,
+    unk5f8: u32,
+    unk5fc: u32,
+    rng_sp_effect_equip_ctrl: usize,
+    wep_sp_effect_equip_ctrl: usize,
+    pro_sp_effect_equip_ctrl: usize,
+    npc_sp_effect_equip_ctrl: usize,
+    unk620: [u8; 0x18],
     pub chr_asm: OwningPtr<ChrAsm>,
     chr_asm_model_res: usize,
     chr_asm_model_ins: usize,
@@ -486,4 +512,14 @@ pub struct ChrAsm {
     unkd4: u32,
     unkd8: u32,
     _paddc: [u8; 12],
+}
+
+#[repr(C)]
+/// Source of name: RTTI
+pub struct PlayerSessionHolder {
+    vftable: usize,
+    player_debug_session: usize,
+    unk10: usize,
+    player_netword_session: usize,
+    unk18: usize,
 }
