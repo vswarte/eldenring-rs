@@ -1,6 +1,6 @@
 use std::ffi;
 
-use crate::dltx::DLWString;
+use crate::dltx::DLBasicString;
 
 #[repr(C)]
 /// Seems to be used in some control flow around engine settings and debug options.
@@ -14,6 +14,6 @@ pub struct CSEzSelectBot {
 #[repr(C)]
 pub struct CSEzSelectBotString {
     pub allocator: *const ffi::c_void,
-    pub string: DLWString,
+    pub string: DLBasicString,
     unk28: u64,
 }

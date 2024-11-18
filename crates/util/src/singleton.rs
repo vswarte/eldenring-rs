@@ -1,5 +1,6 @@
 use dlrf::DLRFSingleton;
 use pelite::pattern;
+use pelite::pattern::Atom;
 use pelite::pe::Pe;
 use pelite::pe::Rva;
 use std::collections;
@@ -55,18 +56,18 @@ pub unsafe fn get_instance<T: DLRFSingleton>() -> Result<Option<&'static mut T>,
     unsafe { Ok((*(ptr as *const *mut T)).as_mut()) }
 }
 
-const NULL_CHECK_PATTERN: &str = concat!(
-    //  MOV REG, [MEM]
-    "48 8b 0d $ { ' }",
-    //  TEST REG, REG
-    "48 85 ? ",
-    // JNZ +2e
-    "75 ? ",
-    // LEA RCX, [runtime_class_metadata]
-    "48 8d 0d $ { ' }",
-    // 19 CALL get_singleton_name
-    "e8 $ { ' }"
-);
+// MOV REG, [MEM]
+// TEST REG, REG
+// JNZ +2e
+// LEA RCX, [runtime_class_metadata]
+// CALL get_singleton_name
+const NULL_CHECK_PATTERN: &[Atom] = pattern!("
+    48 8b ? $ { ' }
+    48 85 ? 
+    75 ? 
+    48 8d 0d $ { ' }
+    e8 $ { ' }
+");
 
 /// Builds a table of all the singletons. It does so by looking for null checks
 /// in the game by using an instance pattern. It then cycles over all
@@ -87,8 +88,7 @@ pub fn build_singleton_table(program: &Program) -> Result<SingletonMap, Singleto
         .ok_or(SingletonMapError::Section(".data"))?
         .virtual_range();
 
-    let pattern = pattern::parse(NULL_CHECK_PATTERN).unwrap();
-    let mut matches = program.scanner().matches_code(&pattern);
+    let mut matches = program.scanner().matches_code(NULL_CHECK_PATTERN);
     let mut captures: [Rva; 4] = [Rva::default(); 4];
     let mut results: SingletonMap = Default::default();
 

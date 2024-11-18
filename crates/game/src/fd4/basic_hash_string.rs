@@ -1,6 +1,6 @@
 use std::{ffi, fmt::Display};
 
-use crate::dltx::DLWString;
+use crate::dltx::DLBasicString;
 
 #[repr(C)]
 /// Wraps a string to make it easier to use with hashmaps. Seemingly mostly used in the resource
@@ -11,7 +11,7 @@ pub struct FD4BasicHashString {
     vftable: usize,
     pub allocator: usize,
     /// The contained string we're hashing for.
-    pub string: DLWString,
+    pub string: DLBasicString,
     /// Hashed representation of the string field.
     pub hash: u32,
     /// Indicates whether or not the hash field is populated.

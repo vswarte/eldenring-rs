@@ -1,3 +1,12 @@
+use std::ptr::NonNull;
+use std::thread;
+use std::time::Duration;
+
+use display::DebugDisplay;
+use game::dlio::DLFileDeviceBase;
+use game::dlio::DLFileDeviceVmt;
+use game::dlio::LoggingProxyFileDevice;
+use game::dltx::DLString;
 use hudhook::eject;
 use hudhook::hooks::dx12::ImguiDx12Hooks;
 use hudhook::imgui;
@@ -6,18 +15,19 @@ use hudhook::windows::Win32::Foundation::HINSTANCE;
 use hudhook::Hudhook;
 use hudhook::ImguiRenderLoop;
 
-use game::cs::CSEventFlagMan;
-use game::cs::MsbRepository;
-use game::fd4::FD4ParamRepository;
-use game::cs::WorldAreaTime;
 use game::cs::CSCamera;
+use game::cs::CSEventFlagMan;
 use game::cs::CSFade;
 use game::cs::CSNetMan;
-use game::cs::CSTaskGroup;
-use game::cs::WorldChrMan;
-use game::cs::CSWorldGeomMan;
-use game::cs::CSTaskImp;
 use game::cs::CSSessionManager;
+use game::cs::CSTaskGroup;
+use game::cs::CSTaskImp;
+use game::cs::CSWorldGeomMan;
+use game::cs::MsbRepository;
+use game::cs::WorldAreaTime;
+use game::cs::WorldChrMan;
+use game::dlio::DLFileDeviceManager;
+use game::fd4::FD4ParamRepository;
 
 use display::render_debug_singleton;
 use tracing_panic::panic_hook;
@@ -42,6 +52,32 @@ pub unsafe extern "C" fn DllMain(hmodule: HINSTANCE, reason: u32) -> bool {
                 tracing::error!("Couldn't apply hooks: {e:?}");
                 eject();
             }
+        });
+
+        std::thread::spawn(move || {
+            std::thread::sleep(Duration::from_secs(5));
+
+            let file_device_manager =
+                unsafe { &mut *(0x1448464c0usize as *mut DLFileDeviceManager) };
+
+            // Instrument all loggers
+            file_device_manager.mutex.lock();
+            file_device_manager
+                .devices
+                .items()
+                .iter_mut()
+                .for_each(|f| {
+                    let device = unsafe {
+                        let tmp = Box::leak(Box::new(LoggingProxyFileDevice::new(f.clone())))
+                            as *mut LoggingProxyFileDevice
+                            as *mut DLFileDeviceBase;
+
+                        NonNull::new(tmp).unwrap()
+                    };
+                    *f = device;
+                });
+            // file_device_manager.devices.push_front(std::mem::transmute(device));
+            file_device_manager.mutex.unlock();
         });
     }
 
@@ -78,6 +114,13 @@ impl ImguiRenderLoop for EldenRingDebugGui {
                 }
 
                 if let Some(item) = ui.tab_item("Resource") {
+                    if ui.collapsing_header("DLFileDeviceManager", TreeNodeFlags::empty()) {
+                        let file_device_manager =
+                            unsafe { &*(0x1448464c0usize as *mut DLFileDeviceManager) };
+
+                        file_device_manager.render_debug(&ui);
+                    }
+
                     render_debug_singleton::<CSTaskGroup>(&ui);
                     render_debug_singleton::<CSTaskImp>(&ui);
                     render_debug_singleton::<FD4ParamRepository>(&ui);

@@ -1,36 +1,29 @@
 use std::ffi;
+use std::ptr::NonNull;
 
 use crate::dlkr::DLPlainLightMutex;
 use crate::fd4::{
-    FD4BasicHashString, FD4ResCap, FD4ResCapHolder
+    FD4BasicHashString, FD4FileCap, FD4ResCap, FD4ResCapHolder, FD4ResRep
 };
-use crate::pointer::OwningPtr;
+use crate::pointer::OwnedPtr;
+use crate::DoublyLinkedList;
 
+/// Manages files used by the file, both virtual and on-disk.
 #[repr(C)]
 pub struct CSFile {
     vftable: usize,
-    pub file_repository_1: OwningPtr<CSFileRepository>,
+    pub file_repository_1: OwnedPtr<CSFileRepository>,
     // TODO: Incomplete..
 }
 
+/// Manages a set of files as well as keeps track of load state and such.
 #[repr(C)]
 pub struct CSFileRepository {
-    // TODO: This is actually embedding an FD4FileRepository of size 0x210
-    pub repository_res_cap: FD4ResCap<()>,
-    pub holder1: FD4ResCapHolder<()>,
-    pub holder2: FD4ResCapHolder<()>,
-
-    // Some type of btree?
-    unkc8_allocator: usize,
-    unkd0_tree_pointer: usize,
-    unkd8_tree_size: u32,
-    unkdc_tree_pad: u32,
-    pub mutexes: [OwningPtr<CSFileRepositoryMutex>; 5],
-    unk108: usize,
-    unk110: usize,
-    unk118: usize,
-    unk120: usize,
-    unk128: usize,
+    pub res_rep: FD4ResRep<UntypedFileCap>,
+    pub holder2: FD4ResCapHolder<UntypedFileCap>,
+    unkc8: DoublyLinkedList<()>,
+    pub mutexes: [OwnedPtr<CSFileRepositoryMutex>; 5],
+    file_load_event_queues: [OwnedPtr<usize>; 5],
 }
 
 #[repr(C)]
@@ -42,4 +35,18 @@ pub struct CSFileRepositoryMutex {
     unk3c: u32,
     unk40: usize,
     unk48: usize,
+}
+
+#[repr(C)]
+/// Used to represent file caps without a concrete type.
+pub struct UntypedFileCap {
+    pub file_cap: FD4FileCap<Self>,
+}
+
+impl AsRef<FD4ResCap<Self>> for UntypedFileCap {
+    fn as_ref(&self) -> &FD4ResCap<Self> {
+        &self.file_cap.res_cap
+    }
+
+    // TODO: add downcasting logic
 }
