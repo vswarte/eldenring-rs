@@ -38,7 +38,7 @@ impl DebugDisplay for CSWorldGeomManBlockData {
             self.geom_ins_vector.len()
         ));
         if ui.collapsing_header("Geometry Vector", TreeNodeFlags::empty()) {
-            for geometry_ins in self.geom_ins_vector.iter() {
+            for geometry_ins in self.geom_ins_vector.items() {
                 let name = unsafe {
                     geometry_ins
                         .info
@@ -68,7 +68,7 @@ impl DebugDisplay for CSWorldGeomManBlockData {
         }
 
         if ui.collapsing_header("Sign Geometry Vector", TreeNodeFlags::empty()) {
-            for geometry_ins in self.sos_sign_geometry.iter() {
+            for geometry_ins in self.sos_sign_geometry.items() {
                 let name = unsafe {
                     geometry_ins
                         .info

@@ -1,6 +1,5 @@
 [workspace]
 members = [
-    "crates/dlrf-derive",
     "crates/debug",
     "crates/game",
     "crates/util",
@@ -9,7 +8,8 @@ members = [
     "examples/mini-transmog",
     "examples/procedural-dungeons",
     "tools/export-singletons",
-    "tools/profiler", "crates/dlrf",
+    "tools/profiler",
+    "crates/dlrf",
 ]
 resolver = "2"
 

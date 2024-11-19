@@ -1,6 +1,10 @@
-use std::{collections::VecDeque, marker::PhantomData, ptr::NonNull};
+use std::{
+    collections::VecDeque,
+    marker::PhantomData,
+    ptr::{copy_nonoverlapping, NonNull},
+};
 
-use crate::pointer::OwningPtr;
+use crate::{dlkr::DLAllocator, pointer::OwnedPtr};
 
 #[repr(C)]
 pub struct DoublyLinkedListNode<T> {
@@ -43,7 +47,7 @@ pub struct Vector<T>
 where
     T: Sized,
 {
-    pub allocator: usize,
+    allocator: NonNull<DLAllocator>,
     pub begin: Option<NonNull<T>>,
     pub end: Option<NonNull<T>>,
     pub capacity: Option<NonNull<T>>,
@@ -53,20 +57,15 @@ impl<T> Vector<T>
 where
     T: Sized,
 {
-    pub fn iter(&self) -> impl Iterator<Item = &mut T> {
-        let mut current = self.begin;
-        let end = self.end;
+    pub fn items(&self) -> &mut [T] {
+        let Some(start) = self.begin else {
+            return &mut [];
+        };
 
-        std::iter::from_fn(move || {
-            let result = if current?.as_ptr() >= end?.as_ptr() {
-                None
-            } else {
-                Some(unsafe { current?.as_mut() })
-            };
+        let end = self.end.unwrap();
+        let count = (end.as_ptr() as usize - start.as_ptr() as usize) / size_of::<T>();
 
-            current = Some(unsafe { current?.add(1) });
-            result
-        })
+        unsafe { std::slice::from_raw_parts_mut(start.as_ptr(), count) }
     }
 
     pub fn len(&self) -> usize {
@@ -79,6 +78,42 @@ where
         };
 
         (end.as_ptr() as usize - start.as_ptr() as usize) / size_of::<T>()
+    }
+
+    // TODO: setup CXX for this shit
+    pub fn push(&mut self, item: T) {
+        let end = self.end.unwrap();
+        let new_end = end.as_ptr() as usize + size_of::<T>();
+
+        // Check if we're not going oob, otherwise reloc
+        if new_end > self.capacity.unwrap().as_ptr() as usize {
+            todo!("Implement vector relocs");
+        }
+
+        // Write data to tail
+        unsafe { copy_nonoverlapping(&item as _, end.as_ptr(), 1) };
+
+        // Up the end
+        self.end = Some(NonNull::new(new_end as *mut T).unwrap());
+    }
+
+    // TODO: setup CXX for this shit
+    pub fn push_front(&mut self, item: T) {
+        let end = self.end.unwrap();
+        let start = self.begin.unwrap();
+        let new_end = end.as_ptr() as usize + size_of::<T>();
+
+        // Check if we're not going oob, otherwise reloc
+        if new_end > self.capacity.unwrap().as_ptr() as usize {
+            todo!("Implement vector relocs");
+        }
+
+        let count = (end.as_ptr() as usize - start.as_ptr() as usize) / size_of::<T>();
+
+        // Copy existing items back one slot
+        unsafe { copy_nonoverlapping(start.as_ptr(), start.add(1).as_ptr(), count) }
+        // Write data to start
+        unsafe { copy_nonoverlapping(&item as _, self.begin.unwrap().as_ptr(), 1) };
     }
 }
 

@@ -232,7 +232,7 @@ impl DebugDisplay for CSChrModelParamModifierModule {
                 TableColumnSetup::new("Name"),
             ],
         ) {
-            self.modifiers.iter().for_each(|modifier| {
+            self.modifiers.items().iter().for_each(|modifier| {
                 ui.table_next_column();
                 ui.text(unsafe { modifier.name.to_string() }.unwrap());
             });

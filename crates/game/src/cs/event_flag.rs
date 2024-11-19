@@ -1,6 +1,6 @@
 use std::mem::ManuallyDrop;
 
-use crate::{pointer::OwningPtr, Tree};
+use crate::{pointer::OwnedPtr, Tree};
 
 pub struct EventFlag(u32);
 
@@ -122,12 +122,12 @@ pub struct FlagBlockDescriptor {
 
 union FlagBlockLocationUnion {
     holder_offset: u32,
-    external_location: ManuallyDrop<OwningPtr<FlagBlock>>,
+    external_location: ManuallyDrop<OwnedPtr<FlagBlock>>,
 }
 
 pub enum FlagBlockLocation {
     HolderOffset(u32),
-    External(OwningPtr<FlagBlock>),
+    External(OwnedPtr<FlagBlock>),
 }
 
 #[repr(C)]

@@ -1,6 +1,6 @@
 use std::ptr::NonNull;
 
-use crate::pointer::OwningPtr;
+use crate::pointer::OwnedPtr;
 
 use super::ChrAsm;
 
@@ -111,7 +111,7 @@ pub struct PlayerGameData {
     pub equipment: EquipGameData,
     face_data: [u8; 0x170],
     /// Describes the storage box contents.
-    pub storage: OwningPtr<EquipInventoryData>,
+    pub storage: OwnedPtr<EquipInventoryData>,
     gesture_game_data: usize,
     ride_game_data: usize,
     unk8e8: usize,
@@ -147,7 +147,7 @@ pub struct EquipGameData {
     pub chr_asm: ChrAsm,
     _pad154: u32,
     pub equip_inventory_data: EquipInventoryData,
-    pub equip_magic_data: OwningPtr<EquipMagicData>,
+    pub equip_magic_data: OwnedPtr<EquipMagicData>,
     pub equip_item_data: EquipItemData,
     unk330: u32,
     unk334: u32,
@@ -189,15 +189,15 @@ pub struct EquipInventoryData {
     pub global_capacity: u32,
 
     pub normal_item_capacity: u32,
-    normal_item_head: OwningPtr<EquipInventoryDataListEntry>,
+    normal_item_head: OwnedPtr<EquipInventoryDataListEntry>,
     pub normal_item_count: u32,
 
     pub key_item_capacity: u32,
-    key_item_head: OwningPtr<EquipInventoryDataListEntry>,
+    key_item_head: OwnedPtr<EquipInventoryDataListEntry>,
     pub key_item_count: u32,
 
     pub secondary_key_item_capacity: u32,
-    secondary_key_item_head: OwningPtr<EquipInventoryDataListEntry>,
+    secondary_key_item_head: OwnedPtr<EquipInventoryDataListEntry>,
     pub secondary_key_item_count: u32,
 
     _pad3c: u32,
@@ -279,7 +279,7 @@ pub struct EquipItemData {
     pub pouch_slots: [EquipDataItem; 6],
     pub great_rune: EquipDataItem,
     unk90: usize,
-    pub inventory: OwningPtr<EquipInventoryData>,
+    pub inventory: OwnedPtr<EquipInventoryData>,
     unka0: i32,
     unka4: u32,
 }

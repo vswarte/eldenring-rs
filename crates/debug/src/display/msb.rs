@@ -1,6 +1,5 @@
 use game::cs::MsbRepository;
 use hudhook::imgui::{TableColumnSetup, TreeNodeFlags};
-use util::resource::FD4ResCapHolderExt;
 
 use super::DebugDisplay;
 
@@ -13,12 +12,11 @@ impl DebugDisplay for MsbRepository {
                     TableColumnSetup::new("Name"),
                 ],
             ) {
-                for res_cap in unsafe { self.res_rep.res_cap_holder.entries() } {
+                for msb in self.res_rep.res_cap_holder.entries() {
                     ui.table_next_column();
-                    ui.text(res_cap.name.to_string());
+                    ui.text(msb.file_cap.res_cap.name.to_string());
                 }
             }
         }
-
     }
 }
