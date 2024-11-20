@@ -1,15 +1,15 @@
 use crate::matrix::FSMatrix4x4;
-use crate::pointer::OwningPtr;
+use crate::pointer::OwnedPtr;
 
 #[repr(C)]
 /// Source of name: RTTI
 #[dlrf::singleton("CSCamera")]
 pub struct CSCamera {
     vftable: usize,
-    pub pers_cam_1: OwningPtr<CSPersCam>,
-    pub pers_cam_2: OwningPtr<CSPersCam>,
-    pub pers_cam_3: OwningPtr<CSPersCam>,
-    pub pers_cam_4: OwningPtr<CSPersCam>,
+    pub pers_cam_1: OwnedPtr<CSPersCam>,
+    pub pers_cam_2: OwnedPtr<CSPersCam>,
+    pub pers_cam_3: OwnedPtr<CSPersCam>,
+    pub pers_cam_4: OwnedPtr<CSPersCam>,
 
     // 0b00100000 // Copy from pers_cam_4 into pers_cam_1
     // 0b00010000 // Copy from pers_cam_3 into pers_cam_1

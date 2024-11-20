@@ -2,7 +2,7 @@ use std::{fmt::Formatter, ptr::NonNull};
 
 use windows::core::PCWSTR;
 
-use crate::{pointer::OwningPtr, Tree, Vector};
+use crate::{pointer::OwnedPtr, Tree, Vector};
 
 use super::{FieldInsHandle, MapId};
 
@@ -16,14 +16,14 @@ pub struct CSWorldGeomMan {
     /// A tree of loaded maps hosting their geometry instances.
     pub blocks: Tree<CSWorldGeomManBlocksEntry>,
     /// Seemingly points to the current overlay world tile's map data
-    pub curent_99_block_data: OwningPtr<CSWorldGeomManBlockData>,
+    pub curent_99_block_data: OwnedPtr<CSWorldGeomManBlockData>,
 }
 
 #[repr(C)]
 pub struct CSWorldGeomManBlocksEntry {
     pub map_id: MapId,
     _pad4: u32,
-    pub data: OwningPtr<CSWorldGeomManBlockData>,
+    pub data: OwnedPtr<CSWorldGeomManBlockData>,
 }
 
 #[repr(C)]
@@ -41,11 +41,11 @@ pub struct CSWorldGeomManBlockData {
     pub activation_fade_modules: Vector<()>,
     unk180: [u8; 0x108],
     /// Holds refs to some geometry instances for this map.
-    pub geom_ins_vector: Vector<OwningPtr<CSWorldGeomIns>>,
+    pub geom_ins_vector: Vector<OwnedPtr<CSWorldGeomIns>>,
     unk2a8: [u8; 0x20],
     pub geometry_array_count: u32,
     unk2cc: u32,
-    pub geometry_array: OwningPtr<CSWorldGeomIns>,
+    pub geometry_array: OwnedPtr<CSWorldGeomIns>,
     unk2d8: [u8; 0x58],
     /// Seems to be the next field ins index that will be assiged.
     pub next_geom_ins_field_ins_index: u32,
@@ -53,7 +53,7 @@ pub struct CSWorldGeomManBlockData {
     unk334: bool,
     _pad335: [u8; 3],
     unk338: [u8; 0x50],
-    pub sos_sign_geometry: Vector<OwningPtr<OwningPtr<CSWorldGeomIns>>>,
+    pub sos_sign_geometry: Vector<OwnedPtr<OwnedPtr<CSWorldGeomIns>>>,
     unk3a8: [u8; 0x300],
 }
 
@@ -77,7 +77,7 @@ pub struct CSWorldGeomIns {
 /// Source of name: "..\\..\\Source\\Game\\Geometry\\CSWorldGeomInfo.cpp" in exception.
 pub struct CSWorldGeomInfo {
     /// Points to the map data hosting the GeomIns for this info struct.
-    pub block_data: OwningPtr<CSWorldGeomManBlockData>,
+    pub block_data: OwnedPtr<CSWorldGeomManBlockData>,
     /// Points to the param row this geometry instance uses.
     pub asset_geometry_param: usize,
     unk10: u32,
@@ -157,7 +157,7 @@ pub struct CSMsbParts {
     pub draw_flags: u32,
     _padc: u32,
     unk10: usize,
-    pub msb_part: OwningPtr<MsbPart>,
+    pub msb_part: OwnedPtr<MsbPart>,
     unk20: [u8; 0x30],
 }
 

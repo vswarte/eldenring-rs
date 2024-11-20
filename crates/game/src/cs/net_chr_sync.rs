@@ -1,6 +1,6 @@
 use std::ptr::NonNull;
 
-use crate::pointer::OwningPtr;
+use crate::pointer::OwnedPtr;
 
 use super::{ChrIns, ChrSet};
 
@@ -9,7 +9,7 @@ pub struct NetChrSync {
     pub world_info_owner: usize,
     pub chr_slot_count: u32,
     _padc: u32,
-    pub net_chr_set_sync: [OwningPtr<NetChrSetSync>; 196],
+    pub net_chr_set_sync: [OwnedPtr<NetChrSetSync>; 196],
 }
 
 /// Acts as an update buffer for all the ChrIns sync for a given ChrSet.

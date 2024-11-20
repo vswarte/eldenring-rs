@@ -2,7 +2,7 @@ use std::{ffi, marker::PhantomData};
 use windows::core::PCWSTR;
 
 use crate::dlrf::DLRuntimeClass;
-use crate::pointer::OwningPtr;
+use crate::pointer::OwnedPtr;
 use crate::{dlkr::DLPlainLightMutex, fd4::{FD4BasicHashString, FD4Time}, Tree, Vector};
 
 #[repr(C)]
@@ -56,7 +56,7 @@ pub struct CSEzUpdateTask<TSubject> {
     pub base_task: CSEzTask,
 
     /// Whatever this update task is operating on
-    pub subject: OwningPtr<TSubject>,
+    pub subject: OwnedPtr<TSubject>,
 
     /// Takes in the subject and the delta time
     pub executor: fn(&TSubject, f32),
@@ -67,14 +67,14 @@ pub struct CSEzTaskProxy {
     vftable: *const CSEzTaskVMT,
     unk8: u32,
     _padc: u32,
-    pub task: OwningPtr<CSEzTask>,
+    pub task: OwnedPtr<CSEzTask>,
 }
 
 #[repr(C)]
 #[dlrf::singleton("CSTaskGroup")]
 pub struct CSTaskGroup {
     vftable: usize,
-    pub task_groups: [OwningPtr<CSTimeLineTaskGroupIns>; 168],
+    pub task_groups: [OwnedPtr<CSTimeLineTaskGroupIns>; 168],
 }
 
 #[repr(C)]
@@ -95,7 +95,7 @@ pub struct CSTimeLineTaskGroupIns {
 #[dlrf::singleton("CSTask")]
 pub struct CSTaskImp {
     vftable: usize,
-    pub inner: OwningPtr<CSTask>,
+    pub inner: OwnedPtr<CSTask>,
 }
 
 #[repr(C)]
@@ -121,9 +121,9 @@ pub struct CSTask {
     unk40: usize,
     unk48: [usize; 3],
     unk60: [usize; 3],
-    pub task_runner_manager: OwningPtr<CSTaskRunnerManager>,
-    pub task_runners: [OwningPtr<CSTaskRunner>; 6],
-    pub task_runners_ex: [OwningPtr<CSTaskRunnerEx>; 6],
+    pub task_runner_manager: OwnedPtr<CSTaskRunnerManager>,
+    pub task_runners: [OwnedPtr<CSTaskRunner>; 6],
+    pub task_runners_ex: [OwnedPtr<CSTaskRunnerEx>; 6],
     unke0: usize,
 }
 
@@ -131,7 +131,7 @@ pub struct CSTask {
 pub struct CSTaskRunner {
     vftable: usize,
     pub task_queue: usize,
-    pub task_runner_manager: OwningPtr<CSTaskRunnerManager>,
+    pub task_runner_manager: OwnedPtr<CSTaskRunnerManager>,
     unk18: u32,
     _pad1c: u32,
     unk_string: PCWSTR,
@@ -159,7 +159,7 @@ pub struct FD4TaskGroup {
 pub struct CSTaskRunnerManager {
     pub allocator: usize,
     pub concurrent_task_group_count: usize,
-    pub concurrent_task_group_policy: OwningPtr<TaskGroupConcurrency>,
+    pub concurrent_task_group_policy: OwnedPtr<TaskGroupConcurrency>,
     pub current_concurrent_task_group: u32,
     unk1c: u32,
     unk20: u32,

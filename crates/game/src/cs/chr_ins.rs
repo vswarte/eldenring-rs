@@ -5,7 +5,7 @@ use windows::core::PCWSTR;
 
 use crate::cs::ChrSetEntry;
 use crate::matrix::FSVector4;
-use crate::pointer::OwningPtr;
+use crate::pointer::OwnedPtr;
 use crate::position::{ChunkPosition, HavokPosition};
 use crate::Vector;
 
@@ -58,8 +58,8 @@ pub struct ChrIns {
     pub chr_set_cleanup: u32,
     _pad44: u32,
     unk48: usize,
-    pub chr_model_ins: OwningPtr<CSChrModelIns>,
-    pub chr_ctrl: OwningPtr<ChrCtrl>,
+    pub chr_model_ins: OwnedPtr<CSChrModelIns>,
+    pub chr_ctrl: OwnedPtr<ChrCtrl>,
     pub think_param_id: i32,
     pub npc_id_1: i32,
     pub chr_type: i32,
@@ -87,12 +87,12 @@ pub struct ChrIns {
     unk170: u32,
     unk174: u32,
     /// Container for the speffects applied to this character.
-    pub special_effect: OwningPtr<SpecialEffect>,
+    pub special_effect: OwnedPtr<SpecialEffect>,
     /// Refers to what field ins you were last killed by.
     pub last_killed_by: FieldInsHandle,
     pub character_id: u32,
     unk18c: u32,
-    pub module_container: OwningPtr<ChrInsModuleContainer>,
+    pub module_container: OwnedPtr<ChrInsModuleContainer>,
     rest: [u8; 0x3E8],
 }
 
@@ -100,7 +100,7 @@ pub struct ChrIns {
 /// Source of name: RTTI
 pub struct SpecialEffect {
     vftable: usize,
-    head: Option<OwningPtr<SpecialEffectEntry>>,
+    head: Option<OwnedPtr<SpecialEffectEntry>>,
     /// ChrIns this SpecialEffect structure belongs to.
     pub owner: NonNull<ChrIns>,
     unk18: usize,
@@ -155,7 +155,7 @@ pub struct SpecialEffectEntryAccumulatorInfo {
 
 #[repr(C)]
 pub struct ChrInsModuleContainer {
-    pub data: OwningPtr<CSChrDataModule>,
+    pub data: OwnedPtr<CSChrDataModule>,
     action_flag: usize,
     behavior_script: usize,
     time_act: usize,
@@ -163,17 +163,17 @@ pub struct ChrInsModuleContainer {
     behavior: usize,
     behavior_sync: usize,
     ai: usize,
-    pub super_armor: OwningPtr<CSChrSuperArmorModule>,
-    pub toughness: OwningPtr<CSChrToughnessModule>,
+    pub super_armor: OwnedPtr<CSChrSuperArmorModule>,
+    pub toughness: OwnedPtr<CSChrToughnessModule>,
     talk: usize,
-    pub event: OwningPtr<CSChrEventModule>,
+    pub event: OwnedPtr<CSChrEventModule>,
     magic: usize,
     /// Describes the characters physics-related properties.
-    pub physics: OwningPtr<ChrPhysicsModule>,
+    pub physics: OwnedPtr<ChrPhysicsModule>,
     fall: usize,
     ladder: usize,
     action_request: usize,
-    throw: OwningPtr<CSChrThrowModule>,
+    throw: OwnedPtr<CSChrThrowModule>,
     hitstop: usize,
     damage: usize,
     material: usize,
@@ -184,7 +184,7 @@ pub struct ChrInsModuleContainer {
     unkc8: usize,
     /// Describes a number of render-related inputs, like the color for the phantom effect and
     /// equipment coloring effects.
-    pub model_param_modifier: OwningPtr<CSChrModelParamModifierModule>,
+    pub model_param_modifier: OwnedPtr<CSChrModelParamModifierModule>,
     dripping: usize,
     unke0: usize,
     ride: usize,
@@ -361,7 +361,7 @@ pub struct CSChrDataModule {
     some_debug_bitfield: u8,
     unk19c: [u8; 0x8c],
     // wchar_t*
-    character_name: OwningPtr<ffi::OsString>,
+    character_name: OwnedPtr<ffi::OsString>,
     unk230: [u8; 0x20],
     dl_string: [u8; 0x30],
 }
@@ -371,7 +371,7 @@ pub struct CSChrDataModule {
 pub struct CSPairAnimNode {
     vftable: usize,
     unk8: usize,
-    pub owner: OwningPtr<ChrIns>,
+    pub owner: OwnedPtr<ChrIns>,
     pub forwarding_recipient: FieldInsHandle,
     unk20: FSVector4,
     unk30: FSVector4,
@@ -400,7 +400,7 @@ pub struct CSThrowNode {
 pub struct CSChrThrowModule {
     vftable: usize,
     pub owner: NonNull<ChrIns>,
-    pub throw_node: OwningPtr<CSThrowNode>,
+    pub throw_node: OwnedPtr<CSThrowNode>,
     unk18: usize,
     unk20: u32,
     // p2p handle of the target?, need verification
@@ -444,7 +444,7 @@ pub struct CSChrModelIns {
 /// Source of name: RTTI
 pub struct PlayerIns {
     pub chr_ins: ChrIns,
-    pub player_game_data: OwningPtr<PlayerGameData>,
+    pub player_game_data: OwnedPtr<PlayerGameData>,
     chr_manipulator: usize,
     unk590: usize,
     pub player_session_holder: PlayerSessionHolder,
@@ -464,7 +464,7 @@ pub struct PlayerIns {
     pro_sp_effect_equip_ctrl: usize,
     npc_sp_effect_equip_ctrl: usize,
     unk620: [u8; 0x18],
-    pub chr_asm: OwningPtr<ChrAsm>,
+    pub chr_asm: OwnedPtr<ChrAsm>,
     chr_asm_model_res: usize,
     chr_asm_model_ins: usize,
     unk650: [u8; 0x60],

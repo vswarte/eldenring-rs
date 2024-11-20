@@ -1,4 +1,4 @@
-use crate::pointer::OwningPtr;
+use crate::pointer::OwnedPtr;
 use crate::fd4::FD4Time;
 
 #[repr(C)]
@@ -8,9 +8,9 @@ use crate::fd4::FD4Time;
 #[dlrf::singleton("CSFade")]
 pub struct CSFade {
     vftable: usize,
-    pub fade_system: OwningPtr<CSFD4FadeSystem>,
+    pub fade_system: OwnedPtr<CSFD4FadeSystem>,
     /// Holds the individual fade plates, these control the actual drawing of the dimming.
-    pub fade_plates: [OwningPtr<CSFD4FadePlate>; 9],
+    pub fade_plates: [OwnedPtr<CSFD4FadePlate>; 9],
     unk58: u32,
     unk5c: f32,
 }

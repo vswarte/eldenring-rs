@@ -1,6 +1,6 @@
 use std::ptr::NonNull;
 
-use crate::pointer::OwningPtr;
+use crate::pointer::OwnedPtr;
 
 use super::FD4ResRep;
 use super::resource::FD4ResCap;
@@ -9,17 +9,24 @@ use super::resource::FD4ResCap;
 #[dlrf::singleton("FD4ParamRepository")]
 pub struct FD4ParamRepository {
     /// Resource repository holding the actual param data.
-    pub res_rep: FD4ResRep<FD4ParamResCapBody>,
+    pub res_rep: FD4ResRep<FD4ParamResCap>,
     allocator: usize,
-    test: FD4ResCap<FD4ParamResCapBody>,
 }
 
 #[repr(C)]
-pub struct FD4ParamResCapBody {
+pub struct FD4ParamResCap {
+    pub res_cap: FD4ResCap<Self>,
+
     /// Size of data at pointer.
     pub size: u64,
     /// Raw row data for this param file.
-    pub data: Option<OwningPtr<ParamFileHeader>>,
+    pub data: Option<OwnedPtr<ParamFileHeader>>,
+}
+
+impl AsRef<FD4ResCap<Self>> for FD4ParamResCap {
+    fn as_ref(&self) -> &FD4ResCap<Self> {
+        &self.res_cap
+    }
 }
 
 pub struct ParamFileHeader {

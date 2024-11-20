@@ -7,7 +7,6 @@ pub mod fade;
 pub mod geometry;
 pub mod input;
 pub mod program;
-pub mod resource;
 pub mod rtti;
 pub mod singleton;
 pub mod steam;

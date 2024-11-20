@@ -6,4 +6,4 @@ repository.workspace = true
 license.workspace = true
 
 [dependencies]
-dlrf-derive = { path = "../dlrf-derive" }
+dlrf-derive = { path = "./derive" }

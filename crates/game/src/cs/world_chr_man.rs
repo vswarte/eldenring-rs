@@ -8,7 +8,7 @@ use vtable_rs::VPtr;
 
 use crate::cs::ChrIns;
 use crate::matrix::FSVector4;
-use crate::pointer::OwningPtr;
+use crate::pointer::OwnedPtr;
 use crate::Tree;
 
 use super::{FieldInsHandle, NetChrSync, PlayerIns};
@@ -36,7 +36,7 @@ pub struct WorldChrMan {
     unk10dbc: u32,
     pub world_grid_area_chr_ptr: usize,
 
-    pub world_area_list: [OwningPtr<WorldAreaChrBase>; 34],
+    pub world_area_list: [OwnedPtr<WorldAreaChrBase>; 34],
     pub world_area_list_count: u32,
     unk10edc: u32,
 
@@ -55,32 +55,32 @@ pub struct WorldChrMan {
     /// Array of ChrSet holders.
     pub chr_set_holders: [ChrSetHolder<ChrIns>; 196],
     pub null_chr_set_holder: ChrSetHolder<ChrIns>,
-    pub chr_sets: [Option<OwningPtr<ChrSet<ChrIns>>>; 196],
-    pub null_chr_set: Option<OwningPtr<ChrSet<ChrIns>>>,
+    pub chr_sets: [Option<OwnedPtr<ChrSet<ChrIns>>>; 196],
+    pub null_chr_set: Option<OwnedPtr<ChrSet<ChrIns>>>,
     pub player_grid_area: Option<NonNull<WorldGridAreaChr>>,
     /// Points to the local player.
-    pub main_player: Option<OwningPtr<PlayerIns>>,
-    unk_player: Option<OwningPtr<PlayerIns>>,
+    pub main_player: Option<OwnedPtr<PlayerIns>>,
+    unk_player: Option<OwnedPtr<PlayerIns>>,
 
     unk_map_id_1: MapId,
     unk_map_id_2: MapId,
 
     unk1e520: [u8; 0x18],
     /// Manages spirit summons (excluding Torrent).
-    pub summon_buddy_manager: Option<OwningPtr<SummonBuddyManager>>,
+    pub summon_buddy_manager: Option<OwnedPtr<SummonBuddyManager>>,
     unk1e540: usize,
     unk1e548: usize,
     unk1e550: usize,
     unk1e558: u32,
     unk1e55c: f32,
     unk1e560: [u8; 0x80],
-    pub net_chr_sync: OwningPtr<NetChrSync>,
+    pub net_chr_sync: OwnedPtr<NetChrSync>,
     unk1e5e8: usize,
     unk1e5f0: usize,
     unk1e5f8: usize,
     unk1e600: usize,
     unk1e608: [u8; 0x40],
-    pub debug_chr_creator: OwningPtr<CSDebugChrCreator>,
+    pub debug_chr_creator: OwnedPtr<CSDebugChrCreator>,
 }
 
 #[repr(C)]
@@ -308,7 +308,7 @@ pub struct OpenFieldChrSet {
 #[repr(C)]
 pub struct OpenFieldChrSetList1Entry {
     unk0: u64,
-    pub chr_ins: OwningPtr<ChrIns>,
+    pub chr_ins: NonNull<ChrIns>,
 }
 
 #[repr(C)]
@@ -367,9 +367,9 @@ pub struct SummonBuddyManager {
     pub to_spawn_buddy_param: i32,
     pub spawned_buddy_param: i32,
     unk28: usize,
-    pub chr_set: OwningPtr<ChrSet<ChrIns>>,
+    pub chr_set: OwnedPtr<ChrSet<ChrIns>>,
     unk38: [u8; 0xb0],
-    pub warp: OwningPtr<SummonBuddyManagerWarp>,
+    pub warp: OwnedPtr<SummonBuddyManagerWarp>,
 }
 
 #[repr(C)]

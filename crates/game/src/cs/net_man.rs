@@ -1,4 +1,4 @@
-use crate::{pointer::OwningPtr, stl::DoublyLinkedList};
+use crate::{pointer::OwnedPtr, stl::DoublyLinkedList};
 
 use super::{CSEzTask, CSEzUpdateTask, MapId, PlayerIns};
 
@@ -9,7 +9,7 @@ pub struct CSNetMan {
     unk8: [u8; 0x60],
     pub sos_db: usize,
     pub wandering_ghost_db: usize,
-    pub blood_message_db: OwningPtr<CSNetBloodMessageDb>,
+    pub blood_message_db: OwnedPtr<CSNetBloodMessageDb>,
     pub bloodstain_db: usize,
     pub bonfire_db: usize,
     pub spiritual_statue_db: usize,
@@ -29,7 +29,7 @@ pub struct CSNetMan {
 pub struct CSNetBloodMessageDb {
     vftable: usize,
     // Contains all CSNetBloodMessageDbItem?
-    pub entries: DoublyLinkedList<OwningPtr<CSNetBloodMessageDbItem>>,
+    pub entries: DoublyLinkedList<OwnedPtr<CSNetBloodMessageDbItem>>,
     unk20: usize,
     // Seemingly contains message data for messages created by local user
     pub created_data: DoublyLinkedList<usize>,
@@ -38,7 +38,7 @@ pub struct CSNetBloodMessageDb {
     unk58: usize,
     pub blood_message_ins_man_1: usize,
     pub blood_message_ins_man_2: usize,
-    pub discovered_messages: DoublyLinkedList<OwningPtr<OwningPtr<CSNetBloodMessageDbItem>>>,
+    pub discovered_messages: DoublyLinkedList<OwnedPtr<OwnedPtr<CSNetBloodMessageDbItem>>>,
     unk88: [u8; 0xD0],
     pub evaluate_job: usize,
     unk160: usize,
