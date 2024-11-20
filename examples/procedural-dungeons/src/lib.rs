@@ -5,7 +5,7 @@ use std::{
     time::Duration,
 };
 
-use game::{cs::{CSTaskGroupIndex, CSTaskImp, CSWorldGeomMan, FD4TaskData, MapId, WorldChrMan}, position::{ChunkPosition, HavokPosition}};
+use game::{cs::{CSTaskGroupIndex, CSTaskImp, CSWorldGeomMan, MapId, WorldChrMan}, fd4::FD4TaskData, position::{ChunkPosition, HavokPosition}};
 use serde::{Deserialize, Serialize};
 use thiserror::Error;
 use tracing_panic::panic_hook;
@@ -55,9 +55,12 @@ fn init() -> Result<(), Box<dyn Error>> {
     // let ron = ron::to_string(&prefabs).unwrap();
     // std::fs::write("./prefabs.ron", ron);
 
-    let task = cs_task.run_task(
+    let task = cs_task.run_recurring(
         move |_: &FD4TaskData| {
-            let world_geom_man = unsafe { get_instance::<CSWorldGeomMan>() }.unwrap().unwrap();
+            let Some(world_geom_man) = unsafe { get_instance::<CSWorldGeomMan>() }.unwrap() else {
+                return;
+            };
+
             if is_key_pressed(0x68) {
                 spawn(move || {
                     let Some(main_player) = unsafe { get_instance::<WorldChrMan>() }

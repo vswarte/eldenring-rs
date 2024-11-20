@@ -7,10 +7,16 @@ use std::{
 };
 
 use crate::program::Program;
-use game::cs::{CSTaskGroupIndex, CSTaskImp, FD4TaskData};
+use game::fd4::FD4TaskData;
+use game::{
+    cs::{CSTaskGroupIndex, CSTaskImp},
+    dlrf::DLRuntimeClass,
+    fd4::FD4TaskBaseVmt,
+};
 use pelite::pe::Pe;
 use pelite::{pattern, pattern::Atom};
 use std::sync::LazyLock;
+use vtable_rs::VPtr;
 
 const REGISTER_TASK_PATTERN: &[Atom] =
     pattern!("e8 ? ? ? ? 48 8b 0d ? ? ? ? 4c 8b c7 8b d3 e8 $ { ' }");
@@ -32,15 +38,24 @@ const REGISTER_TASK_VA: LazyLock<u64> = LazyLock::new(|| {
 });
 
 pub trait CSTaskImpExt {
-    fn run_task<T: Into<FD4Task>>(&self, execute: T, group: CSTaskGroupIndex) -> TaskHandle;
+    /// Registers the given closure as a task to the games task runtime.
+    fn run_recurring<T: Into<RecurringTask>>(
+        &self,
+        execute: T,
+        group: CSTaskGroupIndex,
+    ) -> RecurringTaskHandle;
 }
 
 impl CSTaskImpExt for CSTaskImp {
-    fn run_task<T: Into<FD4Task>>(&self, task: T, group: CSTaskGroupIndex) -> TaskHandle {
-        let register_task: extern "C" fn(&CSTaskImp, CSTaskGroupIndex, &FD4Task) =
+    fn run_recurring<T: Into<RecurringTask>>(
+        &self,
+        task: T,
+        group: CSTaskGroupIndex,
+    ) -> RecurringTaskHandle {
+        let register_task: extern "C" fn(&CSTaskImp, CSTaskGroupIndex, &RecurringTask) =
             unsafe { std::mem::transmute(*REGISTER_TASK_VA) };
 
-        let task: Arc<FD4Task> = Arc::new(task.into());
+        let task: Arc<RecurringTask> = Arc::new(task.into());
         // SAFETY: we hold a unique reference to the contents of `arc`
         unsafe {
             *task.self_ref.get() = Some(task.clone());
@@ -48,79 +63,58 @@ impl CSTaskImpExt for CSTaskImp {
 
         register_task(self, group, task.as_ref());
 
-        TaskHandle { _task: task }
+        RecurringTaskHandle { _task: task }
     }
 }
 
-pub struct TaskHandle {
-    _task: Arc<FD4Task>,
+pub struct RecurringTaskHandle {
+    _task: Arc<RecurringTask>,
 }
 
-impl Drop for TaskHandle {
+impl Drop for RecurringTaskHandle {
     fn drop(&mut self) {
-        todo!("Call the actual unregister fn from the game");
-        self._task.unregister()
+        self._task.cancel();
     }
-}
-
-// 'static required to generate the vmt
-// Sized required to make sure &T is not fat
-trait FD4TaskVMT: 'static + Sized {
-    // TODO: Generate this using a macro_rules taking the virtual functions
-    fn vmt() -> *const extern "C" fn() -> () {
-        // This must be used as opposed to an untyped tuple to guarantee the ordering
-        // Could be generated outside for use in other code too
-        #[repr(C)]
-        struct Layout<T>(
-            extern "C" fn(&T) -> *mut (),
-            extern "C" fn(&mut T),
-            extern "C" fn(&mut T, &FD4TaskData),
-        );
-
-        // Using &'static with type inference without a `static` or `const` keyword, because
-        // otherwise `Self` would have to be mentionned which is not allowed.
-        // Checked with gotbolt to be sure and it does generate it statically at all opt levels.
-        let vmt: &'static _ = &Layout(Self::get_runtime_class, Self::destructor, Self::execute);
-        vmt as *const _ as *const extern "C" fn() -> ()
-    }
-
-    extern "C" fn get_runtime_class(&self) -> *mut () {
-        unimplemented!()
-    }
-    extern "C" fn destructor(&mut self) {
-        unimplemented!()
-    }
-
-    extern "C" fn execute(&mut self, data: &FD4TaskData);
 }
 
 #[repr(C)]
-pub struct FD4Task {
-    vftable: *const extern "C" fn() -> (),
+pub struct RecurringTask {
+    vftable: VPtr<dyn FD4TaskBaseVmt, Self>,
     unk8: usize,
     closure: Box<dyn FnMut(&FD4TaskData)>,
     unregister_requested: AtomicBool,
     self_ref: UnsafeCell<Option<Arc<Self>>>,
 }
 
-impl FD4TaskVMT for FD4Task {
+impl FD4TaskBaseVmt for RecurringTask {
+    extern "C" fn get_runtime_class(&self) -> &DLRuntimeClass {
+        unimplemented!();
+    }
+
+    extern "C" fn destructor(&mut self) {
+        unimplemented!();
+    }
+
     extern "C" fn execute(&mut self, data: &FD4TaskData) {
-        // Should we stop before run?
+        // Run the task if cancellation wasn't requested.
         if !self.unregister_requested.load(Ordering::Relaxed) {
             (self.closure)(data);
         }
 
-        // Drop if we got cancelled during run.
-        if self.unregister_requested.load(Ordering::Relaxed) {
-            self.self_ref.get_mut().take();
-        }
+        // TODO: implement the games unregister fn to properly get the task removed from the task
+        // pool instead of just not running the closure.
+
+        // Drop if we got cancelled in the meanwhile.
+        // if self.unregister_requested.load(Ordering::Relaxed) {
+        //     self.self_ref.get_mut().take();
+        // }
     }
 }
 
-impl FD4Task {
+impl RecurringTask {
     pub fn new<F: FnMut(&FD4TaskData) + 'static + Send>(closure: F) -> Self {
         Self {
-            vftable: Self::vmt(),
+            vftable: Default::default(),
             unk8: 0,
             closure: Box::new(closure),
             unregister_requested: AtomicBool::new(false),
@@ -128,19 +122,13 @@ impl FD4Task {
         }
     }
 
-    fn unregister(&self) {
+    pub fn cancel(&self) {
         self.unregister_requested.store(true, Ordering::Relaxed);
     }
 }
 
-impl<F: FnMut(&FD4TaskData) + 'static + Send> From<F> for FD4Task {
+impl<F: FnMut(&FD4TaskData) + 'static + Send> From<F> for RecurringTask {
     fn from(value: F) -> Self {
         Self::new(value)
-    }
-}
-
-impl Drop for FD4Task {
-    fn drop(&mut self) {
-        self.unregister_requested.store(true, Ordering::Relaxed);
     }
 }
