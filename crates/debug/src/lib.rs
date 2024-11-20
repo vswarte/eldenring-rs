@@ -53,32 +53,6 @@ pub unsafe extern "C" fn DllMain(hmodule: HINSTANCE, reason: u32) -> bool {
                 eject();
             }
         });
-
-        std::thread::spawn(move || {
-            std::thread::sleep(Duration::from_secs(5));
-
-            let file_device_manager =
-                unsafe { &mut *(0x1448464c0usize as *mut DLFileDeviceManager) };
-
-            // Instrument all loggers
-            file_device_manager.mutex.lock();
-            file_device_manager
-                .devices
-                .items()
-                .iter_mut()
-                .for_each(|f| {
-                    let device = unsafe {
-                        let tmp = Box::leak(Box::new(LoggingProxyFileDevice::new(f.clone())))
-                            as *mut LoggingProxyFileDevice
-                            as *mut DLFileDeviceBase;
-
-                        NonNull::new(tmp).unwrap()
-                    };
-                    *f = device;
-                });
-            // file_device_manager.devices.push_front(std::mem::transmute(device));
-            file_device_manager.mutex.unlock();
-        });
     }
 
     true
