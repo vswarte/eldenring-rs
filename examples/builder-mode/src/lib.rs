@@ -1,9 +1,12 @@
 use std::{
-    error::Error, f32::consts::PI, mem::forget, sync::{LazyLock, Mutex}
+    error::Error,
+    f32::consts::PI,
+    mem::forget,
+    sync::{LazyLock, Mutex}
 };
 
 use game::{
-    cs::{CSCamera, CSTaskGroupIndex, CSTaskImp, CSWorldGeomMan, FD4TaskData, WorldChrMan}, position::ChunkPosition,
+    cs::{CSCamera, CSTaskGroupIndex, CSTaskImp, CSWorldGeomMan, WorldChrMan}, fd4::FD4TaskData, position::ChunkPosition
 };
 use nalgebra_glm::{Mat4, Vec3};
 use thiserror::Error;
@@ -32,7 +35,7 @@ pub unsafe extern "C" fn DllMain(_hmodule: usize, reason: u32) -> bool {
 
 fn init() -> Result<(), Box<dyn Error>> {
     let task = unsafe { get_instance::<CSTaskImp>() }.unwrap().unwrap();
-    let task = task.run_task(
+    let task = task.run_recurring(
         move |_: &FD4TaskData| {
             let mut builder_camera = BUILDER_CAMERA.lock().unwrap();
             if let Some(camera) = unsafe { get_instance::<CSCamera>() }.unwrap() {

@@ -9,10 +9,9 @@ use std::{
 
 use game::{
     cs::{
-        CSCamera, CSTaskGroupIndex, CSTaskImp, CSWorldGeomMan, ChrIns, EnemyIns, FD4TaskData,
+        CSCamera, CSTaskGroupIndex, CSTaskImp, CSWorldGeomMan, ChrIns, EnemyIns,
         WorldChrMan, WorldChrManDbg,
-    },
-    position::ChunkPosition,
+    }, fd4::FD4TaskData, position::ChunkPosition
 };
 use tracing_panic::panic_hook;
 use util::{
@@ -45,7 +44,7 @@ pub unsafe extern "C" fn DllMain(_hmodule: usize, reason: u32) -> bool {
 fn init() -> Result<(), Box<dyn Error>> {
     let tracker = RefCell::new(EnemyControlTracker::default());
     let task = unsafe { get_instance::<CSTaskImp>() }.unwrap().unwrap();
-    let task = task.run_task(
+    let task = task.run_recurring(
         move |_: &FD4TaskData| {
             is_key_pressed(0x68).then(|| {
                 // Grab WorldChrMan

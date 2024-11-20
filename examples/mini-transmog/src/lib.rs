@@ -3,12 +3,13 @@ use std::sync::Arc;
 use std::thread::sleep;
 use std::time::Duration;
 use std::{error::Error, thread::spawn};
+use game::fd4::FD4TaskData;
 use steamworks::networking_types::{NetworkingIdentity, SendFlags};
 use steamworks::{LobbyId, SteamId};
 use tracing_panic::panic_hook;
 
 use game::cs::{
-    CSTaskGroupIndex, CSTaskImp, FD4TaskData, WorldChrMan, CHR_ASM_SLOT_PROTECTOR_HEAD,
+    CSTaskGroupIndex, CSTaskImp, WorldChrMan, CHR_ASM_SLOT_PROTECTOR_HEAD,
     CHR_ASM_SLOT_PROTECTOR_LEGS,
 };
 use util::steam::{self, networking_messages, register_callback, SteamCallbackImpl};
@@ -51,7 +52,7 @@ fn init() -> Result<(), Box<dyn Error>> {
     let chr_asm_patch_task = {
         let protector_mapping = protector_mapping.clone();
 
-        task.run_task(
+        task.run_recurring(
             move |_: &FD4TaskData| {
                 let Some(world_chr_man) = unsafe { get_instance::<WorldChrMan>() }.unwrap() else {
                     return;
@@ -76,7 +77,7 @@ fn init() -> Result<(), Box<dyn Error>> {
     };
     std::mem::forget(chr_asm_patch_task);
 
-    let model_param_modifier_task = task.run_task(
+    let model_param_modifier_task = task.run_recurring(
         |_: &FD4TaskData| {
             let Some(player) = unsafe { get_instance::<WorldChrMan>() }
                 .unwrap()
@@ -134,7 +135,7 @@ fn init() -> Result<(), Box<dyn Error>> {
     // std::mem::forget(register_callback::<SyncMessageRequestCallback>());
 
     // Retrieve updates to our character table from the p2p.
-    let networking_task = task.run_task(
+    let networking_task = task.run_recurring(
         |_: &FD4TaskData| {
             for message in steam::client()
                 .networking_messages()

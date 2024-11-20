@@ -1,54 +1,33 @@
+use std::ptr::NonNull;
 use std::{ffi, marker::PhantomData};
+use vtable_rs::VPtr;
 use windows::core::PCWSTR;
 
+use crate::dlkr::DLPlainConditionSignal;
 use crate::dlrf::DLRuntimeClass;
+use crate::fd4::{FD4TaskBase, FD4TaskBaseVmt, FD4TaskData};
 use crate::pointer::OwnedPtr;
 use crate::{dlkr::DLPlainLightMutex, fd4::{FD4BasicHashString, FD4Time}, Tree, Vector};
 
-#[repr(C)]
-pub struct FD4TaskBaseVMT  {
-    /// Getter for DLRF runtime metadata.
-    pub get_runtime_class: fn(*const FD4TaskBase) -> *const DLRuntimeClass,
-    /// Destructor
-    pub destructor: fn(*const FD4TaskBase),
-    /// Gets called by the runtime
-    pub execute: fn(*const FD4TaskBase, *const FD4TaskData),
-}
-
-#[derive(Debug)]
-#[repr(C)]
-pub struct FD4TaskData {
-    pub delta_time: FD4Time,
-    pub task_group_id: u32,
-    pub seed: i32,
-}
-
-#[repr(C)]
-pub struct CSEzTaskVMT  {
-    pub task_base: FD4TaskBaseVMT,
+#[vtable_rs::vtable]
+pub trait CSEzTaskVmt : FD4TaskBaseVmt {
     /// Called by execute() in the case of CSEzTask.
-    pub eztask_execute: fn(),
+    fn eztask_execute(&mut self, data: &FD4TaskData);
     /// Called to register the task to the appropriate runtime.
-    pub register_task: fn(),
-    /// Called to free up the task.
-    pub free_task: fn(),
+    fn register_task(&mut self);
+    /// Called to clean up the task.
+    fn free_task(&mut self);
     /// Getter for the task group.
-    pub get_task_group: fn(),
-}
-
-#[repr(C)]
-pub struct FD4TaskBase {
-    pub vftable: *const CSEzTaskVMT,
-    unk8: u32,
-    _padc: u32,
+    fn get_task_group(&self) -> u32;
 }
 
 #[repr(C)]
 pub struct CSEzTask {
-    pub vftable: *const CSEzTaskVMT,
+    // vftable: VPtr<CSEzTaskVmt>,
+    pub vftable: usize,
     unk8: u32,
     _padc: u32,
-    pub task_proxy: usize,
+    pub task_proxy: NonNull<CSEzTaskProxy>,
 }
 
 #[repr(C)]
@@ -64,10 +43,11 @@ pub struct CSEzUpdateTask<TSubject> {
 
 #[repr(C)]
 pub struct CSEzTaskProxy {
-    vftable: *const CSEzTaskVMT,
+    // vftable: VPtr<CSEzTaskVmt>,
+    vftable: usize,
     unk8: u32,
     _padc: u32,
-    pub task: OwnedPtr<CSEzTask>,
+    pub task: NonNull<CSEzTask>,
 }
 
 #[repr(C)]
@@ -143,19 +123,6 @@ pub struct CSTaskRunnerEx {
 }
 
 #[repr(C)]
-pub struct FD4TaskQueue {
-    vftable: usize,
-    pub allocator: usize,
-    pub entries_tree: Tree<FD4TaskGroup>,
-    pub entries_vector: Vector<FD4TaskGroup>,
-}
-
-#[repr(C)]
-pub struct FD4TaskGroup {
-    vftable: usize,
-}
-
-#[repr(C)]
 pub struct CSTaskRunnerManager {
     pub allocator: usize,
     pub concurrent_task_group_count: usize,
@@ -174,17 +141,6 @@ pub struct CSTaskRunnerManager {
     unkcc: u32,
     unkd0: u32,
     unkd4: u32,
-}
-
-#[repr(C)]
-pub struct FD4TaskRequestEntry {
-    pub task: *const FD4TaskBase,
-}
-
-#[repr(C)]
-pub struct DLPlainConditionSignal {
-    vftable: usize,
-    pub event_handle: usize,
 }
 
 #[repr(C)]
