@@ -4,7 +4,7 @@ use super::FieldInsHandle;
 pub struct PartyMemberInfoEntry {
     pub field_ins_handle: FieldInsHandle,
     unk8: u32,
-    unkc: u32,
+    pub state: u32,
     pub ceremony_event_flag: u32,
     unk14: u32,
     unk18: u32,

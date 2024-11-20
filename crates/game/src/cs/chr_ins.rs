@@ -368,14 +368,45 @@ pub struct CSChrDataModule {
 
 #[repr(C)]
 /// Source of name: RTTI
+pub struct CSPairAnimNode {
+    vftable: usize,
+    unk8: usize,
+    pub owner: OwningPtr<ChrIns>,
+    pub forwarding_recipient: FieldInsHandle,
+    unk20: FSVector4,
+    unk30: FSVector4,
+    unk40: u32,
+    unk44: [u8; 0xc],
+}
+
+#[repr(C)]
+/// Source of name: RTTI
+pub struct CSThrowNode {
+    pub super_pair_anim_node: CSPairAnimNode,
+    unk58: [u8; 0x18],
+    pub throw_state: u32,
+    unk6c: u32,
+    unk70: f32,
+    unk74: f32,
+    unk78: f32,
+    unk7c: [u8; 0x34],
+    /// available only for main player
+    throw_self_esc: usize,
+    unkb8: [u8; 0xb8],
+}
+
+#[repr(C)]
+/// Source of name: RTTI
 pub struct CSChrThrowModule {
     vftable: usize,
     pub owner: NonNull<ChrIns>,
-    throw_node: usize,
+    pub throw_node: OwningPtr<CSThrowNode>,
     unk18: usize,
     unk20: u32,
+    // p2p handle of the target?, need verification
     p2p_entity_handle: P2PEntityHandle,
-    pub throw_target: usize,
+    // field ins handle of the target?, need verification
+    throw_target: usize,
     unk28: [u8; 0x8],
 }
 
@@ -416,7 +447,7 @@ pub struct PlayerIns {
     pub player_game_data: OwningPtr<PlayerGameData>,
     chr_manipulator: usize,
     unk590: usize,
-    player_session_holder: PlayerSessionHolder,
+    pub player_session_holder: PlayerSessionHolder,
     unk5c0: usize,
     replay_recorder: usize,
     unk5d0: u32,
