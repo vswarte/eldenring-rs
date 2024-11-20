@@ -327,7 +327,7 @@ pub struct WorldGridAreaChr {
 }
 
 #[repr(C)]
-#[derive(Clone, Copy, Debug)]
+#[derive(Clone, Copy, Debug, PartialEq)]
 pub struct MapId {
     pub index: i8,
     pub region: i8,
