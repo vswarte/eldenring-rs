@@ -17,7 +17,7 @@ pub struct PartyMemberInfoEntry {
     unk25: u8,
     unk26: u8,
     unk27: u8,
-    unk28: u32,
+    pub npc_name_fmg_id: u32,
     unk2c: u8,
     unk2d: u8,
     unk2e: u8,
