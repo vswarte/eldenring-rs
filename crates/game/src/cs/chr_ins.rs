@@ -173,7 +173,7 @@ pub struct ChrInsModuleContainer {
     fall: usize,
     ladder: usize,
     action_request: usize,
-    throw: OwnedPtr<CSChrThrowModule>,
+    pub throw: OwnedPtr<CSChrThrowModule>,
     hitstop: usize,
     damage: usize,
     material: usize,
