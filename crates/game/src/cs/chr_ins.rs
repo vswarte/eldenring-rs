@@ -380,7 +380,7 @@ pub struct CSPairAnimNode {
 }
 
 #[repr(u32)]
-pub enum TrowNodeState {
+pub enum ThrowNodeState {
     Unk1 = 1,
     Unk2 = 2,
     InThrowAttacker = 3,
@@ -396,7 +396,7 @@ pub enum TrowNodeState {
 pub struct CSThrowNode {
     pub super_pair_anim_node: CSPairAnimNode,
     unk58: [u8; 0x18],
-    pub throw_state: TrowNodeState,
+    pub throw_state: ThrowNodeState,
     unk6c: u32,
     unk70: f32,
     unk74: f32,
