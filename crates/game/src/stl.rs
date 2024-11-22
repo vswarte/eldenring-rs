@@ -4,7 +4,7 @@ use std::{
     ptr::{copy_nonoverlapping, NonNull},
 };
 
-use crate::{dlkr::DLAllocator, pointer::OwnedPtr};
+use crate::{dlkr::DLAllocatorBase, pointer::OwnedPtr};
 
 #[repr(C)]
 pub struct DoublyLinkedListNode<T> {
@@ -47,7 +47,7 @@ pub struct Vector<T>
 where
     T: Sized,
 {
-    allocator: NonNull<DLAllocator>,
+    allocator: NonNull<DLAllocatorBase>,
     pub begin: Option<NonNull<T>>,
     pub end: Option<NonNull<T>>,
     pub capacity: Option<NonNull<T>>,

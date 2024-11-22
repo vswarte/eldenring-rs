@@ -1,17 +1,56 @@
 use std::ffi;
 use std::ptr::NonNull;
 
+use vtable_rs::VPtr;
+
 use crate::dlkr::DLPlainLightMutex;
-use crate::fd4::{
-    FD4BasicHashString, FD4FileCap, FD4ResCap, FD4ResCapHolder, FD4ResRep
-};
+use crate::fd4::{FD4BasicHashString, FD4FileCap, FD4ResCap, FD4ResCapHolder, FD4ResRep};
 use crate::pointer::OwnedPtr;
 use crate::DoublyLinkedList;
 
+#[vtable_rs::vtable]
+pub trait CSFileImpVmt {
+    fn get_runtime_metadata(&self) -> usize;
+
+    fn destructor(&mut self, param_2: u32);
+
+    /// Retrieves a file cap from the primary file repository.
+    fn get_file_cap(&mut self, name: &FD4BasicHashString) -> Option<NonNull<UntypedFileCap>>;
+
+    /// Adds a file cap to the primary file repository. The file loading queue parameters indicates
+    /// what file loading queue the load events will be handled by.
+    fn add_file_cap(
+        &mut self,
+        name: &FD4BasicHashString,
+        file_cap: &UntypedFileCap,
+        file_loading_queue: u32,
+    );
+
+    fn unk_add_file_cap(
+        &mut self,
+        name: &FD4BasicHashString,
+        file_cap: &UntypedFileCap,
+        param_4: usize,
+        param_5: usize,
+        file_loading_queue: u32,
+    );
+
+    /// Removes the FileCap from the repositories, calls the destructor and deallocates the memory.
+    /// This will often load to a crash-less unload of the resource but there are exceptions so be
+    /// careful with calling this on specific resources.
+    fn unload_file_cap_by_name(&mut self, name: &FD4BasicHashString);
+
+
+    /// Unloads the referenced filecap.
+    fn unload_file_cap(&mut self, file_cap: &UntypedFileCap);
+
+    fn unk40(&mut self, file_cap: &UntypedFileCap);
+}
+
 /// Manages files used by the file, both virtual and on-disk.
 #[repr(C)]
-pub struct CSFile {
-    vftable: usize,
+pub struct CSFileImp {
+    vftable: VPtr<dyn CSFileImpVmt, Self>,
     pub file_repository_1: OwnedPtr<CSFileRepository>,
     // TODO: Incomplete..
 }
@@ -47,6 +86,4 @@ impl AsRef<FD4ResCap<Self>> for UntypedFileCap {
     fn as_ref(&self) -> &FD4ResCap<Self> {
         &self.file_cap.res_cap
     }
-
-    // TODO: add downcasting logic
 }

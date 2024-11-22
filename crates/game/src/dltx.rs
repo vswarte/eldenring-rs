@@ -32,7 +32,6 @@ impl ToString for DLBasicString {
     }
 }
 
-#[repr(C)]
 pub struct DLString {
     allocator: usize,
     inner: DLBasicString,

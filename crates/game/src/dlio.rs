@@ -267,3 +267,43 @@ impl DLFileDeviceVmt for LoggingProxyFileDevice {
         unsafe { (inner.vftable.file_enumerator)(inner) }
     }
 }
+
+#[repr(C)]
+pub struct StubFileDevice {
+    pub vftable: VPtr<dyn DLFileDeviceVmt, Self>,
+    unk8: bool,
+    pub mutex: DLPlainLightMutex,
+}
+
+impl StubFileDevice {
+    pub fn new() -> Self {
+        Self {
+            vftable: Default::default(),
+            unk8: true,
+            mutex: Default::default(),
+        }
+    }
+}
+
+impl DLFileDeviceVmt for StubFileDevice {
+    extern "C" fn destructor(&mut self) {
+        tracing::info!("Called destructor");
+    }
+
+    extern "C" fn load_file(
+        &self,
+        name_dlstring: &DLString,
+        name_u16: &[u16],
+        param_4: usize,
+        param_5: usize,
+        param_6: bool,
+    ) -> *const u8 {
+        tracing::info!("Requested file load {}", name_dlstring.to_string());
+        std::ptr::null()
+    }
+
+    extern "C" fn file_enumerator(&self) -> *const u8 {
+        tracing::info!("Called file enumerator");
+        std::ptr::null()
+    }
+}
