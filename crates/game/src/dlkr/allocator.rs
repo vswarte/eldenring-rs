@@ -55,11 +55,11 @@ pub trait DLAllocatorVmt {
     fn get_memory_block_for_allocation(&mut self, allocation: *const u8) -> *const u8;
 }
 
-pub struct DLAllocator {
+pub struct DLAllocatorBase {
     pub vftable: VPtr<dyn DLAllocatorVmt, Self>,
 }
 
-impl DLAllocatorVmt for DLAllocator {
+impl DLAllocatorVmt for DLAllocatorBase {
     extern "C" fn destructor(&mut self,param_2:bool) {
         todo!()
     }
