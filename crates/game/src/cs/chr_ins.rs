@@ -379,12 +379,24 @@ pub struct CSPairAnimNode {
     unk44: [u8; 0xc],
 }
 
+#[repr(u32)]
+pub enum TrowNodeState {
+    Unk1 = 1,
+    Unk2 = 2,
+    InThrowAttacker = 3,
+    InThrowTarget = 4,
+    DeathAttacker = 5,
+    DeathTarget = 6,
+    Unk7 = 7,
+    Unk8 = 8,
+}
+
 #[repr(C)]
 /// Source of name: RTTI
 pub struct CSThrowNode {
     pub super_pair_anim_node: CSPairAnimNode,
     unk58: [u8; 0x18],
-    pub throw_state: u32,
+    pub throw_state: TrowNodeState,
     unk6c: u32,
     unk70: f32,
     unk74: f32,
