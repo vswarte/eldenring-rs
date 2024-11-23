@@ -158,7 +158,7 @@ pub struct ChrInsModuleContainer {
     pub data: OwnedPtr<CSChrDataModule>,
     action_flag: usize,
     behavior_script: usize,
-    time_act: usize,
+    pub time_act: OwnedPtr<CSChrTimeActModule>,
     resist: usize,
     behavior: usize,
     behavior_sync: usize,
@@ -270,15 +270,38 @@ pub struct CSChrModelParamModifierModuleEntryValue {
 }
 
 #[repr(C)]
+pub struct CSChrTimeActModuleAnim {
+    pub anim_id: i32,
+    unk4: f32,
+    unkc: f32,
+    unk10: f32,
+}
+#[repr(C)]
+/// Source of name: RTTI
+pub struct CSChrTimeActModule {
+    vftable: usize,
+    pub owner: NonNull<ChrIns>,
+    hvk_anim: usize,
+    chr_tae_anim_event: usize,
+    pub anim_queue: [CSChrTimeActModuleAnim; 10],
+    unkc0: u32,
+    unkc4: u32,
+    unkc8: u32,
+    unkcc: u32,
+    unkd0: u32,
+    unkd4: u32,
+}
+
+#[repr(C)]
 pub struct CSChrEventModule {
     vftable: usize,
     pub owner: NonNull<ChrIns>,
     unk10: [u8; 0x8],
-    /// Animation ID that should be played immediately.
+    /// Id of override animation that should be played on next frame.
     pub request_animation_id: i32,
-    /// Current animation ID.
-    pub current_animation: i32,
-    pub init_stay_id: i32,
+    /// ID of default idle animation.
+    pub idle_anim_id: i32,
+    unk20: i32,
     unk24: u32,
     pub ez_state_request_ladder: i32,
     unk2c: [u8; 0xB],
