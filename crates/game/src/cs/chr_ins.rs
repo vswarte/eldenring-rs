@@ -272,9 +272,9 @@ pub struct CSChrModelParamModifierModuleEntryValue {
 #[repr(C)]
 pub struct CSChrTimeActModuleAnim {
     pub anim_id: i32,
-    unk4: f32,
-    unkc: f32,
-    unk10: f32,
+    pub play_time: f32,
+    play_time2: f32,
+    pub anim_lenght: f32,
 }
 #[repr(C)]
 /// Source of name: RTTI
