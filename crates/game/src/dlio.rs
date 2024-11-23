@@ -96,7 +96,7 @@ pub trait DLFileDeviceVmt {
     fn load_file(
         &self,
         name_dlstring: &DLString,
-        name_u16: &[u16],
+        name_u16: *const u16,
         param_4: usize,
         param_5: usize,
         param_6: bool,
@@ -247,7 +247,7 @@ impl DLFileDeviceVmt for LoggingProxyFileDevice {
     extern "C" fn load_file(
         &self,
         name_dlstring: &DLString,
-        name_u16: &[u16],
+        name_u16: *const u16,
         param_4: usize,
         param_5: usize,
         param_6: bool,
