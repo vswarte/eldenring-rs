@@ -13,7 +13,7 @@ use super::player_game_data::PlayerGameData;
 use super::{CSMsbParts, CSMsbPartsEne, FieldInsBaseVmt, FieldInsHandle, MapId, WorldBlockChr};
 
 #[repr(C)]
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Eq, Hash)]
 /// Used for communicating about characters in the networking layer. This handle is essentially the
 /// same as FieldInsHandle but has its MapID and selector swapped. In packets this might be packed
 /// into map_id (4 bytes) + chr_selector (3 bytes). According to Sekiro's debug asserts the packed

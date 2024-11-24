@@ -3,7 +3,7 @@ use std::fmt::Display;
 use super::{AtkParamLookupResult, MapId};
 
 /// Used to reference a specific FieldIns managed by its respective (external) domain.
-#[derive(Clone, Debug, PartialEq)]
+#[derive(Clone, Debug, PartialEq, Eq, Hash)]
 pub struct FieldInsSelector(pub u32);
 
 /// Used throughout the game engine to refer to characters, geometry, bullets, hits and more.
@@ -11,7 +11,7 @@ pub struct FieldInsSelector(pub u32);
 /// Source of name: Destructor reveals this being a field in FieldIns and it's used as a means of
 /// naming some FieldIns derivant everywhere where raw pointers cannot be shared.
 #[repr(C)]
-#[derive(Clone, PartialEq)]
+#[derive(Clone, PartialEq, Eq, Hash)]
 pub struct FieldInsHandle {
     pub selector: FieldInsSelector,
     pub map_id: MapId,
