@@ -9,6 +9,7 @@ pub mod dlkr;
 pub mod dlkrd;
 pub mod dlrf;
 pub mod dlio;
+pub mod dlcr;
 pub mod fd4;
 pub mod matrix;
 pub mod pointer;

@@ -1,9 +1,11 @@
 use std::ffi;
+use std::marker::PhantomData;
 use std::mem;
 use std::slice;
 use std::marker;
 
 #[repr(C)]
+#[derive(Default)]
 pub struct DLBasicString {
     inner: [u8; 0x10],
     pub length: usize,
@@ -13,7 +15,7 @@ pub struct DLBasicString {
 impl ToString for DLBasicString {
     fn to_string(&self) -> String {
         let slice_size = self.length * mem::size_of::<u16>();
-        let bytes = if self.capacity >= 8 {
+        let bytes = if slice_size >= 16 {
             let ptr = usize::from_le_bytes(
                 self.inner[0..8].try_into().unwrap()
             );
@@ -33,6 +35,7 @@ impl ToString for DLBasicString {
 }
 
 #[repr(C)]
+#[derive(Default)]
 pub struct DLString {
     allocator: usize,
     inner: DLBasicString,
@@ -44,4 +47,28 @@ impl ToString for DLString {
     fn to_string(&self) -> String {
         self.inner.to_string()
     }
+}
+
+pub type DLAllocatedString = DLString;
+
+#[repr(C)]
+// Unsure what the const generic U is used for 
+pub struct DLCodedString<const U: usize> {
+    inner: DLBasicString,
+}
+
+impl<const U: usize> ToString for DLCodedString<U> {
+    fn to_string(&self) -> String {
+        self.inner.to_string()
+    }
+}
+
+#[repr(C)]
+// Unsure what the const generic U is used for 
+pub struct DLInplaceStr<const U: usize, const N: usize> {
+    vftable: usize,
+    /// Inner string
+    inner: DLBasicString,
+    /// Buffer hosting the strings bytes.
+    bytes: [u16; N],
 }

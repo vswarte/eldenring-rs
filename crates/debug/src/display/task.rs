@@ -6,7 +6,7 @@ use super::DebugDisplay;
 impl DebugDisplay for CSTaskGroup {
     fn render_debug(&self, ui: &&mut Ui) {
         for task_group in self.task_groups.iter() {
-            ui.text(task_group.base.name.string.to_string());
+            ui.text(task_group.base.name.to_string());
         }
     }
 }

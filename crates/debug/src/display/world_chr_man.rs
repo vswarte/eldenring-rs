@@ -93,7 +93,6 @@ impl DebugDisplay for WorldChrMan {
         }
 
         if ui.collapsing_header("Debug Character Creator", TreeNodeFlags::empty()) {
-            let last_created_characer = self.debug_chr_creator.last_created_chr;
             ui.input_text(
                 "Last Created Character",
                 &mut format!("{:x?}", self.debug_chr_creator.last_created_chr),

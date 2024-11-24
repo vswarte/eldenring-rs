@@ -150,10 +150,22 @@ impl FD4FileCapUnk89Properties {
         self.0 & 0b00000010 != 0
     }
 
+    // Set on creation
+    fn unk5(&self) -> bool {
+        self.0 & 0b00100000 != 0
+    }
+
     fn set_unk1(&mut self, state: bool) {
         match state {
             true => self.0 |= 0b00000010,
             false => self.0 &= !0b00000010,
+        }
+    }
+
+    fn set_unk5(&mut self, state: bool) {
+        match state {
+            true => self.0 |= 0b00100000,
+            false => self.0 &= !0b00100000,
         }
     }
 

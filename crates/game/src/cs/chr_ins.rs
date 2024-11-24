@@ -1,6 +1,7 @@
 use std::ptr::NonNull;
 use std::{ffi, usize};
 
+use vtable_rs::VPtr;
 use windows::core::PCWSTR;
 
 use crate::cs::ChrSetEntry;
@@ -34,8 +35,13 @@ pub struct AtkParamLookupResult {
 
 #[vtable_rs::vtable]
 pub trait ChrInsVmt: FieldInsBaseVmt {
-    /// Part of FieldInsBase, retrieves reflection metadata for FD4Component derivants.
-    fn unk40(&self) -> usize;
+    /// Initializes a batch of combat-related modules for a ChrIns as well as initialize the
+    /// initiale SpEffect state and a bunch of other stuff.
+    fn initialize_character(&mut self);
+
+    fn initialize_model_resources(&mut self);
+
+    fn initialize_character_rendering(&mut self);
 }
 
 #[repr(C)]
@@ -44,7 +50,7 @@ pub trait ChrInsVmt: FieldInsBaseVmt {
 ///
 /// Source of name: RTTI
 pub struct ChrIns {
-    vftable: usize,
+    pub vftable: VPtr<dyn ChrInsVmt, Self>,
     pub field_ins_handle: FieldInsHandle,
     chr_set_entry: usize,
     unk18: usize,

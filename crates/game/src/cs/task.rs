@@ -35,7 +35,7 @@ pub struct CSEzUpdateTask<TSubject> {
     pub base_task: CSEzTask,
 
     /// Whatever this update task is operating on
-    pub subject: OwnedPtr<TSubject>,
+    pub subject: NonNull<TSubject>,
 
     /// Takes in the subject and the delta time
     pub executor: fn(&TSubject, f32),
