@@ -88,12 +88,12 @@ impl ImguiRenderLoop for EldenRingDebugGui {
                 }
 
                 if let Some(item) = ui.tab_item("Resource") {
-                    // if ui.collapsing_header("DLFileDeviceManager", TreeNodeFlags::empty()) {
-                    //     let file_device_manager =
-                    //         unsafe { &*(0x1448464c0usize as *mut DLFileDeviceManager) };
-                    //
-                    //     file_device_manager.render_debug(&ui);
-                    // }
+                    if ui.collapsing_header("DLFileDeviceManager", TreeNodeFlags::empty()) {
+                        let file_device_manager =
+                            unsafe { &*(0x1448464c0usize as *mut DLFileDeviceManager) };
+
+                        file_device_manager.render_debug(&ui);
+                    }
 
                     render_debug_singleton::<CSTaskGroup>(&ui);
                     render_debug_singleton::<CSTaskImp>(&ui);

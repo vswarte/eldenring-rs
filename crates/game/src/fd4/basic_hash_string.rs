@@ -11,7 +11,7 @@ pub struct FD4BasicHashString {
     vftable: usize,
     pub allocator: usize,
     /// The contained string we're hashing for.
-    pub string: DLBasicString,
+    inner: DLBasicString,
     /// Hashed representation of the string field.
     pub hash: u32,
     /// Indicates whether or not the hash field is populated.
@@ -19,8 +19,14 @@ pub struct FD4BasicHashString {
     _pad35: [u8; 7],
 }
 
+impl AsRef<DLBasicString> for FD4BasicHashString {
+    fn as_ref(&self) -> &DLBasicString {
+        &self.inner
+    }
+}
+
 impl Display for FD4BasicHashString {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "{}", self.string.to_string())
+        write!(f, "{}", self.to_string())
     }
 }

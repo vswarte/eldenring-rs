@@ -20,16 +20,16 @@ impl DebugDisplay for MsbRepository {
             }
 
             if ui.button("Test MSB Load") {
-                // let file_device_manager = unsafe { &mut *(0x1448464c0usize as *mut DLFileDeviceManager) };
-                //
-                // let device = Box::leak(Box::new(StubFileDevice::new())) as *mut _ as *mut DLFileDeviceBase;
-                // let device = NonNull::new(device).unwrap();
-                // file_device_manager.mutex.lock();
-                // file_device_manager.devices.push(device);
-                // file_device_manager.mutex.unlock();
+                let file_device_manager = unsafe { &mut *(0x1448464c0usize as *mut DLFileDeviceManager) };
 
-                // load_msb("debug:/what-the-fuck.msb");
-                // load_msb("mapstudio:/m60_00_00_99.msb");
+                let device = Box::leak(Box::new(StubFileDevice::default())) as *mut StubFileDevice as *mut DLFileDeviceBase;
+                let device = NonNull::new(device).unwrap();
+                file_device_manager.mutex.lock();
+                file_device_manager.devices.push(device);
+                file_device_manager.mutex.unlock();
+
+                load_msb("mapstudio_den:/m49_00_00_00.msb");
+                load_msb("mapstudio_den:/m49_00_00_99.msb");
             }
         }
     }
