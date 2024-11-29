@@ -290,7 +290,7 @@ pub struct LoggingProxyFileDevice {
 impl LoggingProxyFileDevice {
     pub fn new(inner: NonNull<DLFileDeviceBase>) -> Self {
         Self {
-            vftable: Default::default(),
+            vftable: VPtr::default(),
             unk8: false,
             mutex: Default::default(),
             inner,
@@ -365,8 +365,9 @@ impl DLFileDeviceVmt for StubFileDevice {
             operator.file_device = Some(NonNull::new(self).expect("Test"));
 
             let allocation = allocator
-                .allocate_aligned(size_of::<AdapterFileOperator<Cursor<&[u8]>>>(), 0x8)
-                as *mut u8 as *mut AdapterFileOperator<Cursor<&[u8]>>;
+                .allocate_aligned(size_of::<AdapterFileOperator<Cursor<&[u8]>, Self>>(), 0x8)
+                as *mut u8
+                as *mut AdapterFileOperator<Cursor<&[u8]>, Self>;
             tracing::info!("Allocated memory: {allocation:x?}");
 
             unsafe { *allocation = operator };
@@ -384,22 +385,24 @@ impl DLFileDeviceVmt for StubFileDevice {
 }
 
 #[repr(C)]
-pub struct AdapterFileOperator<R>
+pub struct AdapterFileOperator<R, T>
 where
     R: Read + Seek + 'static,
+    T: DLFileDeviceVmt,
 {
     pub vftable: VPtr<dyn DLFileOperatorVmt, Self>,
     pub allocator: Option<NonNull<DLAllocatorBase>>,
     unk10: usize,
     pub io_state: u32,
-    pub file_device: Option<NonNull<StubFileDevice>>,
+    pub file_device: Option<NonNull<T>>,
     pub name: DLString,
     buffer: R,
 }
 
-impl<R> AdapterFileOperator<R>
+impl<R, T> AdapterFileOperator<R, T>
 where
     R: Read + Seek + 'static,
+    T: DLFileDeviceVmt,
 {
     fn new(buffer: R) -> Self {
         Self {
@@ -414,9 +417,10 @@ where
     }
 }
 
-impl<R> DLFileOperatorVmt for AdapterFileOperator<R>
+impl<R, T> DLFileOperatorVmt for AdapterFileOperator<R, T>
 where
     R: Read + Seek + 'static,
+    T: DLFileDeviceVmt,
 {
     extern "C" fn destructor(&mut self) {
         tracing::info!("StubFileOperator::destructor()");
