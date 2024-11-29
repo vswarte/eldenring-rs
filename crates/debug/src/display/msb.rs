@@ -1,7 +1,8 @@
 use std::{mem::transmute, ptr::NonNull};
 
 use game::{
-    cs::{CSFileImp, MsbFileCap, MsbRepository}, dlio::{BndEntry, DLFileDeviceBase, DLFileDeviceManager, DLFileDeviceVmt, StubFileDevice}, dlkr::{DLAllocatorBase, DLAllocatorVmt, DLPlainLightMutex}, dltx::DLString, pointer::OwnedPtr
+    cs::{CSFileImp, MsbFileCap, MsbRepository},
+    dlio::{DLFileDeviceBase, DLFileDeviceManager, StubFileDevice},
 };
 use hudhook::imgui::{TableColumnSetup, TreeNodeFlags};
 
@@ -20,9 +21,11 @@ impl DebugDisplay for MsbRepository {
             }
 
             if ui.button("Test MSB Load") {
-                let file_device_manager = unsafe { &mut *(0x1448464c0usize as *mut DLFileDeviceManager) };
+                let file_device_manager =
+                    unsafe { &mut *(0x1448464c0usize as *mut DLFileDeviceManager) };
 
-                let device = Box::leak(Box::new(StubFileDevice::default())) as *mut StubFileDevice as *mut DLFileDeviceBase;
+                let device = Box::leak(Box::new(StubFileDevice::default())) as *mut StubFileDevice
+                    as *mut DLFileDeviceBase;
                 let device = NonNull::new(device).unwrap();
                 file_device_manager.mutex.lock();
                 file_device_manager.devices.push(device);

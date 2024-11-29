@@ -14,7 +14,7 @@ use super::player_game_data::PlayerGameData;
 use super::{CSMsbParts, CSMsbPartsEne, FieldInsBaseVmt, FieldInsHandle, MapId, WorldBlockChr};
 
 #[repr(C)]
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, PartialEq, Eq, Hash)]
 /// Used for communicating about characters in the networking layer. This handle is essentially the
 /// same as FieldInsHandle but has its MapID and selector swapped. In packets this might be packed
 /// into map_id (4 bytes) + chr_selector (3 bytes). According to Sekiro's debug asserts the packed
@@ -164,7 +164,7 @@ pub struct ChrInsModuleContainer {
     pub data: OwnedPtr<CSChrDataModule>,
     action_flag: usize,
     behavior_script: usize,
-    time_act: usize,
+    pub time_act: OwnedPtr<CSChrTimeActModule>,
     resist: usize,
     behavior: usize,
     behavior_sync: usize,
@@ -179,7 +179,7 @@ pub struct ChrInsModuleContainer {
     fall: usize,
     ladder: usize,
     action_request: usize,
-    throw: OwnedPtr<CSChrThrowModule>,
+    pub throw: OwnedPtr<CSChrThrowModule>,
     hitstop: usize,
     damage: usize,
     material: usize,
@@ -276,15 +276,38 @@ pub struct CSChrModelParamModifierModuleEntryValue {
 }
 
 #[repr(C)]
+pub struct CSChrTimeActModuleAnim {
+    pub anim_id: i32,
+    pub play_time: f32,
+    play_time2: f32,
+    pub anim_lenght: f32,
+}
+#[repr(C)]
+/// Source of name: RTTI
+pub struct CSChrTimeActModule {
+    vftable: usize,
+    pub owner: NonNull<ChrIns>,
+    hvk_anim: usize,
+    chr_tae_anim_event: usize,
+    pub anim_queue: [CSChrTimeActModuleAnim; 10],
+    unkc0: u32,
+    unkc4: u32,
+    unkc8: u32,
+    unkcc: u32,
+    unkd0: u32,
+    unkd4: u32,
+}
+
+#[repr(C)]
 pub struct CSChrEventModule {
     vftable: usize,
     pub owner: NonNull<ChrIns>,
     unk10: [u8; 0x8],
-    /// Animation ID that should be played immediately.
+    /// Id of override animation that should be played on next frame.
     pub request_animation_id: i32,
-    /// Current animation ID.
-    pub current_animation: i32,
-    pub init_stay_id: i32,
+    /// ID of default idle animation.
+    pub idle_anim_id: i32,
+    unk20: i32,
     unk24: u32,
     pub ez_state_request_ladder: i32,
     unk2c: [u8; 0xB],
@@ -385,12 +408,24 @@ pub struct CSPairAnimNode {
     unk44: [u8; 0xc],
 }
 
+#[repr(u32)]
+pub enum ThrowNodeState {
+    Unk1 = 1,
+    Unk2 = 2,
+    InThrowAttacker = 3,
+    InThrowTarget = 4,
+    DeathAttacker = 5,
+    DeathTarget = 6,
+    Unk7 = 7,
+    Unk8 = 8,
+}
+
 #[repr(C)]
 /// Source of name: RTTI
 pub struct CSThrowNode {
     pub super_pair_anim_node: CSPairAnimNode,
     unk58: [u8; 0x18],
-    pub throw_state: u32,
+    pub throw_state: ThrowNodeState,
     unk6c: u32,
     unk70: f32,
     unk74: f32,

@@ -9,6 +9,7 @@ pub fn client() -> &'static Client {
     CLIENT.get_or_init(|| Client::init_app(1245620).unwrap().0)
 }
 
+#[allow(dead_code)]
 unsafe fn steam_networking_messages() -> Option<*mut ISteamNetworkingMessages> {
     let result = steamworks_sys::SteamAPI_SteamNetworkingMessages_SteamAPI_v002();
     if result.is_null() {
@@ -40,6 +41,7 @@ pub trait SteamCallbackImpl {
     fn run(data: *const Self::TData);
 }
 
+#[allow(dead_code)]
 pub struct SteamCallbackHandle<T: SteamCallbackImpl> {
     vmt: Pin<Box<SteamCallbackVMT<T>>>,
     callback: Pin<Box<SteamCallback<T>>>,
@@ -71,10 +73,7 @@ pub fn register_callback<T: SteamCallbackImpl>() -> SteamCallbackHandle<T> {
         );
     }
 
-    SteamCallbackHandle {
-        vmt,
-        callback,
-    }
+    SteamCallbackHandle { vmt, callback }
 }
 
 pub fn networking_messages() -> Option<*mut ISteamNetworkingMessages> {
