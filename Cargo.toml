@@ -35,7 +35,7 @@ zerocopy-derive = "0.7"
 byteorder = "1"
 pelite = "0.10"
 dataview = "~1.0"
-vtable-rs = "0.1"
+vtable-rs = "0.1.3"
 
 [workspace.dependencies.tracing-tracy]
 version = "0.11.3"
