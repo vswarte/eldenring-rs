@@ -5,7 +5,6 @@ use std::time::Duration;
 use display::DebugDisplay;
 use game::dlio::DLFileDeviceBase;
 use game::dlio::DLFileDeviceVmt;
-use game::dlio::LoggingProxyFileDevice;
 use game::dltx::DLString;
 use hudhook::eject;
 use hudhook::hooks::dx12::ImguiDx12Hooks;

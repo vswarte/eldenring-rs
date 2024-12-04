@@ -1,7 +1,13 @@
 use std::{mem::transmute, ptr::NonNull};
 
 use game::{
-    cs::{CSFileImp, MsbFileCap, MsbRepository}, dlio::{BndEntry, DLFileDeviceBase, DLFileDeviceManager, DLFileDeviceVmt, StubFileDevice}, dlkr::{DLAllocatorBase, DLAllocatorVmt, DLPlainLightMutex}, dltx::DLString, pointer::OwnedPtr
+    cs::{CSFileImp, MsbFileCap, MsbRepository},
+    dlio::{
+        BndEntry, DLFileDeviceBase, DLFileDeviceManager, DLFileDeviceVmt, OverrideProxyFileDevice,
+    },
+    dlkr::{DLAllocatorBase, DLAllocatorVmt, DLPlainLightMutex},
+    dltx::DLString,
+    pointer::OwnedPtr,
 };
 use hudhook::imgui::{TableColumnSetup, TreeNodeFlags};
 
@@ -10,6 +16,7 @@ use super::DebugDisplay;
 impl DebugDisplay for MsbRepository {
     fn render_debug(&self, ui: &&mut hudhook::imgui::Ui) {
         if ui.collapsing_header("Resources", TreeNodeFlags::empty()) {
+            ui.indent();
             if let Some(_t) =
                 ui.begin_table_header("msb-repository-rescaps", [TableColumnSetup::new("Name")])
             {
@@ -18,20 +25,27 @@ impl DebugDisplay for MsbRepository {
                     ui.text(msb.file_cap.res_cap.name.to_string());
                 }
             }
-
-            if ui.button("Test MSB Load") {
-                let file_device_manager = unsafe { &mut *(0x1448464c0usize as *mut DLFileDeviceManager) };
-
-                let device = Box::leak(Box::new(StubFileDevice::default())) as *mut StubFileDevice as *mut DLFileDeviceBase;
-                let device = NonNull::new(device).unwrap();
-                file_device_manager.mutex.lock();
-                file_device_manager.devices.push(device);
-                file_device_manager.mutex.unlock();
-
-                load_msb("mapstudio_den:/m49_00_00_00.msb");
-                load_msb("mapstudio_den:/m49_00_00_99.msb");
-            }
         }
+
+        if ui.button("Test MSB Load") {
+            let file_device_manager =
+                unsafe { &mut *(0x1448464c0usize as *mut DLFileDeviceManager) };
+
+            file_device_manager.mutex.lock();
+            file_device_manager
+                .devices
+                .items()
+                .iter_mut()
+                .for_each(|d| {
+                    *d = NonNull::new(Box::leak(Box::new(OverrideProxyFileDevice::new(
+                        d.to_owned(),
+                    ))) as *mut OverrideProxyFileDevice
+                        as *mut DLFileDeviceBase)
+                    .unwrap();
+                });
+            file_device_manager.mutex.unlock();
+        }
+        ui.unindent();
     }
 }
 

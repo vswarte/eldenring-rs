@@ -10,15 +10,20 @@ impl DebugDisplay for PlayerIns {
         self.chr_ins.render_debug(ui);
 
         if ui.collapsing_header("ChrAsm", TreeNodeFlags::empty()) {
+            ui.indent();
             self.chr_asm.render_debug(ui);
+            ui.unindent();
         }
 
         if ui.collapsing_header("PlayerGameData", TreeNodeFlags::empty()) {
+            ui.indent();
             self.player_game_data.render_debug(ui);
+            ui.unindent();
         }
 
         ui.text(format!("Locked on enemy: {}", self.locked_on_enemy));
-        ui.text(format!("Chunk position: {}", self.chunk_position));
+        ui.text(format!("Block position: {}", self.block_position));
+        ui.text(format!("Block orientation: {}", self.block_orientation));
     }
 }
 
@@ -166,7 +171,8 @@ impl DebugDisplay for EquipInventoryData {
 
 impl DebugDisplay for ChrIns {
     fn render_debug(&self, ui: &&mut Ui) {
-        ui.text(format!("Team Type: {}", self.team_type));
+        ui.text(format!("Map ID: {}", self.map_id_1));
+        // ui.text(format!("Team Type: {}", self.team_type));
         ui.text(format!("Last killed by: {}", self.last_killed_by));
         ui.text(format!("Last used item: {}", self.last_used_item));
 
@@ -209,11 +215,15 @@ impl DebugDisplay for ChrIns {
 impl DebugDisplay for ChrInsModuleContainer {
     fn render_debug(&self, ui: &&mut Ui) {
         if ui.collapsing_header("Physics", TreeNodeFlags::empty()) {
+            ui.indent();
             self.physics.render_debug(ui);
+            ui.unindent();
         }
 
         if ui.collapsing_header("Model param modifier", TreeNodeFlags::empty()) {
+            ui.indent();
             self.model_param_modifier.render_debug(ui);
+            ui.unindent();
         }
     }
 }
@@ -221,6 +231,7 @@ impl DebugDisplay for ChrInsModuleContainer {
 impl DebugDisplay for ChrPhysicsModule {
     fn render_debug(&self, ui: &&mut Ui) {
         ui.text(format!("Position: {}", self.position));
+        ui.text(format!("Orientation: {}", self.orientation));
     }
 }
 

@@ -5,7 +5,7 @@ use std::{
     time::Duration,
 };
 
-use game::{cs::{CSTaskGroupIndex, CSTaskImp, CSWorldGeomMan, MapId, WorldChrMan}, fd4::FD4TaskData, position::{ChunkPosition, HavokPosition}};
+use game::{cs::{CSTaskGroupIndex, CSTaskImp, CSWorldGeomMan, MapId, WorldChrMan}, fd4::FD4TaskData, position::{BlockPoint, ChunkPosition4, HavokPosition}};
 use serde::{Deserialize, Serialize};
 use thiserror::Error;
 use tracing_panic::panic_hook;
@@ -71,7 +71,7 @@ fn init() -> Result<(), Box<dyn Error>> {
                     };
 
                     // Generate a dungeon
-                    let pos = main_player.chunk_position.xyz();
+                    let pos = main_player.block_position.xyz();
                     let dungeon = Dungeon::generate(
                         main_player.chr_ins.map_id_1,
                         (pos.0, pos.1 - 200.0, pos.2),
@@ -154,7 +154,7 @@ impl Dungeon {
                     &c.asset,
                     Box::leak(Box::new(GeometrySpawnParameters {
                         map_id: self.map,
-                        position: ChunkPosition::from_xyz(
+                        position: BlockPoint::from_xyz(
                             prefab_origin.0 + c.position.0,
                             prefab_origin.1 + c.position.1,
                             prefab_origin.2 + c.position.2,

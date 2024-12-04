@@ -327,7 +327,7 @@ pub struct WorldGridAreaChr {
 }
 
 #[repr(C)]
-#[derive(Clone, Copy, Debug)]
+#[derive(Clone, Copy, Debug, PartialEq)]
 pub struct MapId {
     pub index: i8,
     pub region: i8,
@@ -336,6 +336,10 @@ pub struct MapId {
 }
 
 impl MapId {
+    pub const fn from_parts(area: i8, block: i8, region: i8, index: i8) -> Self {
+        Self { area, block, region, index}
+    }
+
     /// Makes a -1 map id, which is usually used to represent an entity not bound to some map.
     pub fn global() -> Self {
         Self {
@@ -344,6 +348,18 @@ impl MapId {
             block: -1,
             area: -1,
         }
+    }
+}
+
+impl From<&u32> for MapId {
+    fn from(value: &u32) -> Self {
+        unsafe { std::mem::transmute::<&u32, &MapId>(value) }.to_owned()
+    }
+}
+
+impl Into<u32> for &MapId {
+    fn into(self) -> u32 {
+        unsafe { std::mem::transmute::<&MapId, &u32>(self) }.to_owned()
     }
 }
 

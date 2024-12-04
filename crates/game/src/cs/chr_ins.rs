@@ -7,11 +7,11 @@ use windows::core::PCWSTR;
 use crate::cs::ChrSetEntry;
 use crate::matrix::FSVector4;
 use crate::pointer::OwnedPtr;
-use crate::position::{ChunkPosition, HavokPosition};
+use crate::position::{BlockPoint, ChunkPosition4, HavokPosition, Quaternion};
 use crate::Vector;
 
 use super::player_game_data::PlayerGameData;
-use super::{CSMsbParts, CSMsbPartsEne, FieldInsBaseVmt, FieldInsHandle, MapId, WorldBlockChr};
+use super::{CSMsbParts, CSMsbPartsEne, CSSessionManagerPlayerEntry, FieldInsBaseVmt, FieldInsHandle, MapId, WorldBlockChr};
 
 #[repr(C)]
 #[derive(Debug, Clone)]
@@ -212,8 +212,8 @@ pub struct ChrPhysicsModule {
     vftable: usize,
     pub owner: NonNull<ChrIns>,
     unk10: [u8; 0x40],
-    pub orientation: FSVector4,
-    unk60_orientation: FSVector4,
+    pub orientation: Quaternion,
+    unk60_orientation: Quaternion,
     pub position: HavokPosition,
     unk80_position: HavokPosition,
     unk90: bool,
@@ -426,7 +426,9 @@ pub struct ChrCtrl {
     unk20: usize,
     pub ragdoll_ins: usize,
     pub chr_collision: usize,
-    unk38: [u8; 240],
+    unk38: [u8; 0xb8],
+    pub flags: u32,
+    unkf1: [u8; 0x34],
     pub chr_ragdoll_state: u8,
 }
 
@@ -463,7 +465,7 @@ pub struct PlayerIns {
     unk5e0: usize,
     fg_model: usize,
     npc_param: usize,
-    unk5f8: u32,
+    think_param: u32,
     unk5fc: u32,
     rng_sp_effect_equip_ctrl: usize,
     wep_sp_effect_equip_ctrl: usize,
@@ -475,8 +477,17 @@ pub struct PlayerIns {
     chr_asm_model_ins: usize,
     unk650: [u8; 0x60],
     pub locked_on_enemy: FieldInsHandle,
-    session_manager_player_entry: usize,
-    pub chunk_position: ChunkPosition,
+    pub session_manager_player_entry: NonNull<CSSessionManagerPlayerEntry>,
+    /// Position within the current block.
+    pub block_position: BlockPoint,
+    /// Angle as radians. Relative to the orientation of the current block.
+    pub block_orientation: f32,
+}
+
+impl AsRef<ChrIns> for PlayerIns {
+    fn as_ref(&self) -> &ChrIns {
+        &self.chr_ins
+    }
 }
 
 #[repr(C)]

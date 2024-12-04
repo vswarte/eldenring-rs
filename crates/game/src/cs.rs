@@ -21,6 +21,8 @@ mod world_area_time;
 mod net_chr_sync;
 mod msb;
 mod network_session;
+mod item_lot;
+mod item;
 
 pub use camera::*;
 pub use field_ins::*;
@@ -45,3 +47,5 @@ pub use world_area_time::*;
 pub use net_chr_sync::*;
 pub use msb::*;
 pub use network_session::*;
+pub use item_lot::*;
+pub use item::*;

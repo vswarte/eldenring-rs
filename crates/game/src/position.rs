@@ -15,17 +15,16 @@
 /// coordinate where both chunk and havok position are known.
 use std::{fmt::Display, ops::Sub};
 
-use crate::matrix::FSVector4;
+use crate::matrix::{FSPoint, FSVector4};
 
-/// Represents a chunk local position. Found all over the code usually in together with a
-/// map ID.
+/// Represents a position relative to some block center.
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
-pub struct ChunkPosition(FSVector4);
+pub struct BlockPoint(pub FSPoint);
 
-impl ChunkPosition {
-    pub fn from_xyz(x: f32, y: f32, z: f32) -> Self {
-        Self(FSVector4(x, y, z, 0.0))
+impl BlockPoint {
+    pub const fn from_xyz(x: f32, y: f32, z: f32) -> Self {
+        Self(FSPoint(x, y, z))
     }
 
     pub fn xyz(&self) -> (f32, f32, f32) {
@@ -33,14 +32,36 @@ impl ChunkPosition {
     }
 }
 
-impl Display for ChunkPosition {
+impl Display for BlockPoint {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         let (x, y, z) = self.xyz();
-        write!(f, "ChunkPos({}, {}, {})", x, y, z)
+        write!(f, "BlockPoint({x}, {y}, {z})")
     }
 }
 
-impl From<FSVector4> for ChunkPosition {
+// TODO: reevaluate if we need this thing
+#[repr(C)]
+#[derive(Debug, Clone, Copy)]
+pub struct ChunkPosition4(pub FSVector4);
+
+impl ChunkPosition4 {
+    pub const fn from_xyzw(x: f32, y: f32, z: f32, w: f32) -> Self {
+        Self(FSVector4(x, y, z, 0.0))
+    }
+
+    pub fn xyzw(&self) -> (f32, f32, f32, f32) {
+        (self.0 .0, self.0 .1, self.0 .2, self.0 .3)
+    }
+}
+
+impl Display for ChunkPosition4 {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        let (x, y, z, w) = self.xyzw();
+        write!(f, "ChunkPosition({}, {}, {}, {})", x, y, z, w)
+    }
+}
+
+impl From<FSVector4> for ChunkPosition4 {
     fn from(value: FSVector4) -> Self {
         Self(value)
     }
@@ -64,7 +85,7 @@ impl HavokPosition {
 impl Display for HavokPosition {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         let (x, y, z) = self.xyz();
-        write!(f, "ChunkPos({}, {}, {})", x, y, z)
+        write!(f, "HavokPosition({}, {}, {})", x, y, z)
     }
 }
 
@@ -79,5 +100,26 @@ impl Sub<HavokPosition> for HavokPosition {
 
     fn sub(self, rhs: HavokPosition) -> Self::Output {
         HavokPosition(self.0 - rhs.0)
+    }
+}
+
+/// Represents an orientation in radians.
+#[repr(C)]
+#[derive(Debug, Clone, Copy)]
+pub struct Quaternion(FSVector4);
+
+impl Display for Quaternion {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(
+            f,
+            "Quaternion({}, {}, {}, {})",
+            self.0 .0, self.0 .1, self.0 .2, self.0 .3
+        )
+    }
+}
+
+impl From<FSVector4> for Quaternion {
+    fn from(value: FSVector4) -> Self {
+        Self(value)
     }
 }

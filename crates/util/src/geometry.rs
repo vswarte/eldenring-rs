@@ -1,5 +1,6 @@
 use std::{mem::transmute, sync::LazyLock};
 
+use game::position::BlockPoint;
 use pelite::pattern::Atom;
 use pelite::pe::Pe;
 use thiserror::Error;
@@ -7,7 +8,7 @@ use thiserror::Error;
 use game::cs::CSWorldGeomMan;
 use game::cs::GeometrySpawnRequest;
 use game::cs::MapId;
-use game::position::ChunkPosition;
+use game::position::ChunkPosition4;
 
 use crate::program::Program;
 
@@ -26,7 +27,7 @@ pub enum SpawnGeometryError {
 
 pub struct GeometrySpawnParameters {
     pub map_id: MapId,
-    pub position: ChunkPosition,
+    pub position: BlockPoint,
     pub rot_x: f32,
     pub rot_y: f32,
     pub rot_z: f32,

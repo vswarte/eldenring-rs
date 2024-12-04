@@ -6,8 +6,6 @@ use crate::{dlkr::DLAllocatorBase, dltx::DLString, Tree};
 
 use super::FD4TaskBase;
 
-/// Base class for steppers which are 
-///
 /// Source of name: RTTI
 #[repr(C)]
 pub struct FD4StepTemplateBase<const N: usize, T> {
@@ -52,8 +50,17 @@ impl<T> StepperFn<T> {
 
 #[repr(C)]
 pub struct FD4StepTemplateBase0x18 {
-    pub unk0: NonNull<DLAllocatorBase>,
-    pub unk8: Tree<()>,
-    pub unk20: NonNull<DLAllocatorBase>,
-    pub unk28: NonNull<DLAllocatorBase>,
+    unk0: NonNull<()>,
+    unk8: Tree<()>,
+    unk20: NonNull<DLAllocatorBase>,
+    unk28: NonNull<DLAllocatorBase>,
+}
+
+
+/// Source of name: RTTI
+#[repr(C)]
+pub struct FD4StepBaseInterface<const N: usize, T> {
+    vftable: usize,
+    pub stepper_fns: NonNull<[StepperFn<T>; N]>,
+    unk10: NonNull<()>,
 }

@@ -1,3 +1,5 @@
+use std::ptr::NonNull;
+
 use pelite::pe::{msvc::RTTICompleteObjectLocator, Pe, Rva, Va};
 use undname::Flags;
 
@@ -127,8 +129,20 @@ impl Class<'_> {
     /// Retrieves the function pointer from the VMT.
     ///
     /// # Safety
-    /// Does not validate if the index is actually contained within the VMT.
-    pub unsafe fn vmt_index(&self, index: u32) -> Option<Va> {
+    /// Does not validate whether or not the index is actually contained within the VMT.
+    pub unsafe fn vmt_fn(&self, index: u32) -> Option<Va> {
         Some(*self.program.derva(self.vftable + VA_SIZE * index).ok()?)
+    }
+
+    /// Retrieves a mutable function pointer from the VMT.
+    ///
+    /// # Safety
+    /// Does not validate whether or not the index is actually contained within the VMT.
+    pub unsafe fn vmt_index(&self, index: u32) -> Option<NonNull<Va>> {
+        let ptr = self.program
+            .rva_to_va(self.vftable + VA_SIZE * index)
+            .ok()? as *const u64 as *mut u64;
+
+        NonNull::new(ptr)
     }
 }

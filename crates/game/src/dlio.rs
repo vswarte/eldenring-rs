@@ -17,9 +17,6 @@ use crate::{
     Vector,
 };
 
-const MSB_DATA: &[u8] = include_bytes!("test.msb.dcx");
-const MSB_DATA_SKYBOX: &[u8] = include_bytes!("test_skybox.msb.dcx");
-
 #[vtable_rs::vtable]
 pub trait DLInputStreamVmt {
     // Sets unk28 on DLMemoryInputStream, sets unk10 on DLFileInputStream, sets unk20 on
@@ -280,14 +277,14 @@ pub struct DLFileDeviceManager {
 }
 
 #[repr(C)]
-pub struct LoggingProxyFileDevice {
+pub struct OverrideProxyFileDevice {
     pub vftable: VPtr<dyn DLFileDeviceVmt, Self>,
     unk8: bool,
     pub mutex: DLPlainLightMutex,
     inner: NonNull<DLFileDeviceBase>,
 }
 
-impl LoggingProxyFileDevice {
+impl OverrideProxyFileDevice {
     pub fn new(inner: NonNull<DLFileDeviceBase>) -> Self {
         Self {
             vftable: Default::default(),
@@ -298,7 +295,7 @@ impl LoggingProxyFileDevice {
     }
 }
 
-impl DLFileDeviceVmt for LoggingProxyFileDevice {
+impl DLFileDeviceVmt for OverrideProxyFileDevice {
     extern "C" fn destructor(&mut self) {
         tracing::info!("Called destructor");
     }
@@ -328,62 +325,6 @@ impl DLFileDeviceVmt for LoggingProxyFileDevice {
 }
 
 #[repr(C)]
-#[derive(Default)]
-pub struct StubFileDevice {
-    pub vftable: VPtr<dyn DLFileDeviceVmt, Self>,
-    unk8: bool,
-    pub mutex: DLPlainLightMutex,
-}
-
-impl DLFileDeviceVmt for StubFileDevice {
-    extern "C" fn destructor(&mut self) {
-        tracing::info!("Called destructor");
-    }
-
-    extern "C" fn load_file(
-        &mut self,
-        name_dlstring: &DLString,
-        name_u16: *const u16,
-        param_4: usize,
-        allocator: &mut DLAllocatorBase,
-        param_6: bool,
-    ) -> *const u8 {
-        if name_dlstring.to_string().starts_with("mapstudio_den:/") {
-            tracing::info!(
-                "Found cringe map load {}",
-                name_dlstring.to_string().as_str()
-            );
-
-            let cursor = if name_dlstring.to_string().contains("99") {
-                Cursor::new(MSB_DATA_SKYBOX)
-            } else {
-                Cursor::new(MSB_DATA)
-            };
-
-            let mut operator = AdapterFileOperator::new(cursor);
-            operator.io_state = 0x1;
-            operator.file_device = Some(NonNull::new(self).expect("Test"));
-
-            let allocation = allocator
-                .allocate_aligned(size_of::<AdapterFileOperator<Cursor<&[u8]>>>(), 0x8)
-                as *mut u8 as *mut AdapterFileOperator<Cursor<&[u8]>>;
-            tracing::info!("Allocated memory: {allocation:x?}");
-
-            unsafe { *allocation = operator };
-
-            return allocation as *const u8;
-        }
-
-        std::ptr::null()
-    }
-
-    extern "C" fn file_enumerator(&self) -> *const u8 {
-        tracing::info!("Called file enumerator");
-        std::ptr::null()
-    }
-}
-
-#[repr(C)]
 pub struct AdapterFileOperator<R>
 where
     R: Read + Seek + 'static,
@@ -392,7 +333,7 @@ where
     pub allocator: Option<NonNull<DLAllocatorBase>>,
     unk10: usize,
     pub io_state: u32,
-    pub file_device: Option<NonNull<StubFileDevice>>,
+    pub file_device: Option<NonNull<OverrideProxyFileDevice>>,
     pub name: DLString,
     buffer: R,
 }
@@ -401,7 +342,7 @@ impl<R> AdapterFileOperator<R>
 where
     R: Read + Seek + 'static,
 {
-    fn new(buffer: R) -> Self {
+    pub fn new(buffer: R) -> Self {
         Self {
             vftable: Default::default(),
             allocator: Default::default(),
@@ -419,7 +360,7 @@ where
     R: Read + Seek + 'static,
 {
     extern "C" fn destructor(&mut self) {
-        tracing::info!("StubFileOperator::destructor()");
+        tracing::info!("AdapterFilterOperator::destructor()");
     }
 
     #[doc = " Copies the data from the source DLFileOperator into itself."]
@@ -429,7 +370,7 @@ where
 
     extern "C" fn set_path(&mut self, path: &DLString, param_3: bool) -> bool {
         tracing::info!(
-            "StubFileOperator::set_path({}, {})",
+            "AdapterFilterOperator::set_path({}, {})",
             path.to_string(),
             param_3
         );
@@ -486,7 +427,7 @@ where
         let current = self.buffer.seek(SeekFrom::Current(0)).unwrap();
         let end = self.buffer.seek(SeekFrom::End(0)).unwrap() as usize;
         self.buffer.seek(SeekFrom::Start(current));
-        tracing::info!("StubFileOperator::file_size() -> {end}");
+        tracing::info!("AdapterFilterOperator::file_size() -> {end}");
         end
     }
 
@@ -511,17 +452,17 @@ where
     }
 
     extern "C" fn is_open(&self) -> bool {
-        tracing::info!("StubFileOperator::is_open()");
+        tracing::info!("AdapterFilterOperator::is_open()");
         true
     }
 
     extern "C" fn open_file(&mut self, open_mode: u32) -> bool {
-        tracing::info!("StubFileOperator::open_file({})", open_mode);
+        tracing::info!("AdapterFilterOperator::open_file({})", open_mode);
         true
     }
 
     extern "C" fn try_close_file(&mut self) -> bool {
-        tracing::info!("StubFileOperator::try_close_file()");
+        tracing::info!("AdapterFilterOperator::try_close_file()");
         true
     }
 
@@ -538,7 +479,7 @@ where
     }
 
     extern "C" fn read_file(&mut self, output: *mut u8, length: usize) -> usize {
-        tracing::info!("StubFileOperator::read_file({:x?}, {})", output, length);
+        tracing::info!("AdapterFilterOperator::read_file({:x?}, {})", output, length);
         let mut buffer = vec![0x0u8; length];
         self.buffer.read_exact(&mut buffer).unwrap();
 

@@ -3,13 +3,14 @@ members = [
     "crates/debug",
     "crates/game",
     "crates/util",
+    "crates/dlrf",
     "examples/builder-mode",
     "examples/enemy-control",
     "examples/mini-transmog",
     "examples/procedural-dungeons",
+    "examples/battleroyale",
     "tools/export-singletons",
     "tools/profiler",
-    "crates/dlrf",
 ]
 resolver = "2"
 
@@ -36,6 +37,8 @@ byteorder = "1"
 pelite = "0.10"
 dataview = "~1.0"
 vtable-rs = "0.1"
+rand = "0.8"
+crash-handler = "0.6"
 
 [workspace.dependencies.tracing-tracy]
 version = "0.11.3"

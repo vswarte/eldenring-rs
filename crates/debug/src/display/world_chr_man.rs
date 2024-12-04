@@ -77,7 +77,9 @@ impl DebugDisplay for WorldChrMan {
         match self.main_player.as_ref() {
             Some(p) => {
                 if ui.collapsing_header("Main player", TreeNodeFlags::empty()) {
-                    p.render_debug(ui)
+                    ui.indent();
+                    p.render_debug(ui);
+                    ui.unindent();
                 }
             }
             None => ui.text("No Main player instance"),

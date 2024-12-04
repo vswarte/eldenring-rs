@@ -11,7 +11,7 @@ use game::{
     cs::{
         CSCamera, CSTaskGroupIndex, CSTaskImp, CSWorldGeomMan, ChrIns, EnemyIns,
         WorldChrMan, WorldChrManDbg,
-    }, fd4::FD4TaskData, position::ChunkPosition
+    }, fd4::FD4TaskData,
 };
 use tracing_panic::panic_hook;
 use util::{

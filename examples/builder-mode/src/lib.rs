@@ -6,7 +6,7 @@ use std::{
 };
 
 use game::{
-    cs::{CSCamera, CSTaskGroupIndex, CSTaskImp, CSWorldGeomMan, WorldChrMan}, fd4::FD4TaskData, position::ChunkPosition
+    cs::{CSCamera, CSTaskGroupIndex, CSTaskImp, CSWorldGeomMan, WorldChrMan}, fd4::FD4TaskData, position::BlockPoint
 };
 use nalgebra_glm::{Mat4, Vec3};
 use thiserror::Error;
@@ -181,11 +181,11 @@ impl BuilderCamera {
 
         let player_physics_pos = main_player.chr_ins.module_container.physics.position;
         let camera_physics_pos = camera.pers_cam_1.position();
-        let player_chunk_pos = &main_player.chunk_position.xyz();
+        let player_chunk_pos = &main_player.block_position.xyz();
         let physics_pos_delta = (camera_physics_pos - player_physics_pos).xyz();
 
         // Calculated chunk-relative position of camera
-        let camera_chunk_pos = ChunkPosition::from_xyz(
+        let camera_chunk_pos = BlockPoint::from_xyz(
             player_chunk_pos.0 + physics_pos_delta.0,
             player_chunk_pos.1 + physics_pos_delta.1,
             player_chunk_pos.2 + physics_pos_delta.2,
@@ -195,7 +195,7 @@ impl BuilderCamera {
             SPAWNABLE_ASSETS[self.selected_asset],
             &GeometrySpawnParameters {
                 map_id: main_player.chr_ins.map_id_1,
-                position: ChunkPosition::from_xyz(
+                position: BlockPoint::from_xyz(
                     camera_chunk_pos.0,
                     player_chunk_pos.1,
                     camera_chunk_pos.2,
