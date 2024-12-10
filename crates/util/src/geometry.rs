@@ -8,7 +8,6 @@ use thiserror::Error;
 use game::cs::CSWorldGeomMan;
 use game::cs::GeometrySpawnRequest;
 use game::cs::MapId;
-use game::position::ChunkPosition4;
 
 use crate::program::Program;
 

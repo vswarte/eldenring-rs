@@ -424,7 +424,7 @@ where
     }
 
     extern "C" fn file_size(&mut self) -> usize {
-        let current = self.buffer.seek(SeekFrom::Current(0)).unwrap();
+        let current = self.buffer.stream_position().unwrap();
         let end = self.buffer.seek(SeekFrom::End(0)).unwrap() as usize;
         self.buffer.seek(SeekFrom::Start(current));
         tracing::info!("AdapterFilterOperator::file_size() -> {end}");

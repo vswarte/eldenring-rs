@@ -119,7 +119,7 @@ impl SpecialEffect {
         let mut current = self.head.as_ref().map(|e| e.as_ptr());
 
         std::iter::from_fn(move || {
-            let ret = current.map(|c| unsafe { c.as_ref() }).flatten();
+            let ret = current.and_then(|c| unsafe { c.as_ref() });
             current = unsafe { ret?.next.map(|e| e.as_ptr()) };
             ret
         })

@@ -27,7 +27,7 @@ pub static CHARACTER_DEBUG_FLAGS: LazyLock<RwLock<&mut CharacterDebugFlags>> =
 
         if !program
             .scanner()
-            .finds_code(&CHARACTER_DEBUG_FLAGS_PATTERN, &mut matches)
+            .finds_code(CHARACTER_DEBUG_FLAGS_PATTERN, &mut matches)
         {
             panic!("Failed to find character debug flags pattern");
         }

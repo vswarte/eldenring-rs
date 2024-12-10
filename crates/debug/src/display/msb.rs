@@ -3,11 +3,9 @@ use std::{mem::transmute, ptr::NonNull};
 use game::{
     cs::{CSFileImp, MsbFileCap, MsbRepository},
     dlio::{
-        BndEntry, DLFileDeviceBase, DLFileDeviceManager, DLFileDeviceVmt, OverrideProxyFileDevice,
+        DLFileDeviceBase, DLFileDeviceManager, OverrideProxyFileDevice,
     },
-    dlkr::{DLAllocatorBase, DLAllocatorVmt, DLPlainLightMutex},
-    dltx::DLString,
-    pointer::OwnedPtr,
+    dlkr::DLAllocatorVmt,
 };
 use hudhook::imgui::{TableColumnSetup, TreeNodeFlags};
 
@@ -68,7 +66,7 @@ fn load_msb(path: &str) {
     let mut string_bytes = path.encode_utf16().collect::<Vec<_>>();
     string_bytes.push(0x0);
 
-    let msb = unsafe { create_msb_filecap(*cs_file_imp, string_bytes.as_ptr(), 0).as_mut() };
+    let msb = unsafe { create_msb_filecap(cs_file_imp, string_bytes.as_ptr(), 0).as_mut() };
     tracing::info!(
         "File cap {} - {:x?}",
         msb.file_cap.res_cap.name.to_string(),

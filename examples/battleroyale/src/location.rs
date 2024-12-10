@@ -1,4 +1,4 @@
-use std::{collections::HashMap, error::Error};
+use std::collections::HashMap;
 
 use pelite::pe::{Pe, Rva, Va};
 use thiserror::Error;

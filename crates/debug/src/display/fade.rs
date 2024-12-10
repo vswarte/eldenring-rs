@@ -19,16 +19,13 @@ impl DebugDisplay for CSFade {
 impl DebugDisplay for CSFD4FadePlate {
     fn render_debug(&self, ui: &&mut Ui) {
         let mut current_color: [f32; 4] = (&self.current_color).into();
-        if ui.color_edit4("current_color", &mut current_color) {
-        }
+        ui.color_edit4("current_color", &mut current_color);
 
         let mut start_color: [f32; 4] = (&self.start_color).into();
-        if ui.color_edit4("start_color", &mut start_color) {
-        }
+        ui.color_edit4("start_color", &mut start_color);
 
         let mut end_color: [f32; 4] = (&self.end_color).into();
-        if ui.color_edit4("end_color", &mut end_color) {
-        }
+        ui.color_edit4("end_color", &mut end_color);
 
         ui.input_text("Fade timer", &mut self.fade_timer.time.to_string())
             .read_only(true)

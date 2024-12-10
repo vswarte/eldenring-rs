@@ -1,37 +1,33 @@
 use pain::PainRing;
-use crash_handler::{make_crash_event, CrashContext, CrashEvent, CrashEventResult, CrashHandler};
+use crash_handler::{make_crash_event, CrashContext, CrashEventResult, CrashHandler};
 use gamestate::DefaultGameStateProvider;
 use hooks::GamemodeHooks;
 use location::*;
 use loot::LootGenerator;
 use message::NotificationPresenter;
-use pelite::pe::{Pe, Rva, Va};
 use player::Player;
 use spectator_camera::SpectatorCamera;
 use std::{
     error::Error,
-    sync::{Arc, RwLock},
+    sync::Arc,
     time::Duration,
 };
 
 /// Implements a battle-royale gamemode on top of quickmatches.
 use game::{
     cs::{
-        CSNetMan, CSTaskGroupIndex, CSTaskImp, ChrIns, MapId, PlayerIns, QuickmatchManager,
-        WorldChrMan,
+        CSTaskGroupIndex, CSTaskImp,
     },
     fd4::FD4TaskData,
 };
 
 use gamemode::GameMode;
-use retour::static_detour;
-use tracing::level_filters::LevelFilter;
 use tracing_panic::panic_hook;
 use util::{
     arxan,
     program::Program,
     singleton::get_instance,
-    task::{CSTaskImpExt, RecurringTaskHandle},
+    task::CSTaskImpExt,
 };
 
 mod gamemode;

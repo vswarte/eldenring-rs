@@ -1,6 +1,5 @@
 use game::cs::{
-    ChrIns, ChrSet, EquipInventoryData, FieldInsHandle, FieldInsSelector, MapId, OpenFieldChrSet,
-    PlayerGameData, PlayerIns, SummonBuddyManager, SummonBuddyManagerWarp, WorldChrMan,
+    ChrIns, ChrSet, OpenFieldChrSet, PlayerIns, SummonBuddyManager, SummonBuddyManagerWarp, WorldChrMan,
 };
 use hudhook::imgui::{TableColumnSetup, TreeNodeFlags, Ui};
 use util::{

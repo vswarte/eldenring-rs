@@ -7,8 +7,7 @@ use crate::mapdata::MapPoint;
 pub fn sample_spawn_point() {
     let Some(main_player) = unsafe { get_instance::<WorldChrMan>() }
         .unwrap()
-        .map(|w| w.main_player.as_ref())
-        .flatten()
+        .and_then(|w| w.main_player.as_ref())
     else {
         return;
     };

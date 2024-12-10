@@ -2,7 +2,7 @@ use std::sync::LazyLock;
 
 use game::{
     cs::MapId,
-    position::{BlockPoint, ChunkPosition4},
+    position::BlockPoint,
 };
 
 pub const MAP_CONFIG: LazyLock<Vec<MapConfiguration>> = LazyLock::new(|| {

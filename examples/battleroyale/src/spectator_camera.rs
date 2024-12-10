@@ -3,10 +3,7 @@ use std::{
     sync::{Arc, RwLock},
 };
 
-use game::{
-    cs::{ChrIns, FieldInsHandle, WorldChrMan, WorldChrManDbg},
-    position::HavokPosition,
-};
+use game::cs::{FieldInsHandle, WorldChrMan, WorldChrManDbg};
 use util::singleton::get_instance;
 
 use crate::gamestate::GameStateProvider;
@@ -60,7 +57,7 @@ where
             return;
         };
 
-        main_player.chr_ins.module_container.physics.position = spectating_player.module_container.physics.position.clone();
+        main_player.chr_ins.module_container.physics.position = spectating_player.module_container.physics.position;
     }
 
     /// Stop spectating.
@@ -85,12 +82,10 @@ where
         // Lookup character and grab the FieldInsHandle from the discovered character, to ensure
         // the FieldInsHandle is valid.
         let chr_ins = handle
-            .map(|h| world_chr_man.player_chr_set.chr_ins_by_handle(&h))
-            .flatten()
-            .map(|c| NonNull::new(c))
-            .flatten();
+            .and_then(|h| world_chr_man.player_chr_set.chr_ins_by_handle(&h))
+            .and_then(|c| NonNull::new(c));
 
-        world_chr_man_dbg.cam_override_chr_ins = chr_ins.clone();
+        world_chr_man_dbg.cam_override_chr_ins = chr_ins;
         *self.currently_spectating.write().unwrap() =
             chr_ins.map(|c| unsafe { c.as_ref().field_ins_handle.clone() });
     }

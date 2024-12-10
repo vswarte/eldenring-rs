@@ -2,15 +2,10 @@ use std::marker::PhantomData;
 use std::sync::Arc;
 
 use game::cs::ChrIns;
-use game::cs::MapId;
-use game::cs::PlayerIns;
 use game::cs::QuickmatchManager;
-use game::cs::WorldChrMan;
 use game::position::ChunkPosition4;
 use retour::static_detour;
-use retour::GenericDetour;
 use thiserror::Error;
-use util::singleton::get_instance;
 use windows::core::w;
 use windows::core::PCWSTR;
 
@@ -72,8 +67,8 @@ where
         Self::hook_text_lookups(&location, gamemode.clone())?;
 
         Ok(Self {
-            _game_state: PhantomData::default(),
-            _location: PhantomData::default(),
+            _game_state: PhantomData,
+            _location: PhantomData,
         })
     }
 

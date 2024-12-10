@@ -10,13 +10,13 @@ impl DebugDisplay for CSSessionManager {
 
         if ui.collapsing_header("Members", TreeNodeFlags::empty()) {
             for player in self.players.items() {
-                player.render_debug(&ui);
+                player.render_debug(ui);
             }
         }
 
         if self.host_player.steam_id != 0x0 && ui.collapsing_header("Host", TreeNodeFlags::empty())
         {
-            self.host_player.render_debug(&ui);
+            self.host_player.render_debug(ui);
         }
     }
 }

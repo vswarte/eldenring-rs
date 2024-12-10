@@ -1,4 +1,4 @@
-use game::cs::{CSEventFlagMan, CSNetMan, CSSessionManager, ChrIns, FieldInsHandle, LobbyState, PlayerIns, WorldChrMan};
+use game::cs::{CSEventFlagMan, CSNetMan, CSSessionManager, ChrIns, FieldInsHandle, LobbyState, WorldChrMan};
 use util::singleton::get_instance;
 
 pub trait GameStateProvider {
@@ -70,8 +70,7 @@ impl GameStateProvider for DefaultGameStateProvider {
     fn local_player_is_alive(&self) -> bool {
         unsafe { get_instance::<WorldChrMan>() }
             .unwrap()
-            .map(|n| n.main_player.as_ref())
-            .flatten()
+            .and_then(|n| n.main_player.as_ref())
             .map(|p| is_chr_ins_alive(&p.as_ref().chr_ins))
             .unwrap_or_default()
     }
@@ -82,7 +81,7 @@ impl GameStateProvider for DefaultGameStateProvider {
             .map(|w| {
                 w.player_chr_set
                     .characters()
-                    .filter_map(|p| match is_chr_ins_alive(&p.as_ref()) {
+                    .filter_map(|p| match is_chr_ins_alive(p.as_ref()) {
                         true => Some(p.chr_ins.field_ins_handle.clone()),
                         false => None,
                     })
@@ -103,23 +102,21 @@ impl GameStateProvider for DefaultGameStateProvider {
     fn local_player(&self) -> Option<FieldInsHandle> {
         unsafe { get_instance::<WorldChrMan>() }
             .unwrap()
-            .map(|w| {
+            .and_then(|w| {
                 w.main_player
                     .as_ref()
                     .map(|p| p.chr_ins.field_ins_handle.clone())
             })
-            .flatten()
     }
 
     fn last_killed_by(&self) -> Option<FieldInsHandle> {
         unsafe { get_instance::<WorldChrMan>() }
             .unwrap()
-            .map(|n| {
+            .and_then(|n| {
                 n.main_player
                     .as_ref()
                     .map(|p| p.chr_ins.field_ins_handle.clone())
             })
-            .flatten()
     }
 
     fn host_steam_id(&self)  -> u64 {

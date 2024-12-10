@@ -76,7 +76,7 @@ pub fn find_rtti_classes<'a>(program: &'a Program) -> impl Iterator<Item = Class
 
 // TODO: use better than usizes.
 /// Attempts to extract the class name for a given vftable.
-pub fn vftable_classname<'a>(program: &'a Program, vftable_va: usize) -> Option<String> {
+pub fn vftable_classname(program: &Program, vftable_va: usize) -> Option<String> {
     let vftable_rva = program.va_to_rva(vftable_va as u64).ok()?;
     let vftable_meta_rva = vftable_rva - VA_SIZE;
 

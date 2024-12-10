@@ -357,9 +357,9 @@ impl From<&u32> for MapId {
     }
 }
 
-impl Into<u32> for &MapId {
-    fn into(self) -> u32 {
-        unsafe { std::mem::transmute::<&MapId, &u32>(self) }.to_owned()
+impl From<&MapId> for u32 {
+    fn from(val: &MapId) -> Self {
+        unsafe { std::mem::transmute::<&MapId, &u32>(val) }.to_owned()
     }
 }
 

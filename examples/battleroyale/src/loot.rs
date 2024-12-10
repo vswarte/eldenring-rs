@@ -1,20 +1,17 @@
-use game::{
-    cs::{MapId, MapItemMan},
-    dlrf,
-};
+use game::cs::{MapId, MapItemMan};
 use rand::prelude::*;
 use std::{
     marker::Sync, sync::{
         atomic::{AtomicBool, Ordering}, Arc, RwLock
     }, time::{Duration, Instant}
 };
-use util::{input::is_key_pressed, singleton::get_instance};
+use util::singleton::get_instance;
 
 // Spawn some loot around the place
 const LOOT_SPAWN_INTERVAL: Duration = Duration::from_secs(10);
 
 use crate::{
-    mapdata::{MapConfiguration, MapPoint, MAP_CONFIG},
+    mapdata::{MapConfiguration, MAP_CONFIG},
     ProgramLocationProvider, LOCATION_SPAWN_DROPPED_ITEM,
 };
 
@@ -511,7 +508,7 @@ where
                     unkc: 0x0,
                     unk10: -1,
                     unk14: -1,
-                    map: point.map.clone(),
+                    map: point.map,
                     position_x: x,
                     position_y: y,
                     position_z: z,

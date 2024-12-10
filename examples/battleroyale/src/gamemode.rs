@@ -1,5 +1,5 @@
 use std::{
-    collections::HashMap, marker::Sync, ptr::NonNull, sync::{
+    collections::HashMap, marker::Sync, sync::{
         atomic::{AtomicBool, Ordering},
         Arc, RwLock,
     }, time::{Duration, Instant}
@@ -7,10 +7,8 @@ use std::{
 
 use game::{
     cs::{
-        CSEventFlagMan, CSNetMan, CSSessionManager, ChrIns, FieldInsHandle, MapId, WorldChrMan,
-        WorldChrManDbg,
+        CSEventFlagMan, CSNetMan, CSSessionManager, FieldInsHandle, MapId,
     },
-    fd4::FD4Time,
     position::BlockPoint,
 };
 use util::{input::is_key_pressed, singleton::get_instance};
@@ -23,7 +21,7 @@ use crate::{
     mapdata::{MapPoint, MAP_CONFIG},
 };
 use crate::{
-    message::NotificationPresenter, spectator_camera::SpectatorCamera, HardcodedLocationProvider,
+    message::NotificationPresenter, spectator_camera::SpectatorCamera,
 };
 
 #[derive(Clone, Debug, PartialEq)]
@@ -142,7 +140,7 @@ where
                     *self.spawn_point.write().unwrap() = Some(MapPoint {
                         map: MapId::from_parts(20, 0, 0, 0),
                         position: BlockPoint::from_xyz(position.0, position.1, position.2),
-                        orientation: orientation.clone(),
+                        orientation: *orientation,
                     })
                 }
             }
@@ -326,11 +324,9 @@ where
 
         // TODO: this needs reeavaluation if we ever want to spawn players across multiple blocks.
         targeted_map
-            .player_spawn_points
-            .get(0)
+            .player_spawn_points.first()
             .expect("Map has no spawn points...")
             .map
-            .clone()
     }
 
     /// Get local players assigned spawn-point for the match.

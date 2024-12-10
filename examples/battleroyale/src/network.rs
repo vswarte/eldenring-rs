@@ -7,7 +7,7 @@ use steamworks::{
 };
 use util::steam;
 
-use crate::{loadout::PlayerLoadout, mapdata::MapPoint};
+use crate::mapdata::MapPoint;
 
 const STEAM_MESSAGE_CHANNEL: u32 = 51234;
 const STEAM_MESSAGE_BATCH_SIZE: usize = 0x10;

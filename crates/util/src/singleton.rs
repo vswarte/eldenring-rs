@@ -6,7 +6,6 @@ use pelite::pe::Rva;
 use std::collections;
 use std::io::Write;
 use std::sync;
-use std::sync::LazyLock;
 use thiserror::Error;
 
 use crate::program::Program;
