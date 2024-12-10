@@ -4,11 +4,9 @@ use game::{
 };
 use rand::prelude::*;
 use std::{
-    sync::{
-        atomic::{AtomicBool, Ordering},
-        RwLock,
-    },
-    time::{Duration, Instant},
+    marker::Sync, sync::{
+        atomic::{AtomicBool, Ordering}, Arc, RwLock
+    }, time::{Duration, Instant}
 };
 use util::{input::is_key_pressed, singleton::get_instance};
 
@@ -16,7 +14,7 @@ use util::{input::is_key_pressed, singleton::get_instance};
 const LOOT_SPAWN_INTERVAL: Duration = Duration::from_secs(10);
 
 use crate::{
-    mapdata::{MapConfiguration, SpawnPoint, MAP_CONFIG},
+    mapdata::{MapConfiguration, MapPoint, MAP_CONFIG},
     ProgramLocationProvider, LOCATION_SPAWN_DROPPED_ITEM,
 };
 
@@ -39,7 +37,7 @@ impl LootTableEntryItem {
 /// Generates and spawns random loot over the map
 pub struct LootGenerator<L>
 where
-    L: ProgramLocationProvider + std::marker::Sync,
+    L: ProgramLocationProvider + Sync,
 {
     /// Did the current map get the initial items spawned already?
     has_provisioned_map: AtomicBool,
@@ -47,14 +45,14 @@ where
     /// When did we last spawn items?
     last_spawn_round: RwLock<Instant>,
 
-    location: L,
+    location: Arc<L>,
 }
 
 impl<L> LootGenerator<L>
 where
-    L: ProgramLocationProvider + std::marker::Sync,
+    L: ProgramLocationProvider + Sync,
 {
-    pub fn new(location: L) -> Self {
+    pub fn new(location: Arc<L>) -> Self {
         Self {
             has_provisioned_map: Default::default(),
             last_spawn_round: RwLock::new(Instant::now()),
@@ -80,10 +78,402 @@ where
 
         std::thread::spawn(move || {
             let loot_table = &[
-                // 1x Soap
+                // 1x Pulley Bow + 15 Shattershard Arrows + Piquebone
+                LootTableEntry {
+                    weight: 3,
+                    items: vec![
+                        LootTableEntryItem::new(0x027286A0, 1),
+                        LootTableEntryItem::new(0x02FBDAE0, 15),
+                        LootTableEntryItem::new(0x03032DE0, 15),
+                    ],
+                },
+                // 20x Bloodbone + Coldbone Arrows
+                LootTableEntry {
+                    weight: 2,
+                    items: vec![
+                        LootTableEntryItem::new(0x02FF8460, 20),
+                        LootTableEntryItem::new(0x02FFD280, 20),
+                    ],
+                },
+                // 1x Great Katana
+                LootTableEntry {
+                    weight: 3,
+                    items: vec![LootTableEntryItem::new(0x03F6B5A0, 1)],
+                },
+                // 1x Stone-Sheathed Sword
+                LootTableEntry {
+                    weight: 3,
+                    items: vec![LootTableEntryItem::new(0x0026C1E0, 1)],
+                },
+                // 1x Fire Knight's Shortsword
+                LootTableEntry {
+                    weight: 3,
+                    items: vec![LootTableEntryItem::new(0x00170A70, 1)],
+                },
+                // 1x Lizard Greatsword
+                LootTableEntry {
+                    weight: 3,
+                    items: vec![LootTableEntryItem::new(0x0035B600, 1)],
+                },
+                // Common Soldier Set
                 LootTableEntry {
                     weight: 1,
-                    items: vec![LootTableEntryItem::new(0x40000848, 1)],
+                    items: vec![
+                        LootTableEntryItem::new(0x104FF4C0, 1),
+                        LootTableEntryItem::new(0x104FF524, 1),
+                        LootTableEntryItem::new(0x104FF588, 1),
+                        LootTableEntryItem::new(0x104FF5EC, 1),
+                    ],
+                },
+                // Dancer's Set
+                LootTableEntry {
+                    weight: 1,
+                    items: vec![
+                        LootTableEntryItem::new(0x104D83C0, 1),
+                        LootTableEntryItem::new(0x104D8424, 1),
+                        LootTableEntryItem::new(0x104D8488, 1),
+                        LootTableEntryItem::new(0x104D84EC, 1),
+                    ],
+                },
+                // Grave Bird Set
+                LootTableEntry {
+                    weight: 1,
+                    items: vec![
+                        LootTableEntryItem::new(0x104FCDB0, 1),
+                        LootTableEntryItem::new(0x104FCE14, 1),
+                        LootTableEntryItem::new(0x104FCE78, 1),
+                        LootTableEntryItem::new(0x104FCEDC, 1),
+                    ],
+                },
+                // Shadow Militiaman Set
+                LootTableEntry {
+                    weight: 1,
+                    items: vec![
+                        LootTableEntryItem::new(0x10509100, 1),
+                        LootTableEntryItem::new(0x10509164, 1),
+                        LootTableEntryItem::new(0x105091C8, 1),
+                        LootTableEntryItem::new(0x1050922C, 1),
+                    ],
+                },
+                // Ansbach's Set
+                LootTableEntry {
+                    weight: 1,
+                    items: vec![
+                        LootTableEntryItem::new(0x104DF8F0, 1),
+                        LootTableEntryItem::new(0x104DF954, 1),
+                        LootTableEntryItem::new(0x104DF9B8, 1),
+                        LootTableEntryItem::new(0x104DFA1C, 1),
+                    ],
+                },
+                // Ascetic's Set
+                LootTableEntry {
+                    weight: 1,
+                    items: vec![
+                        LootTableEntryItem::new(0x104F7F90, 1),
+                        LootTableEntryItem::new(0x104F7FF4, 1),
+                        LootTableEntryItem::new(0x104F8058, 1),
+                        LootTableEntryItem::new(0x104F80BC, 1),
+                    ],
+                },
+                // Black Knight Set
+                LootTableEntry {
+                    weight: 1,
+                    items: vec![
+                        LootTableEntryItem::new(0x104E9530, 1),
+                        LootTableEntryItem::new(0x104E9594, 1),
+                        LootTableEntryItem::new(0x104E95F8, 1),
+                        LootTableEntryItem::new(0x104E965C, 1),
+                    ],
+                },
+                // Dane's Set
+                LootTableEntry {
+                    weight: 1,
+                    items: vec![
+                        LootTableEntryItem::new(0x102DC6C0, 1),
+                        LootTableEntryItem::new(0x102DC724, 1),
+                        LootTableEntryItem::new(0x102DC788, 1),
+                        LootTableEntryItem::new(0x102DC7EC, 1),
+                    ],
+                },
+                // Death Knight Set
+                LootTableEntry {
+                    weight: 1,
+                    items: vec![
+                        LootTableEntryItem::new(0x104F5880, 1),
+                        LootTableEntryItem::new(0x104F58E4, 1),
+                        LootTableEntryItem::new(0x104F5948, 1),
+                        LootTableEntryItem::new(0x104F59AC, 1),
+                    ],
+                },
+                // Divine Bird Set
+                LootTableEntry {
+                    weight: 1,
+                    items: vec![
+                        LootTableEntryItem::new(0x10502788, 1),
+                        LootTableEntryItem::new(0x105027EC, 1),
+                        LootTableEntryItem::new(0x10502850, 1),
+                        LootTableEntryItem::new(0x105028B4, 1),
+                    ],
+                },
+                // Fire Knight Set
+                LootTableEntry {
+                    weight: 1,
+                    items: vec![
+                        LootTableEntryItem::new(0x104F0A60, 1),
+                        LootTableEntryItem::new(0x104F0AC4, 1),
+                        LootTableEntryItem::new(0x104F0B28, 1),
+                        LootTableEntryItem::new(0x104F0B8C, 1),
+                    ],
+                },
+                // Freyja's Set
+                LootTableEntry {
+                    weight: 1,
+                    items: vec![
+                        LootTableEntryItem::new(0x104E2000, 1),
+                        LootTableEntryItem::new(0x104E2064, 1),
+                        LootTableEntryItem::new(0x104E20C8, 1),
+                        LootTableEntryItem::new(0x104E212C, 1),
+                    ],
+                },
+                // Gaius's Set
+                LootTableEntry {
+                    weight: 1,
+                    items: vec![
+                        LootTableEntryItem::new(0x102DEDD0, 1),
+                        LootTableEntryItem::new(0x102DEE34, 1),
+                        LootTableEntryItem::new(0x102DEE98, 1),
+                        LootTableEntryItem::new(0x102DEEFC, 1),
+                    ],
+                },
+                // High Priest Set
+                LootTableEntry {
+                    weight: 1,
+                    items: vec![
+                        LootTableEntryItem::new(0x104D35A0, 1),
+                        LootTableEntryItem::new(0x104D3604, 1),
+                        LootTableEntryItem::new(0x104D3668, 1),
+                        LootTableEntryItem::new(0x104D36CC, 1),
+                    ],
+                },
+                // Horned Warrior Set
+                LootTableEntry {
+                    weight: 1,
+                    items: vec![
+                        LootTableEntryItem::new(0x10501BD0, 1),
+                        LootTableEntryItem::new(0x10501C34, 1),
+                        LootTableEntryItem::new(0x10501C98, 1),
+                        LootTableEntryItem::new(0x10501CFC, 1),
+                    ],
+                },
+                // Hornsent Set
+                LootTableEntry {
+                    weight: 1,
+                    items: vec![
+                        LootTableEntryItem::new(0x104D5CB0, 1),
+                        LootTableEntryItem::new(0x104D5D14, 1),
+                        LootTableEntryItem::new(0x104D5D78, 1),
+                        LootTableEntryItem::new(0x104D5DDC, 1),
+                    ],
+                },
+                // Igon's Set
+                LootTableEntry {
+                    weight: 1,
+                    items: vec![
+                        LootTableEntryItem::new(0x104DD1E0, 1),
+                        LootTableEntryItem::new(0x104DD244, 1),
+                        LootTableEntryItem::new(0x104DD2A8, 1),
+                        LootTableEntryItem::new(0x104DD30C, 1),
+                    ],
+                },
+                // Iron Rivet Set
+                LootTableEntry {
+                    weight: 1,
+                    items: vec![
+                        LootTableEntryItem::new(0x104C9D48, 1),
+                        LootTableEntryItem::new(0x104C99C4, 1),
+                        LootTableEntryItem::new(0x104C9A28, 1),
+                        LootTableEntryItem::new(0x104C9A8C, 1),
+                    ],
+                },
+                // Highland Warrior Set
+                LootTableEntry {
+                    weight: 1,
+                    items: vec![
+                        LootTableEntryItem::new(0x104F3558, 1),
+                        LootTableEntryItem::new(0x104F31D4, 1),
+                        LootTableEntryItem::new(0x104F3238, 1),
+                        LootTableEntryItem::new(0x104F329C, 1),
+                    ],
+                },
+                // Messmer Soldier Set
+                LootTableEntry {
+                    weight: 1,
+                    items: vec![
+                        LootTableEntryItem::new(0x104E6E20, 1),
+                        LootTableEntryItem::new(0x104E6E84, 1),
+                        LootTableEntryItem::new(0x104E6EE8, 1),
+                        LootTableEntryItem::new(0x104E6F4C, 1),
+                    ],
+                },
+                // Messmer's Set
+                LootTableEntry {
+                    weight: 1,
+                    items: vec![
+                        LootTableEntryItem::new(0x104FA6A0, 1),
+                        LootTableEntryItem::new(0x104FA704, 1),
+                        LootTableEntryItem::new(0x104FA768, 1),
+                        LootTableEntryItem::new(0x104FA7CC, 1),
+                    ],
+                },
+                // Night Set
+                LootTableEntry {
+                    weight: 1,
+                    items: vec![
+                        LootTableEntryItem::new(0x104DAAD0, 1),
+                        LootTableEntryItem::new(0x104DAB34, 1),
+                        LootTableEntryItem::new(0x104DAB98, 1),
+                        LootTableEntryItem::new(0x104DABFC, 1),
+                    ],
+                },
+                // Oathseeker Knight Set
+                LootTableEntry {
+                    weight: 1,
+                    items: vec![
+                        LootTableEntryItem::new(0x104C4B40, 1),
+                        LootTableEntryItem::new(0x104C5374, 1),
+                        LootTableEntryItem::new(0x104C4C08, 1),
+                        LootTableEntryItem::new(0x104C4C6C, 1),
+                    ],
+                },
+                // Rakshasa Set
+                LootTableEntry {
+                    weight: 1,
+                    items: vec![
+                        LootTableEntryItem::new(0x104EBC40, 1),
+                        LootTableEntryItem::new(0x104EBCA4, 1),
+                        LootTableEntryItem::new(0x104EBD08, 1),
+                        LootTableEntryItem::new(0x104EBD6C, 1),
+                    ],
+                },
+                // Rellana's Set
+                LootTableEntry {
+                    weight: 1,
+                    items: vec![
+                        LootTableEntryItem::new(0x105042E0, 1),
+                        LootTableEntryItem::new(0x10504344, 1),
+                        LootTableEntryItem::new(0x105043A8, 1),
+                        LootTableEntryItem::new(0x1050440C, 1),
+                    ],
+                },
+                // Solitude Set
+                LootTableEntry {
+                    weight: 1,
+                    items: vec![
+                        LootTableEntryItem::new(0x104E4710, 1),
+                        LootTableEntryItem::new(0x104E4774, 1),
+                        LootTableEntryItem::new(0x104E47D8, 1),
+                        LootTableEntryItem::new(0x104E483C, 1),
+                    ],
+                },
+                // Thiollier's Set
+                LootTableEntry {
+                    weight: 1,
+                    items: vec![
+                        LootTableEntryItem::new(0x104CC070, 1),
+                        LootTableEntryItem::new(0x104CC0D4, 1),
+                        LootTableEntryItem::new(0x104CC138, 1),
+                        LootTableEntryItem::new(0x104CC19C, 1),
+                    ],
+                },
+                // Verdigris Set
+                LootTableEntry {
+                    weight: 1,
+                    items: vec![
+                        LootTableEntryItem::new(0x104C7250, 1),
+                        LootTableEntryItem::new(0x104C72B4, 1),
+                        LootTableEntryItem::new(0x104C7318, 1),
+                        LootTableEntryItem::new(0x104C737C, 1),
+                    ],
+                },
+                // Young Lion's Set
+                LootTableEntry {
+                    weight: 1,
+                    items: vec![
+                        LootTableEntryItem::new(0x105069F0, 1),
+                        LootTableEntryItem::new(0x10506AB8, 1),
+                        LootTableEntryItem::new(0x10506B1C, 1),
+                        LootTableEntryItem::new(0x10506B80, 1),
+                    ],
+                },
+                // Dueling Shield
+                LootTableEntry {
+                    weight: 3,
+                    items: vec![LootTableEntryItem::new(0x03B9ACA0, 1)],
+                },
+                // Dryleaf Arts
+                LootTableEntry {
+                    weight: 3,
+                    items: vec![LootTableEntryItem::new(0x039B2820, 1)],
+                },
+                // Smithscript Dagger
+                LootTableEntry {
+                    weight: 3,
+                    items: vec![LootTableEntryItem::new(0x03C8EEE0, 1)],
+                },
+                // Backhand Blade
+                LootTableEntry {
+                    weight: 3,
+                    items: vec![LootTableEntryItem::new(0x03D83120, 1)],
+                },
+                // Beast Claw
+                LootTableEntry {
+                    weight: 3,
+                    items: vec![LootTableEntryItem::new(0x04153A20, 1)],
+                },
+                // Milady
+                LootTableEntry {
+                    weight: 3,
+                    items: vec![LootTableEntryItem::new(0x0405F7E0, 1)],
+                },
+                // Fire Knight's Greatsword
+                LootTableEntry {
+                    weight: 3,
+                    items: vec![LootTableEntryItem::new(0x0044F840, 1)],
+                },
+                // Frozen Needle
+                LootTableEntry {
+                    weight: 3,
+                    items: vec![LootTableEntryItem::new(0x004D0E90, 1)],
+                },
+                // Sword Lance
+                LootTableEntry {
+                    weight: 3,
+                    items: vec![LootTableEntryItem::new(0x003567E0, 1)],
+                },
+                // Horned Warrior's Sword
+                LootTableEntry {
+                    weight: 3,
+                    items: vec![LootTableEntryItem::new(0x0072E610, 1)],
+                },
+                // Horned Warrior's Greatsword
+                LootTableEntry {
+                    weight: 3,
+                    items: vec![LootTableEntryItem::new(0x00820140, 1)],
+                },
+                // Sword of Night (But no flame)
+                LootTableEntry {
+                    weight: 3,
+                    items: vec![LootTableEntryItem::new(0x0090F560, 1)],
+                },
+                // Black Steel Twinblade
+                LootTableEntry {
+                    weight: 3,
+                    items: vec![LootTableEntryItem::new(0x00A05EB0, 1)],
+                },
+                // Messmer Soldier's Axe
+                LootTableEntry {
+                    weight: 3,
+                    items: vec![LootTableEntryItem::new(0x00DD8EC0, 1)],
                 },
             ];
 
@@ -98,7 +488,7 @@ where
 
             spawn_points.for_each(|point| {
                 // Throttle to not exhaust fixed-bound packet queue for packet 44.
-                std::thread::sleep(Duration::from_millis(100));
+                std::thread::sleep(Duration::from_millis(50));
 
                 tracing::info!("Spawning loot");
                 let (x, y, z) = point.position.xyz();
@@ -125,7 +515,7 @@ where
                     position_x: x,
                     position_y: y,
                     position_z: z,
-                    angle: 0.0,
+                    orientation: point.orientation,
                     unk2c: 0,
                     unk30: 0x000001D0,
                     unk34: -1,
@@ -143,9 +533,8 @@ where
                 }));
 
                 let map_item_man = unsafe { get_instance::<MapItemMan>() }.unwrap().unwrap();
-                let spawn_item: extern "C" fn(&mut MapItemMan, &ItemSpawnRequest, bool, bool) = unsafe {
-                    std::mem::transmute(location_dropped_item)
-                };
+                let spawn_item: extern "C" fn(&mut MapItemMan, &ItemSpawnRequest, bool, bool) =
+                    unsafe { std::mem::transmute(location_dropped_item) };
 
                 (spawn_item)(map_item_man, request, true, false);
             });
@@ -176,7 +565,7 @@ pub struct ItemSpawnRequest {
     /// Spawn z
     position_z: f32,
     /// Spawn angle
-    angle: f32,
+    orientation: f32,
     unk2c: u32,
     unk30: u32,
     unk34: i32,

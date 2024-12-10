@@ -188,31 +188,60 @@ pub struct EquipInventoryData {
     /// How many items can one hold in total?
     pub global_capacity: u32,
 
+    /// Holds ordinary items.
     pub normal_item_capacity: u32,
     normal_item_head: OwnedPtr<EquipInventoryDataListEntry>,
     pub normal_item_count: u32,
 
+    /// Holds key items.
     pub key_item_capacity: u32,
     key_item_head: OwnedPtr<EquipInventoryDataListEntry>,
     pub key_item_count: u32,
 
+    /// Holds key items as well?
     pub secondary_key_item_capacity: u32,
     secondary_key_item_head: OwnedPtr<EquipInventoryDataListEntry>,
     pub secondary_key_item_count: u32,
 
     _pad3c: u32,
 
-    normal_item_head_ptr: *mut EquipInventoryDataListEntry,
-    normal_item_count_ptr: *const u32,
-    key_item_head_ptr: *mut EquipInventoryDataListEntry,
-    key_item_count_ptr: *const u32,
+    normal_item_head_ptr: NonNull<EquipInventoryDataListEntry>,
+    normal_item_count_ptr: NonNull<u32>,
+    key_item_head_ptr: NonNull<EquipInventoryDataListEntry>,
+    key_item_count_ptr: NonNull<u32>,
 
-    unk_list_1_head: *mut u16,
-    unk_list_1_count: u64,
-    unk_list_2_head: *mut u16,
-    unk_list_2_count: u64,
+    /// Contains the indices into the item ID mapping list.
+    item_id_mapping_indices: OwnedPtr<[u16; 2017]>,
 
-    unk80: [u8; 0xa8],
+    unk68: u64,
+    /// Contains table of item IDs and their corresponding location in the equip inventory data
+    /// lists.
+    item_id_mapping: *mut ItemIdMapping,
+
+    unk78: u64,
+
+    pub total_item_entry_count: u32,
+    unk84: [u8; 0xa4],
+}
+
+#[repr(C)]
+pub struct ItemIdMapping {
+    pub item_id: u32,
+    bits4: u32,
+}
+
+impl ItemIdMapping {
+    /// Returns the offset of the next item ID mapping with the same modulo result.
+    pub fn next_mapping_item(&self) -> u32 {
+        ((self.bits4 >> 12) & 0xFFF) - 1
+    }
+
+    /// Returns the index of the item slot. This index is first checked against the key items
+    /// capacity to see if it's contained in that. If not you will need to subtract the key items
+    /// capacity to get the index for the normal items list.
+    pub fn item_slot(&self) -> u32 {
+        self.bits4 & 0xFFF
+    }
 }
 
 impl EquipInventoryData {
@@ -259,7 +288,7 @@ pub struct EquipInventoryDataListEntry {
     pub display_id: u32,
     unk10: u8,
     _pad11: [u8; 3],
-    unk14: i32,
+    pub pot_group: i32,
 }
 
 #[repr(C)]
@@ -270,7 +299,6 @@ pub struct EquipMagicData {
     pub selected_slot: u32,
     unk84: u32,
 }
-
 
 #[repr(C)]
 pub struct EquipItemData {

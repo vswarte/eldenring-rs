@@ -1,4 +1,4 @@
-use game::cs::{EzStateEventVMT, EzStateExternalFuncArg, EzStateExternalFuncArgValue};
+use game::cs::{EzStateEventVmt, EzStateExternalFuncArg, EzStateExternalFuncArgValue};
 use vtable_rs::VPtr;
 
 #[derive(Clone, Copy)]
@@ -40,7 +40,7 @@ impl From<EzStateExternalFuncArgSafe> for EzStateExternalFuncArg {
 
 #[repr(C)]
 pub struct EzStateEvent {
-    vmt: VPtr<dyn EzStateEventVMT, Self>,
+    vmt: VPtr<dyn EzStateEventVmt, Self>,
     event_id: u32,
     args: Vec<EzStateExternalFuncArg>,
 }
@@ -65,7 +65,7 @@ impl EzStateEvent {
     }
 }
 
-impl EzStateEventVMT for EzStateEvent {
+impl EzStateEventVmt for EzStateEvent {
     extern "C" fn destructor(&mut self) {
         unimplemented!()
     }

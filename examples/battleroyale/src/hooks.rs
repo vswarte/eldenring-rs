@@ -11,6 +11,8 @@ use retour::static_detour;
 use retour::GenericDetour;
 use thiserror::Error;
 use util::singleton::get_instance;
+use windows::core::w;
+use windows::core::PCWSTR;
 
 use crate::gamemode::GameMode;
 use crate::gamestate::GameStateProvider;
@@ -24,6 +26,7 @@ static_detour! {
     static HOOK_MSB_GET_PARTS_DATA_COUNT: extern "C" fn(usize, u32) -> u32;
     static HOOK_CHR_INS_DEAD: extern "C" fn(*mut ChrIns);
     static HOOK_INITIAL_SPAWN_POSITION: extern "C" fn(*mut QuickmatchManager, *mut ChunkPosition4, usize, usize, usize);
+    static HOOK_LOOKUP_MENU_TEXT: extern "C" fn(*const usize, u32) -> PCWSTR;
 }
 
 #[derive(Debug, Error)]
@@ -34,24 +37,24 @@ pub enum HookError {
     Retour(#[from] retour::Error),
 }
 
-pub struct GamemodeHooks<S, T>
+pub struct GamemodeHooks<S, L>
 where
     S: GameStateProvider + Send + Sync + 'static,
-    T: ProgramLocationProvider,
+    L: ProgramLocationProvider + Send + Sync + 'static,
 {
     _game_state: PhantomData<S>,
-    _location: PhantomData<T>,
+    _location: PhantomData<L>,
 }
 
 // TODO: stop using static detours
-impl<S, T> GamemodeHooks<S, T>
+impl<S, L> GamemodeHooks<S, L>
 where
     S: GameStateProvider + Send + Sync + 'static,
-    T: ProgramLocationProvider,
+    L: ProgramLocationProvider + Send + Sync + 'static,
 {
-    pub unsafe fn place(location: T, gamemode: Arc<GameMode<S>>) -> Result<Self, HookError>
+    pub unsafe fn place(location: Arc<L>, gamemode: Arc<GameMode<S, L>>) -> Result<Self, HookError>
     where
-        T: ProgramLocationProvider,
+        L: ProgramLocationProvider,
     {
         // Take control over the players death so we can apply the specator cam.
         Self::hook_player_characters(&location, gamemode.clone())?;
@@ -65,6 +68,9 @@ where
         // Disable player item drop cap
         Self::patch_item_drop_limit(&location, gamemode.clone())?;
 
+        // Inject custom strings
+        Self::hook_text_lookups(&location, gamemode.clone())?;
+
         Ok(Self {
             _game_state: PhantomData::default(),
             _location: PhantomData::default(),
@@ -72,10 +78,10 @@ where
     }
 
     unsafe fn patch_item_drop_limit(
-        location: &T,
-        gamemode: Arc<GameMode<S>>,
+        location: &L,
+        gamemode: Arc<GameMode<S, L>>,
     ) -> Result<(), HookError> {
-        // Neuter dropped item cap check 
+        // Neuter dropped item cap check
         let location = location.get(LOCATION_DROPPED_ITEM_CAP_CHECK)?;
         unsafe { *(location as *mut u8) = 0xEB };
 
@@ -83,8 +89,8 @@ where
     }
 
     unsafe fn hook_player_characters(
-        location: &T,
-        gamemode: Arc<GameMode<S>>,
+        location: &L,
+        gamemode: Arc<GameMode<S, L>>,
     ) -> Result<(), HookError> {
         // Take control over character death so we can enforce spectator mode instead
         {
@@ -97,7 +103,7 @@ where
                             return HOOK_CHR_INS_DEAD.call(chr_ins);
                         }
 
-                        // Disable character collision  
+                        // Disable character collision
                         chr_ins.as_mut().unwrap().chr_ctrl.flags |= 2;
 
                         tracing::info!("Caught ChrIns death");
@@ -111,7 +117,10 @@ where
         Ok(())
     }
 
-    unsafe fn override_map_load(location: &T, gamemode: Arc<GameMode<S>>) -> Result<(), HookError> {
+    unsafe fn override_map_load(
+        location: &L,
+        gamemode: Arc<GameMode<S, L>>,
+    ) -> Result<(), HookError> {
         {
             let gamemode = gamemode.clone();
             // Override map ID on qm map load
@@ -170,7 +179,10 @@ where
         Ok(())
     }
 
-    unsafe fn apply_msb_fixups(location: &T, gamemode: Arc<GameMode<S>>) -> Result<(), HookError> {
+    unsafe fn apply_msb_fixups(
+        location: &L,
+        gamemode: Arc<GameMode<S, L>>,
+    ) -> Result<(), HookError> {
         // Disable loading of certain MSB event entries
         {
             let gamemode = gamemode.clone();
@@ -213,7 +225,7 @@ where
                         match parts_type {
                             // Disable enemies
                             2 => 0,
-                            
+
                             // Disable dummy enemies
                             9 => 0,
 
@@ -243,6 +255,32 @@ where
                             1 => 0,
 
                             _ => HOOK_MSB_GET_POINT_DATA_COUNT.call(msb_res_cap, point_type),
+                        }
+                    },
+                )?
+                .enable()?;
+        }
+
+        Ok(())
+    }
+
+    unsafe fn hook_text_lookups(
+        location: &L,
+        gamemode: Arc<GameMode<S, L>>,
+    ) -> Result<(), HookError> {
+        {
+            let gamemode = gamemode.clone();
+            HOOK_LOOKUP_MENU_TEXT
+                .initialize(
+                    std::mem::transmute(location.get(LOCATION_LOOKUP_MENU_TEXT)?),
+                    move |msg_repository_imp: *const usize, entry: u32| {
+                        let original = HOOK_LOOKUP_MENU_TEXT.call(msg_repository_imp, entry);
+                        // tracing::info!("MenuText lookup {entry} -> {}", original.to_string().unwrap());
+
+                        if entry == 506201 {
+                            w!("Battle Royale")
+                        } else {
+                            original
                         }
                     },
                 )?

@@ -1,11 +1,8 @@
 use std::{
-    collections::HashMap,
-    ptr::NonNull,
-    sync::{
+    collections::HashMap, marker::Sync, ptr::NonNull, sync::{
         atomic::{AtomicBool, Ordering},
         Arc, RwLock,
-    },
-    time::{Duration, Instant},
+    }, time::{Duration, Instant}
 };
 
 use game::{
@@ -16,22 +13,17 @@ use game::{
     fd4::FD4Time,
     position::BlockPoint,
 };
-use rand::prelude::*;
 use util::{input::is_key_pressed, singleton::get_instance};
 
 use crate::{
-    gamestate::GameStateProvider,
-    loot::LootGenerator,
-    message,
-    network::{MatchMessaging, Message},
-    tool,
+    pain::PainRing, gamestate::GameStateProvider, loot::LootGenerator, message, network::{MatchMessaging, Message}, player::Player, tool, ProgramLocationProvider
 };
 use crate::{
     loadout::PlayerLoadout,
-    mapdata::{SpawnPoint, MAP_CONFIG},
+    mapdata::{MapPoint, MAP_CONFIG},
 };
 use crate::{
-    message::MatchResultPresenter, spectator_camera::SpectatorCamera, HardcodedLocationProvider,
+    message::NotificationPresenter, spectator_camera::SpectatorCamera, HardcodedLocationProvider,
 };
 
 #[derive(Clone, Debug, PartialEq)]
@@ -43,14 +35,17 @@ pub enum PlayerState {
 /// Fornite emote allotment.
 pub const END_DISCONNECT_TIMEOUT: Duration = Duration::from_secs(10);
 
-pub struct GameMode<S>
+pub struct GameMode<S, L>
 where
     S: GameStateProvider,
+    L: ProgramLocationProvider + Sync,
 {
     /// Is gamemode active at this time?
     _running: AtomicBool,
     /// Is gamemode active still but the match finished?
     _finished: AtomicBool,
+    /// Did we apply the player levels yet?
+    setup_player: AtomicBool,
     /// As a host, did send the loadout to the participants?
     sent_loadout: AtomicBool,
     /// Applied flag overrides for this match?
@@ -58,45 +53,56 @@ where
     /// Handles player spectation.
     spectator_camera: SpectatorCamera<S>,
     /// Handles loot generation
-    loot_generator: LootGenerator<HardcodedLocationProvider>,
+    loot_generator: LootGenerator<L>,
     /// Provides info about the games state like if we're in a match, score, alive players.
     game_state: Arc<S>,
+    /// Manages player-related mechanics.
+    player: Player<L>,
     /// Used to generate and keep track of player spawns.
     player_loadout: RwLock<Option<PlayerLoadout>>,
     /// Player spawn point
-    spawn_point: RwLock<Option<SpawnPoint>>,
+    spawn_point: RwLock<Option<MapPoint>>,
     /// Facilitates networking for the match.
     messaging: MatchMessaging,
     /// Timer to keep track of when a match end was requested.
     end_requested_at: RwLock<Option<Instant>>,
     /// Presents match scores at the end.
-    match_result_presenter: MatchResultPresenter<HardcodedLocationProvider>,
+    notification: NotificationPresenter<L>,
+    /// Shrinking circle that slowly kills player if they step outside of it.
+    pain_ring: PainRing<L>,
 }
 
-impl<S> GameMode<S>
+impl<S, L> GameMode<S, L>
 where
     S: GameStateProvider,
+    L: ProgramLocationProvider + Sync,
 {
     /// Initializes the gamemodes
     pub fn init(
-        game_state: S,
-        match_result_presenter: MatchResultPresenter<HardcodedLocationProvider>,
+        game_state: Arc<S>,
+        location: Arc<L>,
+        notification: NotificationPresenter<L>,
+        spectator_camera: SpectatorCamera<S>,
+        loot_generator: LootGenerator<L>,
+        player: Player<L>,
+        pain_ring: PainRing<L>,
     ) -> Self {
-        let game_state = Arc::new(game_state);
-
         Self {
             _running: Default::default(),
             _finished: Default::default(),
+            setup_player: Default::default(),
             sent_loadout: Default::default(),
             applied_flag_overrides: Default::default(),
-            spectator_camera: SpectatorCamera::new(game_state.clone()),
-            loot_generator: LootGenerator::new(HardcodedLocationProvider::new()),
-            game_state: game_state.clone(),
+            spectator_camera,
+            loot_generator,
+            game_state,
             player_loadout: Default::default(),
+            player,
             spawn_point: Default::default(),
             messaging: Default::default(),
             end_requested_at: Default::default(),
-            match_result_presenter,
+            notification,
+            pain_ring,
         }
     }
 
@@ -129,11 +135,11 @@ where
 
             match message {
                 Message::Loadout {
-                    map_id,
+                    map_id: _,
                     position,
                     orientation,
                 } => {
-                    *self.spawn_point.write().unwrap() = Some(SpawnPoint {
+                    *self.spawn_point.write().unwrap() = Some(MapPoint {
                         map: MapId::from_parts(20, 0, 0, 0),
                         position: BlockPoint::from_xyz(position.0, position.1, position.2),
                         orientation: orientation.clone(),
@@ -179,6 +185,10 @@ where
                 .expect("Could not send player loadouts");
         }
 
+        if game_state.match_loading() && !self.setup_player.swap(true, Ordering::Relaxed) {
+            self.player.setup_for_match();
+        }
+
         if !game_state.match_active() {
             return;
         }
@@ -216,6 +226,7 @@ where
             self.loot_generator.update();
         }
 
+        self.pain_ring.update();
         self.spectator_camera.update();
     }
 
@@ -252,7 +263,7 @@ where
             message::Message::Defeat
         };
 
-        self.match_result_presenter.present(message);
+        self.notification.present_mp_message(message);
 
         *self.end_requested_at.write().unwrap() = Some(Instant::now());
     }
@@ -267,6 +278,8 @@ where
 
     /// Finishes the match and closes it.
     fn end_match(&self) {
+        self.player.restore_original_levels();
+
         // Disconnect the ugly way for now
         let cs_net_man = unsafe { get_instance::<CSNetMan>() }.unwrap().unwrap();
         cs_net_man
@@ -293,6 +306,8 @@ where
         let _ = self.end_requested_at.write().unwrap().take();
         self.spectator_camera.stop();
         self.loot_generator.reset();
+        self.pain_ring.reset();
+        self.setup_player.store(false, Ordering::Relaxed);
         self.applied_flag_overrides.store(false, Ordering::Relaxed);
         self._running.store(false, Ordering::Relaxed);
     }
@@ -319,7 +334,7 @@ where
     }
 
     /// Get local players assigned spawn-point for the match.
-    pub fn player_spawn_point(&self) -> SpawnPoint {
+    pub fn player_spawn_point(&self) -> MapPoint {
         // Place player at default location if no spawn point was networked by now...
         let default = MAP_CONFIG
             .first()

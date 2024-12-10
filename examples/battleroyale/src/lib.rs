@@ -1,9 +1,13 @@
+use pain::PainRing;
 use crash_handler::{make_crash_event, CrashContext, CrashEvent, CrashEventResult, CrashHandler};
 use gamestate::DefaultGameStateProvider;
 use hooks::GamemodeHooks;
 use location::*;
-use message::MatchResultPresenter;
+use loot::LootGenerator;
+use message::NotificationPresenter;
 use pelite::pe::{Pe, Rva, Va};
+use player::Player;
+use spectator_camera::SpectatorCamera;
 use std::{
     error::Error,
     sync::{Arc, RwLock},
@@ -41,6 +45,8 @@ mod network;
 mod message;
 mod loot;
 mod tool;
+mod pain;
+mod player;
 
 #[no_mangle]
 pub unsafe extern "C" fn DllMain(_hmodule: usize, reason: u32) -> bool {
@@ -80,12 +86,28 @@ fn init() -> Result<(), Box<dyn Error>> {
     let program = unsafe { Program::current() };
     unsafe { arxan::disable_code_restoration(&program)? };
 
-    let message = MatchResultPresenter::new(HardcodedLocationProvider::new());
-    let game_state = DefaultGameStateProvider::default();
-    let gamemode = Arc::new(GameMode::init(game_state, message));
+    let game_state = Arc::new(DefaultGameStateProvider::default());
+    let location = Arc::new(HardcodedLocationProvider::new());
+
+    let spectator_camera = SpectatorCamera::new(game_state.clone());
+    let loot_generator = LootGenerator::new(location.clone());
+    let notification = NotificationPresenter::new(location.clone());
+    let player = Player::new(location.clone());
+    let pain_ring = PainRing::new(location.clone());
+
+    let gamemode = Arc::new(GameMode::init(
+        game_state,
+        location.clone(),
+        notification,
+        spectator_camera,
+        loot_generator,
+        player,
+        pain_ring,
+    ));
+
     let hooks = unsafe {
         GamemodeHooks::<DefaultGameStateProvider, _>::place(
-            HardcodedLocationProvider::new(),
+            location,
             gamemode.clone(),
         )?
     };

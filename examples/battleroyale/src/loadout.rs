@@ -1,9 +1,9 @@
 use rand::prelude::*;
-use crate::mapdata::{MapConfiguration, SpawnPoint};
+use crate::mapdata::{MapConfiguration, MapPoint};
 
 #[derive(Debug)]
 pub struct PlayerLoadout {
-    spawn_points: Vec<SpawnPoint>,
+    spawn_points: Vec<MapPoint>,
 }
 
 impl PlayerLoadout {
@@ -23,7 +23,7 @@ impl PlayerLoadout {
     }
 
     /// Retrieves the generated spawn point for a particular player.
-    pub fn spawn_point_for_player(&self, player: usize) -> &SpawnPoint {
+    pub fn spawn_point_for_player(&self, player: usize) -> &MapPoint {
         self.spawn_points
             .get(player % self.spawn_points.len())
             .expect("Tried calling spawnpoint getter without having spawn points for a map.")

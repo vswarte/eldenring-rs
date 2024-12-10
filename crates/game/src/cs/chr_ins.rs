@@ -364,7 +364,8 @@ pub struct CSChrDataModule {
     unk16c: f32,
     unk170: [u8; 0x28],
     unk198: [u8; 0x3],
-    some_debug_bitfield: u8,
+    // 2nd bit makes you undamageable
+    debug_flags: u8,
     unk19c: [u8; 0x8c],
     // wchar_t*
     character_name: OwnedPtr<ffi::OsString>,

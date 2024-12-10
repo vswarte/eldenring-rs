@@ -23,6 +23,14 @@ pub const LOCATION_PRESENT_MP_MESSAGE: &str = "PRESENT_MP_MESSAGE";
 pub const LOCATION_SPAWN_DROPPED_ITEM: &str = "SPAWN_DROPPED_ITEM";
 // JL of a check to cap amount of dropped items.
 pub const LOCATION_DROPPED_ITEM_CAP_CHECK: &str = "DROPPED_ITEM_CAP_CHECK";
+// Function that executes a prepared debug ffx spawn.
+pub const LOCATION_SPAWN_DEBUG_FFX: &str = "SPAWN_DEBUG_FFX";
+// Message repo lookup fn for ?MenuText?. Contains quickmatch strings.
+pub const LOCATION_LOOKUP_MENU_TEXT: &str = "LOOKUP_MENU_TEXT";
+// Fn that transfers items between two inventory data instances.
+pub const LOCATION_TRANSFER_ITEM: &str = "LOOKUP_TRANSFER_ITEM";
+// Applies speffect to chrins
+pub const LOCATION_APPLY_SPEFFECT: &str = "APPLY_SPEFFECT";
 
 pub trait ProgramLocationProvider {
     fn get(&self, name: &str) -> Result<Va, LocationProviderError>;
@@ -56,6 +64,10 @@ impl HardcodedLocationProvider {
                 (LOCATION_PRESENT_MP_MESSAGE, 0x766460),
                 (LOCATION_SPAWN_DROPPED_ITEM, 0x561620),
                 (LOCATION_DROPPED_ITEM_CAP_CHECK, 0x561fea),
+                (LOCATION_SPAWN_DEBUG_FFX, 0xd963c0),
+                (LOCATION_LOOKUP_MENU_TEXT, 0xd10a00),
+                (LOCATION_TRANSFER_ITEM, 0x24dc40),
+                (LOCATION_APPLY_SPEFFECT, 0x3e8cf0),
             ]),
         }
     }

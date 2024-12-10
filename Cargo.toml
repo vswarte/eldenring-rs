@@ -11,6 +11,7 @@ members = [
     "examples/battleroyale",
     "tools/export-singletons",
     "tools/profiler",
+    "tools/binary-mapper",
 ]
 resolver = "2"
 
@@ -24,6 +25,7 @@ license = "MIT OR Apache-2.0"
 dlrf = { path = "crates/dlrf" }
 game = { path = "crates/game" }
 util = { path = "crates/util" }
+binary_mapper = { path = "crates/binary-mapper" }
 thiserror = "1"
 tracing = "0.1"
 tracing-subscriber = "0.3"

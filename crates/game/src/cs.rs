@@ -23,6 +23,8 @@ mod msb;
 mod network_session;
 mod item_lot;
 mod item;
+mod sfx;
+mod world_sfx_man;
 
 pub use camera::*;
 pub use field_ins::*;
@@ -49,3 +51,5 @@ pub use msb::*;
 pub use network_session::*;
 pub use item_lot::*;
 pub use item::*;
+pub use sfx::*;
+pub use world_sfx_man::*;

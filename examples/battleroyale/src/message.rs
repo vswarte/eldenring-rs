@@ -1,3 +1,5 @@
+use std::sync::Arc;
+
 use game::cs::CSMenuMan;
 use util::singleton::get_instance;
 
@@ -39,26 +41,25 @@ pub enum Message {
     YouDiedWithFade= 50,
 }
 
-/// Presents the user with
-pub struct MatchResultPresenter<L>
+pub struct NotificationPresenter<L>
 where
     L: ProgramLocationProvider,
 {
-    location: L,
+    location: Arc<L>,
 }
 
-impl<L> MatchResultPresenter<L>
+impl<L> NotificationPresenter<L>
 where
     L: ProgramLocationProvider,
 {
-    pub fn new(location: L) -> Self {
+    pub fn new(location: Arc<L>) -> Self {
         Self {
             location,
         }
     }
 
     /// Displays state message on the screen ala "YOU DIED"
-    pub fn present(&self, message: Message) {
+    pub fn present_mp_message(&self, message: Message) {
         let Some(menu_man) = unsafe { get_instance::<CSMenuMan>() }.unwrap() else {
             return;
         };

@@ -7,7 +7,7 @@ use steamworks::{
 };
 use util::steam;
 
-use crate::{loadout::PlayerLoadout, mapdata::SpawnPoint};
+use crate::{loadout::PlayerLoadout, mapdata::MapPoint};
 
 const STEAM_MESSAGE_CHANNEL: u32 = 51234;
 const STEAM_MESSAGE_BATCH_SIZE: usize = 0x10;
@@ -26,7 +26,7 @@ pub enum Message {
 }
 
 impl MatchMessaging {
-    pub fn send_loadouts(&self, loadout: &HashMap<u64, SpawnPoint>) -> Result<(), Box<dyn Error>> {
+    pub fn send_loadouts(&self, loadout: &HashMap<u64, MapPoint>) -> Result<(), Box<dyn Error>> {
         loadout.iter().for_each(|(remote, spawn)| {
             let message = Message::Loadout {
                 map_id: 0x0,

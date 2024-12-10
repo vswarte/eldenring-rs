@@ -1,7 +1,7 @@
 use game::cs::WorldChrMan;
 use util::singleton::get_instance;
 
-use crate::mapdata::SpawnPoint;
+use crate::mapdata::MapPoint;
 
 /// Defines some utilities around creating maps
 pub fn sample_spawn_point() {
@@ -13,7 +13,7 @@ pub fn sample_spawn_point() {
         return;
     };
 
-    let point = SpawnPoint {
+    let point = MapPoint {
         map: main_player.chr_ins.map_id_1,
         position: main_player.block_position,
         orientation: main_player.block_orientation,

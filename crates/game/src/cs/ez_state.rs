@@ -1,7 +1,7 @@
 use vtable_rs::vtable;
 
 #[vtable]
-pub trait EzStateEventVMT {
+pub trait EzStateEventVmt {
     fn destructor(&mut self);
 
     fn unk08(&mut self);
