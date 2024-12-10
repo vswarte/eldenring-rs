@@ -1,7 +1,49 @@
-[[patterns]]
-pattern = "4c 8b c7 48 c7 44 24 20 00 00 00 00 33 d2 49 8b cf e8 $ { ' }"
-captures = ["", "ASSET_HOOK_ARCHIVE_LOOKUP"]
+# Mapper file used to retrieve the fixed RVAs in the hardcoded location provider.
 
 [[patterns]]
-pattern = "4c 89 74 24 28 48 8b 84 24 90 00 00 00 48 89 44 24 20 4c 8b ce 45 8b c4 49 8b d7 48 8b cd e8 $ { ' } 8b d8"
-captures = ["", "ASSET_HOOK_SOUND_ARCHIVE_LOOKUP"]
+pattern = "ba ff 01 00 00 40 84 ff 74 ? 45 33 c0 e8 $ { ' }"
+captures = ["", "APPLY_SPEFFECT"]
+
+[[patterns]]
+pattern = "ba ae 70 04 00 e8 $ { ' }"
+captures = ["", "LOOKUP_MENU_TEXT"]
+
+[[patterns]]
+pattern = "ba d0 07 00 00 48 83 c4 28 e9 $ { ' }"
+captures = ["", "PRESENT_MP_MESSAGE"]
+
+[[patterns]]
+pattern = "ba 36 00 00 00 49 8b ce e8 $ { ' }"
+captures = ["", "MSB_GET_POINT_DATA_COUNT"]
+
+[[patterns]]
+pattern = "8d 56 0d 48 8b c8 e8 $ { ' }"
+captures = ["", "MSB_GET_PARTS_DATA_COUNT"]
+
+[[patterns]]
+pattern = "4c 8b 73 28 ba 14 00 00 00 49 8b ce e8 $ { ' }"
+captures = ["", "MSB_GET_EVENT_DATA_COUNT"]
+
+[[patterns]]
+pattern = "83 78 0c 06 74 ? 48 8b d3 48 8b cf e8 $ { ' }"
+captures = ["", "SPAWN_DROPPED_ITEM"]
+
+[[patterns]]
+pattern = "41 b8 01 00 00 00 41 8b d8 41 8b d0 89 5c 24 20 e8 $ { ' }"
+captures = ["", "MAP_QUICKMATCH_ENUM_TO_MAP_ID"]
+
+[[patterns]]
+pattern = "40 53 48 83 ec 40 c7 44 24 50 00 00 00 00 48 8b d9 48 8b 89 90 01 00 00 0f 57 db f3 0f 10 05 f5 19 ea 02"
+captures = ["CHR_INS_DEAD"]
+
+[[patterns]]
+pattern = "4c 8b ce 4c 8d 45 e7 48 8d 55 d7 48 8b cb e8 $ { ' }"
+captures = ["", "INITIAL_SPAWN_POSITION"]
+
+[[patterns]]
+pattern = "4c 89 33 4c 89 73 08 48 8b d5 48 8d 4b 20 e8 $ {} 83 7f 1c 08 ' 7c ?"
+captures = ["", "DROPPED_ITEM_CAP_CHECK"]
+
+[[patterns]]
+pattern = "44 8b cd 4c 8b c7 48 8b d6 8b cb e8 $ { ' }"
+captures = ["", "TRANSFER_ITEM"]

@@ -23,13 +23,11 @@ pub const LOCATION_PRESENT_MP_MESSAGE: &str = "PRESENT_MP_MESSAGE";
 pub const LOCATION_SPAWN_DROPPED_ITEM: &str = "SPAWN_DROPPED_ITEM";
 // JL of a check to cap amount of dropped items.
 pub const LOCATION_DROPPED_ITEM_CAP_CHECK: &str = "DROPPED_ITEM_CAP_CHECK";
-// Function that executes a prepared debug ffx spawn.
-pub const LOCATION_SPAWN_DEBUG_FFX: &str = "SPAWN_DEBUG_FFX";
 // Message repo lookup fn for ?MenuText?. Contains quickmatch strings.
 pub const LOCATION_LOOKUP_MENU_TEXT: &str = "LOOKUP_MENU_TEXT";
 // Fn that transfers items between two inventory data instances.
 pub const LOCATION_TRANSFER_ITEM: &str = "LOOKUP_TRANSFER_ITEM";
-// Applies speffect to chrins
+// Applies speffect to chrins.
 pub const LOCATION_APPLY_SPEFFECT: &str = "APPLY_SPEFFECT";
 
 pub trait ProgramLocationProvider {
@@ -55,18 +53,17 @@ impl HardcodedLocationProvider {
         Self {
             program: unsafe { Program::current() },
             offsets: HashMap::from([
+                (LOCATION_TRANSFER_ITEM, 0x24dc40),
+                (LOCATION_DROPPED_ITEM_CAP_CHECK, 0x561fea),
+                (LOCATION_INITIAL_SPAWN_POSITION, 0xa4cd70),
                 (LOCATION_CHR_INS_DEAD, 0x3fcc60),
                 (LOCATION_MAP_QUICKMATCH_ENUM_TO_MAP_ID, 0xa3c8a0),
-                (LOCATION_INITIAL_SPAWN_POSITION, 0xa4cd70),
-                (LOCATION_MSB_GET_EVENT_DATA_COUNT, 0xcf5c10),
-                (LOCATION_MSB_GET_PARTS_DATA_COUNT, 0xcf5da0),
-                (LOCATION_MSB_GET_POINT_DATA_COUNT, 0xcf6360),
-                (LOCATION_PRESENT_MP_MESSAGE, 0x766460),
                 (LOCATION_SPAWN_DROPPED_ITEM, 0x561620),
-                (LOCATION_DROPPED_ITEM_CAP_CHECK, 0x561fea),
-                (LOCATION_SPAWN_DEBUG_FFX, 0xd963c0),
+                (LOCATION_MSB_GET_POINT_DATA_COUNT, 0xcf6360),
+                (LOCATION_MSB_GET_PARTS_DATA_COUNT, 0xcf5da0),
+                (LOCATION_MSB_GET_EVENT_DATA_COUNT, 0xcf5c10),
+                (LOCATION_PRESENT_MP_MESSAGE, 0x766460),
                 (LOCATION_LOOKUP_MENU_TEXT, 0xd10a00),
-                (LOCATION_TRANSFER_ITEM, 0x24dc40),
                 (LOCATION_APPLY_SPEFFECT, 0x3e8cf0),
             ]),
         }
