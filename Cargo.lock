@@ -103,6 +103,7 @@ dependencies = [
  "steamworks",
  "steamworks-sys",
  "thiserror",
+ "toml 0.8.19",
  "tracing",
  "tracing-appender",
  "tracing-panic",

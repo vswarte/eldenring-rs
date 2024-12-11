@@ -11,7 +11,7 @@ use util::singleton::get_instance;
 const LOOT_SPAWN_INTERVAL: Duration = Duration::from_secs(10);
 
 use crate::{
-    mapdata::{MapConfiguration, MAP_CONFIG},
+    mapdata::{self, MapConfiguration},
     ProgramLocationProvider, LOCATION_SPAWN_DROPPED_ITEM,
 };
 
@@ -58,12 +58,12 @@ where
     }
 
     pub fn update(&self) {
-        let map = &MAP_CONFIG[0];
+        let map = mapdata::get(0).unwrap();
 
         // First update on the map should provision it
         if !self.has_provisioned_map.load(Ordering::Relaxed) {
             tracing::info!("Provisioning map");
-            self.provision_map(map);
+            self.provision_map(&map);
             self.has_provisioned_map.store(true, Ordering::Relaxed);
         }
     }

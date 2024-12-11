@@ -1,48 +1,39 @@
-use pain::PainRing;
+use config::Configuration;
 use crash_handler::{make_crash_event, CrashContext, CrashEventResult, CrashHandler};
 use gamestate::DefaultGameStateProvider;
 use hooks::GamemodeHooks;
 use location::*;
 use loot::LootGenerator;
 use message::NotificationPresenter;
+use pain::PainRing;
 use player::Player;
 use spectator_camera::SpectatorCamera;
-use std::{
-    error::Error,
-    sync::Arc,
-    time::Duration,
-};
+use std::{collections::HashMap, error::Error, sync::Arc, time::Duration};
 
 /// Implements a battle-royale gamemode on top of quickmatches.
 use game::{
-    cs::{
-        CSTaskGroupIndex, CSTaskImp,
-    },
+    cs::{CSTaskGroupIndex, CSTaskImp},
     fd4::FD4TaskData,
 };
 
 use gamemode::GameMode;
 use tracing_panic::panic_hook;
-use util::{
-    arxan,
-    program::Program,
-    singleton::get_instance,
-    task::CSTaskImpExt,
-};
+use util::{arxan, program::Program, singleton::get_instance, task::CSTaskImpExt};
 
+mod config;
 mod gamemode;
-mod hooks;
-mod location;
-mod mapdata;
-mod spectator_camera;
 mod gamestate;
+mod hooks;
 mod loadout;
-mod network;
-mod message;
+mod location;
 mod loot;
-mod tool;
+mod mapdata;
+mod message;
+mod network;
 mod pain;
 mod player;
+mod spectator_camera;
+mod tool;
 
 #[no_mangle]
 pub unsafe extern "C" fn DllMain(_hmodule: usize, reason: u32) -> bool {
@@ -91,6 +82,13 @@ fn init() -> Result<(), Box<dyn Error>> {
     let player = Player::new(location.clone());
     let pain_ring = PainRing::new(location.clone());
 
+    // let config = Configuration {
+    //     maps: HashMap::from([
+    //         (String::from("0"), (&mapdata::MAP_CONFIG[0]).into()),
+    //     ]),
+    // };
+    // config::export_config(&config).unwrap();
+
     let gamemode = Arc::new(GameMode::init(
         game_state,
         location.clone(),
@@ -101,12 +99,8 @@ fn init() -> Result<(), Box<dyn Error>> {
         pain_ring,
     ));
 
-    let hooks = unsafe {
-        GamemodeHooks::<DefaultGameStateProvider, _>::place(
-            location,
-            gamemode.clone(),
-        )?
-    };
+    let hooks =
+        unsafe { GamemodeHooks::<DefaultGameStateProvider, _>::place(location, gamemode.clone())? };
 
     // Enqueue task that updates gamemode
     let cs_task = unsafe { get_instance::<CSTaskImp>() }?.unwrap();

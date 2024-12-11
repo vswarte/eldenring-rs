@@ -14,11 +14,11 @@ use game::{
 use util::{input::is_key_pressed, singleton::get_instance};
 
 use crate::{
-    pain::PainRing, gamestate::GameStateProvider, loot::LootGenerator, message, network::{MatchMessaging, Message}, player::Player, tool, ProgramLocationProvider
+    gamestate::GameStateProvider, loot::LootGenerator, mapdata, message, network::{MatchMessaging, Message}, pain::PainRing, player::Player, tool, ProgramLocationProvider
 };
 use crate::{
     loadout::PlayerLoadout,
-    mapdata::{MapPoint, MAP_CONFIG},
+    mapdata::MapPoint,
 };
 use crate::{
     message::NotificationPresenter, spectator_camera::SpectatorCamera,
@@ -202,7 +202,7 @@ where
                 .unwrap()
                 .unwrap();
 
-            let map = &MAP_CONFIG[0];
+            let map = mapdata::get(0).unwrap();
             map.event_flag_overrides.iter().for_each(|(flag, state)| {
                 cs_event_flag_man
                     .virtual_memory_flag
@@ -315,10 +315,10 @@ where
         tracing::info!("Requested target map ID for {map}");
 
         // TODO: match config against incoming map enum
-        let targeted_map = &MAP_CONFIG[0];
+        let targeted_map = mapdata::get(0).unwrap();
 
         // Generate loadout on every end.
-        let loadout = PlayerLoadout::generate(targeted_map);
+        let loadout = PlayerLoadout::generate(&targeted_map);
         tracing::info!("Generated loadout: {loadout:#?}");
         *self.player_loadout.write().unwrap() = Some(loadout);
 
@@ -332,13 +332,12 @@ where
     /// Get local players assigned spawn-point for the match.
     pub fn player_spawn_point(&self) -> MapPoint {
         // Place player at default location if no spawn point was networked by now...
-        let default = MAP_CONFIG
-            .first()
-            .unwrap()
+        let default = mapdata::get(0).unwrap()
             .player_spawn_points
             .first()
             .unwrap()
             .clone();
+
         self.spawn_point
             .read()
             .unwrap()

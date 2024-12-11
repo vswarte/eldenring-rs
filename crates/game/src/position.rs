@@ -15,6 +15,8 @@
 /// coordinate where both chunk and havok position are known.
 use std::{fmt::Display, ops::Sub};
 
+use nalgebra::{Vector, Vector3};
+
 use crate::matrix::{FSPoint, FSVector4};
 
 /// Represents a position relative to some block center.
@@ -36,6 +38,12 @@ impl Display for BlockPoint {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         let (x, y, z) = self.xyz();
         write!(f, "BlockPoint({x}, {y}, {z})")
+    }
+}
+
+impl Into<Vector3<f32>> for BlockPoint {
+    fn into(self) -> Vector3<f32> {
+        Vector3::new(self.0.0, self.0.1, self.0.2)
     }
 }
 

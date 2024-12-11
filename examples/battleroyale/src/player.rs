@@ -154,10 +154,15 @@ where
         equipment.chr_asm.gaitem_handles = [0; 22];
         equipment.chr_asm.equipment_param_ids = [0; 22];
 
+        equipment.chr_asm.gaitem_handles[CHR_ASM_SLOT_WEAPON_LEFT_1] = 0x808004b3;
+        equipment.chr_asm.gaitem_handles[CHR_ASM_SLOT_WEAPON_RIGHT_1] = 0x808004b3;
+        equipment.chr_asm.gaitem_handles[CHR_ASM_SLOT_PROTECTOR_HEAD] = 0x908004af;
+        equipment.chr_asm.gaitem_handles[CHR_ASM_SLOT_PROTECTOR_CHEST] = 0x908004b0;
+        equipment.chr_asm.gaitem_handles[CHR_ASM_SLOT_PROTECTOR_HANDS] = 0x908004b1;
+        equipment.chr_asm.gaitem_handles[CHR_ASM_SLOT_PROTECTOR_LEGS] = 0x908004b2;
+
         equipment.chr_asm.equipment_param_ids[CHR_ASM_SLOT_WEAPON_LEFT_1] = 110000;
         equipment.chr_asm.equipment_param_ids[CHR_ASM_SLOT_WEAPON_RIGHT_1] = 110000;
-
-        equipment.chr_asm.equipment_param_ids[CHR_ASM_SLOT_PROTECTOR_CHEST] = 10100;
         equipment.chr_asm.equipment_param_ids[CHR_ASM_SLOT_PROTECTOR_HEAD] = 10000;
         equipment.chr_asm.equipment_param_ids[CHR_ASM_SLOT_PROTECTOR_CHEST] = 10100;
         equipment.chr_asm.equipment_param_ids[CHR_ASM_SLOT_PROTECTOR_HANDS] = 10200;

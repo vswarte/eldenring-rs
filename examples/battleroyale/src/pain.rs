@@ -2,11 +2,12 @@ use std::{sync::{
     Arc, Mutex
 }, time::{Duration, Instant}};
 
-use game::cs::{PlayerIns, WorldChrMan};
-use util::singleton::get_instance;
+use game::cs::{CSWorldGeomMan, PlayerIns, WorldChrMan};
+use nalgebra::Vector3;
+use util::{geometry::{CSWorldGeomManExt, GeometrySpawnParameters}, singleton::get_instance};
 
 use crate::{
-    mapdata::{MapPoint, MAP_CONFIG},
+    mapdata::{self, MapPoint},
     ProgramLocationProvider, LOCATION_APPLY_SPEFFECT,
 };
 
@@ -37,7 +38,7 @@ where
         {
             // Set center position first time around
             if center.as_ref().is_none() {
-                let point = MAP_CONFIG[0]
+                let point = mapdata::get(0).unwrap()
                     .ring_centers
                     .first()
                     .expect("No suitable ring center found for match.")
@@ -50,11 +51,23 @@ where
         }
 
         {
-            // Kind of naive but :shrug:
-            let mut last_applied_hurt = self.last_applied_hurt.lock().unwrap();
-            if Instant::now().duration_since(*last_applied_hurt) > Duration::from_millis(75) {
-                *last_applied_hurt = Instant::now();
-                self.hurt_player();
+            // Check if we're outside the circle and apply damage to player.
+            if let Some(main_player) = &mut unsafe { get_instance::<WorldChrMan>() }
+                .unwrap()
+                .map(|w| w.main_player.as_ref())
+                .flatten() {
+                let player_pos: Vector3<f32> = main_player.block_position.into();
+                let center_pos: Vector3<f32> = center.as_ref().unwrap().position.into();
+
+                let distance_from_center = player_pos.metric_distance(&center_pos);
+                if distance_from_center > 1000.0 {
+                    // Kind of naive but :shrug:
+                    let mut last_applied_hurt = self.last_applied_hurt.lock().unwrap();
+                    if Instant::now().duration_since(*last_applied_hurt) > Duration::from_millis(75) {
+                        *last_applied_hurt = Instant::now();
+                        self.hurt_player();
+                    }
+                }
             }
         }
     }
@@ -65,7 +78,22 @@ where
     }
 
     fn spawn_center_marker(&self, point: &MapPoint) {
-        tracing::info!("Spawning FFX at {point:?}");
+        tracing::info!("Spawning center marker at {point:?}");
+        let world_geom_man = unsafe { get_instance::<CSWorldGeomMan>() }.unwrap().unwrap();
+
+        world_geom_man.spawn_geometry(
+            "AEG099_620",
+            &GeometrySpawnParameters {
+                map_id: point.map,
+                position: point.position,
+                rot_x: 0.0,
+                rot_y: 0.0,
+                rot_z: 0.0,
+                scale_x: 1.0,
+                scale_y: 1.0,
+                scale_z: 1.0,
+            }
+        );
     }
 
     fn hurt_player(&self) {
