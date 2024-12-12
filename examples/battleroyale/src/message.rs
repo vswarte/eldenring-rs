@@ -41,18 +41,12 @@ pub enum Message {
     YouDiedWithFade= 50,
 }
 
-pub struct NotificationPresenter<L>
-where
-    L: ProgramLocationProvider,
-{
-    location: Arc<L>,
+pub struct NotificationPresenter {
+    location: Arc<ProgramLocationProvider>,
 }
 
-impl<L> NotificationPresenter<L>
-where
-    L: ProgramLocationProvider,
-{
-    pub fn new(location: Arc<L>) -> Self {
+impl NotificationPresenter {
+    pub fn new(location: Arc<ProgramLocationProvider>) -> Self {
         Self {
             location,
         }

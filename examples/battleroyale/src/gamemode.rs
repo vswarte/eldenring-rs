@@ -1,28 +1,30 @@
 use std::{
-    collections::HashMap, marker::Sync, sync::{
+    collections::HashMap,
+    marker::Sync,
+    sync::{
         atomic::{AtomicBool, Ordering},
         Arc, RwLock,
-    }, time::{Duration, Instant}
+    },
+    time::{Duration, Instant},
 };
 
 use game::{
-    cs::{
-        CSEventFlagMan, CSNetMan, CSSessionManager, FieldInsHandle, MapId,
-    },
+    cs::{CSEventFlagMan, CSNetMan, CSSessionManager, FieldInsHandle, MapId},
     position::BlockPoint,
 };
 use util::{input::is_key_pressed, singleton::get_instance};
 
 use crate::{
-    gamestate::GameStateProvider, loot::LootGenerator, mapdata, message, network::{MatchMessaging, Message}, pain::PainRing, player::Player, tool, ProgramLocationProvider
+    gamestate::GameStateProvider,
+    loot::LootGenerator,
+    mapdata, message,
+    network::{MatchMessaging, Message},
+    pain::PainRing,
+    player::Player,
+    tool, ProgramLocationProvider,
 };
-use crate::{
-    loadout::PlayerLoadout,
-    mapdata::MapPoint,
-};
-use crate::{
-    message::NotificationPresenter, spectator_camera::SpectatorCamera,
-};
+use crate::{loadout::PlayerLoadout, mapdata::MapPoint};
+use crate::{message::NotificationPresenter, spectator_camera::SpectatorCamera};
 
 #[derive(Clone, Debug, PartialEq)]
 pub enum PlayerState {
@@ -33,11 +35,7 @@ pub enum PlayerState {
 /// Fornite emote allotment.
 pub const END_DISCONNECT_TIMEOUT: Duration = Duration::from_secs(10);
 
-pub struct GameMode<S, L>
-where
-    S: GameStateProvider,
-    L: ProgramLocationProvider + Sync,
-{
+pub struct GameMode {
     /// Is gamemode active at this time?
     _running: AtomicBool,
     /// Is gamemode active still but the match finished?
@@ -49,13 +47,13 @@ where
     /// Applied flag overrides for this match?
     applied_flag_overrides: AtomicBool,
     /// Handles player spectation.
-    spectator_camera: SpectatorCamera<S>,
+    spectator_camera: SpectatorCamera,
     /// Handles loot generation
-    loot_generator: LootGenerator<L>,
+    loot_generator: LootGenerator,
     /// Provides info about the games state like if we're in a match, score, alive players.
-    game_state: Arc<S>,
+    game_state: Arc<GameStateProvider>,
     /// Manages player-related mechanics.
-    player: Player<L>,
+    player: Player,
     /// Used to generate and keep track of player spawns.
     player_loadout: RwLock<Option<PlayerLoadout>>,
     /// Player spawn point
@@ -65,25 +63,21 @@ where
     /// Timer to keep track of when a match end was requested.
     end_requested_at: RwLock<Option<Instant>>,
     /// Presents match scores at the end.
-    notification: NotificationPresenter<L>,
+    notification: NotificationPresenter,
     /// Shrinking circle that slowly kills player if they step outside of it.
-    pain_ring: PainRing<L>,
+    pain_ring: PainRing,
 }
 
-impl<S, L> GameMode<S, L>
-where
-    S: GameStateProvider,
-    L: ProgramLocationProvider + Sync,
-{
+impl GameMode {
     /// Initializes the gamemodes
     pub fn init(
-        game_state: Arc<S>,
-        location: Arc<L>,
-        notification: NotificationPresenter<L>,
-        spectator_camera: SpectatorCamera<S>,
-        loot_generator: LootGenerator<L>,
-        player: Player<L>,
-        pain_ring: PainRing<L>,
+        game_state: Arc<GameStateProvider>,
+        location: Arc<ProgramLocationProvider>,
+        notification: NotificationPresenter,
+        spectator_camera: SpectatorCamera,
+        loot_generator: LootGenerator,
+        player: Player,
+        pain_ring: PainRing,
     ) -> Self {
         Self {
             _running: Default::default(),
@@ -105,12 +99,8 @@ where
     }
 
     /// Updates the gamemode state, spectator camera, etc...
-    pub fn update(&self) {
+    pub fn update(&self, delta: f32) {
         let game_state = self.game_state.clone();
-
-        if is_key_pressed(0x60) {
-            tool::sample_spawn_point();
-        }
 
         // Update gamemode state
         {
@@ -224,8 +214,8 @@ where
             self.loot_generator.update();
         }
 
-        self.pain_ring.update();
         self.spectator_camera.update();
+        self.pain_ring.update();
     }
 
     /// Returns whether or not the custom gamemode is running.
@@ -324,7 +314,8 @@ where
 
         // TODO: this needs reeavaluation if we ever want to spawn players across multiple blocks.
         targeted_map
-            .player_spawn_points.first()
+            .player_spawn_points
+            .first()
             .expect("Map has no spawn points...")
             .map
     }
@@ -332,7 +323,8 @@ where
     /// Get local players assigned spawn-point for the match.
     pub fn player_spawn_point(&self) -> MapPoint {
         // Place player at default location if no spawn point was networked by now...
-        let default = mapdata::get(0).unwrap()
+        let default = mapdata::get(0)
+            .unwrap()
             .player_spawn_points
             .first()
             .unwrap()

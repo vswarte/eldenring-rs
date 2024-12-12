@@ -30,10 +30,6 @@ pub const LOCATION_TRANSFER_ITEM: &str = "LOOKUP_TRANSFER_ITEM";
 // Applies speffect to chrins.
 pub const LOCATION_APPLY_SPEFFECT: &str = "APPLY_SPEFFECT";
 
-pub trait ProgramLocationProvider {
-    fn get(&self, name: &str) -> Result<Va, LocationProviderError>;
-}
-
 #[derive(Debug, Error)]
 pub enum LocationProviderError {
     #[error("Could not convert RVA to VA")]
@@ -43,12 +39,12 @@ pub enum LocationProviderError {
     LocationNotFound(String),
 }
 
-pub struct HardcodedLocationProvider {
+pub struct ProgramLocationProvider {
     program: Program<'static>,
     offsets: HashMap<&'static str, Rva>,
 }
 
-impl HardcodedLocationProvider {
+impl ProgramLocationProvider {
     pub fn new() -> Self {
         Self {
             program: unsafe { Program::current() },
@@ -70,9 +66,9 @@ impl HardcodedLocationProvider {
     }
 }
 
-impl ProgramLocationProvider for HardcodedLocationProvider {
+impl ProgramLocationProvider {
     /// Gets the virtual runtime address for a given named location.
-    fn get(&self, name: &str) -> Result<Va, LocationProviderError> {
+    pub fn get(&self, name: &str) -> Result<Va, LocationProviderError> {
         Ok(
             self.offsets
                 .get(name)

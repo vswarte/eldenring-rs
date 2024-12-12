@@ -32,24 +32,14 @@ pub enum HookError {
     Retour(#[from] retour::Error),
 }
 
-pub struct GamemodeHooks<S, L>
-where
-    S: GameStateProvider + Send + Sync + 'static,
-    L: ProgramLocationProvider + Send + Sync + 'static,
-{
-    _game_state: PhantomData<S>,
-    _location: PhantomData<L>,
-}
+pub struct Hooks {}
 
 // TODO: stop using static detours
-impl<S, L> GamemodeHooks<S, L>
-where
-    S: GameStateProvider + Send + Sync + 'static,
-    L: ProgramLocationProvider + Send + Sync + 'static,
-{
-    pub unsafe fn place(location: Arc<L>, gamemode: Arc<GameMode<S, L>>) -> Result<Self, HookError>
-    where
-        L: ProgramLocationProvider,
+impl Hooks {
+    pub unsafe fn place(
+        location: Arc<ProgramLocationProvider>,
+        gamemode: Arc<GameMode>,
+    ) -> Result<Self, HookError>
     {
         // Take control over the players death so we can apply the specator cam.
         Self::hook_player_characters(&location, gamemode.clone())?;
@@ -66,15 +56,12 @@ where
         // Inject custom strings
         Self::hook_text_lookups(&location, gamemode.clone())?;
 
-        Ok(Self {
-            _game_state: PhantomData,
-            _location: PhantomData,
-        })
+        Ok(Self { })
     }
 
     unsafe fn patch_item_drop_limit(
-        location: &L,
-        gamemode: Arc<GameMode<S, L>>,
+        location: &ProgramLocationProvider,
+        gamemode: Arc<GameMode>,
     ) -> Result<(), HookError> {
         // Neuter dropped item cap check
         let location = location.get(LOCATION_DROPPED_ITEM_CAP_CHECK)?;
@@ -84,8 +71,8 @@ where
     }
 
     unsafe fn hook_player_characters(
-        location: &L,
-        gamemode: Arc<GameMode<S, L>>,
+        location: &ProgramLocationProvider,
+        gamemode: Arc<GameMode>,
     ) -> Result<(), HookError> {
         // Take control over character death so we can enforce spectator mode instead
         {
@@ -113,8 +100,8 @@ where
     }
 
     unsafe fn override_map_load(
-        location: &L,
-        gamemode: Arc<GameMode<S, L>>,
+        location: &ProgramLocationProvider,
+        gamemode: Arc<GameMode>,
     ) -> Result<(), HookError> {
         {
             let gamemode = gamemode.clone();
@@ -175,8 +162,8 @@ where
     }
 
     unsafe fn apply_msb_fixups(
-        location: &L,
-        gamemode: Arc<GameMode<S, L>>,
+        location: &ProgramLocationProvider,
+        gamemode: Arc<GameMode>,
     ) -> Result<(), HookError> {
         // Disable loading of certain MSB event entries
         {
@@ -260,8 +247,8 @@ where
     }
 
     unsafe fn hook_text_lookups(
-        location: &L,
-        gamemode: Arc<GameMode<S, L>>,
+        location: &ProgramLocationProvider,
+        gamemode: Arc<GameMode>,
     ) -> Result<(), HookError> {
         {
             let gamemode = gamemode.clone();

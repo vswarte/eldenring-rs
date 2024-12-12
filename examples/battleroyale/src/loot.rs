@@ -32,24 +32,18 @@ impl LootTableEntryItem {
 }
 
 /// Generates and spawns random loot over the map
-pub struct LootGenerator<L>
-where
-    L: ProgramLocationProvider + Sync,
-{
+pub struct LootGenerator {
     /// Did the current map get the initial items spawned already?
     has_provisioned_map: AtomicBool,
 
     /// When did we last spawn items?
     last_spawn_round: RwLock<Instant>,
 
-    location: Arc<L>,
+    location: Arc<ProgramLocationProvider>,
 }
 
-impl<L> LootGenerator<L>
-where
-    L: ProgramLocationProvider + Sync,
-{
-    pub fn new(location: Arc<L>) -> Self {
+impl LootGenerator {
+    pub fn new(location: Arc<ProgramLocationProvider>) -> Self {
         Self {
             has_provisioned_map: Default::default(),
             last_spawn_round: RwLock::new(Instant::now()),

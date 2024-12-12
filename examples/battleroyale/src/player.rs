@@ -1,6 +1,13 @@
-use std::{marker::Sync, sync::{Arc, RwLock}};
+use std::{
+    marker::Sync,
+    sync::{Arc, RwLock},
+};
 
-use game::cs::{EquipInventoryData, WorldChrMan, CHR_ASM_SLOT_PROTECTOR_CHEST, CHR_ASM_SLOT_PROTECTOR_HANDS, CHR_ASM_SLOT_PROTECTOR_HEAD, CHR_ASM_SLOT_PROTECTOR_LEGS, CHR_ASM_SLOT_WEAPON_LEFT_1, CHR_ASM_SLOT_WEAPON_RIGHT_1};
+use game::cs::{
+    EquipInventoryData, WorldChrMan, CHR_ASM_SLOT_PROTECTOR_CHEST, CHR_ASM_SLOT_PROTECTOR_HANDS,
+    CHR_ASM_SLOT_PROTECTOR_HEAD, CHR_ASM_SLOT_PROTECTOR_LEGS, CHR_ASM_SLOT_WEAPON_LEFT_1,
+    CHR_ASM_SLOT_WEAPON_RIGHT_1,
+};
 use util::singleton::get_instance;
 
 use crate::{ProgramLocationProvider, LOCATION_TRANSFER_ITEM};
@@ -18,22 +25,15 @@ pub const PLAYER_LEVELS_IN_BATTLE: PlayerLevels = PlayerLevels {
     arcane: 60,
 };
 
-#[derive(Default)]
-pub struct Player<L>
-where
-    L: ProgramLocationProvider + Sync,
-{
-    location: Arc<L>,
+pub struct Player {
+    location: Arc<ProgramLocationProvider>,
 
     /// Holds the original levels for the player.
     pub snapshot: RwLock<Option<PlayerLevels>>,
 }
 
-impl<L> Player<L>
-where
-    L: ProgramLocationProvider + Sync,
-{
-    pub fn new(location: Arc<L>) -> Self {
+impl Player {
+    pub fn new(location: Arc<ProgramLocationProvider>) -> Self {
         Self {
             location,
             snapshot: Default::default(),
@@ -119,7 +119,10 @@ where
         let transfer_item: fn(u32, &EquipInventoryData, &EquipInventoryData, u32, bool) -> bool =
             unsafe { std::mem::transmute(self.location.get(LOCATION_TRANSFER_ITEM).unwrap()) };
 
-        (0..player_game_data.equipment.equip_inventory_data.total_item_entry_count)
+        (0..player_game_data
+            .equipment
+            .equip_inventory_data
+            .total_item_entry_count)
             .for_each(|i| {
                 transfer_item(
                     i,

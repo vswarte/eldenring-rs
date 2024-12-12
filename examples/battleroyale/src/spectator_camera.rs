@@ -8,21 +8,15 @@ use util::singleton::get_instance;
 
 use crate::gamestate::GameStateProvider;
 
-pub struct SpectatorCamera<S>
-where
-    S: GameStateProvider,
-{
-    game_state: Arc<S>,
+pub struct SpectatorCamera {
+    game_state: Arc<GameStateProvider>,
 
     /// Player we're currently spectating.
     currently_spectating: RwLock<Option<FieldInsHandle>>,
 }
 
-impl<S> SpectatorCamera<S>
-where
-    S: GameStateProvider,
-{
-    pub fn new(game_state: Arc<S>) -> Self {
+impl SpectatorCamera {
+    pub fn new(game_state: Arc<GameStateProvider>) -> Self {
         Self {
             game_state,
             currently_spectating: RwLock::new(None),
@@ -57,7 +51,8 @@ where
             return;
         };
 
-        main_player.chr_ins.module_container.physics.position = spectating_player.module_container.physics.position;
+        main_player.chr_ins.module_container.physics.position =
+            spectating_player.module_container.physics.position;
     }
 
     /// Stop spectating.

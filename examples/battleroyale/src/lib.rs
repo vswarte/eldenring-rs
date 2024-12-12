@@ -1,7 +1,7 @@
 use config::Configuration;
 use crash_handler::{make_crash_event, CrashContext, CrashEventResult, CrashHandler};
-use gamestate::DefaultGameStateProvider;
-use hooks::GamemodeHooks;
+use gamestate::GameStateProvider;
+use hooks::Hooks;
 use location::*;
 use loot::LootGenerator;
 use message::NotificationPresenter;
@@ -18,7 +18,9 @@ use game::{
 
 use gamemode::GameMode;
 use tracing_panic::panic_hook;
-use util::{arxan, program::Program, singleton::get_instance, task::CSTaskImpExt};
+use util::{
+    arxan, input::is_key_pressed, program::Program, singleton::get_instance, task::CSTaskImpExt,
+};
 
 mod config;
 mod gamemode;
@@ -73,8 +75,8 @@ fn init() -> Result<(), Box<dyn Error>> {
     let program = unsafe { Program::current() };
     unsafe { arxan::disable_code_restoration(&program)? };
 
-    let game_state = Arc::new(DefaultGameStateProvider::default());
-    let location = Arc::new(HardcodedLocationProvider::new());
+    let game_state = Arc::new(GameStateProvider::default());
+    let location = Arc::new(ProgramLocationProvider::new());
 
     let spectator_camera = SpectatorCamera::new(game_state.clone());
     let loot_generator = LootGenerator::new(location.clone());
@@ -82,15 +84,8 @@ fn init() -> Result<(), Box<dyn Error>> {
     let player = Player::new(location.clone());
     let pain_ring = PainRing::new(location.clone());
 
-    // let config = Configuration {
-    //     maps: HashMap::from([
-    //         (String::from("0"), (&mapdata::MAP_CONFIG[0]).into()),
-    //     ]),
-    // };
-    // config::export_config(&config).unwrap();
-
     let gamemode = Arc::new(GameMode::init(
-        game_state,
+        game_state.clone(),
         location.clone(),
         notification,
         spectator_camera,
@@ -99,16 +94,21 @@ fn init() -> Result<(), Box<dyn Error>> {
         pain_ring,
     ));
 
-    let hooks =
-        unsafe { GamemodeHooks::<DefaultGameStateProvider, _>::place(location, gamemode.clone())? };
+    let hooks = unsafe { Hooks::place(location, gamemode.clone())? };
 
-    // Enqueue task that updates gamemode
+    // Enqueue task that does it all :tm:
     let cs_task = unsafe { get_instance::<CSTaskImp>() }?.unwrap();
     let task_handle = {
         let gamemode = gamemode.clone();
 
         cs_task.run_recurring(
-            move |_: &FD4TaskData| gamemode.update(),
+            move |data: &FD4TaskData| {
+                if is_key_pressed(0x60) {
+                    tool::sample_spawn_point();
+                }
+
+                gamemode.update(data.delta_time.time);
+            },
             CSTaskGroupIndex::GameMan,
         )
     };
