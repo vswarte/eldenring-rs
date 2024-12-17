@@ -25,6 +25,7 @@ mod item_lot;
 mod item;
 mod sfx;
 mod world_sfx_man;
+mod team_relation;
 
 pub use camera::*;
 pub use field_ins::*;
@@ -53,3 +54,4 @@ pub use item_lot::*;
 pub use item::*;
 pub use sfx::*;
 pub use world_sfx_man::*;
+pub use team_relation::*;
