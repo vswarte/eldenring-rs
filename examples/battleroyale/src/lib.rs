@@ -1,19 +1,22 @@
-use config::Configuration;
+use config::{Configuration, ConfigurationProvider};
 use crash_handler::{make_crash_event, CrashContext, CrashEventResult, CrashHandler};
 use gamestate::GameStateProvider;
 use hooks::Hooks;
 use location::*;
 use loot::LootGenerator;
 use message::NotificationPresenter;
-use pain::PainRing;
+use pain::{PainRing, SfxSpawnLocation};
 use player::Player;
 use spectator_camera::SpectatorCamera;
-use std::{collections::HashMap, error::Error, sync::Arc, time::Duration};
+use stage::StagePrepare;
+use std::{collections::HashMap, error::Error, f32::consts::PI, sync::Arc, time::Duration};
 
 /// Implements a battle-royale gamemode on top of quickmatches.
 use game::{
-    cs::{CSTaskGroupIndex, CSTaskImp},
+    cs::{CSHavokMan, CSPhysWorld, CSTaskGroupIndex, CSTaskImp, ChrIns, PlayerIns, WorldChrMan},
     fd4::FD4TaskData,
+    matrix::FSVector4,
+    position::HavokPosition,
 };
 
 use gamemode::GameMode;
@@ -29,13 +32,18 @@ mod hooks;
 mod loadout;
 mod location;
 mod loot;
-mod mapdata;
+//mod mapdata;
 mod message;
 mod network;
 mod pain;
 mod player;
 mod spectator_camera;
-mod tool;
+// mod tool;
+mod stage;
+
+// 523357 - Fia's Mist
+// 523573 - Darkness clouds
+// 523887 - Freezing Mist
 
 #[no_mangle]
 pub unsafe extern "C" fn DllMain(_hmodule: usize, reason: u32) -> bool {
@@ -75,39 +83,159 @@ fn init() -> Result<(), Box<dyn Error>> {
     let program = unsafe { Program::current() };
     unsafe { arxan::disable_code_restoration(&program)? };
 
+    let mut config = Arc::new(ConfigurationProvider::load()?);
+
     let game_state = Arc::new(GameStateProvider::default());
     let location = Arc::new(ProgramLocationProvider::new());
 
-    let spectator_camera = SpectatorCamera::new(game_state.clone());
-    let loot_generator = LootGenerator::new(location.clone());
     let notification = NotificationPresenter::new(location.clone());
     let player = Player::new(location.clone());
-    let pain_ring = PainRing::new(location.clone());
 
     let gamemode = Arc::new(GameMode::init(
         game_state.clone(),
-        location.clone(),
+        config.clone(),
         notification,
-        spectator_camera,
-        loot_generator,
         player,
-        pain_ring,
     ));
 
-    let hooks = unsafe { Hooks::place(location, gamemode.clone())? };
+    let hooks = unsafe { Hooks::place(location.clone(), gamemode.clone())? };
 
     // Enqueue task that does it all :tm:
     let cs_task = unsafe { get_instance::<CSTaskImp>() }?.unwrap();
     let task_handle = {
         let gamemode = gamemode.clone();
 
+        let mut stage = StagePrepare::new(location.clone());
+        let mut pain_ring = PainRing::new(location.clone(), config.clone());
+        let mut loot_generator = LootGenerator::new(location.clone(), config.clone());
+        let mut spectator_camera = SpectatorCamera::new(game_state.clone());
+
+        let mut active = false;
+        let mut running = false;
+
         cs_task.run_recurring(
             move |data: &FD4TaskData| {
-                if is_key_pressed(0x60) {
-                    tool::sample_spawn_point();
+                // Trigger logic that needs to run when the player goes into a qm lobby.
+                if game_state.match_active() && !active {
+                    tracing::info!("Starting battleroyale");
+
+                    active = true;
+                } else if !game_state.match_active() && active {
+                    tracing::info!("Stopping battleroyale");
+
+                    pain_ring.reset();
+                    loot_generator.reset();
+                    spectator_camera.reset();
+
+                    active = false;
                 }
 
+                // Trigger logic that needs to run when player has spawned in map. 
+                if game_state.match_running() && !running {
+                    tracing::info!("Match started");
+                    running = true;
+                } else if !game_state.match_running() && running {
+                    tracing::info!("Match stopped");
+                    running = false;
+                }
+
+                // if is_key_pressed(0x60) {
+                //     tool::sample_spawn_point();
+                // }
+
+                // if is_key_pressed(0x60) {
+                //     let world_chr_man = unsafe { get_instance::<WorldChrMan>() }.unwrap().unwrap();
+                //     if let Some(main_player) = &world_chr_man.main_player {
+                //         let physics_pos = main_player
+                //             .chr_ins
+                //             .module_container
+                //             .physics
+                //             .position
+                //             .clone();
+                //
+                //         let cast_ray: extern "C" fn(
+                //             *const CSPhysWorld,
+                //             u32,
+                //             *const FSVector4,
+                //             *const FSVector4,
+                //             *const FSVector4,
+                //             *const PlayerIns,
+                //         ) -> bool = unsafe {
+                //             std::mem::transmute(location.get(LOCATION_PHYS_WORLD_CAST_RAY).unwrap())
+                //         };
+                //
+                //         let phys_world = unsafe { get_instance::<CSHavokMan>() }
+                //             .unwrap()
+                //             .unwrap()
+                //             .phys_world
+                //             .as_ptr();
+                //
+                //         let player = main_player.as_ptr();
+                //
+                //         let radius = 50.0;
+                //         let count = 128;
+                //         for i in 0..count {
+                //             let current = ((PI * 2.0) / count as f32) * i as f32;
+                //             let point_x = f32::sin(current) * radius;
+                //             let point_z = f32::cos(current) * radius;
+                //
+                //             let (ox, oy, oz) = physics_pos.xyz();
+                //             let origin = FSVector4(ox + point_x, oy + 100.0, oz + point_z, 0.0);
+                //             let direction = FSVector4(0.0, -200.0, 0.0, 0.0);
+                //             let mut collision = FSVector4(0.0, 0.0, 0.0, 0.0);
+                //
+                //             tracing::info!("Phys World: {phys_world:#x?}");
+                //             tracing::info!("Player: {player:#x?}");
+                //             tracing::info!("Origin: {origin:#?}");
+                //             tracing::info!("Direction: {direction:#?}");
+                //
+                //             if cast_ray(
+                //                 phys_world,
+                //                 0x2000058, // Broadphase filter
+                //                 &origin, // Where we shoot the cast from
+                //                 &direction, // Direction to shoot cast into
+                //                 &mut collision, // Output
+                //                 player, // Owner of the ray
+                //             ) {
+                //                 tracing::info!("Collision: {collision:#?}");
+                //
+                //                 // Angle the sfx we're about to spawn
+                //                 let angle = (
+                //                     FSVector4(0.7882865667, -0.007318737917, 0.6165360808, 0.0),
+                //                     FSVector4(0.06933222711, 0.9946286082, -0.07685082406, 0.0),
+                //                     FSVector4(-0.6126625538, 0.1033189669, 0.784560442, 0.0),
+                //                 );
+                //
+                //                 let spawn_sfx: fn(&u32, &SfxSpawnLocation) -> bool =
+                //                     unsafe { std::mem::transmute(location.get(LOCATION_SFX_SPAWN).unwrap()) };
+                //
+                //                 // Place sfx at collision
+                //                 let (x, y, z) = (
+                //                     collision.0,
+                //                     collision.1,
+                //                     collision.2,
+                //                 );
+                //                 let spawn_location = SfxSpawnLocation {
+                //                     angle,
+                //                     position: HavokPosition::from_xyz(x, y, z),
+                //                 };
+                //
+                //                 spawn_sfx(&523887, &spawn_location);
+                //             }
+                //         }
+                //     }
+                // }
+
                 gamemode.update(data.delta_time.time);
+
+                if game_state.match_running() {
+                    if game_state.is_host() {
+                        loot_generator.update();
+                    }
+
+                    pain_ring.update();
+                    spectator_camera.update();
+                }
             },
             CSTaskGroupIndex::GameMan,
         )

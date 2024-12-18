@@ -13,7 +13,7 @@
 /// coords requires knowing the world coordinates of the chunk center and going from havok position
 /// to chunk position requires either the chunk position of the havok aabb center or reference
 /// coordinate where both chunk and havok position are known.
-use std::{fmt::Display, ops::Sub};
+use std::{fmt::Display, ops::{Add, Sub}};
 
 use nalgebra::{Vector, Vector3};
 
@@ -100,6 +100,14 @@ impl Display for HavokPosition {
 impl From<FSVector4> for HavokPosition {
     fn from(value: FSVector4) -> Self {
         Self(value)
+    }
+}
+
+impl Add<HavokPosition> for HavokPosition {
+    type Output = HavokPosition;
+
+    fn add(self, rhs: HavokPosition) -> Self::Output {
+        HavokPosition(self.0 + rhs.0)
     }
 }
 

@@ -25,7 +25,7 @@ impl Add<FSPoint> for FSPoint {
     }
 }
 
-#[repr(C)]
+#[repr(C, align(16))]
 #[derive(Debug, Clone, Copy)]
 pub struct FSVector4(pub f32, pub f32, pub f32, pub f32);
 

@@ -1,5 +1,6 @@
 use rand::prelude::*;
-use crate::mapdata::{MapConfiguration, MapPoint};
+
+use crate::config::{MapConfiguration, MapPoint};
 
 #[derive(Debug)]
 pub struct PlayerLoadout {

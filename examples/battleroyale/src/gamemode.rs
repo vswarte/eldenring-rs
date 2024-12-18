@@ -15,15 +15,9 @@ use game::{
 use util::{input::is_key_pressed, singleton::get_instance};
 
 use crate::{
-    gamestate::GameStateProvider,
-    loot::LootGenerator,
-    mapdata, message,
-    network::{MatchMessaging, Message},
-    pain::PainRing,
-    player::Player,
-    tool, ProgramLocationProvider,
+    config::{ConfigurationProvider, MapPoint, MapPosition}, gamestate::GameStateProvider, loot::LootGenerator, network::{MatchMessaging, Message}, pain::PainRing, player::Player, ProgramLocationProvider
 };
-use crate::{loadout::PlayerLoadout, mapdata::MapPoint};
+use crate::loadout::PlayerLoadout;
 use crate::{message::NotificationPresenter, spectator_camera::SpectatorCamera};
 
 #[derive(Clone, Debug, PartialEq)]
@@ -33,7 +27,7 @@ pub enum PlayerState {
 }
 
 /// Fornite emote allotment.
-pub const END_DISCONNECT_TIMEOUT: Duration = Duration::from_secs(10);
+pub const END_DISCONNECT_TIMEOUT: Duration = Duration::from_secs(5);
 
 pub struct GameMode {
     /// Is gamemode active at this time?
@@ -46,10 +40,6 @@ pub struct GameMode {
     sent_loadout: AtomicBool,
     /// Applied flag overrides for this match?
     applied_flag_overrides: AtomicBool,
-    /// Handles player spectation.
-    spectator_camera: SpectatorCamera,
-    /// Handles loot generation
-    loot_generator: LootGenerator,
     /// Provides info about the games state like if we're in a match, score, alive players.
     game_state: Arc<GameStateProvider>,
     /// Manages player-related mechanics.
@@ -64,20 +54,17 @@ pub struct GameMode {
     end_requested_at: RwLock<Option<Instant>>,
     /// Presents match scores at the end.
     notification: NotificationPresenter,
-    /// Shrinking circle that slowly kills player if they step outside of it.
-    pain_ring: PainRing,
+
+    config: Arc<ConfigurationProvider>,
 }
 
 impl GameMode {
     /// Initializes the gamemodes
     pub fn init(
         game_state: Arc<GameStateProvider>,
-        location: Arc<ProgramLocationProvider>,
+        config: Arc<ConfigurationProvider>,
         notification: NotificationPresenter,
-        spectator_camera: SpectatorCamera,
-        loot_generator: LootGenerator,
         player: Player,
-        pain_ring: PainRing,
     ) -> Self {
         Self {
             _running: Default::default(),
@@ -85,8 +72,6 @@ impl GameMode {
             setup_player: Default::default(),
             sent_loadout: Default::default(),
             applied_flag_overrides: Default::default(),
-            spectator_camera,
-            loot_generator,
             game_state,
             player_loadout: Default::default(),
             player,
@@ -94,7 +79,7 @@ impl GameMode {
             messaging: Default::default(),
             end_requested_at: Default::default(),
             notification,
-            pain_ring,
+            config,
         }
     }
 
@@ -104,7 +89,7 @@ impl GameMode {
 
         // Update gamemode state
         {
-            let in_quickmatch = game_state.in_quickmatch();
+            let in_quickmatch = game_state.match_active();
             let gamemode_running = self.running();
             if in_quickmatch && !gamemode_running {
                 self.start();
@@ -122,14 +107,14 @@ impl GameMode {
             }
 
             match message {
-                Message::Loadout {
-                    map_id: _,
+                Message::MatchDetails {
+                    map,
                     position,
                     orientation,
                 } => {
                     *self.spawn_point.write().unwrap() = Some(MapPoint {
-                        map: MapId::from_parts(20, 0, 0, 0),
-                        position: BlockPoint::from_xyz(position.0, position.1, position.2),
+                        map: *map,
+                        position: position.clone(),
                         orientation: *orientation,
                     })
                 }
@@ -181,24 +166,24 @@ impl GameMode {
             return;
         }
 
-        // Apply event flags if we're in the networked world state with our event flag man.
-        if game_state.event_flags_are_non_local()
-            && !self.applied_flag_overrides.swap(true, Ordering::Relaxed)
-        {
-            tracing::info!("Applying world flag overrides to temp flag blocks");
-
-            // TODO: refactor to general structure that changes world + map state.
-            let cs_event_flag_man = unsafe { get_instance::<CSEventFlagMan>() }
-                .unwrap()
-                .unwrap();
-
-            let map = mapdata::get(0).unwrap();
-            map.event_flag_overrides.iter().for_each(|(flag, state)| {
-                cs_event_flag_man
-                    .virtual_memory_flag
-                    .set_flag(*flag, *state);
-            });
-        }
+        // // Apply event flags if we're in the networked world state with our event flag man.
+        // if game_state.event_flags_are_non_local()
+        //     && !self.applied_flag_overrides.swap(true, Ordering::Relaxed)
+        // {
+        //     tracing::info!("Applying world flag overrides to temp flag blocks");
+        //
+        //     // TODO: refactor to general structure that changes world + map state.
+        //     let cs_event_flag_man = unsafe { get_instance::<CSEventFlagMan>() }
+        //         .unwrap()
+        //         .unwrap();
+        //
+        //     let map = mapdata::get(0).unwrap();
+        //     map.event_flag_overrides.iter().for_each(|(flag, state)| {
+        //         cs_event_flag_man
+        //             .virtual_memory_flag
+        //             .set_flag(*flag, *state);
+        //     });
+        // }
 
         if self.should_request_end_match() {
             tracing::info!("Requesting match end");
@@ -209,23 +194,11 @@ impl GameMode {
             tracing::info!("Ending match");
             self.end_match();
         }
-
-        if self.game_state.is_host() {
-            self.loot_generator.update();
-        }
-
-        self.spectator_camera.update();
-        self.pain_ring.update();
     }
 
     /// Returns whether or not the custom gamemode is running.
     pub fn running(&self) -> bool {
         self._running.load(Ordering::Relaxed)
-    }
-
-    /// Puts the player into spectate mode.
-    pub fn spectate(&self) {
-        tracing::info!("Entering spectate mode");
     }
 
     /// Returns if the match was finished.
@@ -236,6 +209,7 @@ impl GameMode {
     /// Should request the session to end.
     fn should_request_end_match(&self) -> bool {
         return false;
+
         match self.end_requested_at.read().unwrap().as_ref() {
             Some(_) => false,
             None => self.game_state.alive_players().len() == 1,
@@ -244,14 +218,14 @@ impl GameMode {
 
     /// Request that a match is ended.
     fn request_end_match(&self) {
-        /// Display the results
-        let message = if self.game_state.local_player_is_alive() {
-            message::Message::Victory
-        } else {
-            message::Message::Defeat
-        };
-
-        self.notification.present_mp_message(message);
+        // /// Display the results
+        // let message = if self.game_state.local_player_is_alive() {
+        //     message::Message::Victory
+        // } else {
+        //     message::Message::Defeat
+        // };
+        //
+        // self.notification.present_mp_message(message);
 
         *self.end_requested_at.write().unwrap() = Some(Instant::now());
     }
@@ -292,9 +266,6 @@ impl GameMode {
     fn stop(&self) {
         tracing::info!("Stopping gamemode");
         let _ = self.end_requested_at.write().unwrap().take();
-        self.spectator_camera.stop();
-        self.loot_generator.reset();
-        self.pain_ring.reset();
         self.setup_player.store(false, Ordering::Relaxed);
         self.applied_flag_overrides.store(false, Ordering::Relaxed);
         self._running.store(false, Ordering::Relaxed);
@@ -305,25 +276,20 @@ impl GameMode {
         tracing::info!("Requested target map ID for {map}");
 
         // TODO: match config against incoming map enum
-        let targeted_map = mapdata::get(0).unwrap();
+        let targeted_map = self.config.map(&0).unwrap();
 
         // Generate loadout on every end.
         let loadout = PlayerLoadout::generate(&targeted_map);
+
         tracing::info!("Generated loadout: {loadout:#?}");
         *self.player_loadout.write().unwrap() = Some(loadout);
-
-        // TODO: this needs reeavaluation if we ever want to spawn players across multiple blocks.
-        targeted_map
-            .player_spawn_points
-            .first()
-            .expect("Map has no spawn points...")
-            .map
+        MapId(targeted_map.player_spawn_points.first().unwrap().map.0)
     }
 
     /// Get local players assigned spawn-point for the match.
     pub fn player_spawn_point(&self) -> MapPoint {
         // Place player at default location if no spawn point was networked by now...
-        let default = mapdata::get(0)
+        let default = self.config.map(&0)
             .unwrap()
             .player_spawn_points
             .first()
@@ -338,18 +304,18 @@ impl GameMode {
             .clone()
     }
 
-    /// Processes a characters death.
-    pub fn handle_death(&self, handle: &FieldInsHandle) {
-        tracing::info!("ChrIns died: {}", handle);
-
-        // Local player has died
-        if self.game_state.local_player().is_some_and(|h| &h == handle) {
-            tracing::info!("Local player died, putting in spectate mode");
-            // Turn on the spectator camera
-            // TODO: define behavior when killed-by player is no longer available (very
-            // unlikely).
-            self.spectator_camera
-                .spectate(self.game_state.last_killed_by())
-        }
-    }
+    // /// Processes a characters death.
+    // pub fn handle_death(&self, handle: &FieldInsHandle) {
+    //     tracing::info!("ChrIns died: {}", handle);
+    //
+    //     // Local player has died
+    //     if self.game_state.local_player().is_some_and(|h| &h == handle) {
+    //         tracing::info!("Local player died, putting in spectate mode");
+    //         // Turn on the spectator camera
+    //         // TODO: define behavior when killed-by player is no longer available (very
+    //         // unlikely).
+    //         // self.spectator_camera
+    //         //     .spectate(self.game_state.last_killed_by())
+    //     }
+    // }
 }

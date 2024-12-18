@@ -5,14 +5,16 @@ use util::singleton::get_instance;
 pub struct GameStateProvider {}
 
 impl GameStateProvider {
-    pub fn in_quickmatch(&self) -> bool {
+    /// Is anything happening related to quickmatch?
+    pub fn match_active(&self) -> bool {
         unsafe { get_instance::<CSNetMan>() }
             .unwrap()
             .map(|n| n.quickmatch_manager.quickmatching_ctrl.current_state != 0)
             .unwrap_or_default()
     }
 
-    pub fn match_active(&self) -> bool {
+    /// Is the match currently playing out on the map?
+    pub fn match_running(&self) -> bool {
         unsafe { get_instance::<CSNetMan>() }
             .unwrap()
             .map(|n| 
@@ -22,6 +24,7 @@ impl GameStateProvider {
             .unwrap_or_default()
     }
 
+    /// Are players currently loading into the map or awaiting the start packet from the host?
     pub fn match_loading(&self) -> bool {
         unsafe { get_instance::<CSNetMan>() }
             .unwrap()
@@ -107,6 +110,6 @@ impl GameStateProvider {
     }
 }
 
-fn is_chr_ins_alive(chr_ins: &ChrIns) -> bool {
+pub fn is_chr_ins_alive(chr_ins: &ChrIns) -> bool {
     chr_ins.module_container.data.hp > 0
 }

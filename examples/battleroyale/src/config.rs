@@ -1,30 +1,45 @@
-use std::{collections::HashMap, error::Error};
+use std::{collections::HashMap, error::Error, sync::RwLock};
 
-use game::{cs, position::BlockPoint};
+use game::{cs, matrix::FSPoint, position::BlockPoint};
 use serde::{Deserialize, Serialize};
 
-use crate::mapdata;
-
-pub fn retrieve_config() -> Result<Configuration, Box<dyn Error>> {
-    let config_str = std::fs::read_to_string("battleroyale.toml")?;
-    Ok(toml::from_str::<Configuration>(config_str.as_str())?)
+pub struct ConfigurationProvider {
+    config: RwLock<Configuration>,
 }
 
-pub fn export_config(configuration: &Configuration) -> Result<(), Box<dyn Error>> {
-    let string = toml::to_string_pretty(configuration)?;
-    std::fs::write("battleroyale.toml.out", string.as_bytes())?;
-    Ok(())
+impl ConfigurationProvider {
+    pub fn load() -> Result<Self, Box<dyn Error>> {
+        let config_str = std::fs::read_to_string("battleroyale.toml")?;
+        let maps = toml::from_str::<Configuration>(config_str.as_str())?.maps;
+
+        Ok(Self {
+            config: RwLock::new(Configuration {
+                maps,
+            }),
+        })
+    }
+
+    pub fn export(&self) -> Result<(), Box<dyn Error>> {
+        let handle = std::fs::File::create("./br_player_spawns.csv")?;
+        let config = self.config.read().unwrap();
+        let writer = csv::Writer::from_writer(handle);
+
+        Ok(())
+    }
+
+    /// Retrieve the configuration for a single map entry.
+    pub fn map(&self, map: &u32) -> Option<MapConfiguration> {
+        self.config.read().unwrap().maps.get(map.to_string().as_str()).cloned()
+    }
 }
 
 #[derive(Deserialize, Serialize)]
 pub struct Configuration {
-    pub maps: HashMap<String, MapConfiguration>,
+    maps: HashMap<String, MapConfiguration>,
+    // ring: RingConfiguration,
 }
 
-#[derive(Deserialize, Serialize)]
-pub struct PainRingConfiguration {}
-
-#[derive(Deserialize, Serialize)]
+#[derive(Clone, Deserialize, Serialize)]
 pub struct MapConfiguration {
     /// Spawn points for this map.
     pub player_spawn_points: Vec<MapPoint>,
@@ -36,33 +51,7 @@ pub struct MapConfiguration {
     pub event_flag_overrides: Vec<(u32, bool)>,
 }
 
-impl From<&mapdata::MapConfiguration> for MapConfiguration {
-    fn from(value: &mapdata::MapConfiguration) -> Self {
-        Self {
-            player_spawn_points: value
-                .player_spawn_points
-                .iter()
-                .map(MapPoint::from)
-                .collect(),
-            item_spawn_points: value.item_spawn_points.iter().map(MapPoint::from).collect(),
-            ring_centers: value.ring_centers.iter().map(MapPoint::from).collect(),
-            event_flag_overrides: value.event_flag_overrides.clone(),
-        }
-    }
-}
-
-impl Into<mapdata::MapConfiguration> for &MapConfiguration {
-    fn into(self) -> mapdata::MapConfiguration {
-        mapdata::MapConfiguration {
-            player_spawn_points: self.player_spawn_points.iter().map(|p| p.into()).collect(),
-            item_spawn_points: self.item_spawn_points.iter().map(|p| p.into()).collect(),
-            ring_centers: self.ring_centers.iter().map(|p| p.into()).collect(),
-            event_flag_overrides: self.event_flag_overrides.clone(),
-        }
-    }
-}
-
-#[derive(Deserialize, Serialize)]
+#[derive(Clone, Debug, Deserialize, Serialize)]
 pub struct MapPoint {
     /// Map ID to load into
     pub map: MapId,
@@ -72,37 +61,41 @@ pub struct MapPoint {
     pub orientation: f32,
 }
 
-impl From<&mapdata::MapPoint> for MapPoint {
-    fn from(value: &mapdata::MapPoint) -> Self {
-        Self {
-            map: MapId(
-                value.map.area,
-                value.map.block,
-                value.map.region,
-                value.map.index,
-            ),
-            position: MapPosition(
-                value.position.0 .0,
-                value.position.0 .1,
-                value.position.0 .2,
-            ),
-            orientation: value.orientation,
-        }
+#[derive(Clone, Debug, Deserialize, Serialize)]
+pub struct MapPosition(pub f32, pub f32, pub f32);
+
+impl Into<BlockPoint> for &MapPosition {
+    fn into(self) -> BlockPoint {
+        BlockPoint(FSPoint(self.0, self.1, self.2))
     }
 }
 
-impl Into<mapdata::MapPoint> for &MapPoint {
-    fn into(self) -> mapdata::MapPoint {
-        mapdata::MapPoint {
-            map: cs::MapId::from_parts(self.map.0, self.map.1, self.map.2, self.map.3),
-            position: BlockPoint::from_xyz(self.position.0, self.position.1, self.position.2),
-            orientation: self.orientation,
-        }
-    }
+#[derive(Clone, Copy, Debug, Deserialize, Serialize)]
+pub struct MapId(pub i32);
+
+#[derive(Deserialize, Serialize)]
+pub struct RingConfiguration {
+
 }
 
 #[derive(Deserialize, Serialize)]
-pub struct MapPosition(f32, f32, f32);
+pub struct LootConfiguration {
 
-#[derive(Deserialize, Serialize)]
-pub struct MapId(i8, i8, i8, i8);
+}
+
+#[derive(Clone, Debug, Deserialize, Serialize)]
+pub struct LootTable {
+    pub drops: Vec<LootTableEntry>,
+}
+
+#[derive(Clone, Debug, Deserialize, Serialize)]
+pub struct LootTableEntry {
+    pub weight: u32,
+    pub items: Vec<LootTableEntryItem>,
+}
+
+#[derive(Clone, Debug, Deserialize, Serialize)]
+pub struct LootTableEntryItem {
+    pub item: u32,
+    pub quantity: u32,
+}

@@ -26,9 +26,15 @@ pub const LOCATION_DROPPED_ITEM_CAP_CHECK: &str = "DROPPED_ITEM_CAP_CHECK";
 // Message repo lookup fn for ?MenuText?. Contains quickmatch strings.
 pub const LOCATION_LOOKUP_MENU_TEXT: &str = "LOOKUP_MENU_TEXT";
 // Fn that transfers items between two inventory data instances.
-pub const LOCATION_TRANSFER_ITEM: &str = "LOOKUP_TRANSFER_ITEM";
+pub const LOCATION_TRANSFER_ITEM: &str = "TRANSFER_ITEM";
 // Applies speffect to chrins.
 pub const LOCATION_APPLY_SPEFFECT: &str = "APPLY_SPEFFECT";
+// Spawns an FXR.
+pub const LOCATION_SFX_SPAWN: &str = "SFX_SPAWN";
+// Cast a ray.
+pub const LOCATION_PHYS_WORLD_CAST_RAY: &str = "PHYS_WORLD_CAST_RAY";
+// Spawn dropped item vfx hook.
+pub const LOCATION_SPAWN_DROPPED_ITEM_VFX: & str = "SPAWN_DROPPED_ITEM_VFX";
 
 #[derive(Debug, Error)]
 pub enum LocationProviderError {
@@ -61,6 +67,9 @@ impl ProgramLocationProvider {
                 (LOCATION_PRESENT_MP_MESSAGE, 0x766460),
                 (LOCATION_LOOKUP_MENU_TEXT, 0xd10a00),
                 (LOCATION_APPLY_SPEFFECT, 0x3e8cf0),
+                (LOCATION_SFX_SPAWN, 0xd92a40),
+                (LOCATION_PHYS_WORLD_CAST_RAY, 0xc70750),
+                (LOCATION_SPAWN_DROPPED_ITEM_VFX, 0xd937b0),
             ]),
         }
     }

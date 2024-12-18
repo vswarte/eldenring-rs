@@ -1,29 +1,23 @@
 use game::cs::{MapId, MapItemMan};
 use rand::prelude::*;
 use std::{
-    marker::Sync, sync::{
-        atomic::{AtomicBool, Ordering}, Arc, RwLock
-    }, time::{Duration, Instant}
+    marker::Sync,
+    sync::{
+        atomic::{AtomicBool, Ordering},
+        Arc, RwLock,
+    },
+    time::{Duration, Instant},
 };
 use util::singleton::get_instance;
 
 // Spawn some loot around the place
 const LOOT_SPAWN_INTERVAL: Duration = Duration::from_secs(10);
 
-use crate::{
-    mapdata::{self, MapConfiguration},
-    ProgramLocationProvider, LOCATION_SPAWN_DROPPED_ITEM,
+use crate::config::{
+    ConfigurationProvider, LootTable, LootTableEntry, LootTableEntryItem, MapConfiguration,
+    MapPosition,
 };
-
-pub struct LootTableEntry {
-    pub weight: u32,
-    pub items: Vec<LootTableEntryItem>,
-}
-
-pub struct LootTableEntryItem {
-    pub item: u32,
-    pub quantity: u32,
-}
+use crate::{ProgramLocationProvider, LOCATION_SPAWN_DROPPED_ITEM};
 
 impl LootTableEntryItem {
     const fn new(item: u32, quantity: u32) -> Self {
@@ -33,32 +27,30 @@ impl LootTableEntryItem {
 
 /// Generates and spawns random loot over the map
 pub struct LootGenerator {
-    /// Did the current map get the initial items spawned already?
-    has_provisioned_map: AtomicBool,
-
-    /// When did we last spawn items?
-    last_spawn_round: RwLock<Instant>,
-
     location: Arc<ProgramLocationProvider>,
+    config: Arc<ConfigurationProvider>,
+
+    /// Did the current map get the initial items spawned already?
+    has_provisioned_map: bool,
 }
 
 impl LootGenerator {
-    pub fn new(location: Arc<ProgramLocationProvider>) -> Self {
+    pub fn new(location: Arc<ProgramLocationProvider>, config: Arc<ConfigurationProvider>) -> Self {
         Self {
-            has_provisioned_map: Default::default(),
-            last_spawn_round: RwLock::new(Instant::now()),
             location,
+            config,
+            has_provisioned_map: Default::default(),
         }
     }
 
-    pub fn update(&self) {
-        let map = mapdata::get(0).unwrap();
+    pub fn update(&mut self) {
+        let map = self.config.map(&0).unwrap();
 
         // First update on the map should provision it
-        if !self.has_provisioned_map.load(Ordering::Relaxed) {
+        if !self.has_provisioned_map {
+            self.has_provisioned_map = true;
             tracing::info!("Provisioning map");
             self.provision_map(&map);
-            self.has_provisioned_map.store(true, Ordering::Relaxed);
         }
     }
 
@@ -69,43 +61,151 @@ impl LootGenerator {
 
         std::thread::spawn(move || {
             let loot_table = &[
-                // 1x Pulley Bow + 15 Shattershard Arrows + Piquebone
+                // ------------ Consumables ------------
+                // Warming Stone
                 LootTableEntry {
                     weight: 3,
+                    items: vec![LootTableEntryItem::new(0x40000CEE, 1)],
+                },
+                // Lulling Branch
+                LootTableEntry {
+                    weight: 3,
+                    items: vec![LootTableEntryItem::new(0x401E880E, 1)],
+                },
+                // Opaline Pickled Liver
+                LootTableEntry {
+                    weight: 1,
+                    items: vec![LootTableEntryItem::new(0x401E8908, 1)],
+                },
+                // Pickled Turtle Neck
+                LootTableEntry {
+                    weight: 1,
+                    items: vec![LootTableEntryItem::new(0x4000044C, 1)],
+                },
+                // Innard Meat
+                LootTableEntry {
+                    weight: 1,
+                    items: vec![LootTableEntryItem::new(0x401E8B24, 5)],
+                },
+                // Golden Vow (Consumable)
+                LootTableEntry {
+                    weight: 1,
+                    items: vec![LootTableEntryItem::new(0x401E90E2, 1)],
+                },
+                // Rune Arc
+                LootTableEntry {
+                    weight: 1,
+                    items: vec![LootTableEntryItem::new(0x400000BE, 1)],
+                },
+                // Starlight Shards
+                LootTableEntry {
+                    weight: 1,
+                    items: vec![LootTableEntryItem::new(0x4000050A, 3)],
+                },
+                // Exalted Flesh
+                LootTableEntry {
+                    weight: 1,
+                    items: vec![LootTableEntryItem::new(0x400004BA, 1)],
+                },
+                // Boiled Prawn
+                LootTableEntry {
+                    weight: 1,
+                    items: vec![LootTableEntryItem::new(0x4000033E, 1)],
+                },
+                // Raw Meat Dumpling
+                LootTableEntry {
+                    weight: 1,
+                    items: vec![LootTableEntryItem::new(0x400004D3, 1)],
+                },
+                // Ruin Fragment
+                LootTableEntry {
+                    weight: 1,
+                    items: vec![LootTableEntryItem::new(0x400006E0, 10)],
+                },
+                // Poisoned Stone
+                LootTableEntry {
+                    weight: 1,
+                    items: vec![LootTableEntryItem::new(0x40000730, 5)],
+                },
+                // Explosive Stone
+                LootTableEntry {
+                    weight: 1,
+                    items: vec![LootTableEntryItem::new(0x40000726, 5)],
+                },
+                // Glintstone Scrap
+                LootTableEntry {
+                    weight: 1,
+                    items: vec![LootTableEntryItem::new(0x40000BEA, 5)],
+                },
+                // Gravity Stone Fan
+                LootTableEntry {
+                    weight: 1,
+                    items: vec![LootTableEntryItem::new(0x40000BF4, 5)],
+                },
+                // Drawstring Fire Grease
+                LootTableEntry {
+                    weight: 1,
+                    items: vec![LootTableEntryItem::new(0x400005DC, 2)],
+                },
+                // Drawstring Lightning Grease
+                LootTableEntry {
+                    weight: 1,
+                    items: vec![LootTableEntryItem::new(0x400005E6, 2)],
+                },
+                // Drawstring Magic Grease
+                LootTableEntry {
+                    weight: 1,
+                    items: vec![LootTableEntryItem::new(0x400005F0, 2)],
+                },
+                // Drawstring Holy Grease
+                LootTableEntry {
+                    weight: 1,
+                    items: vec![LootTableEntryItem::new(0x400005FA, 2)],
+                },
+                // Drawstring Blood Grease
+                LootTableEntry {
+                    weight: 1,
+                    items: vec![LootTableEntryItem::new(0x40000604, 2)],
+                },
+                // Drawstring Poison Grease
+                LootTableEntry {
+                    weight: 1,
+                    items: vec![LootTableEntryItem::new(0x40000618, 1)],
+                },
+                // Drawstring Freezing Grease
+                LootTableEntry {
+                    weight: 1,
+                    items: vec![LootTableEntryItem::new(0x40000622, 2)],
+                },
+                // Drawstring Rot Grease
+                LootTableEntry {
+                    weight: 1,
+                    items: vec![LootTableEntryItem::new(0x40000636, 1)],
+                },
+                // Soft Cotton
+                LootTableEntry {
+                    weight: 1,
+                    items: vec![LootTableEntryItem::new(0x40000834, 3)],
+                },
+                // ------------ Crafting Materials ------------
+
+                // Placeholder (Thin Beast Bones)
+                LootTableEntry {
+                    weight: 1,
+                    items: vec![LootTableEntryItem::new(0x40003BEC, 25)],
+                },
+                // ------------ Spells & Incantations ------------
+
+                // Placeholder (Glintstone Pebble + Starlight Shard)
+                LootTableEntry {
+                    weight: 1,
                     items: vec![
-                        LootTableEntryItem::new(0x027286A0, 1),
-                        LootTableEntryItem::new(0x02FBDAE0, 15),
-                        LootTableEntryItem::new(0x03032DE0, 15),
+                        LootTableEntryItem::new(0x40000FA0, 1),
+                        LootTableEntryItem::new(0x4000050A, 1),
                     ],
                 },
-                // 20x Bloodbone + Coldbone Arrows
-                LootTableEntry {
-                    weight: 2,
-                    items: vec![
-                        LootTableEntryItem::new(0x02FF8460, 20),
-                        LootTableEntryItem::new(0x02FFD280, 20),
-                    ],
-                },
-                // 1x Great Katana
-                LootTableEntry {
-                    weight: 3,
-                    items: vec![LootTableEntryItem::new(0x03F6B5A0, 1)],
-                },
-                // 1x Stone-Sheathed Sword
-                LootTableEntry {
-                    weight: 3,
-                    items: vec![LootTableEntryItem::new(0x0026C1E0, 1)],
-                },
-                // 1x Fire Knight's Shortsword
-                LootTableEntry {
-                    weight: 3,
-                    items: vec![LootTableEntryItem::new(0x00170A70, 1)],
-                },
-                // 1x Lizard Greatsword
-                LootTableEntry {
-                    weight: 3,
-                    items: vec![LootTableEntryItem::new(0x0035B600, 1)],
-                },
+                // ------------ Clothing ------------
+
                 // Common Soldier Set
                 LootTableEntry {
                     weight: 1,
@@ -396,6 +496,7 @@ impl LootGenerator {
                         LootTableEntryItem::new(0x10506B80, 1),
                     ],
                 },
+                // ------------ Weapons ------------
                 // Dueling Shield
                 LootTableEntry {
                     weight: 3,
@@ -466,7 +567,58 @@ impl LootGenerator {
                     weight: 3,
                     items: vec![LootTableEntryItem::new(0x00DD8EC0, 1)],
                 },
+                // 1x Pulley Bow + 15 Shattershard Arrows + Piquebone
+                LootTableEntry {
+                    weight: 3,
+                    items: vec![
+                        LootTableEntryItem::new(0x027286A0, 1),
+                        LootTableEntryItem::new(0x02FBDAE0, 15),
+                        LootTableEntryItem::new(0x03032DE0, 15),
+                    ],
+                },
+                // 1x Great Katana
+                LootTableEntry {
+                    weight: 3,
+                    items: vec![LootTableEntryItem::new(0x03F6B5A0, 1)],
+                },
+                // 1x Stone-Sheathed Sword
+                LootTableEntry {
+                    weight: 3,
+                    items: vec![LootTableEntryItem::new(0x0026C1E0, 1)],
+                },
+                // 1x Fire Knight's Shortsword
+                LootTableEntry {
+                    weight: 3,
+                    items: vec![LootTableEntryItem::new(0x00170A70, 1)],
+                },
+                // 1x Lizard Greatsword
+                LootTableEntry {
+                    weight: 3,
+                    items: vec![LootTableEntryItem::new(0x0035B600, 1)],
+                },
+                // ------------ Ammunition ------------
+
+                // 20x Bloodbone + Coldbone Arrows
+                LootTableEntry {
+                    weight: 2,
+                    items: vec![
+                        LootTableEntryItem::new(0x02FF8460, 20),
+                        LootTableEntryItem::new(0x02FFD280, 20),
+                    ],
+                },
+                //
+                // ------------ Talismans ------------
+                // Placeholder (Crimson medallion)
+                LootTableEntry {
+                    weight: 1,
+                    items: vec![LootTableEntryItem::new(0x200003E8, 1)],
+                },
             ];
+
+            // export_loottable(&LootTable {
+            //     drops: loot_table.to_vec(),
+            // })
+            // .unwrap();
 
             std::thread::sleep(Duration::from_secs(3));
 
@@ -482,7 +634,7 @@ impl LootGenerator {
                 std::thread::sleep(Duration::from_millis(50));
 
                 tracing::info!("Spawning loot");
-                let (x, y, z) = point.position.xyz();
+                let MapPosition(x, y, z) = point.position;
 
                 let mut entries = [ItemSpawnRequestEntry::default(); 10];
                 let loot = loot_table.choose(&mut rng).expect("Loot table has no loot");
@@ -502,7 +654,7 @@ impl LootGenerator {
                     unkc: 0x0,
                     unk10: -1,
                     unk14: -1,
-                    map: point.map,
+                    map: MapId(point.map.0),
                     position_x: x,
                     position_y: y,
                     position_z: z,
@@ -533,9 +685,9 @@ impl LootGenerator {
     }
 
     /// Reset structure after match has finished
-    pub fn reset(&self) {
+    pub fn reset(&mut self) {
         tracing::info!("Resetting loot generator");
-        self.has_provisioned_map.store(false, Ordering::Relaxed);
+        self.has_provisioned_map = false;
     }
 }
 

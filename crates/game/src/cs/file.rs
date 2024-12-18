@@ -40,7 +40,6 @@ pub trait CSFileImpVmt {
     /// careful with calling this on specific resources.
     fn unload_file_cap_by_name(&mut self, name: &FD4BasicHashString);
 
-
     /// Unloads the referenced filecap.
     fn unload_file_cap(&mut self, file_cap: &UntypedFileCap);
 

@@ -54,7 +54,7 @@ pub struct WorldAreaSfxBase {
 /// Source of name: RTTI
 pub struct WorldAreaSfx {
     base: WorldAreaSfxBase,
-    world_area_info_2: usize,
+    world_area_info: usize,
     world_block_sfx_count: u32,
     _pad24: u32,
     world_block_sfx: NonNull<WorldBlockSfx>,

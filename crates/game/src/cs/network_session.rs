@@ -55,10 +55,10 @@ pub trait NetworkSessionVmt {
 
 #[repr(C)]
 pub struct ReceivePacketAllocation {
-    /// Pointer to the write-able buffer of N bytes where N is determined by the size field.
+    /// Pointer to the write-able buffer.
     pub buffer: *mut u8,
 
-    /// Amount of the data that can be written the buffer pointer at maximum.
+    /// Amount of the data that can be written the buffer at maximum.
     pub size: usize,
 }
 

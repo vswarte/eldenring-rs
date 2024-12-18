@@ -1,3 +1,4 @@
+mod map_id;
 mod camera;
 mod field_ins;
 mod chr_ins;
@@ -26,7 +27,10 @@ mod item;
 mod sfx;
 mod world_sfx_man;
 mod team_relation;
+mod location;
+mod havok_man;
 
+pub use map_id::*;
 pub use camera::*;
 pub use field_ins::*;
 pub use chr_ins::*;
@@ -55,3 +59,5 @@ pub use item::*;
 pub use sfx::*;
 pub use world_sfx_man::*;
 pub use team_relation::*;
+pub use location::*;
+pub use havok_man::*;

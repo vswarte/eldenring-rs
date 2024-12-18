@@ -2,6 +2,7 @@ use std::marker::PhantomData;
 use std::sync::Arc;
 
 use game::cs::ChrIns;
+use game::cs::MapId;
 use game::cs::QuickmatchManager;
 use game::position::ChunkPosition4;
 use retour::static_detour;
@@ -9,19 +10,21 @@ use thiserror::Error;
 use windows::core::w;
 use windows::core::PCWSTR;
 
+use crate::config::MapPosition;
 use crate::gamemode::GameMode;
 use crate::gamestate::GameStateProvider;
 use crate::location::*;
 use crate::ProgramLocationProvider;
 
 static_detour! {
-    static HOOK_MAP_QUICKMATCH_ENUM_TO_MAP_ID: extern "C" fn(*mut u32, u32) -> *mut u32;
+    static HOOK_MAP_QUICKMATCH_ENUM_TO_MAP_ID: extern "C" fn(*mut MapId, u32) -> *mut MapId;
     static HOOK_MSB_GET_EVENT_DATA_COUNT: extern "C" fn(usize, u32) -> u32;
     static HOOK_MSB_GET_POINT_DATA_COUNT: extern "C" fn(usize, u32) -> u32;
     static HOOK_MSB_GET_PARTS_DATA_COUNT: extern "C" fn(usize, u32) -> u32;
     static HOOK_CHR_INS_DEAD: extern "C" fn(*mut ChrIns);
     static HOOK_INITIAL_SPAWN_POSITION: extern "C" fn(*mut QuickmatchManager, *mut ChunkPosition4, usize, usize, usize);
     static HOOK_LOOKUP_MENU_TEXT: extern "C" fn(*const usize, u32) -> PCWSTR;
+    static HOOK_SPAWN_DROPPED_ITEM_VFX: extern "C" fn(usize, *mut u32, usize);
 }
 
 #[derive(Debug, Error)]
@@ -39,8 +42,7 @@ impl Hooks {
     pub unsafe fn place(
         location: Arc<ProgramLocationProvider>,
         gamemode: Arc<GameMode>,
-    ) -> Result<Self, HookError>
-    {
+    ) -> Result<Self, HookError> {
         // Take control over the players death so we can apply the specator cam.
         Self::hook_player_characters(&location, gamemode.clone())?;
 
@@ -50,22 +52,41 @@ impl Hooks {
         // Stop the overworld MSBs from crashing.
         Self::apply_msb_fixups(&location, gamemode.clone())?;
 
-        // Disable player item drop cap
-        Self::patch_item_drop_limit(&location, gamemode.clone())?;
+        // Disable player item drop cap as well as loot visuals.
+        Self::patch_loot(&location, gamemode.clone())?;
 
-        // Inject custom strings
+        // Inject custom strings.
         Self::hook_text_lookups(&location, gamemode.clone())?;
 
-        Ok(Self { })
+        Ok(Self {})
     }
 
-    unsafe fn patch_item_drop_limit(
+    unsafe fn patch_loot(
         location: &ProgramLocationProvider,
         gamemode: Arc<GameMode>,
     ) -> Result<(), HookError> {
         // Neuter dropped item cap check
-        let location = location.get(LOCATION_DROPPED_ITEM_CAP_CHECK)?;
-        unsafe { *(location as *mut u8) = 0xEB };
+        {
+            let location = location.get(LOCATION_DROPPED_ITEM_CAP_CHECK)?;
+            unsafe { *(location as *mut u8) = 0xEB };
+        }
+
+        // Change the item drop loot visuals
+        {
+            let gamemode = gamemode.clone();
+            HOOK_SPAWN_DROPPED_ITEM_VFX
+                .initialize(
+                    std::mem::transmute(location.get(LOCATION_SPAWN_DROPPED_ITEM_VFX)?),
+                    move |param_1: usize, param_2: *mut u32, param_3: usize| {
+                        if gamemode.running() {
+                            *param_2 = 6109;
+                        }
+
+                        HOOK_SPAWN_DROPPED_ITEM_VFX.call(param_1, param_2, param_3)
+                    },
+                )?
+                .enable()?;
+        }
 
         Ok(())
     }
@@ -89,8 +110,6 @@ impl Hooks {
                         chr_ins.as_mut().unwrap().chr_ctrl.flags |= 2;
 
                         tracing::info!("Caught ChrIns death");
-                        let chr_ins = chr_ins.as_ref().unwrap();
-                        gamemode.handle_death(&chr_ins.field_ins_handle);
                     },
                 )?
                 .enable()?;
@@ -109,10 +128,10 @@ impl Hooks {
             HOOK_MAP_QUICKMATCH_ENUM_TO_MAP_ID
                 .initialize(
                     std::mem::transmute(location.get(LOCATION_MAP_QUICKMATCH_ENUM_TO_MAP_ID)?),
-                    move |map_id: *mut u32, map: u32| {
+                    move |map_id: *mut MapId, map: u32| {
                         let result = HOOK_MAP_QUICKMATCH_ENUM_TO_MAP_ID.call(map_id, map);
                         let target_map_id = gamemode.target_map(map);
-                        *result = (&gamemode.target_map(map)).into();
+                        *result = target_map_id;
                         result
                     },
                 )?
@@ -150,10 +169,13 @@ impl Hooks {
 
                         // Here's praying the message was received in-time...
                         tracing::info!("Overriding initial spawn position");
-                        let (x, y, z) = gamemode.player_spawn_point().position.xyz();
+                        let MapPosition(x, y, z) = gamemode.player_spawn_point().position;
+
                         (*position).0 .0 = x;
                         (*position).0 .1 = y;
                         (*position).0 .2 = z;
+
+                        // TODO: set orientation
                     },
                 )?
                 .enable()?;

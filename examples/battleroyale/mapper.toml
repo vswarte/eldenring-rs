@@ -47,3 +47,19 @@ captures = ["", "DROPPED_ITEM_CAP_CHECK"]
 [[patterns]]
 pattern = "44 8b cd 4c 8b c7 48 8b d6 8b cb e8 $ { ' }"
 captures = ["", "TRANSFER_ITEM"]
+
+[[patterns]]
+pattern = "0f 29 4d 37 48 8d 45 67 48 89 45 7f 89 75 67 48 8d 55 07 48 8d 4d 67 e8 $ { ' }"
+captures = ["", "SFX_SPAWN"]
+
+[[patterns]]
+pattern = "ba 58 00 00 02 e8 $ { ' }"
+captures = ["", "WORLD_CAST_RAY"]
+
+[[patterns]]
+pattern = "4c 8b c0 48 8d 8f 30 01 00 00 48 8d 54 24 30 e8 $ { ' }"
+captures = ["", "SPAWN_DROPPED_ITEM_VFX"]
+
+[[patterns]]
+pattern = "48 8d 54 24 30 48 03 c8 66 c7 44 24 30 01 00 48 8d 05 $ { ' }"
+captures = ["", "TEAMTYPE_RELATIONS_TABLE"]

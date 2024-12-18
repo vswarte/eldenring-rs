@@ -7,7 +7,7 @@ use steamworks::{
 };
 use util::steam;
 
-use crate::mapdata::MapPoint;
+use crate::config::{MapId, MapPoint, MapPosition};
 
 const STEAM_MESSAGE_CHANNEL: u32 = 51234;
 const STEAM_MESSAGE_BATCH_SIZE: usize = 0x10;
@@ -18,9 +18,9 @@ pub struct MatchMessaging {}
 #[derive(Debug, Serialize, Deserialize)]
 pub enum Message {
     /// Goes from host to clients to set the local players loadout.
-    Loadout {
-        map_id: u32,
-        position: (f32, f32, f32),
+    MatchDetails {
+        map: MapId,
+        position: MapPosition,
         orientation: f32,
     },
 }
@@ -28,18 +28,15 @@ pub enum Message {
 impl MatchMessaging {
     pub fn send_loadouts(&self, loadout: &HashMap<u64, MapPoint>) -> Result<(), Box<dyn Error>> {
         loadout.iter().for_each(|(remote, spawn)| {
-            let message = Message::Loadout {
-                map_id: 0x0,
-                position: (
-                    spawn.position.0 .0,
-                    spawn.position.0 .1,
-                    spawn.position.0 .2,
-                ),
+            let message = Message::MatchDetails {
+                map: spawn.map.into(),
+                position: spawn.position.clone(),
                 orientation: spawn.orientation,
             };
 
             let serialized =
                 bincode::serialize(&message).expect("Could not serialize spawn point message");
+
             self.send_raw(remote, serialized.as_slice());
         });
 

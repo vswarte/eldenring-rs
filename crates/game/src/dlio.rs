@@ -36,7 +36,7 @@ pub trait DLInputStreamVmt {
     /// Indicates if there's bytes left for reading.
     fn has_bytes_left(&self) -> bool;
 
-    /// Indicates the amount of bytes left in the reader\f.
+    /// Indicates the amount of bytes left in the reader.
     fn get_bytes_left(&self) -> usize;
 
     /// Skips count amount of bytes, returns the amount of bytes skipped. Will be less than count if
