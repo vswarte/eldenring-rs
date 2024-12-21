@@ -170,6 +170,30 @@ impl Player {
         equipment.chr_asm.equipment_param_ids[CHR_ASM_SLOT_PROTECTOR_CHEST] = 10100;
         equipment.chr_asm.equipment_param_ids[CHR_ASM_SLOT_PROTECTOR_HANDS] = 10200;
         equipment.chr_asm.equipment_param_ids[CHR_ASM_SLOT_PROTECTOR_LEGS] = 10300;
+
+        equipment.accessories = [-1; 4];
+        equipment.quick_tems = [-1; 10];
+        equipment.pouch = [-1; 6];
+        equipment.protector_head = 10000;
+        equipment.protector_chest = 10100;
+        equipment.protector_hands = 10200;
+        equipment.protector_legs = 10300;
+
+        equipment.weapon_primary_left = 110000;
+        equipment.weapon_primary_right = 110000;
+        equipment.weapon_secondary_left = 110000;
+        equipment.weapon_secondary_right = 110000;
+        equipment.weapon_tertiary_left = 110000;
+        equipment.weapon_tertiary_right = 110000;
+
+        equipment.arrow_primary = -1;
+        equipment.bolt_primary = -1;
+        equipment.arrow_secondary = -1;
+        equipment.bolt_secondary = -1;
+        equipment.arrow_tertiary = -1;
+        equipment.bolt_tertiary = -1;
+
+        equipment.covenant = -1;
     }
 }
 

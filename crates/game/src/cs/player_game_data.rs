@@ -179,7 +179,7 @@ pub struct EquipGameData {
     unk3e0: usize,
     unk3e8: usize,
     pub player_game_data: NonNull<PlayerGameData>,
-    unk3f8: [u8; 0xb8], 
+    unk3f8: [u8; 0xb8],
 }
 
 #[repr(C)]
