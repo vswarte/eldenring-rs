@@ -1,10 +1,13 @@
-use config::{Configuration, ConfigurationProvider};
+use config::{Configuration, ConfigurationProvider, MapPoint};
+use context::GameModeContext;
 use crash_handler::{make_crash_event, CrashContext, CrashEventResult, CrashHandler};
 use gamestate::GameStateProvider;
 use hooks::Hooks;
+use loadout::PlayerLoadout;
 use location::*;
 use loot::LootGenerator;
 use message::NotificationPresenter;
+use network::{MatchMessaging, Message};
 use pain::{PainRing, SfxSpawnLocation};
 use player::Player;
 use spectator_camera::SpectatorCamera;
@@ -13,7 +16,10 @@ use std::{collections::HashMap, error::Error, f32::consts::PI, sync::Arc, time::
 
 /// Implements a battle-royale gamemode on top of quickmatches.
 use game::{
-    cs::{CSHavokMan, CSPhysWorld, CSTaskGroupIndex, CSTaskImp, ChrIns, PlayerIns, WorldChrMan},
+    cs::{
+        CSHavokMan, CSNetMan, CSPhysWorld, CSTaskGroupIndex, CSTaskImp, ChrIns, PlayerIns,
+        WorldChrMan,
+    },
     fd4::FD4TaskData,
     matrix::FSVector4,
     position::HavokPosition,
@@ -26,20 +32,21 @@ use util::{
 };
 
 mod config;
+mod context;
 mod gamemode;
 mod gamestate;
 mod hooks;
 mod loadout;
 mod location;
 mod loot;
-//mod mapdata;
 mod message;
 mod network;
 mod pain;
 mod player;
+mod rva;
 mod spectator_camera;
-// mod tool;
 mod stage;
+mod tool;
 
 // 523357 - Fia's Mist
 // 523573 - Darkness clouds
@@ -71,6 +78,7 @@ pub unsafe extern "C" fn DllMain(_hmodule: usize, reason: u32) -> bool {
         std::thread::spawn(|| {
             // Give the CRT init a bit of leeway
             std::thread::sleep(Duration::from_secs(5));
+
             init().expect("Could not initialize gamemode");
         });
     }
@@ -84,64 +92,100 @@ fn init() -> Result<(), Box<dyn Error>> {
     unsafe { arxan::disable_code_restoration(&program)? };
 
     let mut config = Arc::new(ConfigurationProvider::load()?);
+    // config.export()?;
 
-    let game_state = Arc::new(GameStateProvider::default());
+    let context = Arc::new(GameModeContext::default());
+    let game = Arc::new(GameStateProvider::default());
     let location = Arc::new(ProgramLocationProvider::new());
+
+
 
     let notification = NotificationPresenter::new(location.clone());
     let player = Player::new(location.clone());
 
     let gamemode = Arc::new(GameMode::init(
-        game_state.clone(),
+        game.clone(),
         config.clone(),
         notification,
         player,
     ));
 
-    let hooks = unsafe { Hooks::place(location.clone(), gamemode.clone())? };
+    let hooks = unsafe { Hooks::place(location.clone(), gamemode.clone(), context.clone())? };
 
     // Enqueue task that does it all :tm:
     let cs_task = unsafe { get_instance::<CSTaskImp>() }?.unwrap();
     let task_handle = {
         let gamemode = gamemode.clone();
 
-        let mut stage = StagePrepare::new(location.clone());
+        let messaging = Arc::new(MatchMessaging::default());
+        let mut loadout = PlayerLoadout::new(
+            config.clone(),
+            game.clone(),
+            context.clone(),
+            messaging.clone(),
+        );
+
+        let mut stage = StagePrepare::new(location.clone(), game.clone(), config.clone());
         let mut pain_ring = PainRing::new(location.clone(), config.clone());
         let mut loot_generator = LootGenerator::new(location.clone(), config.clone());
-        let mut spectator_camera = SpectatorCamera::new(game_state.clone());
+        let mut spectator_camera = SpectatorCamera::new(game.clone());
 
+        let mut patched_utility_effects = false;
         let mut active = false;
         let mut running = false;
 
         cs_task.run_recurring(
             move |data: &FD4TaskData| {
+                // Always pull messages but only conditionally handle them
+                for (remote, message) in messaging.receive_messages().iter() {
+                    if !game.match_active() {
+                        continue;
+                    }
+
+                    // Ignore messages not coming from the host
+                    if *remote != game.host_steam_id() {
+                        tracing::warn!("Received non-host message");
+                        continue;
+                    }
+
+                    match message {
+                        Message::MatchDetails { spawn } => {
+                            tracing::info!("Received match details");
+                            context.set_spawn_point(spawn.clone());
+                        }
+                    }
+                }
+
                 // Trigger logic that needs to run when the player goes into a qm lobby.
-                if game_state.match_active() && !active {
+                if game.match_active() && !active {
                     tracing::info!("Starting battleroyale");
-
                     active = true;
-                } else if !game_state.match_active() && active {
+                } else if !game.match_active() && active {
                     tracing::info!("Stopping battleroyale");
-
+                    loadout.reset();
                     pain_ring.reset();
                     loot_generator.reset();
                     spectator_camera.reset();
-
+                    stage.reset();
+                    context.reset();
                     active = false;
                 }
 
-                // Trigger logic that needs to run when player has spawned in map. 
-                if game_state.match_running() && !running {
+                // Trigger logic that needs to run when player has spawned in map.
+                if game.match_running() && !running {
                     tracing::info!("Match started");
                     running = true;
-                } else if !game_state.match_running() && running {
+                } else if !game.match_running() && running {
                     tracing::info!("Match stopped");
                     running = false;
                 }
 
-                // if is_key_pressed(0x60) {
-                //     tool::sample_spawn_point();
-                // }
+                // Gamemode creation tooling
+                if is_key_pressed(0x60) {
+                    tool::sample_spawn_point();
+                } else if is_key_pressed(0x62) {
+                    config.reload().unwrap();
+                }
 
                 // if is_key_pressed(0x60) {
                 //     let world_chr_man = unsafe { get_instance::<WorldChrMan>() }.unwrap().unwrap();
@@ -228,14 +272,26 @@ fn init() -> Result<(), Box<dyn Error>> {
 
                 gamemode.update(data.delta_time.time);
 
-                if game_state.match_running() {
-                    if game_state.is_host() {
-                        loot_generator.update();
-                    }
-
-                    pain_ring.update();
-                    spectator_camera.update();
+                if game.match_active() && game.is_host() {
+                    loadout.update();
                 }
+
+                // if game.match_running() {
+                //     if game.is_host() {
+                //         loot_generator.update();
+                //     }
+                //
+                //     // Remove utility effects like the crystal above the player.
+                //     // if !patched_utility_effects {
+                //     //     patched_utility_effects = true;
+                //     //     let cs_net_man = unsafe { get_instance::<CSNetMan>() }.unwrap().unwrap();
+                //     //     cs_net_man.quickmatch_manager.utility_sp_effects = [0; 10];
+                //     // }
+                //
+                //     pain_ring.update();
+                //     spectator_camera.update();
+                //     stage.update();
+                // }
             },
             CSTaskGroupIndex::GameMan,
         )

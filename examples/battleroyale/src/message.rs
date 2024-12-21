@@ -3,7 +3,7 @@ use std::sync::Arc;
 use game::cs::CSMenuMan;
 use util::singleton::get_instance;
 
-use crate::{ProgramLocationProvider, LOCATION_PRESENT_MP_MESSAGE};
+use crate::{rva::RVA_PRESENT_MP_MESSAGE, ProgramLocationProvider};
 
 #[repr(u32)]
 pub enum Message {
@@ -59,7 +59,7 @@ impl NotificationPresenter {
         };
 
         let display_message: extern "C" fn(&mut CSMenuMan, Message) = unsafe {
-            std::mem::transmute(self.location.get(LOCATION_PRESENT_MP_MESSAGE).unwrap())
+            std::mem::transmute(self.location.get(RVA_PRESENT_MP_MESSAGE).unwrap())
         };
 
         (display_message)(menu_man, message);

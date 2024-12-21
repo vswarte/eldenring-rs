@@ -29,8 +29,8 @@ pattern = "83 78 0c 06 74 ? 48 8b d3 48 8b cf e8 $ { ' }"
 captures = ["", "SPAWN_DROPPED_ITEM"]
 
 [[patterns]]
-pattern = "41 b8 01 00 00 00 41 8b d8 41 8b d0 89 5c 24 20 e8 $ { ' }"
-captures = ["", "MAP_QUICKMATCH_ENUM_TO_MAP_ID"]
+pattern = "48 8d 4d 07 e8 ? ? ? ? 48 8d 4d af e8 $ { ' }"
+captures = ["", "GET_TARGET_MAP_ID"]
 
 [[patterns]]
 pattern = "40 53 48 83 ec 40 c7 44 24 50 00 00 00 00 48 8b d9 48 8b 89 90 01 00 00 0f 57 db f3 0f 10 05 f5 19 ea 02"
@@ -63,3 +63,7 @@ captures = ["", "SPAWN_DROPPED_ITEM_VFX"]
 [[patterns]]
 pattern = "48 8d 54 24 30 48 03 c8 66 c7 44 24 30 01 00 48 8d 05 $ { ' }"
 captures = ["", "TEAMTYPE_RELATIONS_TABLE"]
+
+[[patterns]]
+pattern = "48 8d 55 c0 8b 45 e8 48 8d 4d d0 f2 0f 11 45 c0 89 45 c8 e8 $ { ' }"
+captures = ["", "CONVERT_BLOCK_COORDS_TO_WORLD_COORDS"]

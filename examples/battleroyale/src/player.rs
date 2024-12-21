@@ -10,7 +10,7 @@ use game::cs::{
 };
 use util::singleton::get_instance;
 
-use crate::{ProgramLocationProvider, LOCATION_TRANSFER_ITEM};
+use crate::{rva::RVA_TRANSFER_ITEM, ProgramLocationProvider};
 
 /// Levels applied to the player when in the battle.
 pub const PLAYER_LEVELS_IN_BATTLE: PlayerLevels = PlayerLevels {
@@ -45,43 +45,43 @@ impl Player {
 
         self.clear_equipment();
         self.store_items();
-        self.snapshot_levels();
+        // self.snapshot_levels();
         self.apply_levels_to_player(&PLAYER_LEVELS_IN_BATTLE);
     }
 
-    pub fn restore_original_levels(&self) {
-        tracing::info!("Restoring levels after match");
-        let original = self
-            .snapshot
-            .write()
-            .unwrap()
-            .take()
-            .expect("No levels to restore");
-        self.apply_levels_to_player(&original);
-    }
-
-    /// Copies current player level into memory for later reapplication.
-    fn snapshot_levels(&self) {
-        let player_game_data = &unsafe { get_instance::<WorldChrMan>() }
-            .unwrap()
-            .expect("Could not get WorldChrMan")
-            .main_player
-            .as_ref()
-            .expect("Could not get main player")
-            .player_game_data;
-
-        *self.snapshot.write().unwrap() = Some(PlayerLevels {
-            level: player_game_data.level,
-            vigor: player_game_data.vigor,
-            mind: player_game_data.mind,
-            endurance: player_game_data.endurance,
-            strength: player_game_data.strength,
-            dexterity: player_game_data.dexterity,
-            intelligence: player_game_data.intelligence,
-            faith: player_game_data.faith,
-            arcane: player_game_data.arcane,
-        });
-    }
+    // pub fn restore_original_levels(&self) {
+    //     tracing::info!("Restoring levels after match");
+    //     let original = self
+    //         .snapshot
+    //         .write()
+    //         .unwrap()
+    //         .take()
+    //         .expect("No levels to restore");
+    //     self.apply_levels_to_player(&original);
+    // }
+    //
+    // /// Copies current player level into memory for later reapplication.
+    // fn snapshot_levels(&self) {
+    //     let player_game_data = &unsafe { get_instance::<WorldChrMan>() }
+    //         .unwrap()
+    //         .expect("Could not get WorldChrMan")
+    //         .main_player
+    //         .as_ref()
+    //         .expect("Could not get main player")
+    //         .player_game_data;
+    //
+    //     *self.snapshot.write().unwrap() = Some(PlayerLevels {
+    //         level: player_game_data.level,
+    //         vigor: player_game_data.vigor,
+    //         mind: player_game_data.mind,
+    //         endurance: player_game_data.endurance,
+    //         strength: player_game_data.strength,
+    //         dexterity: player_game_data.dexterity,
+    //         intelligence: player_game_data.intelligence,
+    //         faith: player_game_data.faith,
+    //         arcane: player_game_data.arcane,
+    //     });
+    // }
 
     /// Applies a set of levels to the player
     fn apply_levels_to_player(&self, levels: &PlayerLevels) {
@@ -117,7 +117,7 @@ impl Player {
             .player_game_data;
 
         let transfer_item: fn(u32, &EquipInventoryData, &EquipInventoryData, u32, bool) -> bool =
-            unsafe { std::mem::transmute(self.location.get(LOCATION_TRANSFER_ITEM).unwrap()) };
+            unsafe { std::mem::transmute(self.location.get(RVA_TRANSFER_ITEM).unwrap()) };
 
         (0..player_game_data
             .equipment
@@ -129,7 +129,7 @@ impl Player {
                     &player_game_data.equipment.equip_inventory_data,
                     &player_game_data.storage,
                     99,
-                    false,
+                    true,
                 );
             });
     }

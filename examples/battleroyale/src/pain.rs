@@ -16,8 +16,7 @@ use util::{
 };
 
 use crate::{
-    config::{ConfigurationProvider, MapPoint},
-    ProgramLocationProvider, LOCATION_APPLY_SPEFFECT, LOCATION_SFX_SPAWN,
+    config::{ConfigurationProvider, MapPoint}, rva::{RVA_APPLY_SPEFFECT, RVA_SFX_SPAWN}, ProgramLocationProvider
 };
 
 pub struct PainRing {
@@ -128,10 +127,10 @@ impl PainRing {
         );
 
         let spawn_sfx: fn(&u32, &SfxSpawnLocation) -> bool =
-            unsafe { std::mem::transmute(self.location.get(LOCATION_SFX_SPAWN).unwrap()) };
+            unsafe { std::mem::transmute(self.location.get(RVA_SFX_SPAWN).unwrap()) };
 
         // let cast_ray: extern "C" fn(&*mut CSPhysWorld, u32, &HavokPosition, &FSVector4, &mut HavokPosition, &ChrIns) =
-        //     unsafe { std::mem::transmute(self.location.get(LOCATION_PHYS_WORLD_CAST_RAY).unwrap()) };
+        //     unsafe { std::mem::transmute(self.location.get(RVA_PHYS_WORLD_CAST_RAY).unwrap()) };
 
         let world_chr_man = unsafe { get_instance::<WorldChrMan>() }.unwrap().unwrap();
         if let Some(main_player) = &world_chr_man.main_player {
@@ -200,7 +199,7 @@ impl PainRing {
             .as_ref()
             .unwrap();
 
-        let location_apply_speffect = self.location.get(LOCATION_APPLY_SPEFFECT).unwrap();
+        let location_apply_speffect = self.location.get(RVA_APPLY_SPEFFECT).unwrap();
         let apply_speffect: extern "C" fn(&PlayerIns, u32, bool) =
             unsafe { std::mem::transmute(location_apply_speffect) };
         apply_speffect(main_player.as_ref(), 4004, false);

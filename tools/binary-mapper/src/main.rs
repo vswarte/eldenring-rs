@@ -1,10 +1,16 @@
 use std::{fs::File, path::PathBuf};
 
-use clap::Parser;
+use clap::{Parser, ValueEnum};
 use memmap::MmapOptions;
 use pelite::{pattern, PeFile};
 use rayon::prelude::*;
 use serde::Deserialize;
+
+#[derive(ValueEnum, Clone)]
+enum OutputFormat {
+    Print,
+    Rust,
+}
 
 /// Run a mapper profile against a binary to produce
 #[derive(Parser)]
@@ -12,8 +18,11 @@ struct Args {
     #[arg(long, env("MAPPER_PROFILE"))]
     profile: PathBuf,
 
-    #[arg(long, env("GAME_EXE"))]
+    #[arg(long, env("MAPPER_GAME_EXE"))]
     exe: PathBuf,
+
+    #[arg(long, env("MAPPER_OUTPUT_FORMAT"))]
+    output: OutputFormat,
 }
 
 fn main() {
@@ -48,26 +57,35 @@ fn main() {
                 .matches_code(&scanner_pattern)
                 .next(&mut matches)
             {
-                captures.map(|(_, e)| MapperEntryResult {
+                captures
+                    .map(|(_, e)| MapperEntryResult {
                         name: e.clone(),
                         found: false,
                         rva: 0x0,
                     })
                     .collect::<Vec<_>>()
             } else {
-                captures.map(|(i, e)| {
-                    MapperEntryResult {
+                captures
+                    .map(|(i, e)| MapperEntryResult {
                         name: e.clone(),
                         found: true,
                         rva: matches[i],
-                    }
-                })
-                .collect::<Vec<_>>()
+                    })
+                    .collect::<Vec<_>>()
             }
         })
         .collect::<Vec<_>>();
 
-    println!("Help: {:#x?}", result);
+    match args.output {
+        OutputFormat::Print => println!("Results: {result:#x?}"),
+        OutputFormat::Rust => {
+            let lines = result
+                .iter()
+                .map(|r| format!("pub const RVA_{}: u32 = {:#x};", r.name, r.rva))
+                .collect::<Vec<_>>();
+            println!("{}", lines.join("\n"));
+        }
+    }
 }
 
 /// Profile describing what offsets to extract from a game binary.

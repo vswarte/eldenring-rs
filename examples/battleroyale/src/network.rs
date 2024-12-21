@@ -19,19 +19,15 @@ pub struct MatchMessaging {}
 pub enum Message {
     /// Goes from host to clients to set the local players loadout.
     MatchDetails {
-        map: MapId,
-        position: MapPosition,
-        orientation: f32,
+        spawn: MapPoint,
     },
 }
 
 impl MatchMessaging {
-    pub fn send_loadouts(&self, loadout: &HashMap<u64, MapPoint>) -> Result<(), Box<dyn Error>> {
+    pub fn send_match_details(&self, loadout: &HashMap<u64, MapPoint>) -> Result<(), Box<dyn Error>> {
         loadout.iter().for_each(|(remote, spawn)| {
             let message = Message::MatchDetails {
-                map: spawn.map.into(),
-                position: spawn.position.clone(),
-                orientation: spawn.orientation,
+                spawn: spawn.clone(),
             };
 
             let serialized =

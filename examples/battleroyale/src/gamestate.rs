@@ -108,6 +108,11 @@ impl GameStateProvider {
 
         cs_event_flag_man.world_type != 0
     }
+
+    /// Returns the chosen stage from the battleroyale context. Fixed to 0 for now.
+    pub fn stage(&self) -> u32 {
+        return 0;
+    }
 }
 
 pub fn is_chr_ins_alive(chr_ins: &ChrIns) -> bool {
