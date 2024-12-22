@@ -1,4 +1,4 @@
-use game::cs::{CSNetBloodMessageDb, CSNetBloodMessageDbItem, CSNetMan, QuickmatchManager};
+use game::cs::{CSBattleRoyalContext, CSNetBloodMessageDb, CSNetBloodMessageDbItem, CSNetMan, CSQuickMatchingCtrl, QuickmatchManager};
 use hudhook::imgui::{TableColumnSetup, TreeNodeFlags, Ui};
 
 use super::DebugDisplay;
@@ -100,55 +100,82 @@ fn render_message_table<'a>(
 
 impl DebugDisplay for QuickmatchManager {
     fn render_debug(&self, ui: &&mut Ui) {
-        if ui.collapsing_header("CSBattleRoyalContext", TreeNodeFlags::empty()) {
+        if ui.collapsing_header("CSQuickMatchingCtrl", TreeNodeFlags::empty()) {
             ui.indent();
-
-            ui.input_text(
-                "Match settings",
-                &mut self.battle_royal_context.quickmatch_context.match_settings.to_string(),
-            )
-            .read_only(true)
-            .build();
-
-            ui.input_text(
-                "Match map (map ID)",
-                &mut self.battle_royal_context.quickmatch_context.match_map.to_string(),
-            )
-            .read_only(true)
-            .build();
-
-            ui.input_text(
-                "Match Player Count",
-                &mut self.battle_royal_context.match_player_count.to_string(),
-            )
-            .read_only(true)
-            .build();
-
-            ui.input_text(
-                "Match Map (enum)",
-                &mut self.battle_royal_context.match_player_count.to_string(),
-            )
-            .read_only(true)
-            .build();
-
-            ui.input_text(
-                "Password",
-                &mut self.battle_royal_context.password.to_string(),
-            )
-            .read_only(true)
-            .build();
-
-            ui.input_text(
-                "Participant count",
-                &mut self.battle_royal_context.quickmatch_context.participants.len().to_string(),
-            )
-            .read_only(true)
-            .build();
-
-
+            self.quickmatching_ctrl.render_debug(ui);
             ui.unindent();
         }
 
+        if ui.collapsing_header("CSBattleRoyalContext", TreeNodeFlags::empty()) {
+            ui.indent();
+            self.battle_royal_context.render_debug(ui);
+            ui.unindent();
+        }
+    }
+}
+
+impl DebugDisplay for CSBattleRoyalContext {
+    fn render_debug(&self, ui: &&mut Ui) {
+        ui.input_text(
+            "Error State",
+            &mut self.quickmatch_context.error_state.to_string(),
+        )
+        .read_only(true)
+        .build();
+
+
+        ui.input_text(
+            "Match settings",
+            &mut self.quickmatch_context.match_settings.to_string(),
+        )
+        .read_only(true)
+        .build();
+
+        ui.input_text(
+            "Match map (map ID)",
+            &mut self.quickmatch_context.match_map.to_string(),
+        )
+        .read_only(true)
+        .build();
+
+        ui.input_text(
+            "Match Player Count",
+            &mut self.match_player_count.to_string(),
+        )
+        .read_only(true)
+        .build();
+
+        ui.input_text(
+            "Match Map (enum)",
+            &mut self.match_player_count.to_string(),
+        )
+        .read_only(true)
+        .build();
+
+        ui.input_text(
+            "Password",
+            &mut self.password.to_string(),
+        )
+        .read_only(true)
+        .build();
+
+        ui.input_text(
+            "Participant count",
+            &mut self.quickmatch_context.participants.len().to_string(),
+        )
+        .read_only(true)
+        .build();
+    }
+}
+
+impl DebugDisplay for CSQuickMatchingCtrl {
+    fn render_debug(&self, ui: &&mut Ui) {
+        ui.input_text(
+            "Match state",
+            &mut format!("{:?}", self.current_state),
+        )
+        .read_only(true)
+        .build();
 
     }
 }

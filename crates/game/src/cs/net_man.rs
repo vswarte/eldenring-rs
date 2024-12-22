@@ -1,6 +1,8 @@
 use std::ptr::NonNull;
 
-use crate::{dltx::DLString, fd4::FD4StepBaseInterface, pointer::OwnedPtr, stl::DoublyLinkedList};
+use windows::core::PCWSTR;
+
+use crate::{dltx::DLString, fd4::{FD4StepBaseInterface, FD4Time}, pointer::OwnedPtr, stl::DoublyLinkedList};
 
 use super::{CSEzTask, CSEzUpdateTask, MapId, PlayerIns};
 
@@ -84,10 +86,38 @@ pub struct QuickmatchManager {
     pub quickmatching_ctrl: OwnedPtr<CSQuickMatchingCtrl>,
     /// Keeps track of quickmatch settings as well as any participants.
     pub battle_royal_context: OwnedPtr<CSBattleRoyalContext>,
-    battle_royal_context_active: Option<NonNull<CSBattleRoyalContext>>,
+    /// Populated during creation of the QM lobby locally. Either by joining or creating a room.
+    active_battle_royal_context: Option<NonNull<CSBattleRoyalContext>>,
     unk18: u32,
-    /// List of speffects applied to the players during various states for the battle.
+    /// List of speffects applied to the players during battle.
     pub utility_sp_effects: [u32; 10],
+}
+
+#[repr(u32)]
+#[derive(Debug, PartialEq)]
+pub enum CSQuickMatchingCtrlState {
+    None = 0x0,
+    SearchRegister = 0x1,
+    SearchRegisterWait = 0x2,
+    // Waiting for lobby to gain enough people to start.
+    GuestInviteWait = 0x3,
+    GuestWaitSession = 0x4,
+    GuestReadyWait = 0x5,
+    // Moving to arena map.
+    GuestMoveMap = 0x6,
+    // People are loaded into the map and match is running or has errored.
+    GuestInGame = 0x7,
+    HostWaitSession = 0x8,
+    // Hosting and allowing other people to join the room before starting.
+    HostInvite = 0x9,
+    HostReadyWait = 0xa,
+    HostReadyWaitBlockList = 0xb,
+    // Moving to arena map.
+    HostMoveMap = 0xc,
+    // People are loaded into the map and match is running or has errored.
+    HostInGame = 0xd,
+    // Match has ended either by completion or error.
+    Unregister = 0xe,
 }
 
 /// Source of name: RTTI
@@ -95,9 +125,29 @@ pub struct QuickmatchManager {
 pub struct CSQuickMatchingCtrl {
     pub base: FD4StepBaseInterface<15, Self>,
     unk18: [u8; 0x28],
-    pub current_state: u32,
-    pub requested_state: u32,
-    // TODO: rest....
+    pub current_state: CSQuickMatchingCtrlState,
+    pub requested_state: CSQuickMatchingCtrlState,
+    unk48: [u8; 0x50],
+    /// FD4Step state string.
+    state_string: PCWSTR,
+    unka0: bool,
+    unka1: bool,
+    unka2: bool,
+    unka3: bool,
+    unka4: u32,
+    pub context: NonNull<CSBattleRoyalContext>,
+    menu_job: usize,
+    unkb8: FD4Time,
+    unkc8: bool,
+    unkc9: bool,
+    unkca: bool,
+    unkcb: bool,
+    unkcc: bool,
+    unkcd: bool,
+    unkce: [u8; 5],
+    unkd3: bool,
+    /// Set to true if the client doesn't send the QM "ready" packet in time.
+    pub move_map_timed_out: bool,
 }
 
 /// Source of name: RTTI

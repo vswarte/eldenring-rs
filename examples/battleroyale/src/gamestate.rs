@@ -1,4 +1,7 @@
-use game::cs::{CSEventFlagMan, CSNetMan, CSSessionManager, ChrIns, FieldInsHandle, LobbyState, WorldChrMan};
+use game::cs::{
+    CSEventFlagMan, CSNetMan, CSQuickMatchingCtrlState, CSSessionManager, ChrIns, FieldInsHandle,
+    LobbyState, WorldChrMan,
+};
 use util::singleton::get_instance;
 
 #[derive(Default)]
@@ -9,18 +12,23 @@ impl GameStateProvider {
     pub fn match_active(&self) -> bool {
         unsafe { get_instance::<CSNetMan>() }
             .unwrap()
-            .map(|n| n.quickmatch_manager.quickmatching_ctrl.current_state != 0)
+            .map(|n| {
+                n.quickmatch_manager.quickmatching_ctrl.current_state
+                    != CSQuickMatchingCtrlState::None
+            })
             .unwrap_or_default()
     }
 
     /// Is the match currently playing out on the map?
-    pub fn match_running(&self) -> bool {
+    pub fn match_in_game(&self) -> bool {
         unsafe { get_instance::<CSNetMan>() }
             .unwrap()
-            .map(|n| 
-                n.quickmatch_manager.quickmatching_ctrl.current_state == 7
-                || n.quickmatch_manager.quickmatching_ctrl.current_state == 13
-            )
+            .map(|n| {
+                n.quickmatch_manager.quickmatching_ctrl.current_state
+                    == CSQuickMatchingCtrlState::GuestInGame
+                    || n.quickmatch_manager.quickmatching_ctrl.current_state
+                        == CSQuickMatchingCtrlState::HostInGame
+            })
             .unwrap_or_default()
     }
 
@@ -28,10 +36,12 @@ impl GameStateProvider {
     pub fn match_loading(&self) -> bool {
         unsafe { get_instance::<CSNetMan>() }
             .unwrap()
-            .map(|n| 
-                n.quickmatch_manager.quickmatching_ctrl.current_state == 6
-                || n.quickmatch_manager.quickmatching_ctrl.current_state == 12
-            )
+            .map(|n| {
+                n.quickmatch_manager.quickmatching_ctrl.current_state
+                    == CSQuickMatchingCtrlState::GuestMoveMap
+                    || n.quickmatch_manager.quickmatching_ctrl.current_state
+                        == CSQuickMatchingCtrlState::HostMoveMap
+            })
             .unwrap_or_default()
     }
 
@@ -62,7 +72,11 @@ impl GameStateProvider {
         unsafe { get_instance::<CSSessionManager>() }
             .unwrap()
             .map(|s| {
-                s.players.items().iter().map(|p| p.steam_id).collect::<Vec<_>>()
+                s.players
+                    .items()
+                    .iter()
+                    .map(|p| p.steam_id)
+                    .collect::<Vec<_>>()
             })
             .unwrap_or_default()
     }
@@ -87,14 +101,14 @@ impl GameStateProvider {
             })
     }
 
-    pub fn host_steam_id(&self)  -> u64 {
+    pub fn host_steam_id(&self) -> u64 {
         unsafe { get_instance::<CSSessionManager>() }
             .unwrap()
             .map(|s| s.host_player.steam_id)
             .unwrap_or_default()
     }
 
-    pub fn is_host(&self)  -> bool {
+    pub fn is_host(&self) -> bool {
         unsafe { get_instance::<CSSessionManager>() }
             .unwrap()
             .map(|s| s.lobby_state == LobbyState::HostingLobby)

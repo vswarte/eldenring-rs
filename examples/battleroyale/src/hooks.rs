@@ -20,7 +20,6 @@ use crate::rva::RVA_DROPPED_ITEM_CAP_CHECK;
 use crate::rva::RVA_GET_TARGET_MAP_ID;
 use crate::rva::RVA_INITIAL_SPAWN_POSITION;
 use crate::rva::RVA_LOOKUP_MENU_TEXT;
-use crate::rva::RVA_MAP_QUICKMATCH_ENUM_TO_MAP_ID;
 use crate::rva::RVA_MSB_GET_EVENT_DATA_COUNT;
 use crate::rva::RVA_MSB_GET_PARTS_DATA_COUNT;
 use crate::rva::RVA_MSB_GET_POINT_DATA_COUNT;
@@ -28,7 +27,6 @@ use crate::rva::RVA_SPAWN_DROPPED_ITEM_VFX;
 use crate::ProgramLocationProvider;
 
 static_detour! {
-    static HOOK_MAP_QUICKMATCH_ENUM_TO_MAP_ID: extern "C" fn(*mut MapId, u32) -> *mut MapId;
     static HOOK_GET_TARGET_MAP_ID: extern "C" fn(*mut MapId) -> *mut MapId;
     static HOOK_MSB_GET_EVENT_DATA_COUNT: extern "C" fn(usize, u32) -> u32;
     static HOOK_MSB_GET_POINT_DATA_COUNT: extern "C" fn(usize, u32) -> u32;
@@ -55,9 +53,10 @@ impl Hooks {
         location: Arc<ProgramLocationProvider>,
         gamemode: Arc<GameMode>,
         context: Arc<GameModeContext>,
+        game: Arc<GameStateProvider>,
     ) -> Result<Self, HookError> {
         // Take control over the players death so we can apply the specator cam.
-        Self::hook_player_characters(&location, gamemode.clone())?;
+        Self::hook_player_character(&location, game.clone())?;
 
         // Take control over the map we're warping into and the spawn position of the player.
         Self::override_map_load(&location, gamemode.clone(), context.clone())?;
@@ -104,24 +103,26 @@ impl Hooks {
         Ok(())
     }
 
-    unsafe fn hook_player_characters(
+    unsafe fn hook_player_character(
         location: &ProgramLocationProvider,
-        gamemode: Arc<GameMode>,
+        game: Arc<GameStateProvider>,
     ) -> Result<(), HookError> {
         // Take control over character death so we can enforce spectator mode instead
         {
-            let gamemode = gamemode.clone();
             HOOK_CHR_INS_DEAD
                 .initialize(
                     std::mem::transmute(location.get(RVA_CHR_INS_DEAD)?),
                     move |chr_ins: *mut ChrIns| {
-                        if !gamemode.running() {
+                        let is_main_player = game
+                            .local_player()
+                            .is_some_and(|h| &h == unsafe { &(*chr_ins).field_ins_handle });
+
+                        if !game.match_in_game() || !is_main_player {
                             return HOOK_CHR_INS_DEAD.call(chr_ins);
                         }
 
                         // Disable character collision
                         chr_ins.as_mut().unwrap().chr_ctrl.flags |= 2;
-
                         tracing::info!("Caught ChrIns death");
                     },
                 )?
@@ -136,43 +137,24 @@ impl Hooks {
         gamemode: Arc<GameMode>,
         context: Arc<GameModeContext>,
     ) -> Result<(), HookError> {
-        // {
-        //     let context = context.clone();
-        //     let gamemode = gamemode.clone();
-        //     // Override map ID on qm map load
-        //     HOOK_GET_TARGET_MAP_ID
-        //         .initialize(
-        //             std::mem::transmute(location.get(RVA_GET_TARGET_MAP_ID)?),
-        //             move |map: *mut MapId| {
-        //                 let result = HOOK_GET_TARGET_MAP_ID.call(map);
-        //
-        //                 if let Some(point) = context.spawn_point() {
-        //                     if (*map).0 == 0x2D000000 {
-        //                         *map = MapId(point.map.0);
-        //                         tracing::info!("Patched target map ID {}", *map);
-        //                     }
-        //                 }
-        //
-        //                 map
-        //             },
-        //         )?
-        //         .enable()?;
-        // }
-
         {
+            let context = context.clone();
             let gamemode = gamemode.clone();
             // Override map ID on qm map load
-            HOOK_MAP_QUICKMATCH_ENUM_TO_MAP_ID
+            HOOK_GET_TARGET_MAP_ID
                 .initialize(
-                    std::mem::transmute(location.get(RVA_MAP_QUICKMATCH_ENUM_TO_MAP_ID)?),
-                    move |map_id: *mut MapId, map: u32| {
-                        tracing::info!("Overriding qm stage enum");
-                        let result = HOOK_MAP_QUICKMATCH_ENUM_TO_MAP_ID.call(map_id, map);
-                        *result = MapId(0x14000000);
+                    std::mem::transmute(location.get(RVA_GET_TARGET_MAP_ID)?),
+                    move |map: *mut MapId| {
+                        let result = HOOK_GET_TARGET_MAP_ID.call(map);
 
-                        // let target_map_id = gamemode.target_map(map);
-                        // *result = target_map_id;
-                        result
+                        if let Some(point) = context.spawn_point() {
+                            // if (*map).0 == 0x2D000000 {
+                                *map = MapId(point.map.0);
+                                tracing::info!("Patched target map ID {}", *map);
+                            // }
+                        }
+
+                        map
                     },
                 )?
                 .enable()?;
