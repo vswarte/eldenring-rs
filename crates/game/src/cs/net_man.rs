@@ -210,5 +210,14 @@ pub struct CSQuickMatchContext {
 }
 
 #[repr(C)]
+pub struct QuickmatchSettings(pub u32);
+
+impl QuickmatchSettings {
+    pub const fn spirit_ashes_allowed(&self) -> bool {
+        self.0 > 10 && self.0 < 20
+    }
+}
+
+#[repr(C)]
 pub struct QuickmatchParticipant {
 }

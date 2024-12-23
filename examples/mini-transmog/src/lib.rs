@@ -12,7 +12,7 @@ use game::cs::{
     CSTaskGroupIndex, CSTaskImp, WorldChrMan, CHR_ASM_SLOT_PROTECTOR_HEAD,
     CHR_ASM_SLOT_PROTECTOR_LEGS,
 };
-use util::steam::{self, networking_messages, register_callback, SteamCallbackImpl};
+use util::steam::{self, networking_messages, /*register_callback, SteamCallbackImpl*/};
 use util::{singleton::get_instance, task::CSTaskImpExt};
 
 const STEAM_MESSAGE_CHANNEL: u32 = 123;
@@ -131,7 +131,7 @@ fn init() -> Result<(), Box<dyn Error>> {
     std::mem::forget(model_param_modifier_task);
 
     // WHY
-    std::mem::forget(register_callback::<SyncMappingLobbyUpdateCallback>());
+    // std::mem::forget(register_callback::<SyncMappingLobbyUpdateCallback>());
     // std::mem::forget(register_callback::<SyncMessageRequestCallback>());
 
     // Retrieve updates to our character table from the p2p.
@@ -172,48 +172,48 @@ pub fn send_mapping(remote: SteamId, mapping: &HashMap<i32, i32>) -> Result<(), 
     Ok(())
 }
 
-struct SyncMappingLobbyUpdateCallback;
-impl SteamCallbackImpl for SyncMappingLobbyUpdateCallback {
-    type TData = steamworks_sys::LobbyDataUpdate_t;
-    const CALLBACK: i32 = steamworks_sys::LobbyDataUpdate_t_k_iCallback as _;
-
-    fn run(data: *const Self::TData) {
-        let data = unsafe { data.as_ref() }.unwrap();
-        tracing::info!("Got lobby update: {:?}", data);
-
-        let mapping = HashMap::from([
-            (640000, 900000),
-            (640100, 900100),
-            (640200, 900200),
-            (640300, 900300),
-        ]);
-
-        for member in steam::client()
-            .matchmaking()
-            .lobby_members(LobbyId::from_raw(data.m_ulSteamIDLobby))
-        {
-            tracing::info!("Sending mapping to {member:?}");
-
-            let result = send_mapping(member, &mapping);
-            tracing::info!("Sent mapping: {:?} -> {:?}", data, result);
-        }
-    }
-}
-
-struct SyncMessageRequestCallback;
-impl SteamCallbackImpl for SyncMessageRequestCallback {
-    type TData = steamworks_sys::SteamNetworkingMessagesSessionRequest_t;
-    const CALLBACK: i32 = steamworks_sys::SteamNetworkingMessagesSessionRequest_t_k_iCallback as _;
-
-    fn run(data: *const Self::TData) {
-        let data = unsafe { data.as_ref() }.unwrap();
-        if !unsafe {
-            steamworks_sys::SteamAPI_ISteamNetworkingMessages_AcceptSessionWithUser(
-                networking_messages().unwrap(),
-                &data.m_identityRemote as *const _,
-            )
-        } {
-            tracing::error!("Could not accept session");
-        }
-    }
-}
+// struct SyncMappingLobbyUpdateCallback;
+// impl SteamCallbackImpl for SyncMappingLobbyUpdateCallback {
+//     type TData = steamworks_sys::LobbyDataUpdate_t;
+//     const CALLBACK: i32 = steamworks_sys::LobbyDataUpdate_t_k_iCallback as _;
+//
+//     fn run(data: *const Self::TData) {
+//         let data = unsafe { data.as_ref() }.unwrap();
+//         tracing::info!("Got lobby update: {:?}", data);
+//
+//         let mapping = HashMap::from([
+//             (640000, 900000),
+//             (640100, 900100),
+//             (640200, 900200),
+//             (640300, 900300),
+//         ]);
+//
+//         for member in steam::client()
+//             .matchmaking()
+//             .lobby_members(LobbyId::from_raw(data.m_ulSteamIDLobby))
+//         {
+//             tracing::info!("Sending mapping to {member:?}");
+//
+//             let result = send_mapping(member, &mapping);
+//             tracing::info!("Sent mapping: {:?} -> {:?}", data, result);
+//         }
+//     }
+// }
+//
+// struct SyncMessageRequestCallback;
+// impl SteamCallbackImpl for SyncMessageRequestCallback {
+//     type TData = steamworks_sys::SteamNetworkingMessagesSessionRequest_t;
+//     const CALLBACK: i32 = steamworks_sys::SteamNetworkingMessagesSessionRequest_t_k_iCallback as _;
+//
+//     fn run(data: *const Self::TData) {
+//         let data = unsafe { data.as_ref() }.unwrap();
+//         if !unsafe {
+//             steamworks_sys::SteamAPI_ISteamNetworkingMessages_AcceptSessionWithUser(
+//                 networking_messages().unwrap(),
+//                 &data.m_identityRemote as *const _,
+//             )
+//         } {
+//             tracing::error!("Could not accept session");
+//         }
+//     }
+// }

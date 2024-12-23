@@ -1,11 +1,12 @@
 use std::{collections::HashMap, error::Error};
 
+use game::cs::WorldChrMan;
 use serde::{Deserialize, Serialize};
 use steamworks::{
     networking_types::{NetworkingIdentity, SendFlags},
     SteamId,
 };
-use util::steam;
+use util::{singleton::get_instance, steam};
 
 use crate::config::{MapId, MapPoint, MapPosition};
 
@@ -21,10 +22,26 @@ pub enum Message {
     MatchDetails {
         spawn: MapPoint,
     },
+    MobSpawn {
+        model: String,
+    },
 }
 
 impl MatchMessaging {
-    pub fn send_match_details(&self, loadout: &HashMap<u64, MapPoint>) -> Result<(), Box<dyn Error>> {
+    pub fn send_mob_spawn(&self, model: &str) -> Result<(), Box<dyn Error>> {
+        let serialized = bincode::serialize(&Message::MobSpawn {
+            model: model.to_string(),
+        })?;
+
+        self.broadcast(serialized.as_slice())?;
+
+        Ok(())
+    }
+
+    pub fn send_match_details(
+        &self,
+        loadout: &HashMap<u64, MapPoint>,
+    ) -> Result<(), Box<dyn Error>> {
         loadout.iter().for_each(|(remote, spawn)| {
             let message = Message::MatchDetails {
                 spawn: spawn.clone(),
@@ -33,7 +50,7 @@ impl MatchMessaging {
             let serialized =
                 bincode::serialize(&message).expect("Could not serialize spawn point message");
 
-            self.send_raw(remote, serialized.as_slice());
+            self.send(remote, serialized.as_slice());
         });
 
         Ok(())
@@ -53,7 +70,18 @@ impl MatchMessaging {
             .collect()
     }
 
-    fn send_raw(&self, remote: &u64, data: &[u8]) {
+    /// Send message to all players in world.
+    fn broadcast(&self, data: &[u8]) -> Result<(), Box<dyn Error>> {
+        let world_chr_man = unsafe { get_instance::<WorldChrMan>() }.unwrap().unwrap();
+        world_chr_man.player_chr_set.characters().for_each(|p| {
+            self.send(&unsafe { p.session_manager_player_entry.as_ref() }.steam_id, data);
+        });
+
+        Ok(())
+    }
+
+    /// Send message to a specific player
+    fn send(&self, remote: &u64, data: &[u8]) {
         let result = steam::client().networking_messages().send_message_to_user(
             NetworkingIdentity::new_steam_id(Self::make_steam_id(remote.to_owned())),
             SendFlags::RELIABLE,

@@ -11,13 +11,26 @@ const ONE_30TH_SECOND: f32 = 1.0 / 30.0;
 const ONE_15TH_SECOND: f32 = 1.0 / 15.0;
 
 impl GameStateProvider {
-    /// Is anything happening related to quickmatch?
+    /// Is quickmatch happening in any capacity?
     pub fn match_active(&self) -> bool {
         unsafe { get_instance::<CSNetMan>() }
             .unwrap()
             .map(|n| {
                 n.quickmatch_manager.quickmatching_ctrl.current_state
                     != CSQuickMatchingCtrlState::None
+            })
+            .unwrap_or_default()
+    }
+
+    /// Host is accepting new people and clients are waiting for lobby to fill up.
+    pub fn match_onboarding(&self) -> bool {
+        unsafe { get_instance::<CSNetMan>() }
+            .unwrap()
+            .map(|n| {
+                n.quickmatch_manager.quickmatching_ctrl.current_state
+                    == CSQuickMatchingCtrlState::HostInvite
+                    || n.quickmatch_manager.quickmatching_ctrl.current_state
+                        == CSQuickMatchingCtrlState::GuestInviteWait
             })
             .unwrap_or_default()
     }

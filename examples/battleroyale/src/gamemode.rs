@@ -14,10 +14,16 @@ use game::{
 };
 use util::{input::is_key_pressed, singleton::get_instance};
 
+use crate::{loadout::PlayerLoadout, message};
 use crate::{
-    config::{ConfigurationProvider, MapPoint, MapPosition}, gamestate::GameStateProvider, loot::LootGenerator, network::{MatchMessaging, Message}, pain::PainRing, player::Player, ProgramLocationProvider
+    config::{ConfigurationProvider, MapPoint, MapPosition},
+    gamestate::GameStateProvider,
+    loot::LootGenerator,
+    network::{MatchMessaging, Message},
+    pain::PainRing,
+    player::Player,
+    ProgramLocationProvider,
 };
-use crate::loadout::PlayerLoadout;
 use crate::{message::NotificationPresenter, spectator_camera::SpectatorCamera};
 
 #[derive(Clone, Debug, PartialEq)]
@@ -120,7 +126,9 @@ impl GameMode {
 
     /// Should request the session to end.
     fn should_request_end_match(&self) -> bool {
-        return false;
+        if !self.game_state.match_in_game() {
+            return false;
+        }
 
         match self.end_requested_at.read().unwrap().as_ref() {
             Some(_) => false,
@@ -130,14 +138,14 @@ impl GameMode {
 
     /// Request that a match is ended.
     fn request_end_match(&self) {
-        // /// Display the results
-        // let message = if self.game_state.local_player_is_alive() {
-        //     message::Message::Victory
-        // } else {
-        //     message::Message::Defeat
-        // };
-        //
-        // self.notification.present_mp_message(message);
+        /// Display the results
+        let message = if self.game_state.local_player_is_alive() {
+            message::Message::Victory
+        } else {
+            message::Message::Defeat
+        };
+
+        self.notification.present_mp_message(message);
 
         *self.end_requested_at.write().unwrap() = Some(Instant::now());
     }

@@ -49,6 +49,27 @@ pub trait ChrInsVmt: FieldInsBaseVmt {
 }
 
 #[repr(C)]
+pub struct NetChrSyncFlags(pub u8);
+
+impl NetChrSyncFlags {
+    pub fn set_unk2(&mut self, val: bool) {
+        self.0 = self.0 & 0b11111011 | (val as u8) << 2
+    }
+
+    pub const fn unk2(&self) -> bool {
+        self.0 & 0b00000100 != 0
+    }
+
+    pub fn set_distance_based_network_update_authority(&mut self, val: bool) {
+        self.0 = self.0 & 0b11011111 | (val as u8) << 5
+    }
+
+    pub const fn distance_based_network_update_authority(&self) -> bool {
+        self.0 & 0b00100000 != 0
+    }
+}
+
+#[repr(C)]
 /// Abstract base class to all characters. NPCs, Enemies, Players, Summons, Ghosts, even gesturing
 /// character on bloodmessages inherit from this.
 ///
@@ -58,13 +79,13 @@ pub struct ChrIns {
     pub field_ins_handle: FieldInsHandle,
     chr_set_entry: usize,
     unk18: usize,
-    unk20: u32,
+    pub backread_state: u32,
     unk24: u32,
     chr_res: usize,
     pub map_id_1: MapId,
     pub map_id_origin_1: i32,
-    pub map_id_2: MapId,
-    pub map_id_origin_2: i32,
+    pub block_origin_override: MapId,
+    pub block_origin: MapId,
     pub chr_set_cleanup: u32,
     _pad44: u32,
     unk48: usize,
@@ -103,7 +124,27 @@ pub struct ChrIns {
     pub character_id: u32,
     unk18c: u32,
     pub module_container: OwnedPtr<ChrInsModuleContainer>,
-    rest: [u8; 0x3E8],
+    unk198: usize,
+    unk1a0: f32,
+    unk1a4: f32,
+    unk1a8: f32,
+    unk1ac: f32,
+    unk1b0: f32,
+    unk1b4: f32,
+    unk1b8: f32,
+    unk1bc: f32,
+    unk1c0: u32,
+    pub chr_flags: u32,
+    unk1c8: u8,
+    pub net_chr_sync_flags: NetChrSyncFlags,
+    unk1ca: u8,
+    unk1cb: u8,
+    _pad1cc: u32,
+    unk1d0: FSVector4,
+    unk1e0: u32,
+    pub network_authority: u32,
+    pub event_entity_id: u32,
+    rest: [u8; 0x388],
 }
 
 #[repr(C)]

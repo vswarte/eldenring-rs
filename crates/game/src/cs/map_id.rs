@@ -17,20 +17,24 @@ impl MapId {
         )
     }
 
-    pub const fn area(self) -> i32 {
+    pub const fn area(&self) -> i32 {
         self.0 >> 24 & 0xFF
     }
 
-    pub const fn block(self) -> i32 {
+    pub const fn block(&self) -> i32 {
         self.0 >> 16 & 0xFF
     }
 
-    pub const fn region(self) -> i32 {
+    pub const fn region(&self) -> i32 {
         self.0 >> 8 & 0xFF
     }
 
-    pub const fn index(self) -> i32 {
+    pub const fn index(&self) -> i32 {
         self.0 >> 0 & 0xFF
+    }
+
+    pub const fn is_overworld(&self) -> bool {
+        self.0 > 50 && self.0 < 39
     }
 }
 

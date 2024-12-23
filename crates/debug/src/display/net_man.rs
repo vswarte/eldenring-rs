@@ -123,7 +123,6 @@ impl DebugDisplay for CSBattleRoyalContext {
         .read_only(true)
         .build();
 
-
         ui.input_text(
             "Match settings",
             &mut self.quickmatch_context.match_settings.to_string(),

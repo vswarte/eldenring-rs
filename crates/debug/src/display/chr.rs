@@ -21,6 +21,12 @@ impl DebugDisplay for PlayerIns {
             ui.unindent();
         }
 
+        ui.text(format!("Steam ID: {:x}", unsafe { self.session_manager_player_entry.as_ref() }.steam_id));
+        if ui.collapsing_header("Session Player Entry", TreeNodeFlags::empty()) {
+            ui.indent();
+            ui.unindent();
+        }
+
         ui.text(format!("Locked on enemy: {}", self.locked_on_enemy));
         ui.text(format!("Block position: {}", self.block_position));
         ui.text(format!("Block orientation: {}", self.block_orientation));
@@ -189,10 +195,14 @@ impl DebugDisplay for EquipInventoryData {
 
 impl DebugDisplay for ChrIns {
     fn render_debug(&self, ui: &&mut Ui) {
+
         ui.text(format!("Map ID: {}", self.map_id_1));
         // ui.text(format!("Team Type: {}", self.team_type));
         ui.text(format!("Last killed by: {}", self.last_killed_by));
         ui.text(format!("Last used item: {}", self.last_used_item));
+
+        ui.text(format!("Block center origin 1: {}", self.block_origin_override));
+        ui.text(format!("Block center origin 2: {}", self.block_origin));
 
         if ui.collapsing_header("Special Effect", TreeNodeFlags::empty()) {
             if let Some(_t) = ui.begin_table_header(

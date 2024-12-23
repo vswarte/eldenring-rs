@@ -72,8 +72,6 @@ impl SpectatorCamera {
 
     /// Spectate a particular player by its FieldInsHandle.
     fn spectate(&mut self, handle: Option<FieldInsHandle>) {
-        tracing::info!("SpectatorCamera::spectate({handle:?})");
-
         let Some(world_chr_man) = unsafe { get_instance::<WorldChrMan>() }.unwrap() else {
             return;
         };

@@ -1,5 +1,5 @@
 use game::cs::{
-    ChrIns, ChrSet, OpenFieldChrSet, PlayerIns, SummonBuddyManager, SummonBuddyManagerWarp, WorldChrMan,
+    ChrIns, ChrSet, OpenFieldChrSet, PlayerIns, SummonBuddyManager, SummonBuddyWarpManager, WorldChrMan,
 };
 use hudhook::imgui::{TableColumnSetup, TreeNodeFlags, Ui};
 use util::{
@@ -100,25 +100,6 @@ impl DebugDisplay for WorldChrMan {
             )
             .read_only(true)
             .build();
-
-            if ui.button("Spawn Character Creator") {
-                let world_chr_man = unsafe { get_instance::<WorldChrMan>() }.unwrap().unwrap();
-                if let Some(main_player) = &world_chr_man.main_player {
-                    let (x, y, z) = main_player.chr_ins.module_container.physics.position.xyz();
-
-                    world_chr_man.spawn_debug_character(&ChrDebugSpawnRequest {
-                        chr_id: 4730,
-                        chara_init_param_id: 0,
-                        npc_param_id: 47300000,
-                        npc_think_param_id: 47300000,
-                        event_entity_id: 123123,
-                        talk_id: 0,
-                        pos_x: x,
-                        pos_y: y,
-                        pos_z: z,
-                    });
-                }
-            }
         }
     }
 }
@@ -207,7 +188,7 @@ impl DebugDisplay for ChrSet<PlayerIns> {
                     ),
                     TreeNodeFlags::empty(),
                 ) {
-                    player_ins.chr_ins.render_debug(ui)
+                    player_ins.render_debug(ui)
                 }
             });
             ui.unindent();
@@ -270,12 +251,13 @@ impl DebugDisplay for SummonBuddyManager {
             self.to_spawn_buddy_param
         ));
         ui.text(format!("Spawned buddy param: {}", self.spawned_buddy_param));
+        ui.text(format!("Next summony buddy slot: {}", self.next_buddy_slot));
 
-        self.warp.render_debug(ui);
+        // self.w.render_debug(ui);
     }
 }
 
-impl DebugDisplay for SummonBuddyManagerWarp {
+impl DebugDisplay for SummonBuddyWarpManager {
     fn render_debug(&self, ui: &&mut Ui) {
         ui.text(format!(
             "Trigger time ray block: {}",

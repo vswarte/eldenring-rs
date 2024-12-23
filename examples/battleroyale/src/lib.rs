@@ -1,3 +1,4 @@
+use chr_spawner::ChrSpawner;
 use config::{Configuration, ConfigurationProvider, MapPoint};
 use context::GameModeContext;
 use crash_handler::{make_crash_event, CrashContext, CrashEventResult, CrashHandler};
@@ -13,11 +14,15 @@ use player::Player;
 use spectator_camera::SpectatorCamera;
 use stage::StagePrepare;
 use std::{collections::HashMap, error::Error, f32::consts::PI, sync::Arc, time::Duration};
+use steamworks_sys::{
+    PersonaStateChange_t, SetPersonaNameResponse_t__bindgen_ty_1,
+    SetPersonaNameResponse_t_k_iCallback,
+};
 
 /// Implements a battle-royale gamemode on top of quickmatches.
 use game::{
     cs::{
-        CSHavokMan, CSNetMan, CSPhysWorld, CSTaskGroupIndex, CSTaskImp, ChrIns, PlayerIns,
+        CSHavokMan, CSNetMan, CSPhysWorld, CSTaskGroupIndex, CSTaskImp, ChrIns, ChrSet, PlayerIns,
         WorldChrMan,
     },
     fd4::FD4TaskData,
@@ -28,9 +33,11 @@ use game::{
 use gamemode::GameMode;
 use tracing_panic::panic_hook;
 use util::{
-    arxan, input::is_key_pressed, program::Program, singleton::get_instance, task::CSTaskImpExt,
+    arxan, input::is_key_pressed, program::Program, singleton::get_instance, steam::{self, SteamCallback},
+    task::CSTaskImpExt,
 };
 
+mod chr_spawner;
 mod config;
 mod context;
 mod gamemode;
@@ -78,6 +85,20 @@ pub unsafe extern "C" fn DllMain(_hmodule: usize, reason: u32) -> bool {
         std::thread::spawn(|| {
             // Give the CRT init a bit of leeway
             std::thread::sleep(Duration::from_secs(5));
+
+            steam::register_callback(0x15b, |update: &PersonaStateChange_t| {
+                tracing::info!("Persona state change {}", update.m_ulSteamID);
+            });
+
+            let friends = steamworks_sys::SteamAPI_SteamFriends_v017();
+            steamworks_sys::SteamAPI_ISteamFriends_RequestUserInformation(friends, 76561197997653528, false);
+
+            // let cb = SteamCallback::<
+            //     0x15b,
+            //     PersonaStateChange_t,
+            // >::from(|update: &PersonaStateChange_t| {
+            //     tracing::info!("Persona state change {}", update.m_ulSteamID);
+            // });
 
             init().expect("Could not initialize gamemode");
         });
@@ -130,6 +151,13 @@ fn init() -> Result<(), Box<dyn Error>> {
             messaging.clone(),
         );
 
+        let mut chr_spawner = ChrSpawner::new(
+            location.clone(),
+            config.clone(),
+            game.clone(),
+            messaging.clone(),
+        );
+
         let mut stage = StagePrepare::new(location.clone(), game.clone(), config.clone());
         let mut pain_ring = PainRing::new(location.clone(), config.clone());
         let mut loot_generator = LootGenerator::new(location.clone(), config.clone());
@@ -157,6 +185,9 @@ fn init() -> Result<(), Box<dyn Error>> {
                         Message::MatchDetails { spawn } => {
                             tracing::info!("Received match details");
                             context.set_spawn_point(spawn.clone());
+                        }
+                        Message::MobSpawn { model } => {
+                            chr_spawner.spawn_mob(model.as_str());
                         }
                     }
                 }
@@ -187,13 +218,12 @@ fn init() -> Result<(), Box<dyn Error>> {
 
                 // Gamemode creation tooling
                 if is_key_pressed(0x60) {
-                    test_chr_spawn();
+                    chr_spawner.spawn_mob("c3100");
+
                     tool::sample_spawn_point();
                 } else if is_key_pressed(0x62) {
                     config.reload().unwrap();
                 }
-
-                // Test chr spawn
 
                 // if is_key_pressed(0x60) {
                 //     let world_chr_man = unsafe { get_instance::<WorldChrMan>() }.unwrap().unwrap();
@@ -287,14 +317,15 @@ fn init() -> Result<(), Box<dyn Error>> {
                 if game.match_in_game() {
                     if game.is_host() {
                         loot_generator.update();
+                        chr_spawner.update();
                     }
 
                     // Remove utility effects like the crystal above the player.
-                    // if !patched_utility_effects {
-                    //     patched_utility_effects = true;
-                    //     let cs_net_man = unsafe { get_instance::<CSNetMan>() }.unwrap().unwrap();
-                    //     cs_net_man.quickmatch_manager.utility_sp_effects = [0; 10];
-                    // }
+                    if !patched_utility_effects {
+                        patched_utility_effects = true;
+                        let cs_net_man = unsafe { get_instance::<CSNetMan>() }.unwrap().unwrap();
+                        cs_net_man.quickmatch_manager.utility_sp_effects = [0; 10];
+                    }
 
                     pain_ring.update();
                     spectator_camera.update();
@@ -308,69 +339,4 @@ fn init() -> Result<(), Box<dyn Error>> {
     std::mem::forget(task_handle);
 
     Ok(())
-}
-
-#[repr(C)]
-pub struct ChrSpawnRequest {
-    pub position: HavokPosition,
-    pub orientation: FSVector4,
-    pub scale: FSVector4,
-    pub unk30: FSVector4,
-    pub npc_param: i32,        // 31000000
-    pub npc_think_param: i32,  // 31000000
-    pub chara_init_param: i32, // -1
-    pub event_entity_id: u32,  // 0
-    pub talk_id: u32,          // 0
-    unk54: f32,            // -1.828282595
-
-    // Cursed ass dlinplace str meme
-    unk58: usize,              // 142A425A0
-    asset_name_str_ptr: usize, // 13FFF0278
-    unk68: u32,                // 5
-    unk6c: u32,                // 0
-    unk70: u32,                // 0
-    unk74: u32,                // 0x00010002
-    asset_name: [u16; 0x10],   // c3100
-    unk98: usize,              // 140BDE74D
-}
-
-fn test_chr_spawn() {
-    let world_chr_man = unsafe { get_instance::<WorldChrMan>() }.unwrap().unwrap();
-    let Some(main_player) = &world_chr_man.main_player else {
-        return;
-    };
-
-    let physics_pos = main_player
-        .chr_ins
-        .module_container
-        .physics
-        .position
-        .clone();
-
-    let mut request = Box::leak(Box::new(ChrSpawnRequest {
-        position: physics_pos,
-        orientation: FSVector4(0.0, 3.5, 0.0, 0.0),
-        scale: FSVector4(1.0, 1.0, 1.0, 1.0),
-        unk30: FSVector4(1.0, 1.0, 1.0, 1.0),
-        npc_param: 31000000,
-        npc_think_param: 31000000,
-        chara_init_param: -1,
-        event_entity_id: 0,
-        talk_id: 0,
-        unk54: -1.828282595,
-
-        unk58: 0x142A425A0,
-        asset_name_str_ptr: 0, // Filled in after the fact
-        unk68: 5,
-        unk6c: 0,
-        unk70: 0,
-        unk74: 0x00010002,
-        asset_name: Default::default(),
-        unk98: 0x140BDE74D,
-    }));
-
-    // Set string pointers as god intended
-    let asset = String::from("c3100").encode_utf16().collect::<Vec<u16>>();
-    request.asset_name[0..5].clone_from_slice(asset.as_slice());
-    request.asset_name_str_ptr = request.asset_name.as_ptr() as usize;
 }
