@@ -1,5 +1,6 @@
 // Most of the
 
+use std::fmt::Display;
 use std::io::{Cursor, SeekFrom};
 use std::{
     ffi::c_void,
@@ -16,9 +17,6 @@ use crate::{
     pointer::OwnedPtr,
     Vector,
 };
-
-const MSB_DATA: &[u8] = include_bytes!("test.msb.dcx");
-const MSB_DATA_SKYBOX: &[u8] = include_bytes!("test_skybox.msb.dcx");
 
 #[vtable_rs::vtable]
 pub trait DLInputStreamVmt {
@@ -64,12 +62,22 @@ pub trait DLInputStreamVmt {
 }
 
 #[repr(u32)]
+#[derive(Debug)]
 /// Determines the starting position for passed-in offsets.
 pub enum SeekMode {
     /// Seek from current position.
     CurrentPos = 0x1,
     /// Seek from start of stream.
     Start = 0x2,
+}
+
+impl Display for SeekMode {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            SeekMode::CurrentPos => write!(f, "CurrentPos"),
+            SeekMode::Start => write!(f, "Start"),
+        }
+    }
 }
 
 #[vtable_rs::vtable]
@@ -94,6 +102,7 @@ pub enum DLFileDeviceDriveType {
 pub struct DLFileDeviceBase {
     pub vftable: VPtr<dyn DLFileDeviceVmt, Self>,
     unk8: bool,
+    ref_count: u32,
     pub mutex: DLPlainLightMutex,
 }
 
@@ -217,7 +226,7 @@ pub trait DLFileOperatorVmt {
 
     fn set_control_unk(&mut self) -> bool;
 
-    fn seek(&mut self, is_stream: bool, offset: i64, offset_origin: u32) -> bool;
+    fn seek(&mut self, is_stream: bool, offset: i64, seek_mode: SeekMode) -> bool;
 
     fn cursor_position(&self) -> usize;
 
@@ -279,28 +288,9 @@ pub struct DLFileDeviceManager {
     pub mutex: DLPlainLightMutex,
 }
 
-#[repr(C)]
-pub struct LoggingProxyFileDevice {
-    pub vftable: VPtr<dyn DLFileDeviceVmt, Self>,
-    unk8: bool,
-    pub mutex: DLPlainLightMutex,
-    inner: NonNull<DLFileDeviceBase>,
-}
-
-impl LoggingProxyFileDevice {
-    pub fn new(inner: NonNull<DLFileDeviceBase>) -> Self {
-        Self {
-            vftable: VPtr::default(),
-            unk8: false,
-            mutex: Default::default(),
-            inner,
-        }
-    }
-}
-
-impl DLFileDeviceVmt for LoggingProxyFileDevice {
+impl DLFileDeviceVmt for DLFileDeviceBase {
     extern "C" fn destructor(&mut self) {
-        tracing::info!("Called destructor");
+        (self.vftable.destructor)(self);
     }
 
     extern "C" fn load_file(
@@ -311,76 +301,19 @@ impl DLFileDeviceVmt for LoggingProxyFileDevice {
         allocator: &mut DLAllocatorBase,
         param_6: bool,
     ) -> *const u8 {
-        tracing::info!("Requested file load {}", name_dlstring.to_string());
-
-        let inner = unsafe { self.inner.as_mut() };
-        unsafe {
-            (inner.vftable.load_file)(inner, name_dlstring, name_u16, param_4, allocator, param_6)
-        }
+        (self.vftable.load_file)(self, name_dlstring, name_u16, param_4, allocator, param_6)
     }
 
     extern "C" fn file_enumerator(&self) -> *const u8 {
-        tracing::info!("Called file enumerator");
-
-        let inner = unsafe { self.inner.as_ref() };
-        unsafe { (inner.vftable.file_enumerator)(inner) }
-    }
-}
-
-#[repr(C)]
-#[derive(Default)]
-pub struct StubFileDevice {
-    pub vftable: VPtr<dyn DLFileDeviceVmt, Self>,
-    unk8: bool,
-    pub mutex: DLPlainLightMutex,
-}
-
-impl DLFileDeviceVmt for StubFileDevice {
-    extern "C" fn destructor(&mut self) {
-        tracing::info!("Called destructor");
+        (self.vftable.file_enumerator)(self)
     }
 
-    extern "C" fn load_file(
-        &mut self,
-        name_dlstring: &DLString,
-        name_u16: *const u16,
-        param_4: usize,
-        allocator: &mut DLAllocatorBase,
-        param_6: bool,
-    ) -> *const u8 {
-        if name_dlstring.to_string().starts_with("mapstudio_den:/") {
-            tracing::info!(
-                "Found cringe map load {}",
-                name_dlstring.to_string().as_str()
-            );
-
-            let cursor = if name_dlstring.to_string().contains("99") {
-                Cursor::new(MSB_DATA_SKYBOX)
-            } else {
-                Cursor::new(MSB_DATA)
-            };
-
-            let mut operator = AdapterFileOperator::new(cursor);
-            operator.io_state = 0x1;
-            operator.file_device = Some(NonNull::new(self).expect("Test"));
-
-            let allocation = allocator
-                .allocate_aligned(size_of::<AdapterFileOperator<Cursor<&[u8]>, Self>>(), 0x8)
-                as *mut u8
-                as *mut AdapterFileOperator<Cursor<&[u8]>, Self>;
-            tracing::info!("Allocated memory: {allocation:x?}");
-
-            unsafe { *allocation = operator };
-
-            return allocation as *const u8;
-        }
-
-        std::ptr::null()
+    extern "C" fn drive_type(&self) -> DLFileDeviceDriveType {
+        (self.vftable.drive_type)(self)
     }
 
-    extern "C" fn file_enumerator(&self) -> *const u8 {
-        tracing::info!("Called file enumerator");
-        std::ptr::null()
+    extern "C" fn unk5(&self) -> bool {
+        (self.vftable.unk5)(self)
     }
 }
 
@@ -392,7 +325,8 @@ where
 {
     pub vftable: VPtr<dyn DLFileOperatorVmt, Self>,
     pub allocator: Option<NonNull<DLAllocatorBase>>,
-    unk10: usize,
+    pub result: DLFileOperatorResult,
+    unk18: usize,
     pub io_state: u32,
     pub file_device: Option<NonNull<T>>,
     pub name: DLString,
@@ -404,11 +338,12 @@ where
     R: Read + Seek + 'static,
     T: DLFileDeviceVmt,
 {
-    fn new(buffer: R) -> Self {
+    pub fn new(buffer: R) -> Self {
         Self {
             vftable: Default::default(),
             allocator: Default::default(),
-            unk10: Default::default(),
+            result: DLFileOperatorResult::Success,
+            unk18: Default::default(),
             io_state: Default::default(),
             file_device: Default::default(),
             name: Default::default(),
@@ -423,17 +358,18 @@ where
     T: DLFileDeviceVmt,
 {
     extern "C" fn destructor(&mut self) {
-        tracing::info!("StubFileOperator::destructor()");
+        tracing::info!("AdapterFileOperator::destructor()");
     }
 
     #[doc = " Copies the data from the source DLFileOperator into itself."]
     extern "C" fn copy_from(&mut self, source: &DLFileOperatorBase) -> bool {
+        tracing::info!("AdapterFileOperator::copy_from()");
         unimplemented!()
     }
 
     extern "C" fn set_path(&mut self, path: &DLString, param_3: bool) -> bool {
         tracing::info!(
-            "StubFileOperator::set_path({}, {})",
+            "AdapterFileOperator::set_path({}, {})",
             path.to_string(),
             param_3
         );
@@ -442,24 +378,41 @@ where
 
     #[doc = " Duplicate of set_path, believed to be for other DLString variants."]
     extern "C" fn set_path_other_1(&mut self, path: &DLString, param_3: bool) -> bool {
+        tracing::info!(
+            "AdapterFileOperator::set_path_other_1({}, {})",
+            path.to_string(),
+            param_3
+        );
         unimplemented!()
     }
 
     #[doc = " Duplicate of set_path, believed to be for other DLString variants."]
     extern "C" fn set_path_other_2(&mut self, path: &DLString, param_3: bool) -> bool {
+        tracing::info!(
+            "AdapterFileOperator::set_path_other_2({}, {})",
+            path.to_string(),
+            param_3
+        );
         unimplemented!()
     }
 
     #[doc = " Duplicate of set_path, believed to be for other DLString variants."]
     extern "C" fn set_path_other_3(&mut self, path: &DLString, param_3: bool) -> bool {
+        tracing::info!(
+            "AdapterFileOperator::set_path_other_3({}, {})",
+            path.to_string(),
+            param_3
+        );
         unimplemented!()
     }
 
     extern "C" fn close_file(&mut self) -> bool {
+        tracing::info!("AdapterFileOperator::close_file()");
         unimplemented!()
     }
 
     extern "C" fn get_virtual_disk_operator(&self) -> OwnedPtr<DLFileOperatorBase> {
+        tracing::info!("AdapterFileOperator::get_virtual_disk_operator()");
         unimplemented!()
     }
 
@@ -467,22 +420,27 @@ where
         &mut self,
         image_spi: &DLFileDeviceImageSPIBase,
     ) -> OwnedPtr<DLFileDeviceImageSPIBase> {
+        tracing::info!("AdapterFileOperator::bind_device_image()");
         unimplemented!()
     }
 
     extern "C" fn populate_dir_info(&mut self) -> bool {
+        tracing::info!("AdapterFileOperator::populate_dir_info()");
         unimplemented!()
     }
 
     extern "C" fn populate_file_info(&mut self) -> bool {
+        tracing::info!("AdapterFileOperator::populate_file_info()");
         unimplemented!()
     }
 
     extern "C" fn last_access_time(&self) -> u64 {
+        tracing::info!("AdapterFileOperator::last_access_time()");
         unimplemented!()
     }
 
     extern "C" fn last_modify_time(&self) -> u64 {
+        tracing::info!("AdapterFileOperator::last_modify_time()");
         unimplemented!()
     }
 
@@ -490,68 +448,81 @@ where
         let current = self.buffer.seek(SeekFrom::Current(0)).unwrap();
         let end = self.buffer.seek(SeekFrom::End(0)).unwrap() as usize;
         self.buffer.seek(SeekFrom::Start(current));
-        tracing::info!("StubFileOperator::file_size() -> {end}");
+        tracing::info!("AdapterFileOperator::file_size() -> {end}");
         end
     }
 
     extern "C" fn remaining_size(&mut self) -> usize {
+        tracing::info!("AdapterFileOperator::remaining_size()");
         unimplemented!()
     }
 
     extern "C" fn max_non_streamed_size(&self) -> usize {
+        tracing::info!("AdapterFileOperator::max_non_streamed_size()");
         unimplemented!()
     }
 
     extern "C" fn truncate_file(&mut self) {
+        tracing::info!("AdapterFileOperator::truncate_file()");
         unimplemented!()
     }
 
     extern "C" fn has_file_control_0x4(&self) -> bool {
+        tracing::info!("AdapterFileOperator::has_file_control_0x4()");
         unimplemented!()
     }
 
     extern "C" fn is_directory(&self) -> bool {
+        tracing::info!("AdapterFileOperator::is_directory()");
         unimplemented!()
     }
 
     extern "C" fn is_open(&self) -> bool {
-        tracing::info!("StubFileOperator::is_open()");
+        tracing::info!("AdapterFileOperator::is_open()");
         true
     }
 
     extern "C" fn open_file(&mut self, open_mode: u32) -> bool {
-        tracing::info!("StubFileOperator::open_file({})", open_mode);
+        tracing::info!("AdapterFileOperator::open_file({})", open_mode);
         true
     }
 
     extern "C" fn try_close_file(&mut self) -> bool {
-        tracing::info!("StubFileOperator::try_close_file()");
+        tracing::info!("AdapterFileOperator::try_close_file()");
         true
     }
 
     extern "C" fn set_control_unk(&mut self) -> bool {
+        tracing::info!("AdapterFileOperator::set_control_unk()");
         unimplemented!()
     }
 
-    extern "C" fn seek(&mut self, is_stream: bool, offset: i64, offset_origin: u32) -> bool {
+    extern "C" fn seek(&mut self, is_stream: bool, offset: i64, seek_mode: SeekMode) -> bool {
+        tracing::info!(
+            "AdapterFileOperator::seek({}, {}, {})",
+            is_stream,
+            offset,
+            seek_mode
+        );
         unimplemented!()
     }
 
     extern "C" fn cursor_position(&self) -> usize {
+        tracing::info!("AdapterFileOperator::cursor_position()");
         unimplemented!()
     }
 
     extern "C" fn read_file(&mut self, output: *mut u8, length: usize) -> usize {
-        tracing::info!("StubFileOperator::read_file({:x?}, {})", output, length);
+        tracing::info!("AdapterFileOperator::read_file({:x?}, {})", output, length);
         let mut buffer = vec![0x0u8; length];
         self.buffer.read_exact(&mut buffer).unwrap();
 
         unsafe { std::ptr::copy_nonoverlapping(buffer.as_ptr(), output, length) }
-
         length
     }
 
     extern "C" fn write_file(&mut self, input: *const u8, length: usize) -> usize {
+        tracing::info!("AdapterFileOperator::write_file({:x?}, {})", input, length);
         unimplemented!()
     }
 
@@ -560,38 +531,51 @@ where
         handle: *const c_void,
         length: usize,
     ) -> bool {
+        tracing::info!(
+            "AdapterFileOperator::stream_complete_operation({:x?}, {})",
+            handle,
+            length
+        );
         unimplemented!()
     }
 
     extern "C" fn file_creation_flags(&self) -> u32 {
+        tracing::info!("AdapterFileOperator::file_creation_flags()");
         unimplemented!()
     }
 
     extern "C" fn delete_file(&mut self) -> bool {
+        tracing::info!("AdapterFileOperator::delete_file()");
         unimplemented!()
     }
 
     extern "C" fn unk1(&mut self) -> bool {
+        tracing::info!("AdapterFileOperator::unk1()");
         unimplemented!()
     }
 
     extern "C" fn populate_file_info_2(&mut self) -> bool {
+        tracing::info!("AdapterFileOperator::populate_file_info_2()");
         unimplemented!()
     }
 
     extern "C" fn unk2(&mut self) -> bool {
+        tracing::info!("AdapterFileOperator::unk2()");
         unimplemented!()
     }
 
     extern "C" fn move_file_w(&mut self, path: *const u16) -> bool {
+        tracing::info!("AdapterFileOperator::move_file_w({:x?})", path);
         unimplemented!()
     }
 
     extern "C" fn move_file(&mut self, path: *const u8) -> bool {
+        tracing::info!("AdapterFileOperator::move_file({:x?})", path);
         unimplemented!()
     }
 
     extern "C" fn create_directory(&mut self) -> bool {
+        tracing::info!("AdapterFileOperator::create_directory()");
         unimplemented!()
     }
 }
