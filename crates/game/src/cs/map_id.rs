@@ -1,7 +1,7 @@
 use std::fmt::Display;
 
 #[repr(C)]
-#[derive(Clone, Copy, Debug, PartialEq)]
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash)]
 pub struct MapId(pub i32);
 
 impl MapId {

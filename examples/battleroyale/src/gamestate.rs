@@ -7,6 +7,9 @@ use util::singleton::get_instance;
 #[derive(Default)]
 pub struct GameStateProvider {}
 
+const ONE_30TH_SECOND: f32 = 1.0 / 30.0;
+const ONE_15TH_SECOND: f32 = 1.0 / 15.0;
+
 impl GameStateProvider {
     /// Is anything happening related to quickmatch?
     pub fn match_active(&self) -> bool {
@@ -50,6 +53,26 @@ impl GameStateProvider {
             .unwrap()
             .and_then(|n| n.main_player.as_ref())
             .map(|p| is_chr_ins_alive(&p.as_ref().chr_ins))
+            .unwrap_or_default()
+    }
+
+    pub fn local_player_in_death_anim_loop(&self) -> bool {
+        unsafe { get_instance::<WorldChrMan>() }
+            .unwrap()
+            .and_then(|m| m.main_player.as_ref())
+            .and_then(|p| {
+                p.chr_ins
+                    .module_container
+                    .as_ref()
+                    .time_act
+                    .as_ref()
+                    .anim_queue
+                    .first()
+            })
+            .map(|a| {
+                a.play_time == a.anim_length
+                    && (a.play_time == ONE_30TH_SECOND || a.play_time == ONE_15TH_SECOND)
+            })
             .unwrap_or_default()
     }
 

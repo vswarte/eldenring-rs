@@ -61,9 +61,17 @@ pattern = "4c 8b c0 48 8d 8f 30 01 00 00 48 8d 54 24 30 e8 $ { ' }"
 captures = ["", "SPAWN_DROPPED_ITEM_VFX"]
 
 [[patterns]]
-pattern = "48 8d 54 24 30 48 03 c8 66 c7 44 24 30 01 00 48 8d 05 $ { ' }"
-captures = ["", "TEAMTYPE_RELATIONS_TABLE"]
-
-[[patterns]]
 pattern = "48 8d 55 c0 8b 45 e8 48 8d 4d d0 f2 0f 11 45 c0 89 45 c8 e8 $ { ' }"
 captures = ["", "CONVERT_BLOCK_COORDS_TO_WORLD_COORDS"]
+
+[[patterns]]
+pattern = "48 8d 54 24 30 48 03 c8 66 c7 44 24 30 01 00 48 8d 05 $ { ' }"
+captures = ["", "AI_LOCK_ON_TEAMTYPE_RELATIONS_TABLE"]
+
+[[patterns]]
+pattern = "44 88 44 24 30 48 8d 05 $ { ' } c6 44 24 32 00"
+captures = ["", "DAMAGE_TEAMTYPE_RELATIONS_TABLE"]
+
+[[patterns]]
+pattern = "83 7a 4c ff 75 ? 33 d2 e8 $ { ' } e9 ? ? ? ?"
+captures = ["", "UNEQUIP_ITEM"]

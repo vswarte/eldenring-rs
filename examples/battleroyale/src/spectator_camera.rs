@@ -34,9 +34,8 @@ impl SpectatorCamera {
 
         match self.currently_spectating.clone() {
             Some(spectated) => {
-                let Some(spectated_player) = world_chr_man
-                    .player_chr_set
-                    .chr_ins_by_handle(&spectated)
+                let Some(spectated_player) =
+                    world_chr_man.player_chr_set.chr_ins_by_handle(&spectated)
                 else {
                     return;
                 };
@@ -52,13 +51,15 @@ impl SpectatorCamera {
                 // loading around us.
                 main_player.chr_ins.module_container.physics.position =
                     spectated_player.module_container.physics.position;
-
-            },
-            None => if !self.game_state.local_player_is_alive() {
-                self.spectate(Some(main_player.chr_ins.last_killed_by.clone()));
-            },
+            }
+            None => {
+                if !self.game_state.local_player_is_alive()
+                    && self.game_state.local_player_in_death_anim_loop()
+                {
+                    self.spectate(Some(main_player.chr_ins.last_killed_by.clone()));
+                }
+            }
         }
-
     }
 
     pub fn reset(&mut self) {
