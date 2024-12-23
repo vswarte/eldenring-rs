@@ -114,6 +114,7 @@ pub fn vftable_classname(program: &Program, vftable_va: usize) -> Option<String>
 }
 
 #[derive(Debug, PartialEq, Eq, Hash, Clone, Copy)]
+#[allow(dead_code)]
 struct RttiCandidate {
     vftable_meta_rva: Rva,
     vftable_rva: Rva,

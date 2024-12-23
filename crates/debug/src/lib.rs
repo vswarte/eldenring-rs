@@ -1,4 +1,3 @@
-
 use display::DebugDisplay;
 use hudhook::eject;
 use hudhook::hooks::dx12::ImguiDx12Hooks;

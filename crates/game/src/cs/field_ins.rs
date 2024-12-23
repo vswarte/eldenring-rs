@@ -3,7 +3,7 @@ use std::fmt::Display;
 use super::{AtkParamLookupResult, MapId};
 
 /// Used to reference a specific FieldIns managed by its respective (external) domain.
-#[derive(Clone, Debug, PartialEq)]
+#[derive(Clone, Debug, PartialEq, Eq, Hash)]
 pub struct FieldInsSelector(pub u32);
 
 /// Used throughout the game engine to refer to characters, geometry, bullets, hits and more.
@@ -11,7 +11,7 @@ pub struct FieldInsSelector(pub u32);
 /// Source of name: Destructor reveals this being a field in FieldIns and it's used as a means of
 /// naming some FieldIns derivant everywhere where raw pointers cannot be shared.
 #[repr(C)]
-#[derive(Clone, Debug, PartialEq)]
+#[derive(Clone, Debug, PartialEq, Eq, Hash)]
 pub struct FieldInsHandle {
     pub selector: FieldInsSelector,
     pub map_id: MapId,
@@ -19,7 +19,7 @@ pub struct FieldInsHandle {
 
 impl FieldInsHandle {
     pub fn is_empty(&self) -> bool {
-        self.selector.0 == u32::MAX 
+        self.selector.0 == u32::MAX
     }
 }
 
@@ -43,13 +43,13 @@ impl FieldInsSelector {
     fn mapping(&self) -> &'static FieldInsMapping {
         &FIELD_INS_TYPE_MAPPING[self.mapping_entry_index() as usize]
     }
-    
+
     /// Extracts the container for this FieldInsSelector. Used to ex: determine the
     /// appropriate ChrSet to be calling into for a given NPC. Not used for every type.
     pub fn container(&self) -> u32 {
         self.mapping().container_mask & self.0 >> (self.mapping().container_shift & 0b00111111)
     }
-    
+
     /// Extracts the index within the container for a given FieldIns.
     pub fn index(&self) -> u32 {
         (self.mapping().index_mask & self.0) & 0xFFFFF

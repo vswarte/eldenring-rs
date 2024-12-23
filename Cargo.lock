@@ -1521,18 +1521,18 @@ checksum = "0b928f33d975fc6ad9f86c8f283853ad26bdd5b10b7f1542aa2fa15e2289105a"
 
 [[package]]
 name = "vtable-rs"
-version = "0.1.1"
+version = "0.1.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "ac36bfaa846fe21ee9cbc6338319736d79250d2cc9924001831f135a4c73cf5b"
+checksum = "724216e2508f74f765851c89ac5a74e0b53373734635a0925d84968ab2e8214c"
 dependencies = [
  "vtable-rs-proc-macros",
 ]
 
 [[package]]
 name = "vtable-rs-proc-macros"
-version = "0.1.0"
+version = "0.1.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "747265dcd69977c73c561821d4dfe20ac7a48d4e07bb34ca7cdf078c4b0afc9f"
+checksum = "bb88a9024d3ac3ae6fbd44635cfe9a085437ee749fbba4d2b7bf4510cbb118b5"
 dependencies = [
  "proc-macro2",
  "quote",

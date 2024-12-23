@@ -38,7 +38,7 @@ zerocopy-derive = "0.7"
 byteorder = "1"
 pelite = "0.10"
 dataview = "~1.0"
-vtable-rs = "0.1"
+vtable-rs = "0.1.4"
 rand = "0.8"
 crash-handler = "0.6"
 

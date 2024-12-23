@@ -1,10 +1,31 @@
 use super::FieldInsHandle;
 
+#[repr(u32)]
+pub enum MemberType {
+    Host = 0,
+    RemotePlayer = 1,
+    Npc = 2,
+}
+
+#[repr(u32)]
+pub enum PartyMemberEntryState {
+    HostDefault = 0,
+    Unk1 = 1,
+    Unk2 = 2,
+    Unk3 = 3,
+    RemotePlayerDefault = 4,
+    Dead = 5,
+    DisconnectRequest = 6,
+    DisconnectWait = 7,
+    Unk8 = 8,
+    Unk9 = 9,
+}
+
 #[repr(C)]
 pub struct PartyMemberInfoEntry {
     pub field_ins_handle: FieldInsHandle,
-    unk8: u32,
-    pub state: u32,
+    pub member_type: MemberType,
+    pub state: PartyMemberEntryState,
     pub ceremony_event_flag: u32,
     unk14: u32,
     unk18: u32,
@@ -17,7 +38,7 @@ pub struct PartyMemberInfoEntry {
     unk25: u8,
     unk26: u8,
     unk27: u8,
-    unk28: u32,
+    pub npc_name_fmg_id: u32,
     unk2c: u8,
     unk2d: u8,
     unk2e: u8,

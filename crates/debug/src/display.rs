@@ -13,7 +13,6 @@ pub(crate) mod net_man;
 pub(crate) mod task;
 pub(crate) mod param;
 pub(crate) mod event_flag;
-pub(crate) mod msb;
 pub(crate) mod dlio;
 
 pub trait DebugDisplay {

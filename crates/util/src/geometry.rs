@@ -156,7 +156,7 @@ impl CSWorldGeomManExt for CSWorldGeomMan {
             return Err(SpawnGeometryError::BlockDataUnavailable);
         }
 
-        let geom = spawn_geometry(block_data_ptr, &request);
+        let _geom = spawn_geometry(block_data_ptr, &request);
 
         Ok(())
     }

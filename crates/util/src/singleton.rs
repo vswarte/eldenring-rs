@@ -4,7 +4,6 @@ use pelite::pattern::Atom;
 use pelite::pe::Pe;
 use pelite::pe::Rva;
 use std::collections;
-use std::io::Write;
 use std::sync;
 use thiserror::Error;
 
@@ -60,13 +59,15 @@ pub unsafe fn get_instance<T: DLRFSingleton>() -> Result<Option<&'static mut T>,
 // JNZ +2e
 // LEA RCX, [runtime_class_metadata]
 // CALL get_singleton_name
-const NULL_CHECK_PATTERN: &[Atom] = pattern!("
+const NULL_CHECK_PATTERN: &[Atom] = pattern!(
+    "
     48 8b ? $ { ' }
-    48 85 ? 
-    75 ? 
+    48 85 ?
+    75 ?
     48 8d 0d $ { ' }
     e8 $ { ' }
-");
+    "
+);
 
 /// Builds a table of all the singletons. It does so by looking for null checks
 /// in the game by using an instance pattern. It then cycles over all
