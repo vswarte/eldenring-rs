@@ -37,7 +37,7 @@ pub trait DLInputStreamVmt {
     /// Indicates if there's bytes left for reading.
     fn has_bytes_left(&self) -> bool;
 
-    /// Indicates the amount of bytes left in the reader\f.
+    /// Indicates the amount of bytes left in the reader.
     fn get_bytes_left(&self) -> usize;
 
     /// Skips count amount of bytes, returns the amount of bytes skipped. Will be less than count if
@@ -445,7 +445,7 @@ where
     }
 
     extern "C" fn file_size(&mut self) -> usize {
-        let current = self.buffer.seek(SeekFrom::Current(0)).unwrap();
+        let current = self.buffer.stream_position().unwrap();
         let end = self.buffer.seek(SeekFrom::End(0)).unwrap() as usize;
         self.buffer.seek(SeekFrom::Start(current));
         tracing::info!("AdapterFileOperator::file_size() -> {end}");

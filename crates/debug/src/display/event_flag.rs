@@ -14,7 +14,7 @@ impl DebugDisplay for CSEventFlagMan {
         .build();
 
         if ui.collapsing_header("CSFD4VirtualMemory", TreeNodeFlags::empty()) {
-            self.virtual_memory_flag.render_debug(&ui);
+            self.virtual_memory_flag.render_debug(ui);
         }
     }
 }

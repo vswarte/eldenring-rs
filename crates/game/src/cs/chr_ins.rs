@@ -1,17 +1,21 @@
+use std::ops::Index;
 use std::ptr::NonNull;
+use std::slice::SliceIndex;
 use std::{ffi, usize};
-
 use vtable_rs::VPtr;
 use windows::core::PCWSTR;
 
 use crate::cs::ChrSetEntry;
 use crate::matrix::FSVector4;
 use crate::pointer::OwnedPtr;
-use crate::position::{ChunkPosition, HavokPosition};
+use crate::position::{BlockPoint, ChunkPosition4, HavokPosition, Quaternion};
 use crate::Vector;
 
 use super::player_game_data::PlayerGameData;
-use super::{CSMsbParts, CSMsbPartsEne, FieldInsBaseVmt, FieldInsHandle, MapId, WorldBlockChr};
+use super::{
+    CSMsbParts, CSMsbPartsEne, CSSessionManagerPlayerEntry, FieldInsBaseVmt, FieldInsHandle, MapId,
+    WorldBlockChr,
+};
 
 #[repr(C)]
 #[derive(Debug, Clone, PartialEq, Eq, Hash)]
@@ -119,7 +123,7 @@ impl SpecialEffect {
         let mut current = self.head.as_ref().map(|e| e.as_ptr());
 
         std::iter::from_fn(move || {
-            let ret = current.map(|c| unsafe { c.as_ref() }).flatten();
+            let ret = current.and_then(|c| unsafe { c.as_ref() });
             current = unsafe { ret?.next.map(|e| e.as_ptr()) };
             ret
         })
@@ -212,8 +216,8 @@ pub struct ChrPhysicsModule {
     vftable: usize,
     pub owner: NonNull<ChrIns>,
     unk10: [u8; 0x40],
-    pub orientation: FSVector4,
-    unk60_orientation: FSVector4,
+    pub orientation: Quaternion,
+    unk60_orientation: Quaternion,
     pub position: HavokPosition,
     unk80_position: HavokPosition,
     unk90: bool,
@@ -280,8 +284,9 @@ pub struct CSChrTimeActModuleAnim {
     pub anim_id: i32,
     pub play_time: f32,
     play_time2: f32,
-    pub anim_lenght: f32,
+    pub anim_length: f32,
 }
+
 #[repr(C)]
 /// Source of name: RTTI
 pub struct CSChrTimeActModule {
@@ -387,7 +392,8 @@ pub struct CSChrDataModule {
     unk16c: f32,
     unk170: [u8; 0x28],
     unk198: [u8; 0x3],
-    some_debug_bitfield: u8,
+    // 2nd bit makes you undamageable
+    debug_flags: u8,
     unk19c: [u8; 0x8c],
     // wchar_t*
     character_name: OwnedPtr<ffi::OsString>,
@@ -461,7 +467,9 @@ pub struct ChrCtrl {
     unk20: usize,
     pub ragdoll_ins: usize,
     pub chr_collision: usize,
-    unk38: [u8; 240],
+    unk38: [u8; 0xb8],
+    pub flags: u32,
+    unkf1: [u8; 0x34],
     pub chr_ragdoll_state: u8,
 }
 
@@ -498,7 +506,7 @@ pub struct PlayerIns {
     unk5e0: usize,
     fg_model: usize,
     npc_param: usize,
-    unk5f8: u32,
+    think_param: u32,
     unk5fc: u32,
     rng_sp_effect_equip_ctrl: usize,
     wep_sp_effect_equip_ctrl: usize,
@@ -510,8 +518,17 @@ pub struct PlayerIns {
     chr_asm_model_ins: usize,
     unk650: [u8; 0x60],
     pub locked_on_enemy: FieldInsHandle,
-    session_manager_player_entry: usize,
-    pub chunk_position: ChunkPosition,
+    pub session_manager_player_entry: NonNull<CSSessionManagerPlayerEntry>,
+    /// Position within the current block.
+    pub block_position: BlockPoint,
+    /// Angle as radians. Relative to the orientation of the current block.
+    pub block_orientation: f32,
+}
+
+impl AsRef<ChrIns> for PlayerIns {
+    fn as_ref(&self) -> &ChrIns {
+        &self.chr_ins
+    }
 }
 
 #[repr(C)]
@@ -529,25 +546,53 @@ pub struct EnemyIns {
     unk5b8: [u8; 0x28],
 }
 
-pub const CHR_ASM_SLOT_WEAPON_LEFT_1: usize = 0;
-pub const CHR_ASM_SLOT_WEAPON_RIGHT_1: usize = 1;
-pub const CHR_ASM_SLOT_WEAPON_LEFT_2: usize = 2;
-pub const CHR_ASM_SLOT_WEAPON_RIGHT_2: usize = 3;
-pub const CHR_ASM_SLOT_WEAPON_LEFT_3: usize = 4;
-pub const CHR_ASM_SLOT_WEAPON_RIGHT_3: usize = 5;
-pub const CHR_ASM_SLOT_ARROW_1: usize = 6;
-pub const CHR_ASM_SLOT_BOLT_1: usize = 7;
-pub const CHR_ASM_SLOT_ARROW_2: usize = 8;
-pub const CHR_ASM_SLOT_BOLT_2: usize = 9;
-pub const CHR_ASM_SLOT_PROTECTOR_HEAD: usize = 12;
-pub const CHR_ASM_SLOT_PROTECTOR_CHEST: usize = 13;
-pub const CHR_ASM_SLOT_PROTECTOR_HANDS: usize = 14;
-pub const CHR_ASM_SLOT_PROTECTOR_LEGS: usize = 15;
-pub const CHR_ASM_SLOT_ACCESSORY_1: usize = 17;
-pub const CHR_ASM_SLOT_ACCESSORY_2: usize = 18;
-pub const CHR_ASM_SLOT_ACCESSORY_3: usize = 19;
-pub const CHR_ASM_SLOT_ACCESSORY_4: usize = 20;
-pub const CHR_ASM_SLOT_ACCESSORY_COVENANT: usize = 21;
+#[repr(u32)]
+pub enum ChrAsmSlot {
+    WeaponLeft1 = 0,
+    WeaponRight1 = 1,
+    WeaponLeft2 = 2,
+    WeaponRight2 = 3,
+    WeaponLeft3 = 4,
+    WeaponRight3 = 5,
+    Arrow1 = 6,
+    Bolt1 = 7,
+    Arrow2 = 8,
+    Bolt2 = 9,
+    ProtectorHead = 12,
+    ProtectorChest = 13,
+    ProtectorHands = 14,
+    ProtectorLegs = 15,
+    Accessory1 = 17,
+    Accessory2 = 18,
+    Accessory3 = 19,
+    Accessory4 = 20,
+    AccessoryCovenant = 21,
+    // ----- Slots below are not used in the param id lists and handles -----
+    QuickSlot1 = 22,
+    QuickSlot2 = 23,
+    QuickSlot3 = 24,
+    QuickSlot4 = 25,
+    QuickSlot5 = 26,
+    QuickSlot6 = 27,
+    QuickSlot7 = 28,
+    QuickSlot8 = 29,
+    QuickSlot9 = 30,
+    QuickSlot10 = 31,
+    Pouch1 = 32,
+    Pouch2 = 33,
+    Pouch3 = 34,
+    Pouch4 = 35,
+    Pouch5 = 36,
+    Pouch6 = 37,
+}
+
+impl<T> Index<ChrAsmSlot> for [T] {
+    type Output = T;
+
+    fn index(&self, index: ChrAsmSlot) -> &Self::Output {
+        &self[index as usize]
+    }
+}
 
 #[repr(C)]
 /// Describes how the character should be rendered in terms of selecting the

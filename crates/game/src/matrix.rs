@@ -6,6 +6,27 @@ use nalgebra_glm::{Mat4, Vec4};
 
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
+/// Represents a point in some space described as 3 floats (x, y, z).
+pub struct FSPoint(pub f32, pub f32, pub f32);
+
+impl Sub<FSPoint> for FSPoint {
+    type Output = FSPoint;
+
+    fn sub(self, rhs: FSPoint) -> Self::Output {
+        FSPoint(self.0 - rhs.0, self.1 - rhs.1, self.2 - rhs.2)
+    }
+}
+
+impl Add<FSPoint> for FSPoint {
+    type Output = FSPoint;
+
+    fn add(self, rhs: FSPoint) -> Self::Output {
+        FSPoint(self.0 - rhs.0, self.1 - rhs.1, self.2 - rhs.2)
+    }
+}
+
+#[repr(C, align(16))]
+#[derive(Debug, Clone, Copy)]
 pub struct FSVector4(pub f32, pub f32, pub f32, pub f32);
 
 impl Sub<FSVector4> for FSVector4 {

@@ -11,7 +11,7 @@ use crate::matrix::FSVector4;
 use crate::pointer::OwnedPtr;
 use crate::Tree;
 
-use super::{FieldInsHandle, NetChrSync, PlayerIns};
+use super::{FieldInsHandle, MapId, NetChrSync, PlayerIns};
 
 #[repr(C)]
 /// Source of name: RTTI
@@ -192,7 +192,10 @@ trait ChrSetVmt {
 
     /// Retrieves a ChrSetEntry from the ChrSet by its index. Avoid using this.
     /// Prefer using safe_get_chr_ins_by_index.
-    fn get_chr_set_entry_by_handle(&mut self, handle: FieldInsHandle) -> Option<&mut ChrSetEntry<ChrIns>>;
+    fn get_chr_set_entry_by_handle(
+        &mut self,
+        handle: FieldInsHandle,
+    ) -> Option<&mut ChrSetEntry<ChrIns>>;
 
     /// Retrieves a ChrSetEntry from the ChrSet by its index. Avoid using this.
     /// Prefer using safe_get_chr_ins_by_index.
@@ -250,10 +253,7 @@ impl<T> ChrSet<T> {
         (self.vftable.get_capacity)(self)
     }
 
-    pub fn chr_ins_by_handle(
-        &mut self,
-        field_ins_handle: &FieldInsHandle,
-    ) -> Option<&mut ChrIns> {
+    pub fn chr_ins_by_handle(&mut self, field_ins_handle: &FieldInsHandle) -> Option<&mut ChrIns> {
         (self.vftable.get_chr_ins_by_handle)(self, field_ins_handle.to_owned())
     }
 }
@@ -324,37 +324,6 @@ pub struct WorldGridAreaChr {
     pub base: WorldAreaChrBase,
     pub world_grid_area_info: usize,
     unk_tree: Tree<()>,
-}
-
-#[repr(C)]
-#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash)]
-pub struct MapId {
-    pub index: i8,
-    pub region: i8,
-    pub block: i8,
-    pub area: i8,
-}
-
-impl MapId {
-    /// Makes a -1 map id, which is usually used to represent an entity not bound to some map.
-    pub fn global() -> Self {
-        Self {
-            index: -1,
-            region: -1,
-            block: -1,
-            area: -1,
-        }
-    }
-}
-
-impl Display for MapId {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(
-            f,
-            "m{:0>2}_{:0>2}_{:0>2}_{:0>2}",
-            self.area, self.block, self.region, self.index
-        )
-    }
 }
 
 #[repr(C)]

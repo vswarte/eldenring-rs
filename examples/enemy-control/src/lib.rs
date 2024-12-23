@@ -1,22 +1,18 @@
 use std::{
     cell::RefCell,
     error::Error,
-    f32::consts::PI,
     mem::forget,
     ptr::NonNull,
-    sync::{Arc, LazyLock, Mutex},
 };
 
 use game::{
     cs::{
-        CSCamera, CSTaskGroupIndex, CSTaskImp, CSWorldGeomMan, ChrIns, EnemyIns,
+        CSTaskGroupIndex, CSTaskImp, ChrIns, EnemyIns,
         WorldChrMan, WorldChrManDbg,
-    }, fd4::FD4TaskData, position::ChunkPosition
+    }, fd4::FD4TaskData,
 };
 use tracing_panic::panic_hook;
 use util::{
-    camera::CSCamExt,
-    geometry::{CSWorldGeomManExt, GeometrySpawnParameters, SpawnGeometryError},
     input::is_key_pressed,
     singleton::get_instance,
     task::CSTaskImpExt,

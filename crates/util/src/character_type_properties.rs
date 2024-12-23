@@ -35,7 +35,7 @@ pub static CHARACTER_TYPE_PROPERTIES: LazyLock<RwLock<CharacterPropertiesHolder>
         let mut matches = [0; 2];
         if !program
             .scanner()
-            .finds_code(&CHARACTER_TYPE_PROPERTIES_PATTERN, &mut matches)
+            .finds_code(CHARACTER_TYPE_PROPERTIES_PATTERN, &mut matches)
         {
             panic!("Failed to find character properties pattern");
         }

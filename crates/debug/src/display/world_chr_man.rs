@@ -1,6 +1,5 @@
 use game::cs::{
-    ChrIns, ChrSet, EquipInventoryData, FieldInsHandle, FieldInsSelector, MapId, OpenFieldChrSet,
-    PlayerGameData, PlayerIns, SummonBuddyManager, SummonBuddyManagerWarp, WorldChrMan,
+    ChrIns, ChrSet, OpenFieldChrSet, PlayerIns, SummonBuddyManager, SummonBuddyManagerWarp, WorldChrMan,
 };
 use hudhook::imgui::{TableColumnSetup, TreeNodeFlags, Ui};
 use util::{
@@ -77,7 +76,9 @@ impl DebugDisplay for WorldChrMan {
         match self.main_player.as_ref() {
             Some(p) => {
                 if ui.collapsing_header("Main player", TreeNodeFlags::empty()) {
-                    p.render_debug(ui)
+                    ui.indent();
+                    p.render_debug(ui);
+                    ui.unindent();
                 }
             }
             None => ui.text("No Main player instance"),

@@ -1,4 +1,8 @@
-use crate::{pointer::OwnedPtr, stl::DoublyLinkedList};
+use std::ptr::NonNull;
+
+use windows::core::PCWSTR;
+
+use crate::{dltx::DLString, fd4::{FD4StepBaseInterface, FD4Time}, pointer::OwnedPtr, stl::DoublyLinkedList};
 
 use super::{CSEzTask, CSEzUpdateTask, MapId, PlayerIns};
 
@@ -7,18 +11,23 @@ use super::{CSEzTask, CSEzUpdateTask, MapId, PlayerIns};
 pub struct CSNetMan {
     vftable: usize,
     unk8: [u8; 0x60],
-    pub sos_db: usize,
-    pub wandering_ghost_db: usize,
+    sos_db: usize,
+    wandering_ghost_db: usize,
+    /// Keeps track of all all bloodmessages in the world as well as any rating and created
+    /// bloodmessages.
     pub blood_message_db: OwnedPtr<CSNetBloodMessageDb>,
-    pub bloodstain_db: usize,
-    pub bonfire_db: usize,
-    pub spiritual_statue_db: usize,
+    bloodstain_db: usize,
+    bonfire_db: usize,
+    spiritual_statue_db: usize,
     unk98: usize,
     unka0: usize,
     unka8: usize,
-    unk_quickmatch: usize,
-    pub visitor_db: usize,
-    pub penalty_manager: usize,
+    /// Keeps track of quickmatch gamemode state.
+    pub quickmatch_manager: OwnedPtr<QuickmatchManager>,
+    visitor_db: usize,
+    penalty_manager: usize,
+    /// Task that updates the structure (pulls in new data from server, spawn received signs,
+    /// stains and messages, spawns ghost replays, etc)
     pub update_task: CSEzUpdateTask<Self>,
     unkf0: u32,
     unkf4: u32, // Probably padding
@@ -31,16 +40,17 @@ pub struct CSNetBloodMessageDb {
     // Contains all CSNetBloodMessageDbItem?
     pub entries: DoublyLinkedList<OwnedPtr<CSNetBloodMessageDbItem>>,
     unk20: usize,
-    // Seemingly contains message data for messages created by local user
+    /// Seemingly contains message data for messages created by local user
     pub created_data: DoublyLinkedList<usize>,
     // Contains ???
     unk40: DoublyLinkedList<usize>,
     unk58: usize,
-    pub blood_message_ins_man_1: usize,
-    pub blood_message_ins_man_2: usize,
+    blood_message_ins_man_1: usize,
+    blood_message_ins_man_2: usize,
     pub discovered_messages: DoublyLinkedList<OwnedPtr<OwnedPtr<CSNetBloodMessageDbItem>>>,
     unk88: [u8; 0xD0],
-    pub evaluate_job: usize,
+    /// Hosts any ongoing jobs for evaluations.
+    evaluate_job: usize,
     unk160: usize,
 }
 
@@ -68,4 +78,137 @@ pub struct CSNetBloodMessageDbItem {
     unk3e: u16,
     pub message_id: u64,
     unk48: u32,
+}
+
+#[repr(C)]
+pub struct QuickmatchManager {
+    /// Stepper that updates the games quickmatch state.
+    pub quickmatching_ctrl: OwnedPtr<CSQuickMatchingCtrl>,
+    /// Keeps track of quickmatch settings as well as any participants.
+    pub battle_royal_context: OwnedPtr<CSBattleRoyalContext>,
+    /// Populated during creation of the QM lobby locally. Either by joining or creating a room.
+    active_battle_royal_context: Option<NonNull<CSBattleRoyalContext>>,
+    unk18: u32,
+    /// List of speffects applied to the players during battle.
+    pub utility_sp_effects: [u32; 10],
+}
+
+#[repr(u32)]
+#[derive(Debug, PartialEq)]
+pub enum CSQuickMatchingCtrlState {
+    None = 0x0,
+    SearchRegister = 0x1,
+    SearchRegisterWait = 0x2,
+    // Waiting for lobby to gain enough people to start.
+    GuestInviteWait = 0x3,
+    GuestWaitSession = 0x4,
+    GuestReadyWait = 0x5,
+    // Moving to arena map.
+    GuestMoveMap = 0x6,
+    // People are loaded into the map and match is running or has errored.
+    GuestInGame = 0x7,
+    HostWaitSession = 0x8,
+    // Hosting and allowing other people to join the room before starting.
+    HostInvite = 0x9,
+    HostReadyWait = 0xa,
+    HostReadyWaitBlockList = 0xb,
+    // Moving to arena map.
+    HostMoveMap = 0xc,
+    // People are loaded into the map and match is running or has errored.
+    HostInGame = 0xd,
+    // Match has ended either by completion or error.
+    Unregister = 0xe,
+}
+
+/// Source of name: RTTI
+#[repr(C)]
+pub struct CSQuickMatchingCtrl {
+    pub base: FD4StepBaseInterface<15, Self>,
+    unk18: [u8; 0x28],
+    pub current_state: CSQuickMatchingCtrlState,
+    pub requested_state: CSQuickMatchingCtrlState,
+    unk48: [u8; 0x50],
+    /// FD4Step state string.
+    state_string: PCWSTR,
+    unka0: bool,
+    unka1: bool,
+    unka2: bool,
+    unka3: bool,
+    unka4: u32,
+    pub context: NonNull<CSBattleRoyalContext>,
+    menu_job: usize,
+    unkb8: FD4Time,
+    unkc8: bool,
+    unkc9: bool,
+    unkca: bool,
+    unkcb: bool,
+    unkcc: bool,
+    unkcd: bool,
+    unkce: [u8; 5],
+    unkd3: bool,
+    /// Set to true if the client doesn't send the QM "ready" packet in time.
+    pub move_map_timed_out: bool,
+}
+
+/// Source of name: RTTI
+#[repr(C)]
+pub struct CSBattleRoyalContext {
+    pub quickmatch_context: CSQuickMatchContext,
+    /// Required players to be in lobby before quickmatch can kick-off.
+    pub match_player_count: u32,
+    unkb4: u32,
+    unkb8: u32,
+    /// Map ID as an enum (1, 2, 3).
+    pub map: u32,
+    /// Password used for the quickmatch lobby.
+    pub password: DLString,
+    /// Seems involved in some map ID sanity checks.
+    unkf0: bool,
+    unkf1: u8,
+    unkf2: u8,
+    unkf3: u8,
+    unkf4: u32,
+}
+
+/// Source of name: RTTI
+#[repr(C)]
+pub struct CSQuickMatchContext {
+    vtable: usize,
+    /// Encodes the battle type (1v1, 2v2, 3v3, etc)
+    pub match_settings: u32,
+    /// Map for this map as an integer, 45000000 as an example.
+    pub match_map: u32,
+    unk10: u32,
+    unk14: f32,
+    unk18: f32,
+    unk1c: f32,
+    unk20: u32,
+    unk24: u32,
+    unk28: u64,
+    unk30: u64,
+    unk38: u64,
+    unk40: u64,
+    unk48: u64,
+    unk50: u64,
+    unk58: u64,
+    unk60: u64,
+    unk68: u64,
+    unk70: u64,
+    unk78: u64,
+    /// All quickmatch participants.
+    pub participants: DoublyLinkedList<QuickmatchParticipant>,
+    unk98: u8,
+    /// Seems to be indicative of why some QM lobby failed
+    pub error_state: u8,
+    unk9a: u8,
+    unk9b: u8,
+    unk9c: u32,
+    unka0: u32,
+    unka4: u32,
+    unka8: u32,
+    unkac: u32,
+}
+
+#[repr(C)]
+pub struct QuickmatchParticipant {
 }

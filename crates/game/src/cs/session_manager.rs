@@ -7,7 +7,7 @@ use crate::{dlcr::{AESDecrypter, AESEncrypter, DLSerialCipherKey}, dlkr::{DLAllo
 use super::CSEzUpdateTask;
 
 #[repr(u32)]
-#[derive(Debug)]
+#[derive(Debug, PartialEq)]
 pub enum LobbyState {
     Offline = 0x0,
     CreatingLobby = 0x1,
@@ -155,8 +155,8 @@ pub struct CSSessionManager {
 pub struct CSSessionManagerPlayerEntry {
     internal_thread_steam_connection: usize,
     internal_thread_steam_socket: usize,
-    steam_id: u64,
-    steam_name: DLInplaceStr<1, 64>,
+    pub steam_id: u64,
+    pub steam_name: DLInplaceStr<1, 64>,
     connection_ref_info: usize,
     voice_chat_member_ref_info: usize,
     game_data_index: i32,

@@ -10,15 +10,20 @@ impl DebugDisplay for PlayerIns {
         self.chr_ins.render_debug(ui);
 
         if ui.collapsing_header("ChrAsm", TreeNodeFlags::empty()) {
+            ui.indent();
             self.chr_asm.render_debug(ui);
+            ui.unindent();
         }
 
         if ui.collapsing_header("PlayerGameData", TreeNodeFlags::empty()) {
+            ui.indent();
             self.player_game_data.render_debug(ui);
+            ui.unindent();
         }
 
         ui.text(format!("Locked on enemy: {}", self.locked_on_enemy));
-        ui.text(format!("Chunk position: {}", self.chunk_position));
+        ui.text(format!("Block position: {}", self.block_position));
+        ui.text(format!("Block orientation: {}", self.block_orientation));
     }
 }
 
@@ -61,6 +66,10 @@ impl DebugDisplay for PlayerGameData {
         ui.text(format!("White Ring Active: {:?}", self.white_ring_active));
         ui.text(format!("Blue Ring Active: {:?}", self.blue_ring_active));
 
+        if ui.collapsing_header("Equipment EquipInventoryData", TreeNodeFlags::empty()) {
+            self.equipment.equip_inventory_data.render_debug(ui);
+        }
+
         if ui.collapsing_header("Storage Box EquipInventoryData", TreeNodeFlags::empty()) {
             self.storage.render_debug(ui);
         }
@@ -69,11 +78,14 @@ impl DebugDisplay for PlayerGameData {
 
 impl DebugDisplay for EquipInventoryData {
     fn render_debug(&self, ui: &&mut Ui) {
+        ui.text(format!("Total item entry count: {}", self.total_item_entry_count));
+
         let label = format!("Normal Items ({}/{})", self.normal_item_count, self.normal_item_capacity);
         if ui.collapsing_header(label.as_str(), TreeNodeFlags::empty()) {
             if let Some(_t) = ui.begin_table_header(
                 "equip-inventory-data-normal-items",
                 [
+                    TableColumnSetup::new("Index"),
                     TableColumnSetup::new("Gaitem Handle"),
                     TableColumnSetup::new("Category"),
                     TableColumnSetup::new("Item ID"),
@@ -81,7 +93,10 @@ impl DebugDisplay for EquipInventoryData {
                     TableColumnSetup::new("Display ID"),
                 ],
             ) {
-                self.normal_items().iter().for_each(|item| {
+                self.normal_items().iter().enumerate().for_each(|(index, item)| {
+                    ui.table_next_column();
+                    ui.text(index.to_string());
+
                     ui.table_next_column();
                     ui.text(format!("{:x}", item.gaitem_handle));
 
@@ -105,6 +120,7 @@ impl DebugDisplay for EquipInventoryData {
             if let Some(_t) = ui.begin_table_header(
                 "equip-inventory-data-key-items",
                 [
+                    TableColumnSetup::new("Index"),
                     TableColumnSetup::new("Gaitem Handle"),
                     TableColumnSetup::new("Category"),
                     TableColumnSetup::new("Item ID"),
@@ -112,7 +128,10 @@ impl DebugDisplay for EquipInventoryData {
                     TableColumnSetup::new("Display ID"),
                 ],
             ) {
-                self.key_items().iter().for_each(|item| {
+                self.key_items().iter().enumerate().for_each(|(index, item)| {
+                    ui.table_next_column();
+                    ui.text(index.to_string());
+
                     ui.table_next_column();
                     ui.text(format!("{:x}", item.gaitem_handle));
 
@@ -136,6 +155,7 @@ impl DebugDisplay for EquipInventoryData {
             if let Some(_t) = ui.begin_table_header(
                 "equip-inventory-data-secondary-key-items",
                 [
+                    TableColumnSetup::new("Index"),
                     TableColumnSetup::new("Gaitem Handle"),
                     TableColumnSetup::new("Category"),
                     TableColumnSetup::new("Item ID"),
@@ -143,7 +163,10 @@ impl DebugDisplay for EquipInventoryData {
                     TableColumnSetup::new("Display ID"),
                 ],
             ) {
-                self.secondary_key_items().iter().for_each(|item| {
+                self.secondary_key_items().iter().enumerate().for_each(|(index, item)| {
+                    ui.table_next_column();
+                    ui.text(index.to_string());
+
                     ui.table_next_column();
                     ui.text(format!("{:x}", item.gaitem_handle));
 
@@ -166,7 +189,8 @@ impl DebugDisplay for EquipInventoryData {
 
 impl DebugDisplay for ChrIns {
     fn render_debug(&self, ui: &&mut Ui) {
-        ui.text(format!("Team Type: {}", self.team_type));
+        ui.text(format!("Map ID: {}", self.map_id_1));
+        // ui.text(format!("Team Type: {}", self.team_type));
         ui.text(format!("Last killed by: {}", self.last_killed_by));
         ui.text(format!("Last used item: {}", self.last_used_item));
 
@@ -209,11 +233,15 @@ impl DebugDisplay for ChrIns {
 impl DebugDisplay for ChrInsModuleContainer {
     fn render_debug(&self, ui: &&mut Ui) {
         if ui.collapsing_header("Physics", TreeNodeFlags::empty()) {
+            ui.indent();
             self.physics.render_debug(ui);
+            ui.unindent();
         }
 
         if ui.collapsing_header("Model param modifier", TreeNodeFlags::empty()) {
+            ui.indent();
             self.model_param_modifier.render_debug(ui);
+            ui.unindent();
         }
     }
 }
@@ -221,6 +249,7 @@ impl DebugDisplay for ChrInsModuleContainer {
 impl DebugDisplay for ChrPhysicsModule {
     fn render_debug(&self, ui: &&mut Ui) {
         ui.text(format!("Position: {}", self.position));
+        ui.text(format!("Orientation: {}", self.orientation));
     }
 }
 

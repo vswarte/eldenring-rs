@@ -1,0 +1,34 @@
+[package]
+name = "battleroyale"
+version.workspace = true
+edition.workspace = true
+repository.workspace = true
+license.workspace = true
+
+[dependencies]
+thiserror.workspace = true
+game.workspace = true
+util.workspace = true
+pelite.workspace = true
+nalgebra-glm.workspace = true
+nalgebra.workspace = true
+tracing.workspace = true
+tracing-subscriber.workspace = true
+tracing-appender.workspace = true
+tracing-panic.workspace = true
+rand = "0.8"
+crash-handler.workspace = true
+retour = { version = "0.3", features = ["static-detour"] }
+steamworks = "0.10"
+steamworks-sys = "0.10"
+bincode = "1"
+windows.workspace = true
+toml = "0.8"
+csv = "1"
+
+[dependencies.serde]
+version = "1"
+features = ["derive"]
+
+[lib]
+crate-type = ["cdylib"]
