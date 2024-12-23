@@ -1,16 +1,12 @@
-use std::{
-    marker::Sync,
-    sync::{Arc, RwLock},
-};
+use std::sync::{Arc, RwLock};
 
-use game::cs::{
-    EquipInventoryData, WorldChrMan, CHR_ASM_SLOT_PROTECTOR_CHEST, CHR_ASM_SLOT_PROTECTOR_HANDS,
-    CHR_ASM_SLOT_PROTECTOR_HEAD, CHR_ASM_SLOT_PROTECTOR_LEGS, CHR_ASM_SLOT_WEAPON_LEFT_1,
-    CHR_ASM_SLOT_WEAPON_RIGHT_1,
-};
+use game::cs::{ChrAsmSlot, EquipInventoryData, WorldChrMan};
 use util::singleton::get_instance;
 
-use crate::{rva::RVA_TRANSFER_ITEM, ProgramLocationProvider};
+use crate::{
+    rva::{RVA_TRANSFER_ITEM, RVA_UNEQUIP_ITEM},
+    ProgramLocationProvider,
+};
 
 /// Levels applied to the player when in the battle.
 pub const PLAYER_LEVELS_IN_BATTLE: PlayerLevels = PlayerLevels {
@@ -138,62 +134,53 @@ impl Player {
     pub fn clear_equipment(&self) {
         tracing::info!("Clearing player equipment");
 
-        let equipment = &mut unsafe { get_instance::<WorldChrMan>() }
-            .unwrap()
-            .expect("Could not get WorldChrMan")
-            .main_player
-            .as_mut()
-            .expect("Could not get main player")
-            .player_game_data
-            .equipment;
+        let location_unequip_item = self.location.get(RVA_UNEQUIP_ITEM).unwrap();
+        let unequip_item: extern "C" fn(ChrAsmSlot, bool) =
+            unsafe { std::mem::transmute(location_unequip_item) };
 
-        equipment.chr_asm.arm_style = 0;
-        equipment.chr_asm.left_weapon_slot = 0;
-        equipment.chr_asm.right_weapon_slot = 0;
-        equipment.chr_asm.left_arrow_slot = 0;
-        equipment.chr_asm.right_arrow_slot = 0;
-        equipment.chr_asm.left_bolt_slot = 0;
-        equipment.chr_asm.right_bolt_slot = 0;
-        equipment.chr_asm.gaitem_handles = [0; 22];
-        equipment.chr_asm.equipment_param_ids = [0; 22];
+        unequip_item(ChrAsmSlot::WeaponLeft1, false);
+        unequip_item(ChrAsmSlot::WeaponRight1, false);
 
-        equipment.chr_asm.gaitem_handles[CHR_ASM_SLOT_WEAPON_LEFT_1] = 0x808004b3;
-        equipment.chr_asm.gaitem_handles[CHR_ASM_SLOT_WEAPON_RIGHT_1] = 0x808004b3;
-        equipment.chr_asm.gaitem_handles[CHR_ASM_SLOT_PROTECTOR_HEAD] = 0x908004af;
-        equipment.chr_asm.gaitem_handles[CHR_ASM_SLOT_PROTECTOR_CHEST] = 0x908004b0;
-        equipment.chr_asm.gaitem_handles[CHR_ASM_SLOT_PROTECTOR_HANDS] = 0x908004b1;
-        equipment.chr_asm.gaitem_handles[CHR_ASM_SLOT_PROTECTOR_LEGS] = 0x908004b2;
+        unequip_item(ChrAsmSlot::WeaponRight1, false);
+        unequip_item(ChrAsmSlot::WeaponLeft2, false);
+        unequip_item(ChrAsmSlot::WeaponRight2, false);
+        unequip_item(ChrAsmSlot::WeaponLeft3, false);
+        unequip_item(ChrAsmSlot::WeaponRight3, false);
 
-        equipment.chr_asm.equipment_param_ids[CHR_ASM_SLOT_WEAPON_LEFT_1] = 110000;
-        equipment.chr_asm.equipment_param_ids[CHR_ASM_SLOT_WEAPON_RIGHT_1] = 110000;
-        equipment.chr_asm.equipment_param_ids[CHR_ASM_SLOT_PROTECTOR_HEAD] = 10000;
-        equipment.chr_asm.equipment_param_ids[CHR_ASM_SLOT_PROTECTOR_CHEST] = 10100;
-        equipment.chr_asm.equipment_param_ids[CHR_ASM_SLOT_PROTECTOR_HANDS] = 10200;
-        equipment.chr_asm.equipment_param_ids[CHR_ASM_SLOT_PROTECTOR_LEGS] = 10300;
+        unequip_item(ChrAsmSlot::Arrow1, false);
+        unequip_item(ChrAsmSlot::Bolt1, false);
+        unequip_item(ChrAsmSlot::Arrow2, false);
+        unequip_item(ChrAsmSlot::Bolt2, false);
 
-        equipment.accessories = [-1; 4];
-        equipment.quick_tems = [-1; 10];
-        equipment.pouch = [-1; 6];
-        equipment.protector_head = 10000;
-        equipment.protector_chest = 10100;
-        equipment.protector_hands = 10200;
-        equipment.protector_legs = 10300;
+        unequip_item(ChrAsmSlot::ProtectorHead, false);
+        unequip_item(ChrAsmSlot::ProtectorChest, false);
+        unequip_item(ChrAsmSlot::ProtectorHands, false);
+        unequip_item(ChrAsmSlot::ProtectorLegs, false);
 
-        equipment.weapon_primary_left = 110000;
-        equipment.weapon_primary_right = 110000;
-        equipment.weapon_secondary_left = 110000;
-        equipment.weapon_secondary_right = 110000;
-        equipment.weapon_tertiary_left = 110000;
-        equipment.weapon_tertiary_right = 110000;
+        unequip_item(ChrAsmSlot::Accessory1, false);
+        unequip_item(ChrAsmSlot::Accessory2, false);
+        unequip_item(ChrAsmSlot::Accessory3, false);
+        unequip_item(ChrAsmSlot::Accessory4, false);
 
-        equipment.arrow_primary = -1;
-        equipment.bolt_primary = -1;
-        equipment.arrow_secondary = -1;
-        equipment.bolt_secondary = -1;
-        equipment.arrow_tertiary = -1;
-        equipment.bolt_tertiary = -1;
+        unequip_item(ChrAsmSlot::AccessoryCovenant, false);
 
-        equipment.covenant = -1;
+        unequip_item(ChrAsmSlot::QuickSlot1, false);
+        unequip_item(ChrAsmSlot::QuickSlot2, false);
+        unequip_item(ChrAsmSlot::QuickSlot3, false);
+        unequip_item(ChrAsmSlot::QuickSlot4, false);
+        unequip_item(ChrAsmSlot::QuickSlot5, false);
+        unequip_item(ChrAsmSlot::QuickSlot6, false);
+        unequip_item(ChrAsmSlot::QuickSlot7, false);
+        unequip_item(ChrAsmSlot::QuickSlot8, false);
+        unequip_item(ChrAsmSlot::QuickSlot9, false);
+        unequip_item(ChrAsmSlot::QuickSlot10, false);
+
+        unequip_item(ChrAsmSlot::Pouch1, false);
+        unequip_item(ChrAsmSlot::Pouch2, false);
+        unequip_item(ChrAsmSlot::Pouch3, false);
+        unequip_item(ChrAsmSlot::Pouch4, false);
+        unequip_item(ChrAsmSlot::Pouch5, false);
+        unequip_item(ChrAsmSlot::Pouch6, false);
     }
 }
 

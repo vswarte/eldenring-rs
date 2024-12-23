@@ -327,37 +327,6 @@ pub struct WorldGridAreaChr {
 }
 
 #[repr(C)]
-#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash)]
-pub struct MapId {
-    pub index: i8,
-    pub region: i8,
-    pub block: i8,
-    pub area: i8,
-}
-
-impl MapId {
-    /// Makes a -1 map id, which is usually used to represent an entity not bound to some map.
-    pub fn global() -> Self {
-        Self {
-            index: -1,
-            region: -1,
-            block: -1,
-            area: -1,
-        }
-    }
-}
-
-impl Display for MapId {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(
-            f,
-            "m{:0>2}_{:0>2}_{:0>2}_{:0>2}",
-            self.area, self.block, self.region, self.index
-        )
-    }
-}
-
-#[repr(C)]
 /// Source of name: "SummonBuddy" mentioned in DLRF metadata for the update fn.
 pub struct SummonBuddyManager {
     vftable: usize,

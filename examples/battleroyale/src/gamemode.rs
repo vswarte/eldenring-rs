@@ -95,7 +95,7 @@ impl GameMode {
         }
 
         if game_state.match_loading() && !self.setup_player.swap(true, Ordering::Relaxed) {
-            // self.player.setup_for_match();
+            self.player.setup_for_match();
         }
 
         if !game_state.match_active() {
