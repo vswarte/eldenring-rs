@@ -1,6 +1,7 @@
 use std::{
     ptr::NonNull,
     sync::{Arc, RwLock},
+    time::{Duration, Instant},
 };
 
 use game::cs::{FieldInsHandle, WorldChrMan, WorldChrManDbg};
@@ -8,18 +9,24 @@ use util::singleton::get_instance;
 
 use crate::gamestate::{is_chr_ins_alive, GameStateProvider};
 
+pub const SPECTATOR_CAMERA_ACTIVATION_TIMEOUT: Duration = Duration::from_secs(4);
+
 pub struct SpectatorCamera {
-    game_state: Arc<GameStateProvider>,
+    game: Arc<GameStateProvider>,
 
     /// Player we're currently spectating.
     currently_spectating: Option<FieldInsHandle>,
+
+    /// Death spectator timeout
+    died_at: Option<Instant>,
 }
 
 impl SpectatorCamera {
-    pub fn new(game_state: Arc<GameStateProvider>) -> Self {
+    pub fn new(game: Arc<GameStateProvider>) -> Self {
         Self {
-            game_state,
+            game,
             currently_spectating: None,
+            died_at: None,
         }
     }
 
@@ -43,8 +50,8 @@ impl SpectatorCamera {
                 // Cycle to the next player if the one we're currently spectating has died.
                 if !is_chr_ins_alive(spectated_player) {
                     tracing::info!("Switching spectator camera...");
-                    let next_player = self.game_state.alive_players().first().cloned();
-                    self.spectate(next_player);
+                    self.spectate_next();
+                    return;
                 }
 
                 // Update our pos to that of the player we're spectating so that the map keeps
@@ -53,13 +60,31 @@ impl SpectatorCamera {
                     spectated_player.module_container.physics.position;
             }
             None => {
-                if !self.game_state.local_player_is_alive()
-                    && self.game_state.local_player_in_death_anim_loop()
+                // Enqueue spectator camera
+                if !self.game.local_player_is_alive() && self.died_at.is_none() {
+                    self.died_at = Some(Instant::now());
+                }
+
+                // Put character into spectator camera once timeout has expired
+                if self
+                    .died_at
+                    .is_some_and(|da| da < Instant::now() - SPECTATOR_CAMERA_ACTIVATION_TIMEOUT)
                 {
-                    self.spectate(Some(main_player.chr_ins.last_killed_by.clone()));
+                    self.spectate(self.initial_spectating_player());
                 }
             }
         }
+    }
+
+    /// Determines the player to spectate after dying.
+    fn initial_spectating_player(&self) -> Option<FieldInsHandle> {
+        self.game
+            .killed_by()
+            .or(self.game.alive_players().first().cloned())
+    }
+
+    fn spectate_next(&mut self) {
+        self.spectate(self.game.alive_players().first().cloned());
     }
 
     pub fn reset(&mut self) {
@@ -68,6 +93,7 @@ impl SpectatorCamera {
         }
 
         self.currently_spectating = None;
+        self.died_at = None;
     }
 
     /// Spectate a particular player by its FieldInsHandle.

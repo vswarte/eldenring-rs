@@ -50,68 +50,22 @@ impl ConfigurationProvider {
             maps: HashMap::from([(
                 String::from("0"),
                 MapConfiguration {
-                    player_spawn_points: read_point_collection(File::open(
+                    bespoke_monster_spawns: read_bespoke_monster_spawn_collection(File::open(
+                        "./battleroyale/0_monster_spawns_bespoke.csv",
+                    )?)?,
+                    player_spawn_points: read_player_spawn_collection(File::open(
                         "./battleroyale/0_player_spawns.csv",
                     )?)?,
-                    item_spawn_points: read_point_collection(File::open(
+                    item_spawn_points: read_loot_spawn_collection(File::open(
                         "./battleroyale/0_item_spawns.csv",
                     )?)?,
-                    ring_centers: read_point_collection(File::open(
+                    ring_centers: read_ring_center_collection(File::open(
                         "./battleroyale/0_ring_centers.csv",
                     )?)?,
                     event_flag_overrides,
                 },
             )]),
         })
-    }
-
-    pub fn export(&self) -> Result<(), Box<dyn Error>> {
-        let config = self.config.read().unwrap();
-
-        // let test = read_loot_collection(File::open("./battleroyale/0_loot.csv")?)?;
-        // dbg!(test);
-
-        // Write maps
-        config.maps.iter().for_each(|(map, config)| {
-            // Write event flag overrides
-            {
-                let handle = File::create(format!("./battleroyale/{map}_event_flags.csv")).unwrap();
-                let mut writer = csv::Writer::from_writer(handle);
-                writer
-                    .write_record(&["Description", "Event Flag", "State"])
-                    .unwrap();
-
-                config
-                    .event_flag_overrides
-                    .iter()
-                    .for_each(|(flag, value)| {
-                        writer
-                            .write_record(&[String::new(), flag.to_string(), value.to_string()])
-                            .unwrap();
-                    });
-                writer.flush().unwrap();
-            }
-
-            write_point_collection(
-                File::create(format!("./battleroyale/{map}_player_spawns.csv")).unwrap(),
-                config.player_spawn_points.as_slice(),
-            )
-            .unwrap();
-
-            write_point_collection(
-                File::create(format!("./battleroyale/{map}_item_spawns.csv")).unwrap(),
-                config.item_spawn_points.as_slice(),
-            )
-            .unwrap();
-
-            write_point_collection(
-                File::create(format!("./battleroyale/{map}_ring_centers.csv")).unwrap(),
-                config.ring_centers.as_slice(),
-            )
-            .unwrap();
-        });
-
-        Ok(())
     }
 
     /// Retrieve the configuration for a single map entry.
@@ -129,10 +83,11 @@ impl ConfigurationProvider {
     }
 }
 
-fn read_point_collection<R>(reader: R) -> Result<Vec<MapPoint>, Box<dyn Error>>
+fn read_player_spawn_collection<R>(reader: R) -> Result<Vec<PlayerSpawnPoint>, Box<dyn Error>>
 where
     R: Read,
 {
+    tracing::info!("Parsing player spawns");
     let mut reader = csv::Reader::from_reader(reader);
     let result = reader
         .records()
@@ -140,7 +95,7 @@ where
             let r = r?;
 
             let map = i32::from_str_radix(&r[1], 16)?;
-            Ok(MapPoint {
+            Ok(PlayerSpawnPoint {
                 map: MapId(map),
                 position: MapPosition {
                     0: r[2].parse::<f32>()?,
@@ -150,41 +105,70 @@ where
                 orientation: r[5].parse::<f32>()?,
             })
         })
-        .collect::<Result<Vec<MapPoint>, Box<dyn Error>>>()?;
+        .collect::<Result<Vec<PlayerSpawnPoint>, Box<dyn Error>>>()?;
 
     Ok(result)
 }
 
-fn write_point_collection<W, P>(writer: W, points: P) -> Result<(), Box<dyn Error>>
+fn read_ring_center_collection<R>(reader: R) -> Result<Vec<RingCenterPoint>, Box<dyn Error>>
 where
-    W: Write,
-    P: AsRef<[MapPoint]>,
+    R: Read,
 {
-    let mut writer = csv::Writer::from_writer(writer);
-    writer.write_record(&["Description", "Map", "X", "Y", "Z", "Angle"])?;
+    tracing::info!("Parsing ring spawns");
+    let mut reader = csv::Reader::from_reader(reader);
+    let result = reader
+        .records()
+        .map(|r| {
+            let r = r?;
 
-    points.as_ref().iter().for_each(|p| {
-        writer
-            .write_record(&[
-                String::new(),
-                format!("{:x}", p.map.0),
-                p.position.0.to_string(),
-                p.position.1.to_string(),
-                p.position.2.to_string(),
-                p.orientation.to_string(),
-            ])
-            .unwrap();
-    });
+            let map = i32::from_str_radix(&r[1], 16)?;
+            Ok(RingCenterPoint {
+                map: MapId(map),
+                position: MapPosition {
+                    0: r[2].parse::<f32>()?,
+                    1: r[3].parse::<f32>()?,
+                    2: r[4].parse::<f32>()?,
+                },
+            })
+        })
+        .collect::<Result<Vec<RingCenterPoint>, Box<dyn Error>>>()?;
 
-    writer.flush()?;
+    Ok(result)
+}
 
-    Ok(())
+fn read_loot_spawn_collection<R>(reader: R) -> Result<Vec<LootSpawnPoint>, Box<dyn Error>>
+where
+    R: Read,
+{
+    tracing::info!("Parsing loot spawns");
+    let mut reader = csv::Reader::from_reader(reader);
+    let result = reader
+        .records()
+        .map(|r| {
+            let r = r?;
+
+            let map = i32::from_str_radix(&r[1], 16)?;
+            Ok(LootSpawnPoint {
+                map: MapId(map),
+                position: MapPosition {
+                    0: r[2].parse::<f32>()?,
+                    1: r[3].parse::<f32>()?,
+                    2: r[4].parse::<f32>()?,
+                },
+                orientation: r[5].parse::<f32>()?,
+                pool: r[6].parse::<u32>()?,
+            })
+        })
+        .collect::<Result<Vec<LootSpawnPoint>, Box<dyn Error>>>()?;
+
+    Ok(result)
 }
 
 fn read_loot_collection<R>(reader: R) -> Result<Vec<LootTableEntry>, Box<dyn Error>>
 where
     R: Read,
 {
+    tracing::info!("Parsing loot table");
     let mut reader = csv::Reader::from_reader(reader);
     let result = reader
         .records()
@@ -192,9 +176,12 @@ where
             let r = r?;
 
             let weight = r[1].parse::<u32>()?;
+            tracing::info!("Weight: {weight}");
+            let pool = r[2].parse::<u32>()?;
+            tracing::info!("Pool: {weight}");
 
             let mut items = vec![];
-            for i in 0..10 {
+            for i in 0..4 {
                 let item_id = &r[3 + (i * 2) + 0];
                 if item_id == "ffffffff" {
                     continue;
@@ -208,6 +195,7 @@ where
 
             Ok(LootTableEntry {
                 weight,
+                pool,
                 items,
             })
         })
@@ -216,59 +204,37 @@ where
     Ok(result)
 }
 
-pub fn write_loot_collection<W, L>(writer: W, loot: L) -> Result<(), Box<dyn Error>>
+fn read_bespoke_monster_spawn_collection<R>(reader: R) -> Result<Vec<BespokeMonsterSpawnPoint>, Box<dyn Error>>
 where
-    W: Write,
-    L: AsRef<[LootTableEntry]>,
+    R: Read,
 {
-    let mut writer = csv::Writer::from_writer(writer);
-    writer.write_record(&[
-        "Description",
-        "Weight",
-        "Rarity",
-        "Item ID 1",
-        "Item quantity 1",
-        "Item ID 2",
-        "Item quantity 2",
-        "Item ID 3",
-        "Item quantity 3",
-        "Item ID 4",
-        "Item quantity 4",
-        "Item ID 5",
-        "Item quantity 5",
-        "Item ID 6",
-        "Item quantity 6",
-        "Item ID 7",
-        "Item quantity 7",
-        "Item ID 8",
-        "Item quantity 8",
-        "Item ID 9",
-        "Item quantity 9",
-        "Item ID 10",
-        "Item quantity 10",
-    ])?;
+    tracing::info!("Parsing bespoke monsters");
+    let mut reader = csv::Reader::from_reader(reader);
+    let result = reader
+        .records()
+        .map(|r| {
+            let r = r?;
 
-    loot.as_ref().iter().for_each(|e| {
-        let mut record = Vec::from([String::new(), e.weight.to_string(), String::from("0")]);
+            let map = i32::from_str_radix(&r[1], 16)?;
+            Ok(BespokeMonsterSpawnPoint {
+                map: MapId(map),
+                position: MapPosition {
+                    0: r[2].parse::<f32>()?,
+                    1: r[3].parse::<f32>()?,
+                    2: r[4].parse::<f32>()?,
+                },
+                orientation: r[5].parse::<f32>()?,
+                asset: r[6].to_string(),
+                npc_id: r[7].parse::<i32>()?,
+                think_id: r[8].parse::<i32>()?,
+                scaling_sp_effect: r[9].parse::<u32>()?,
+                item_pool: r[10].parse::<u32>()?,
+                spawn_count: r[11].parse::<u32>()?,
+            })
+        })
+        .collect::<Result<Vec<BespokeMonsterSpawnPoint>, Box<dyn Error>>>()?;
 
-        for i in 0..9 {
-            let item_entry = e.items.get(i).unwrap_or(&LootTableEntryItem {
-                item: -1,
-                quantity: 0,
-            });
-
-            record.push(format!("{:08x}", item_entry.item));
-            record.push(format!("{}", item_entry.quantity));
-        }
-
-        writer
-            .write_record(record.as_slice())
-            .unwrap();
-    });
-
-    writer.flush()?;
-
-    Ok(())
+    Ok(result)
 }
 
 #[derive(Deserialize, Serialize)]
@@ -280,24 +246,68 @@ pub struct Configuration {
 
 #[derive(Clone, Deserialize, Serialize)]
 pub struct MapConfiguration {
+    /// Fixed location mobs.
+    pub bespoke_monster_spawns: Vec<BespokeMonsterSpawnPoint>,
     /// Spawn points for this map.
-    pub player_spawn_points: Vec<MapPoint>,
+    pub player_spawn_points: Vec<PlayerSpawnPoint>,
     /// Spawn points for this map.
-    pub item_spawn_points: Vec<MapPoint>,
+    pub item_spawn_points: Vec<LootSpawnPoint>,
     /// Centers for the shrinking play area boundaries.
-    pub ring_centers: Vec<MapPoint>,
+    pub ring_centers: Vec<RingCenterPoint>,
     /// Event flags that need to be set while loading this map.
     pub event_flag_overrides: Vec<(u32, bool)>,
 }
 
 #[derive(Clone, Debug, Deserialize, Serialize)]
-pub struct MapPoint {
-    /// Map ID to load into
+pub struct PlayerSpawnPoint {
+    /// Map ID to load into.
     pub map: MapId,
     /// Position on the block to spawn the player at.
     pub position: MapPosition,
     /// Angle on the y axis in radians for the player to spawn with.
     pub orientation: f32,
+}
+
+#[derive(Clone, Debug, Deserialize, Serialize)]
+pub struct RingCenterPoint {
+    /// Map ID to load into.
+    pub map: MapId,
+    /// Position on the block to spawn the player at.
+    pub position: MapPosition,
+}
+
+#[derive(Clone, Debug, Deserialize, Serialize)]
+pub struct LootSpawnPoint {
+    /// Map ID to load into.
+    pub map: MapId,
+    /// Position on the block to spawn the player at.
+    pub position: MapPosition,
+    /// Angle on the y axis in radians for the player to spawn with.
+    pub orientation: f32,
+    /// Pool for selecting the loot from.
+    pub pool: u32,
+}
+
+#[derive(Clone, Debug, Deserialize, Serialize)]
+pub struct BespokeMonsterSpawnPoint {
+    /// Map ID to load into.
+    pub map: MapId,
+    /// Position on the block to spawn the player at.
+    pub position: MapPosition,
+    /// Angle on the y axis in radians for the player to spawn with.
+    pub orientation: f32,
+    /// Pool for selecting the loot from.
+    pub asset: String,
+    /// NPC ID for params.
+    pub npc_id: i32,
+    /// NPC think ID for params.
+    pub think_id: i32,
+    /// Speffect applied to monster on spawn for scaling.
+    pub scaling_sp_effect: u32,
+    /// Pool to select drops from.
+    pub item_pool: u32,
+    /// Amount of monsters to spawn at once.
+    pub spawn_count: u32,
 }
 
 #[derive(Clone, Debug, Deserialize, Serialize)]
@@ -318,6 +328,7 @@ pub struct RingConfiguration {}
 #[derive(Clone, Debug, Deserialize, Serialize)]
 pub struct LootTableEntry {
     pub weight: u32,
+    pub pool: u32,
     pub items: Vec<LootTableEntryItem>,
 }
 

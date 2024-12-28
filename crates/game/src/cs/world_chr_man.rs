@@ -283,7 +283,7 @@ impl<T> ChrSet<T> {
 pub struct ChrSetEntry<T> {
     pub chr_ins: Option<NonNull<T>>,
     unk8: u16,
-    unka: u8,
+    pub entry_flags: u8,
     _padb: [u8; 5],
 }
 

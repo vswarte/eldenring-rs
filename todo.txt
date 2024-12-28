@@ -1,0 +1,3 @@
+ - Up the summon buddy chrset cap
+ - Fix the synced chr spawn
+ - Raycast pain circle to ground + animate somehow

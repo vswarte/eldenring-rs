@@ -127,7 +127,7 @@ impl GameStateProvider {
             })
     }
 
-    pub fn last_killed_by(&self) -> Option<FieldInsHandle> {
+    pub fn killed_by(&self) -> Option<FieldInsHandle> {
         unsafe { get_instance::<WorldChrMan>() }
             .unwrap()
             .and_then(|n| {
@@ -162,6 +162,16 @@ impl GameStateProvider {
     /// Returns the chosen stage from the battleroyale context. Fixed to 0 for now.
     pub fn stage(&self) -> u32 {
         return 0;
+    }
+
+    /// Is the match's result definitive?
+    pub fn match_concluded(&self) -> bool {
+        self.alive_players().len() == 1
+    }
+
+    /// Is the local player the winner of the match?
+    pub fn is_winner(&self) -> bool {
+        self.match_concluded() && self.local_player_is_alive()
     }
 }
 

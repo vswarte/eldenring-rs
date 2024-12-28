@@ -1,5 +1,5 @@
 use chr_spawner::ChrSpawner;
-use config::{Configuration, ConfigurationProvider, MapPoint};
+use config::{Configuration, ConfigurationProvider, MapId};
 use context::GameModeContext;
 use crash_handler::{make_crash_event, CrashContext, CrashEventResult, CrashHandler};
 use gamestate::GameStateProvider;
@@ -12,8 +12,11 @@ use network::{MatchMessaging, Message};
 use pain::{PainRing, SfxSpawnLocation};
 use player::Player;
 use spectator_camera::SpectatorCamera;
-use stage::StagePrepare;
-use std::{collections::HashMap, error::Error, f32::consts::PI, sync::Arc, time::Duration};
+use stage::Stage;
+use ui::Ui;
+use std::{
+    cell::RefCell, collections::HashMap, error::Error, f32::consts::PI, sync::Arc, time::Duration,
+};
 use steamworks_sys::{
     PersonaStateChange_t, SetPersonaNameResponse_t__bindgen_ty_1,
     SetPersonaNameResponse_t_k_iCallback,
@@ -22,18 +25,22 @@ use steamworks_sys::{
 /// Implements a battle-royale gamemode on top of quickmatches.
 use game::{
     cs::{
-        CSHavokMan, CSNetMan, CSPhysWorld, CSTaskGroupIndex, CSTaskImp, ChrIns, ChrSet, PlayerIns,
-        WorldChrMan,
+        CSHavokMan, CSNetMan, CSPhysWorld, CSTaskGroupIndex, CSTaskImp, ChrIns, ChrSet,
+        FieldInsHandle, FieldInsSelector, PlayerIns, WorldChrMan,
     },
     fd4::FD4TaskData,
     matrix::FSVector4,
-    position::HavokPosition,
+    position::{BlockPoint, HavokPosition},
 };
 
 use gamemode::GameMode;
 use tracing_panic::panic_hook;
 use util::{
-    arxan, input::is_key_pressed, program::Program, singleton::get_instance, steam::{self, SteamCallback},
+    arxan,
+    input::is_key_pressed,
+    program::Program,
+    singleton::get_instance,
+    steam::{self, SteamCallback},
     task::CSTaskImpExt,
 };
 
@@ -54,6 +61,7 @@ mod rva;
 mod spectator_camera;
 mod stage;
 mod tool;
+mod ui;
 
 // 523357 - Fia's Mist
 // 523573 - Darkness clouds
@@ -91,7 +99,11 @@ pub unsafe extern "C" fn DllMain(_hmodule: usize, reason: u32) -> bool {
             });
 
             let friends = steamworks_sys::SteamAPI_SteamFriends_v017();
-            steamworks_sys::SteamAPI_ISteamFriends_RequestUserInformation(friends, 76561197997653528, false);
+            steamworks_sys::SteamAPI_ISteamFriends_RequestUserInformation(
+                friends,
+                76561197997653528,
+                false,
+            );
 
             // let cb = SteamCallback::<
             //     0x15b,
@@ -151,6 +163,8 @@ fn init() -> Result<(), Box<dyn Error>> {
             messaging.clone(),
         );
 
+        let mut loot_generator = Arc::new(LootGenerator::new(config.clone()));
+
         let mut chr_spawner = ChrSpawner::new(
             location.clone(),
             config.clone(),
@@ -158,10 +172,15 @@ fn init() -> Result<(), Box<dyn Error>> {
             messaging.clone(),
         );
 
-        let mut stage = StagePrepare::new(location.clone(), game.clone(), config.clone());
+        let mut stage = Stage::new(
+            location.clone(),
+            game.clone(),
+            config.clone(),
+            loot_generator.clone(),
+        );
         let mut pain_ring = PainRing::new(location.clone(), config.clone());
-        let mut loot_generator = LootGenerator::new(location.clone(), config.clone());
         let mut spectator_camera = SpectatorCamera::new(game.clone());
+        let mut ui = Ui::new(game.clone(), location.clone());
 
         let mut patched_utility_effects = false;
         let mut active = false;
@@ -171,9 +190,9 @@ fn init() -> Result<(), Box<dyn Error>> {
             move |data: &FD4TaskData| {
                 // Always pull messages but only conditionally handle them
                 for (remote, message) in messaging.receive_messages().iter() {
-                    if !game.match_active() {
-                        continue;
-                    }
+                    // if !game.match_active() {
+                    //     continue;
+                    // }
 
                     // Ignore messages not coming from the host
                     if *remote != game.host_steam_id() {
@@ -186,8 +205,30 @@ fn init() -> Result<(), Box<dyn Error>> {
                             tracing::info!("Received match details");
                             context.set_spawn_point(spawn.clone());
                         }
-                        Message::MobSpawn { model } => {
-                            chr_spawner.spawn_mob(model.as_str());
+                        Message::MobSpawn {
+                            map,
+                            pos,
+                            model,
+                            orientation,
+                            npc_param,
+                            think_param,
+                            chara_init_param,
+                            field_ins_handle_map_id,
+                            field_ins_handle_selector,
+                        } => {
+                            chr_spawner.spawn_mob(
+                                &FieldInsHandle {
+                                    selector: FieldInsSelector(*field_ins_handle_selector),
+                                    map_id: game::cs::MapId(*field_ins_handle_map_id),
+                                },
+                                &game::cs::MapId(*map),
+                                &BlockPoint::from_xyz(pos.0, pos.1, pos.2),
+                                orientation,
+                                npc_param,
+                                think_param,
+                                chara_init_param,
+                                model.as_str(),
+                            );
                         }
                     }
                 }
@@ -198,12 +239,13 @@ fn init() -> Result<(), Box<dyn Error>> {
                     active = true;
                 } else if !game.match_active() && active {
                     tracing::info!("Stopping battleroyale");
+                    ui.reset();
                     loadout.reset();
                     pain_ring.reset();
-                    loot_generator.reset();
                     spectator_camera.reset();
                     stage.reset();
                     context.reset();
+                    chr_spawner.reset();
                     active = false;
                 }
 
@@ -218,8 +260,6 @@ fn init() -> Result<(), Box<dyn Error>> {
 
                 // Gamemode creation tooling
                 if is_key_pressed(0x60) {
-                    chr_spawner.spawn_mob("c3100");
-
                     tool::sample_spawn_point();
                 } else if is_key_pressed(0x62) {
                     config.reload().unwrap();
@@ -316,7 +356,6 @@ fn init() -> Result<(), Box<dyn Error>> {
 
                 if game.match_in_game() {
                     if game.is_host() {
-                        loot_generator.update();
                         chr_spawner.update();
                     }
 
@@ -327,6 +366,7 @@ fn init() -> Result<(), Box<dyn Error>> {
                         cs_net_man.quickmatch_manager.utility_sp_effects = [0; 10];
                     }
 
+                    ui.update();
                     pain_ring.update();
                     spectator_camera.update();
                     stage.update();

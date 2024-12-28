@@ -6,7 +6,6 @@ members = [
     "crates/dlrf",
     "examples/builder-mode",
     "examples/enemy-control",
-    "examples/mini-transmog",
     "examples/procedural-dungeons",
     "examples/battleroyale",
     "tools/export-singletons",

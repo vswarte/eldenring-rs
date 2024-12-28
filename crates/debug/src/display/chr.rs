@@ -195,6 +195,7 @@ impl DebugDisplay for EquipInventoryData {
 
 impl DebugDisplay for ChrIns {
     fn render_debug(&self, ui: &&mut Ui) {
+        ui.text(format!("Team: {}", self.team_type));
 
         ui.text(format!("Map ID: {}", self.map_id_1));
         // ui.text(format!("Team Type: {}", self.team_type));

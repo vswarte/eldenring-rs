@@ -16,14 +16,16 @@ use util::{
 };
 
 use crate::{
-    config::{ConfigurationProvider, MapPoint}, rva::{RVA_APPLY_SPEFFECT, RVA_SFX_SPAWN}, ProgramLocationProvider
+    config::{ConfigurationProvider, RingCenterPoint},
+    rva::{RVA_APPLY_SPEFFECT, RVA_SFX_SPAWN},
+    ProgramLocationProvider,
 };
 
 pub struct PainRing {
     location: Arc<ProgramLocationProvider>,
     config: Arc<ConfigurationProvider>,
 
-    center: Option<MapPoint>,
+    center: Option<RingCenterPoint>,
 
     last_applied_hurt: Instant,
     radius: f32,
@@ -96,8 +98,9 @@ impl PainRing {
     }
 
     // TODO: Dissolve unnecessary sfx when they're too tightly packed.
-    fn spawn_center_marker(&self, center: &MapPoint) {
+    fn spawn_center_marker(&self, center: &RingCenterPoint) {
         tracing::info!("Spawning center marker at {center:?}");
+
         // let world_geom_man = unsafe { get_instance::<CSWorldGeomMan>() }
         //     .unwrap()
         //     .unwrap();
@@ -113,7 +116,7 @@ impl PainRing {
         //         rot_z: 0.0,
         //         scale_x: 4.0,
         //         scale_y: 4.0,
-        //         scale_z: 4.0,
+        //         scale_z: 4.0,w
         //     },
         // ).unwrap();
 
@@ -202,6 +205,7 @@ impl PainRing {
         let location_apply_speffect = self.location.get(RVA_APPLY_SPEFFECT).unwrap();
         let apply_speffect: extern "C" fn(&PlayerIns, u32, bool) =
             unsafe { std::mem::transmute(location_apply_speffect) };
+
         apply_speffect(main_player.as_ref(), 4004, false);
     }
 }

@@ -4,7 +4,7 @@ use windows::core::PCWSTR;
 
 use crate::{pointer::OwnedPtr, Tree, Vector};
 
-use super::{FieldInsHandle, MapId};
+use super::{FieldInsHandle, MapId, WorldInfoOwner};
 
 #[repr(C)]
 /// Source of name: RTTI
@@ -12,7 +12,7 @@ use super::{FieldInsHandle, MapId};
 pub struct CSWorldGeomMan {
     vftable: usize,
     unk8: usize,
-    pub world_info_owner: usize,
+    pub world_info_owner: NonNull<WorldInfoOwner>,
     /// A tree of loaded maps hosting their geometry instances.
     pub blocks: Tree<CSWorldGeomManBlocksEntry>,
     /// Seemingly points to the current overlay world tile's map data

@@ -28,12 +28,28 @@ impl Display for FieldInsHandle {
         if self.is_empty() {
             write!(f, "FieldIns(None)")
         } else {
-            write!(f, "FieldIns({}, {}, {})", self.map_id, self.selector.container(), self.selector.index())
+            write!(
+                f,
+                "FieldIns({}, {}, {})",
+                self.map_id,
+                self.selector.container(),
+                self.selector.index()
+            )
         }
     }
 }
 
 impl FieldInsSelector {
+    /// Create a new FieldInsSelector by its components.
+    pub fn from_parts(field_ins_type: u32, container: u32, index: u32) -> Self {
+        let mapping = &FIELD_INS_TYPE_MAPPING[field_ins_type as usize];
+        Self(
+            index & 0xFFFFF
+            | container << mapping.container_shift
+            | field_ins_type << 0x1C
+        )
+    }
+
     /// Extracts the type map index
     pub fn mapping_entry_index(&self) -> u32 {
         0xF & (self.0 >> 0x1C)
@@ -69,7 +85,8 @@ pub trait FieldInsBaseVmt {
 
     fn use_npc_atk_param(&self) -> bool;
 
-    fn get_atk_param_for_behavior(&self, param_2: u32, atk_param: &mut AtkParamLookupResult) -> u32;
+    fn get_atk_param_for_behavior(&self, param_2: u32, atk_param: &mut AtkParamLookupResult)
+        -> u32;
 
     /// Part of FieldInsBase. ChrIns = 0, PlayerIns = 1, EnemyIns = 0, ReplayGhostIns = 1,
     /// ReplayEnemyIns = 0, CSBulletIns = 0, CSWorldGeomIns = 0, CSFieldInsBase = 0,

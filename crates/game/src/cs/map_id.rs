@@ -6,7 +6,7 @@ pub struct MapId(pub i32);
 
 impl MapId {
     /// MapId -1 indicating that some entity is global or not segregated by map.
-    pub const fn global() -> Self {
+    pub const fn none() -> Self {
         Self::from_parts(-1, -1, -1, -1)
     }
 
@@ -34,7 +34,7 @@ impl MapId {
     }
 
     pub const fn is_overworld(&self) -> bool {
-        self.0 > 50 && self.0 < 39
+        self.area() > 50 && self.area() < 89
     }
 }
 

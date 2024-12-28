@@ -29,6 +29,7 @@ mod world_sfx_man;
 mod team_relation;
 mod location;
 mod havok_man;
+mod field_area;
 
 pub use map_id::*;
 pub use camera::*;
@@ -61,3 +62,4 @@ pub use world_sfx_man::*;
 pub use team_relation::*;
 pub use location::*;
 pub use havok_man::*;
+pub use field_area::*;

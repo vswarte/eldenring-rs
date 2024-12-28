@@ -9,7 +9,7 @@ pub struct NetChrSync {
     pub world_info_owner: usize,
     pub chr_slot_count: u32,
     _padc: u32,
-    pub net_chr_set_sync: [OwnedPtr<NetChrSetSync>; 196],
+    pub net_chr_set_sync: [Option<OwnedPtr<NetChrSetSync>>; 196],
 }
 
 /// Acts as an update buffer for all the ChrIns sync for a given ChrSet.
@@ -59,7 +59,7 @@ impl NetChrSetSync {
 
 /// Holds a set of bits where most bits correspond to a particular type of received sync value.
 #[repr(C)]
-pub struct ChrSyncUpdateFlags(u16);
+pub struct ChrSyncUpdateFlags(pub u16);
 
 const CHR_SYNC_HEALTH_UPDATE: u16 = 0b0000000000010000;
 

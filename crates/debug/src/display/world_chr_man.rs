@@ -1,5 +1,6 @@
 use game::cs::{
-    ChrIns, ChrSet, OpenFieldChrSet, PlayerIns, SummonBuddyManager, SummonBuddyWarpManager, WorldChrMan,
+    ChrIns, ChrSet, NetChrSetSync, OpenFieldChrSet, PlayerIns, SummonBuddyManager,
+    SummonBuddyWarpManager, WorldChrMan,
 };
 use hudhook::imgui::{TableColumnSetup, TreeNodeFlags, Ui};
 use util::{
@@ -67,7 +68,9 @@ impl DebugDisplay for WorldChrMan {
                 };
 
                 if ui.collapsing_header(format!("ChrSet {i}"), TreeNodeFlags::empty()) {
+                    ui.indent();
                     chr_set.render_debug(ui);
+                    ui.unindent();
                 }
             }
             ui.unindent();
@@ -93,6 +96,25 @@ impl DebugDisplay for WorldChrMan {
             None => ui.text("No SummonBuddyManager instance"),
         }
 
+        if ui.collapsing_header("NetChrSync", TreeNodeFlags::empty()) {
+            ui.indent();
+
+            for (i, entry) in self
+                .net_chr_sync
+                .net_chr_set_sync
+                .iter()
+                .enumerate()
+                .filter_map(|(i, s)| s.as_ref().map(|s| (i, s)))
+            {
+                if ui.collapsing_header(format!("NetChrSetSync {i}"), TreeNodeFlags::empty()) {
+                    ui.indent();
+                    entry.render_debug(ui);
+                    ui.unindent();
+                }
+            }
+            ui.unindent();
+        }
+
         if ui.collapsing_header("Debug Character Creator", TreeNodeFlags::empty()) {
             ui.input_text(
                 "Last Created Character",
@@ -101,6 +123,23 @@ impl DebugDisplay for WorldChrMan {
             .read_only(true)
             .build();
         }
+    }
+}
+
+impl DebugDisplay for NetChrSetSync {
+    fn render_debug(&self, ui: &&mut Ui) {
+        ui.text(format!("Character capacity: {}", self.capacity));
+
+        if ui.collapsing_header("Readback Flags", TreeNodeFlags::empty()) {
+            ui.indent();
+            self.update_flags()
+                .iter()
+                .enumerate()
+                .for_each(|e| ui.text(format!("{} {:016b}", e.0, e.1.0)));
+            ui.unindent();
+        }
+
+        ui.text(format!("Character capacity: {}", self.capacity));
     }
 }
 
@@ -142,7 +181,9 @@ impl DebugDisplay for ChrSet<ChrIns> {
 
                     ui.table_next_column();
                     let chr_ins = unsafe { e.chr_set_entry.as_ref().chr_ins.as_ref() };
-                    ui.text(format!("{}", unsafe { &chr_ins.unwrap().as_ref().field_ins_handle }));
+                    ui.text(format!("{}", unsafe {
+                        &chr_ins.unwrap().as_ref().field_ins_handle
+                    }));
                 });
             }
             ui.unindent();
@@ -163,7 +204,9 @@ impl DebugDisplay for ChrSet<ChrIns> {
 
                     ui.table_next_column();
                     let chr_ins = unsafe { e.chr_set_entry.as_ref().chr_ins.as_ref() };
-                    ui.text(format!("{}", unsafe { &chr_ins.unwrap().as_ref().field_ins_handle }));
+                    ui.text(format!("{}", unsafe {
+                        &chr_ins.unwrap().as_ref().field_ins_handle
+                    }));
                 });
             }
             ui.unindent();
@@ -209,7 +252,9 @@ impl DebugDisplay for ChrSet<PlayerIns> {
 
                     ui.table_next_column();
                     let chr_ins = unsafe { e.chr_set_entry.as_ref().chr_ins.as_ref() };
-                    ui.text(format!("{}", unsafe { &chr_ins.unwrap().as_ref().chr_ins.field_ins_handle }));
+                    ui.text(format!("{}", unsafe {
+                        &chr_ins.unwrap().as_ref().chr_ins.field_ins_handle
+                    }));
                 });
             }
             ui.unindent();
@@ -230,7 +275,9 @@ impl DebugDisplay for ChrSet<PlayerIns> {
 
                     ui.table_next_column();
                     let chr_ins = unsafe { e.chr_set_entry.as_ref().chr_ins.as_ref() };
-                    ui.text(format!("{}", unsafe { &chr_ins.unwrap().as_ref().chr_ins.field_ins_handle }));
+                    ui.text(format!("{}", unsafe {
+                        &chr_ins.unwrap().as_ref().chr_ins.field_ins_handle
+                    }));
                 });
             }
             ui.unindent();

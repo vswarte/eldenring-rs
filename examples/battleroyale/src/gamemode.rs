@@ -16,14 +16,13 @@ use util::{input::is_key_pressed, singleton::get_instance};
 
 use crate::{loadout::PlayerLoadout, message};
 use crate::{
-    config::{ConfigurationProvider, MapPoint, MapPosition},
+    config::{ConfigurationProvider, MapPosition},
     gamestate::GameStateProvider,
-    loot::LootGenerator,
     network::{MatchMessaging, Message},
-    pain::PainRing,
     player::Player,
     ProgramLocationProvider,
 };
+
 use crate::{message::NotificationPresenter, spectator_camera::SpectatorCamera};
 
 #[derive(Clone, Debug, PartialEq)]
@@ -76,9 +75,7 @@ impl GameMode {
             sent_loadout: Default::default(),
             applied_flag_overrides: Default::default(),
             game_state,
-            // player_loadout: Default::default(),
             player,
-            // spawn_point: Default::default(),
             end_requested_at: Default::default(),
             notification,
             config,
@@ -126,13 +123,15 @@ impl GameMode {
 
     /// Should request the session to end.
     fn should_request_end_match(&self) -> bool {
+        return false;
+
         if !self.game_state.match_in_game() {
             return false;
         }
 
         match self.end_requested_at.read().unwrap().as_ref() {
             Some(_) => false,
-            None => self.game_state.alive_players().len() == 1,
+            None => self.game_state.match_concluded(),
         }
     }
 

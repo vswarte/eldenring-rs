@@ -6,21 +6,29 @@ use std::{
 };
 
 use game::{
-    cs::{ChrIns, ChrSet, NetChrSync, P2PEntityHandle, WorldChrMan},
+    cs::{
+        ChrIns, ChrSet, FieldArea, FieldInsHandle, FieldInsSelector, MapId, NetChrSync,
+        P2PEntityHandle, WorldChrMan,
+    },
     matrix::FSVector4,
-    position::HavokPosition,
+    position::{BlockPoint, HavokPosition},
+    rva::RVA_GLOBAL_FIELD_AREA,
 };
+use pelite::pe::Pe;
 use serde::{Deserialize, Serialize};
-use util::singleton::get_instance;
+use util::{program::Program, singleton::get_instance};
 
 use crate::{
-    config::{ConfigurationProvider, MapPoint},
+    config::ConfigurationProvider,
     gamestate::GameStateProvider,
     network::MatchMessaging,
-    rva::{RVA_CHR_FLAGS_UNK1, RVA_CHR_FLAGS_UNK2, RVA_NET_CHR_SYNC_SETUP_ENTITY_HANDLE, RVA_SPAWN_CHR},
+    rva::{
+        RVA_CHR_FLAGS_UNK1, RVA_CHR_FLAGS_UNK2, RVA_NET_CHR_SYNC_SETUP_ENTITY_HANDLE, RVA_SPAWN_CHR,
+    },
     ProgramLocationProvider,
 };
 
+const CHR_SPAWN_INDEX_START: u32 = 6;
 const CHR_SPAWN_INTERVAL: Duration = Duration::from_secs(60);
 
 pub struct ChrSpawner {
@@ -29,6 +37,11 @@ pub struct ChrSpawner {
     game: Arc<GameStateProvider>,
     networking: Arc<MatchMessaging>,
     last_spawned_chr: Instant,
+
+    spawned_initial_monsters: bool,
+
+    /// Keeps track of next chr selector field for FielsInsHandle generation.
+    next_chr_index: u32,
 }
 
 impl ChrSpawner {
@@ -44,41 +57,94 @@ impl ChrSpawner {
             game,
             networking,
             last_spawned_chr: Instant::now(),
+            next_chr_index: CHR_SPAWN_INDEX_START,
+            spawned_initial_monsters: false,
         }
     }
 
     pub fn update(&mut self) {
-        if self.game.is_host() && self.game.match_in_game() {
-            if self.last_spawned_chr + CHR_SPAWN_INTERVAL < Instant::now() {
-                self.last_spawned_chr = Instant::now();
-            }
+        if self.game.is_host() && self.game.match_in_game() && !self.spawned_initial_monsters {
+            self.spawned_initial_monsters = true;
+            self.spawn_initial_monsters();
         }
     }
 
-    pub fn spawn_mob(&mut self, model: &str) -> Result<(), Box<dyn Error>> {
-        tracing::info!("Spawning character");
+    fn spawn_initial_monsters(&mut self) {
+        tracing::info!("Spawning initial monsters");
+        let map = self.config.map(&self.game.stage()).unwrap();
+        map.bespoke_monster_spawns.iter().for_each(|m| {
+            let field_ins_handle = self.generate_field_ins_handle();
+            self.spawn_mob(
+                &field_ins_handle,
+                &game::cs::MapId(m.map.0),
+                &BlockPoint::from_xyz(m.position.0, m.position.1, m.position.2),
+                &m.orientation,
+                &m.npc_id,
+                &m.think_id,
+                &-1,
+                m.asset.as_str(),
+            );
+        });
+    }
 
+    /// Generate field ins handle for to-be spawned character.
+    pub fn generate_field_ins_handle(&mut self) -> FieldInsHandle {
+        let field_ins_handle = FieldInsHandle {
+            selector: FieldInsSelector::from_parts(1, 113, self.next_chr_index),
+            map_id: MapId::none(),
+        };
+        self.next_chr_index += 1;
+        field_ins_handle
+    }
+
+    pub fn spawn_mob(
+        &mut self,
+        field_ins_handle: &FieldInsHandle,
+        map: &MapId,
+        pos: &BlockPoint,
+        orientation: &f32,
+        npc_param: &i32,
+        think_param: &i32,
+        chara_init_param: &i32,
+        model: &str,
+    ) -> Result<(), Box<dyn Error>> {
         let world_chr_man = unsafe { get_instance::<WorldChrMan>() }.unwrap().unwrap();
         let Some(main_player) = &world_chr_man.main_player else {
             return Ok(());
         };
 
-        // Convert map coordinates to physics pos
-        let physics_pos = main_player
-            .chr_ins
-            .module_container
-            .physics
-            .position
-            .clone();
+        let program = unsafe { Program::current() };
+        let field_area = unsafe {
+            (*(program.rva_to_va(RVA_GLOBAL_FIELD_AREA).unwrap() as *const *const FieldArea))
+                .as_ref()
+        }
+        .unwrap();
+
+        let Some(center) = field_area
+            .world_info_owner
+            .world_res
+            .world_info
+            .world_block_info_by_map(map)
+            .map(|b| b.physics_center)
+        else {
+            tracing::error!("Could not find WorldBlockInfo for map ID {map}");
+            return Ok(());
+        };
+
+        let spawn_physics_pos = HavokPosition::from_xyz(
+            pos.0 .0 + center.0 .0,
+            pos.0 .1 + center.0 .1,
+            pos.0 .2 + center.0 .2,
+        );
 
         let mut request = Box::leak(Box::new(ChrSpawnRequest {
-            position: physics_pos,
-            orientation: FSVector4(0.0, 3.5, 0.0, 0.0),
+            position: spawn_physics_pos,
+            orientation: FSVector4(0.0, *orientation, 0.0, 0.0),
             scale: FSVector4(1.0, 1.0, 1.0, 1.0),
             unk30: FSVector4(1.0, 1.0, 1.0, 1.0),
-            npc_param: 31000000,
-            npc_think_param: 31000000,
-            chara_init_param: -1,
+            npc_param: *npc_param,
+            npc_think_param: *think_param,
+            chara_init_param: *chara_init_param,
             event_entity_id: 0,
             talk_id: 0,
             unk54: -1.828282595,
@@ -94,12 +160,9 @@ impl ChrSpawner {
             unka0: 16,
             unka4: 0,
             /// World pos?
-            unka8: 29.46097755,
-            unkac: 1,
-            unkb0: 441.519043,
-            unkb4: 1,
-            unkb8: 47.78706741,
-            unkbc: 1,
+            unka8: 0x141EBB015,
+            unkb0: 0x143DCC270,
+            unkb8: 0x1423F25F5,
             unkc0: 0,
             unkc4: 0,
         }));
@@ -111,9 +174,8 @@ impl ChrSpawner {
 
         let spawn_chr: extern "C" fn(
             &ChrSet<ChrIns>,
-            u8,
             &ChrSpawnRequest,
-            u32,
+            FieldInsHandle,
         ) -> Option<NonNull<ChrIns>> =
             unsafe { std::mem::transmute(self.location.get(RVA_SPAWN_CHR).unwrap()) };
 
@@ -125,21 +187,11 @@ impl ChrSpawner {
             )
         };
 
-        let chr_flags_unk1: extern "C" fn(&ChrIns, bool) = unsafe {
-            std::mem::transmute(
-                self.location
-                    .get(RVA_CHR_FLAGS_UNK1)
-                    .unwrap(),
-            )
-        };
+        let chr_flags_unk1: extern "C" fn(&ChrIns, bool) =
+            unsafe { std::mem::transmute(self.location.get(RVA_CHR_FLAGS_UNK1).unwrap()) };
 
-        let chr_flags_unk2: extern "C" fn(&ChrIns) = unsafe {
-            std::mem::transmute(
-                self.location
-                    .get(RVA_CHR_FLAGS_UNK2)
-                    .unwrap(),
-            )
-        };
+        let chr_flags_unk2: extern "C" fn(&ChrIns) =
+            unsafe { std::mem::transmute(self.location.get(RVA_CHR_FLAGS_UNK2).unwrap()) };
 
         let buddy_slot = world_chr_man
             .summon_buddy_manager
@@ -147,27 +199,44 @@ impl ChrSpawner {
             .unwrap()
             .next_buddy_slot;
 
-        let mut chr_ins = spawn_chr(&world_chr_man.summon_buddy_chr_set, 0, request, buddy_slot)
-            .expect("Could not spawn chr");
+        let mut chr_ins = spawn_chr(
+            &world_chr_man.summon_buddy_chr_set,
+            request,
+            field_ins_handle.clone(),
+        )
+        .expect("Could not spawn chr");
 
         let p2phandle = &unsafe { chr_ins.as_ref() }.p2p_entity_handle;
         setup_chrsync(world_chr_man.net_chr_sync.as_ref(), p2phandle);
-
-        unsafe { chr_ins.as_mut() }.net_chr_sync_flags.set_unk2(true);
+        unsafe { chr_ins.as_mut() }
+            .net_chr_sync_flags
+            .set_unk2(true);
 
         // chr_flags_unk1(unsafe { chr_ins.as_ref() }, true);
         // chr_flags_unk2(unsafe { chr_ins.as_ref() });
 
         if self.game.is_host() {
             // Notify others of the spawn
-            self.networking.send_mob_spawn(model)?;
+            self.networking.send_mob_spawn(
+                field_ins_handle,
+                map,
+                pos,
+                orientation,
+                think_param,
+                think_param,
+                chara_init_param,
+                model,
+            )?;
         }
 
         Ok(())
     }
 
     /// Runs cleanup at end of match.
-    pub fn reset(&mut self) {}
+    pub fn reset(&mut self) {
+        self.next_chr_index = CHR_SPAWN_INDEX_START;
+        self.spawned_initial_monsters = false;
+    }
 }
 
 #[repr(C)]
@@ -194,12 +263,9 @@ pub struct ChrSpawnRequest {
     unk98: usize,              // 140BDE74D
     unka0: u32,                // 16
     unka4: u32,                // 0
-    unka8: f32,                // 29.46097755
-    unkac: u32,                // 1
-    unkb0: f32,                // 441.519043
-    unkb4: u32,                // 1
-    unkb8: f32,                // 47.78706741
-    unkbc: u32,                // 1
+    unka8: u64,                // 0000000141EBB015
+    unkb0: u64,                // 0000000143DCC270
+    unkb8: u64,                // 00000001423F25F5
     unkc0: u32,                // 0
     unkc4: u32,                // 0
 }

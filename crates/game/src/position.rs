@@ -78,7 +78,7 @@ impl From<FSVector4> for ChunkPosition4 {
 /// Represents a havok AABB position. Often found where physics are involved.
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
-pub struct HavokPosition(FSVector4);
+pub struct HavokPosition(pub FSVector4);
 
 impl HavokPosition {
     pub fn from_xyz(x: f32, y: f32, z: f32) -> Self {

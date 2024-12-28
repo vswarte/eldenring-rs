@@ -1,6 +1,6 @@
 use std::{collections::HashMap, error::Error};
 
-use game::cs::WorldChrMan;
+use game::{cs::{FieldInsHandle, WorldChrMan}, position::BlockPoint};
 use serde::{Deserialize, Serialize};
 use steamworks::{
     networking_types::{NetworkingIdentity, SendFlags},
@@ -8,7 +8,7 @@ use steamworks::{
 };
 use util::{singleton::get_instance, steam};
 
-use crate::config::{MapId, MapPoint, MapPosition};
+use crate::config::{MapId, MapPosition, PlayerSpawnPoint};
 
 const STEAM_MESSAGE_CHANNEL: u32 = 51234;
 const STEAM_MESSAGE_BATCH_SIZE: usize = 0x10;
@@ -19,17 +19,41 @@ pub struct MatchMessaging {}
 #[derive(Debug, Serialize, Deserialize)]
 pub enum Message {
     /// Goes from host to clients to set the local players loadout.
-    MatchDetails {
-        spawn: MapPoint,
-    },
+    MatchDetails { spawn: PlayerSpawnPoint },
     MobSpawn {
+        field_ins_handle_map_id: i32,
+        field_ins_handle_selector: u32,
+        map: i32,
+        pos: (f32, f32, f32),
+        orientation: f32,
+        npc_param: i32,
+        think_param: i32,
+        chara_init_param: i32,
         model: String,
     },
 }
 
 impl MatchMessaging {
-    pub fn send_mob_spawn(&self, model: &str) -> Result<(), Box<dyn Error>> {
+    pub fn send_mob_spawn(
+        &self,
+        field_ins_handle: &FieldInsHandle,
+        map: &game::cs::MapId,
+        pos: &BlockPoint,
+        orientation: &f32,
+        npc_param: &i32,
+        think_param: &i32,
+        chara_init_param: &i32,
+        model: &str,
+    ) -> Result<(), Box<dyn Error>> {
         let serialized = bincode::serialize(&Message::MobSpawn {
+            field_ins_handle_map_id: field_ins_handle.map_id.0,
+            field_ins_handle_selector: field_ins_handle.selector.0,
+            map: map.0,
+            pos: (pos.0.0, pos.0.1, pos.0.2),
+            orientation: *orientation,
+            npc_param: *npc_param,
+            think_param: *think_param,
+            chara_init_param: *chara_init_param,
             model: model.to_string(),
         })?;
 
@@ -40,7 +64,7 @@ impl MatchMessaging {
 
     pub fn send_match_details(
         &self,
-        loadout: &HashMap<u64, MapPoint>,
+        loadout: &HashMap<u64, PlayerSpawnPoint>,
     ) -> Result<(), Box<dyn Error>> {
         loadout.iter().for_each(|(remote, spawn)| {
             let message = Message::MatchDetails {
@@ -74,7 +98,10 @@ impl MatchMessaging {
     fn broadcast(&self, data: &[u8]) -> Result<(), Box<dyn Error>> {
         let world_chr_man = unsafe { get_instance::<WorldChrMan>() }.unwrap().unwrap();
         world_chr_man.player_chr_set.characters().for_each(|p| {
-            self.send(&unsafe { p.session_manager_player_entry.as_ref() }.steam_id, data);
+            self.send(
+                &unsafe { p.session_manager_player_entry.as_ref() }.steam_id,
+                data,
+            );
         });
 
         Ok(())

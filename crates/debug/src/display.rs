@@ -14,6 +14,7 @@ pub(crate) mod task;
 pub(crate) mod param;
 pub(crate) mod event_flag;
 pub(crate) mod dlio;
+pub(crate) mod field_area;
 
 pub trait DebugDisplay {
     fn render_debug(&self, ui: &&mut Ui);

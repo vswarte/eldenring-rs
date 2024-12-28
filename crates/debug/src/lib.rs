@@ -1,4 +1,6 @@
 use display::DebugDisplay;
+use game::cs::FieldArea;
+use game::rva::RVA_GLOBAL_FIELD_AREA;
 use hudhook::eject;
 use hudhook::hooks::dx12::ImguiDx12Hooks;
 use hudhook::imgui;
@@ -6,6 +8,8 @@ use hudhook::imgui::*;
 use hudhook::windows::Win32::Foundation::HINSTANCE;
 use hudhook::Hudhook;
 use hudhook::ImguiRenderLoop;
+
+use pelite::pe::Pe;
 
 use game::cs::CSCamera;
 use game::cs::CSEventFlagMan;
@@ -15,7 +19,6 @@ use game::cs::CSSessionManager;
 use game::cs::CSTaskGroup;
 use game::cs::CSTaskImp;
 use game::cs::CSWorldGeomMan;
-use game::cs::MsbRepository;
 use game::cs::WorldAreaTime;
 use game::cs::WorldChrMan;
 use game::dlio::DLFileDeviceManager;
@@ -23,6 +26,7 @@ use game::fd4::FD4ParamRepository;
 
 use display::render_debug_singleton;
 use tracing_panic::panic_hook;
+use util::program::Program;
 
 mod display;
 
@@ -60,12 +64,29 @@ impl EldenRingDebugGui {
 
 impl ImguiRenderLoop for EldenRingDebugGui {
     fn render(&mut self, ui: &mut Ui) {
+        let program = unsafe { Program::current() };
+
         ui.window("Elden Ring Rust Bindings Debug")
             .position([0., 0.], imgui::Condition::FirstUseEver)
             .size([600., 400.], imgui::Condition::FirstUseEver)
             .build(|| {
                 let tabs = ui.tab_bar("main-tabs").unwrap();
                 if let Some(item) = ui.tab_item("World") {
+                    if ui.collapsing_header("FieldArea", TreeNodeFlags::empty()) {
+                        ui.indent();
+
+                        if let Some(field_area) = unsafe {
+                            (*(program.rva_to_va(RVA_GLOBAL_FIELD_AREA).unwrap()
+                                as *const *const FieldArea))
+                                .as_ref()
+                        } {
+                            field_area.render_debug(&ui);
+                        }
+
+                        ui.unindent();
+                    }
+
+                    // render_debug_singleton::<FieldArea>(&ui);
                     render_debug_singleton::<CSEventFlagMan>(&ui);
                     render_debug_singleton::<WorldChrMan>(&ui);
                     render_debug_singleton::<CSWorldGeomMan>(&ui);
@@ -80,17 +101,16 @@ impl ImguiRenderLoop for EldenRingDebugGui {
                 }
 
                 if let Some(item) = ui.tab_item("Resource") {
-                    if ui.collapsing_header("DLFileDeviceManager", TreeNodeFlags::empty()) {
-                        let file_device_manager =
-                            unsafe { &*(0x1448464c0usize as *mut DLFileDeviceManager) };
-
-                        file_device_manager.render_debug(&ui);
-                    }
+                    // if ui.collapsing_header("DLFileDeviceManager", TreeNodeFlags::empty()) {
+                    //     let file_device_manager =
+                    //         unsafe { &*(0x1448464c0usize as *mut DLFileDeviceManager) };
+                    //
+                    //     file_device_manager.render_debug(&ui);
+                    // }
 
                     render_debug_singleton::<CSTaskGroup>(&ui);
                     render_debug_singleton::<CSTaskImp>(&ui);
                     render_debug_singleton::<FD4ParamRepository>(&ui);
-                    render_debug_singleton::<MsbRepository>(&ui);
                     item.end();
                 }
 

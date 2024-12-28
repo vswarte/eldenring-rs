@@ -5,7 +5,7 @@ use rand::prelude::*;
 use util::singleton::get_instance;
 
 use crate::{
-    config::{ConfigurationProvider, MapConfiguration, MapPoint},
+    config::{ConfigurationProvider, MapConfiguration, PlayerSpawnPoint},
     context::GameModeContext,
     gamestate::GameStateProvider, network::MatchMessaging,
 };
@@ -17,7 +17,7 @@ pub struct PlayerLoadout {
     messaging: Arc<MatchMessaging>,
     sent_loadout: bool,
     generated: bool,
-    spawn_points: Vec<MapPoint>,
+    spawn_points: Vec<PlayerSpawnPoint>,
 }
 
 impl PlayerLoadout {
@@ -87,7 +87,7 @@ impl PlayerLoadout {
     }
 
     /// Retrieves the generated spawn point for a particular player.
-    pub fn spawn_point_for_player(&self, player: usize) -> &MapPoint {
+        pub fn spawn_point_for_player(&self, player: usize) -> &PlayerSpawnPoint {
         self.spawn_points
             .get(player % self.spawn_points.len())
             .expect("Tried calling spawnpoint getter without having spawn points for a map.")
