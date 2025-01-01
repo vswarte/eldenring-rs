@@ -679,6 +679,6 @@ pub struct PlayerSessionHolder {
     vftable: usize,
     player_debug_session: usize,
     unk10: usize,
-    player_netword_session: usize,
+    player_network_session: usize,
     unk18: usize,
 }

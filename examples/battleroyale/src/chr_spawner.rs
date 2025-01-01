@@ -23,7 +23,7 @@ use crate::{
     gamestate::GameStateProvider,
     network::MatchMessaging,
     rva::{
-        RVA_CHR_FLAGS_UNK1, RVA_CHR_FLAGS_UNK2, RVA_NET_CHR_SYNC_SETUP_ENTITY_HANDLE, RVA_SPAWN_CHR,
+        RVA_CHR_FLAGS_UNK1, RVA_CHR_FLAGS_UNK2, RVA_NET_CHR_SYNC_SETUP_ENTITY_1, RVA_NET_CHR_SYNC_SETUP_ENTITY_2, RVA_NET_CHR_SYNC_SETUP_ENTITY_3, RVA_SPAWN_CHR
     },
     ProgramLocationProvider,
 };
@@ -179,25 +179,29 @@ impl ChrSpawner {
         ) -> Option<NonNull<ChrIns>> =
             unsafe { std::mem::transmute(self.location.get(RVA_SPAWN_CHR).unwrap()) };
 
-        let setup_chrsync: extern "C" fn(&NetChrSync, &P2PEntityHandle) -> Option<NonNull<ChrIns>> = unsafe {
+        let setup_chrsync_1: extern "C" fn(&NetChrSync, &P2PEntityHandle) -> Option<NonNull<ChrIns>> = unsafe {
             std::mem::transmute(
                 self.location
-                    .get(RVA_NET_CHR_SYNC_SETUP_ENTITY_HANDLE)
+                    .get(RVA_NET_CHR_SYNC_SETUP_ENTITY_1)
                     .unwrap(),
             )
         };
 
-        let chr_flags_unk1: extern "C" fn(&ChrIns, bool) =
-            unsafe { std::mem::transmute(self.location.get(RVA_CHR_FLAGS_UNK1).unwrap()) };
+        let setup_chrsync_2: extern "C" fn(&NetChrSync, &P2PEntityHandle, bool) -> Option<NonNull<ChrIns>> = unsafe {
+            std::mem::transmute(
+                self.location
+                    .get(RVA_NET_CHR_SYNC_SETUP_ENTITY_2)
+                    .unwrap(),
+            )
+        };
 
-        let chr_flags_unk2: extern "C" fn(&ChrIns) =
-            unsafe { std::mem::transmute(self.location.get(RVA_CHR_FLAGS_UNK2).unwrap()) };
-
-        let buddy_slot = world_chr_man
-            .summon_buddy_manager
-            .as_ref()
-            .unwrap()
-            .next_buddy_slot;
+        let setup_chrsync_3: extern "C" fn(&NetChrSync, &P2PEntityHandle, u32) -> Option<NonNull<ChrIns>> = unsafe {
+            std::mem::transmute(
+                self.location
+                    .get(RVA_NET_CHR_SYNC_SETUP_ENTITY_3)
+                    .unwrap(),
+            )
+        };
 
         let mut chr_ins = spawn_chr(
             &world_chr_man.summon_buddy_chr_set,
@@ -207,10 +211,13 @@ impl ChrSpawner {
         .expect("Could not spawn chr");
 
         let p2phandle = &unsafe { chr_ins.as_ref() }.p2p_entity_handle;
-        setup_chrsync(world_chr_man.net_chr_sync.as_ref(), p2phandle);
+        setup_chrsync_1(world_chr_man.net_chr_sync.as_ref(), p2phandle);
         unsafe { chr_ins.as_mut() }
             .net_chr_sync_flags
             .set_unk2(true);
+
+        setup_chrsync_2(world_chr_man.net_chr_sync.as_ref(), p2phandle, true);
+        setup_chrsync_3(world_chr_man.net_chr_sync.as_ref(), p2phandle, 0xfff);
 
         // chr_flags_unk1(unsafe { chr_ins.as_ref() }, true);
         // chr_flags_unk2(unsafe { chr_ins.as_ref() });
@@ -222,7 +229,7 @@ impl ChrSpawner {
                 map,
                 pos,
                 orientation,
-                think_param,
+                npc_param,
                 think_param,
                 chara_init_param,
                 model,

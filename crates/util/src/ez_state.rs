@@ -76,16 +76,19 @@ impl EzStateEventVmt for EzStateEvent {
 
     #[doc = "Yields the event ID"]
     extern "C" fn event_id(&self) -> u32 {
+        tracing::info!("EzStateEvent::event_id");
         self.event_id
     }
 
     #[doc = "The amount of arguments for this event dispatch."]
     extern "C" fn arg_count(&self) -> u32 {
+        tracing::info!("EzStateEvent::arg_count");
         TryInto::<u32>::try_into(self.args.len()).unwrap()
     }
 
     #[doc = "Yields the argument data for the argument referenced by its index."]
     extern "C" fn arg(&self, index: u32) -> &EzStateExternalFuncArg {
+        tracing::info!("EzStateEvent::arg");
         self.args.get(index as usize).unwrap()
     }
 }

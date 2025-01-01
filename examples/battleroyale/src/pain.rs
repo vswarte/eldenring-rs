@@ -4,20 +4,24 @@ use std::{
     time::{Duration, Instant},
 };
 
+use pelite::pe::Pe;
+
 use game::{
-    cs::{CSWorldGeomMan, PlayerIns, WorldChrMan},
+    cs::{CSHavokMan, CSPhysWorld, CSWorldGeomMan, FieldArea, PlayerIns, WorldChrMan},
     matrix::FSVector4,
     position::HavokPosition,
+    rva::RVA_GLOBAL_FIELD_AREA,
 };
 use nalgebra::Vector3;
 use util::{
     geometry::{CSWorldGeomManExt, GeometrySpawnParameters},
+    program::Program,
     singleton::get_instance,
 };
 
 use crate::{
     config::{ConfigurationProvider, RingCenterPoint},
-    rva::{RVA_APPLY_SPEFFECT, RVA_SFX_SPAWN},
+    rva::{RVA_APPLY_SPEFFECT, RVA_SFX_SPAWN, RVA_WORLD_CAST_RAY},
     ProgramLocationProvider,
 };
 
@@ -55,7 +59,7 @@ impl PainRing {
                     .expect("No ring centers defined for this map")
                     .clone();
 
-                self.spawn_center_marker(&point);
+                // self.spawn_center_marker(&point);
                 self.center = Some(point);
             }
         }
@@ -98,65 +102,51 @@ impl PainRing {
     }
 
     // TODO: Dissolve unnecessary sfx when they're too tightly packed.
-    fn spawn_center_marker(&self, center: &RingCenterPoint) {
-        tracing::info!("Spawning center marker at {center:?}");
+    pub fn spawn_center_marker(&self, center: &RingCenterPoint) {
+        let program = unsafe { Program::current() };
 
-        // let world_geom_man = unsafe { get_instance::<CSWorldGeomMan>() }
-        //     .unwrap()
-        //     .unwrap();
-        //
-        // // Put down the center asset
-        // world_geom_man.spawn_geometry(
-        //     "AEG099_620",
-        //     &GeometrySpawnParameters {
-        //         map_id: center.map,
-        //         position: center.position,
-        //         rot_x: 0.0,
-        //         rot_y: 0.0,
-        //         rot_z: 0.0,
-        //         scale_x: 4.0,
-        //         scale_y: 4.0,
-        //         scale_z: 4.0,w
-        //     },
-        // ).unwrap();
+        let field_area = unsafe {
+            (*(program.rva_to_va(RVA_GLOBAL_FIELD_AREA).unwrap() as *const *const FieldArea))
+                .as_ref()
+        }.unwrap();
 
-        // Put down the ring
-        let fxr_id = 523573;
-        // Angle the fucking thing upwards
-        let angle = (
-            FSVector4(0.7882865667, -0.007318737917, 0.6165360808, 0.0),
-            FSVector4(0.06933222711, 0.9946286082, -0.07685082406, 0.0),
-            FSVector4(-0.6126625538, 0.1033189669, 0.784560442, 0.0),
-        );
 
         let spawn_sfx: fn(&u32, &SfxSpawnLocation) -> bool =
             unsafe { std::mem::transmute(self.location.get(RVA_SFX_SPAWN).unwrap()) };
 
-        // let cast_ray: extern "C" fn(&*mut CSPhysWorld, u32, &HavokPosition, &FSVector4, &mut HavokPosition, &ChrIns) =
-        //     unsafe { std::mem::transmute(self.location.get(RVA_PHYS_WORLD_CAST_RAY).unwrap()) };
+        let cast_ray: extern "C" fn(
+            *const CSPhysWorld,
+            u32,
+            *const FSVector4,
+            *const FSVector4,
+            *const FSVector4,
+            *const PlayerIns,
+        ) -> bool =
+            unsafe { std::mem::transmute(self.location.get(RVA_WORLD_CAST_RAY).unwrap()) };
 
         let world_chr_man = unsafe { get_instance::<WorldChrMan>() }.unwrap().unwrap();
         if let Some(main_player) = &world_chr_man.main_player {
-            // Since the sfx spawn + later raycast is in havok space we need to figure out the
-            // centers position inside the AABB. This is luckily possible because both havok and FS
-            // use meters and 1 meter represents the same length in both systems.
-            let player_havok_pos = &main_player.chr_ins.module_container.physics.position;
-            let player_block_pos = &main_player.block_position;
 
-            // Grab the delta between players block pos and centers block pos.
-            let delta = HavokPosition::from_xyz(
-                center.position.0 - player_block_pos.0 .0,
-                center.position.1 - player_block_pos.0 .1,
-                center.position.2 - player_block_pos.0 .2,
+            // Since the raycast and sfx spawn are all in physics space we need to find the
+            // WorldBlockInfo for this block to obtain the center of the block in said physics
+            // space.
+            let block_center_physics_pos = field_area
+                .world_info_owner
+                .world_res
+                .world_info
+                .world_block_info_by_map(&(&center.map).into())
+                .map(|b| b.physics_center)
+                .unwrap();
+
+            let center_havok_pos = HavokPosition::from_xyz(
+                block_center_physics_pos.0 .0 + center.position.0,
+                block_center_physics_pos.0 .1 + center.position.1,
+                block_center_physics_pos.0 .2 + center.position.2,
             );
 
-            // Determine the center's position in current AABB using the players physics pos as a
-            // reference.
-            let center_havok_pos = *player_havok_pos + delta;
-            tracing::info!("Center {center_havok_pos}");
-
-            let count = 64;
+            let count = 128;
             for i in 0..count {
+                // Form a circle around the center.
                 let tau = PI * 2.0;
                 let current = (tau / count as f32) * i as f32;
                 // Offset for a point from the center
@@ -166,30 +156,37 @@ impl PainRing {
                     f32::cos(current) * self.radius,
                 );
 
-                // let mut raycast_out = HavokPosition::from_xyz(0.0, 0.0, 0.0);
-                // let phys_world = unsafe { get_instance::<CSHavokMan>() }.unwrap().unwrap().phys_world.as_ptr();
+                // Find the proper height to place the fog at by raycasting from above.
+                let cast_origin = center_havok_pos + offset;
+                let phys_world = unsafe { get_instance::<CSHavokMan>() }
+                    .unwrap()
+                    .unwrap()
+                    .phys_world
+                    .as_ptr();
 
-                // cast_ray(
-                //     &phys_world,
-                //     0x2000058,
-                //     &cast_origin,
-                //     &FSVector4(0.0, 0.0, -1000.0, 0.0), // Aim the fuck down
-                //     &mut raycast_out,
-                //     &main_player.chr_ins,
-                // );
+                let mut collision = FSVector4(0.0, 0.0, 0.0, 0.0);
+                if cast_ray(
+                    phys_world,
+                    0x2000058,
+                    &cast_origin.0,
+                    &FSVector4(0.0, -100.0, 0.0, 0.0),
+                    &mut collision,
+                    main_player.as_ptr(),
+                ) {
+                    let spawn_location = SfxSpawnLocation {
+                        angle: (
+                            FSVector4(0.7882865667, -0.007318737917, 0.6165360808, 0.0),
+                            FSVector4(0.06933222711, 0.9946286082, -0.07685082406, 0.0),
+                            FSVector4(-0.6126625538, 0.1033189669, 0.784560442, 0.0),
+                        ),
+                        position: HavokPosition(collision),
+                    };
 
-                // let spawn_position = if raycast_out.xyz().0 != 0.0 || raycast_out.xyz().2 != 0.0 {
-                //     raycast_out
-                // } else {
-                //     cast_origin
-                // };
-
-                let spawn_location = SfxSpawnLocation {
-                    angle,
-                    position: center_havok_pos + offset,
-                };
-
-                spawn_sfx(&fxr_id, &spawn_location);
+                    // 523357 - Fia's Mist
+                    // 523573 - Darkness clouds
+                    // 523887 - Freezing Mist
+                    spawn_sfx(&523357, &spawn_location);
+                }
             }
         };
     }

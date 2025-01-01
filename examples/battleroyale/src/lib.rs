@@ -13,14 +13,15 @@ use pain::{PainRing, SfxSpawnLocation};
 use player::Player;
 use spectator_camera::SpectatorCamera;
 use stage::Stage;
-use ui::Ui;
 use std::{
     cell::RefCell, collections::HashMap, error::Error, f32::consts::PI, sync::Arc, time::Duration,
 };
 use steamworks_sys::{
     PersonaStateChange_t, SetPersonaNameResponse_t__bindgen_ty_1,
-    SetPersonaNameResponse_t_k_iCallback,
+    SetPersonaNameResponse_t_k_iCallback, SteamNetworkingMessagesSessionFailed_t,
+    SteamNetworkingMessagesSessionRequest_t, SteamNetworkingMessagesSessionRequest_t_k_iCallback,
 };
+use ui::Ui;
 
 /// Implements a battle-royale gamemode on top of quickmatches.
 use game::{
@@ -63,10 +64,6 @@ mod stage;
 mod tool;
 mod ui;
 
-// 523357 - Fia's Mist
-// 523573 - Darkness clouds
-// 523887 - Freezing Mist
-
 #[no_mangle]
 pub unsafe extern "C" fn DllMain(_hmodule: usize, reason: u32) -> bool {
     // Check if we're being attached anew
@@ -94,23 +91,13 @@ pub unsafe extern "C" fn DllMain(_hmodule: usize, reason: u32) -> bool {
             // Give the CRT init a bit of leeway
             std::thread::sleep(Duration::from_secs(5));
 
-            steam::register_callback(0x15b, |update: &PersonaStateChange_t| {
-                tracing::info!("Persona state change {}", update.m_ulSteamID);
+            steam::register_callback(1251, |request: &SteamNetworkingMessagesSessionRequest_t| {
+                tracing::info!("Message sesson request from");
             });
 
-            let friends = steamworks_sys::SteamAPI_SteamFriends_v017();
-            steamworks_sys::SteamAPI_ISteamFriends_RequestUserInformation(
-                friends,
-                76561197997653528,
-                false,
-            );
-
-            // let cb = SteamCallback::<
-            //     0x15b,
-            //     PersonaStateChange_t,
-            // >::from(|update: &PersonaStateChange_t| {
-            //     tracing::info!("Persona state change {}", update.m_ulSteamID);
-            // });
+            steam::register_callback(1252, |info: &SteamNetworkingMessagesSessionFailed_t| {
+                tracing::error!("Message session failed");
+            });
 
             init().expect("Could not initialize gamemode");
         });
@@ -185,6 +172,7 @@ fn init() -> Result<(), Box<dyn Error>> {
         let mut patched_utility_effects = false;
         let mut active = false;
         let mut running = false;
+        let mut sent_hellos = false;
 
         cs_task.run_recurring(
             move |data: &FD4TaskData| {
@@ -201,6 +189,9 @@ fn init() -> Result<(), Box<dyn Error>> {
                     }
 
                     match message {
+                        Message::Hello => {
+                            tracing::info!("Received Hello");
+                        }
                         Message::MatchDetails { spawn } => {
                             tracing::info!("Received match details");
                             context.set_spawn_point(spawn.clone());
@@ -233,6 +224,12 @@ fn init() -> Result<(), Box<dyn Error>> {
                     }
                 }
 
+                // Unclog the steam messaging session requests
+                if game.match_loading() && !sent_hellos {
+                    sent_hellos = true;
+                    messaging.broadcast_hello();
+                }
+
                 // Trigger logic that needs to run when the player goes into a qm lobby.
                 if game.match_active() && !active {
                     tracing::info!("Starting battleroyale");
@@ -247,6 +244,7 @@ fn init() -> Result<(), Box<dyn Error>> {
                     context.reset();
                     chr_spawner.reset();
                     active = false;
+                    sent_hellos = false;
                 }
 
                 // Trigger logic that needs to run when player has spawned in map.
@@ -263,90 +261,22 @@ fn init() -> Result<(), Box<dyn Error>> {
                     tool::sample_spawn_point();
                 } else if is_key_pressed(0x62) {
                     config.reload().unwrap();
-                }
+                } else if is_key_pressed(0x63) {
+                    let main_player = unsafe { get_instance::<WorldChrMan>() }
+                        .unwrap()
+                        .map(|w| w.main_player.as_ref())
+                        .flatten()
+                        .unwrap();
 
-                // if is_key_pressed(0x60) {
-                //     let world_chr_man = unsafe { get_instance::<WorldChrMan>() }.unwrap().unwrap();
-                //     if let Some(main_player) = &world_chr_man.main_player {
-                //         let physics_pos = main_player
-                //             .chr_ins
-                //             .module_container
-                //             .physics
-                //             .position
-                //             .clone();
-                //
-                //         let cast_ray: extern "C" fn(
-                //             *const CSPhysWorld,
-                //             u32,
-                //             *const FSVector4,
-                //             *const FSVector4,
-                //             *const FSVector4,
-                //             *const PlayerIns,
-                //         ) -> bool = unsafe {
-                //             std::mem::transmute(location.get(LOCATION_PHYS_WORLD_CAST_RAY).unwrap())
-                //         };
-                //
-                //         let phys_world = unsafe { get_instance::<CSHavokMan>() }
-                //             .unwrap()
-                //             .unwrap()
-                //             .phys_world
-                //             .as_ptr();
-                //
-                //         let player = main_player.as_ptr();
-                //
-                //         let radius = 50.0;
-                //         let count = 128;
-                //         for i in 0..count {
-                //             let current = ((PI * 2.0) / count as f32) * i as f32;
-                //             let point_x = f32::sin(current) * radius;
-                //             let point_z = f32::cos(current) * radius;
-                //
-                //             let (ox, oy, oz) = physics_pos.xyz();
-                //             let origin = FSVector4(ox + point_x, oy + 100.0, oz + point_z, 0.0);
-                //             let direction = FSVector4(0.0, -200.0, 0.0, 0.0);
-                //             let mut collision = FSVector4(0.0, 0.0, 0.0, 0.0);
-                //
-                //             tracing::info!("Phys World: {phys_world:#x?}");
-                //             tracing::info!("Player: {player:#x?}");
-                //             tracing::info!("Origin: {origin:#?}");
-                //             tracing::info!("Direction: {direction:#?}");
-                //
-                //             if cast_ray(
-                //                 phys_world,
-                //                 0x2000058, // Broadphase filter
-                //                 &origin, // Where we shoot the cast from
-                //                 &direction, // Direction to shoot cast into
-                //                 &mut collision, // Output
-                //                 player, // Owner of the ray
-                //             ) {
-                //                 tracing::info!("Collision: {collision:#?}");
-                //
-                //                 // Angle the sfx we're about to spawn
-                //                 let angle = (
-                //                     FSVector4(0.7882865667, -0.007318737917, 0.6165360808, 0.0),
-                //                     FSVector4(0.06933222711, 0.9946286082, -0.07685082406, 0.0),
-                //                     FSVector4(-0.6126625538, 0.1033189669, 0.784560442, 0.0),
-                //                 );
-                //
-                //                 let spawn_sfx: fn(&u32, &SfxSpawnLocation) -> bool =
-                //                     unsafe { std::mem::transmute(location.get(LOCATION_SFX_SPAWN).unwrap()) };
-                //
-                //                 // Place sfx at collision
-                //                 let (x, y, z) = (
-                //                     collision.0,
-                //                     collision.1,
-                //                     collision.2,
-                //                 );
-                //                 let spawn_location = SfxSpawnLocation {
-                //                     angle,
-                //                     position: HavokPosition::from_xyz(x, y, z),
-                //                 };
-                //
-                //                 spawn_sfx(&523887, &spawn_location);
-                //             }
-                //         }
-                //     }
-                // }
+                    pain_ring.spawn_center_marker(&config::RingCenterPoint {
+                        map: (&main_player.chr_ins.block_origin_override).into(),
+                        position: config::MapPosition(
+                            main_player.block_position.0.0,
+                            main_player.block_position.0.1,
+                            main_player.block_position.0.2,
+                        ),
+                    })
+                }
 
                 gamemode.update(data.delta_time.time);
 

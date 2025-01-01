@@ -16,7 +16,7 @@ pub struct ConfigurationProvider {
 impl ConfigurationProvider {
     pub fn load() -> Result<Self, Box<dyn Error>> {
         Ok(Self {
-            config: RwLock::new(Self::fetch_config()?)
+            config: RwLock::new(Self::fetch_config()?),
         })
     }
 
@@ -29,24 +29,20 @@ impl ConfigurationProvider {
 
     fn fetch_config() -> Result<Configuration, Box<dyn Error>> {
         let event_flag_overrides = unsafe {
-            let mut reader = csv::Reader::from_reader(File::open("./battleroyale/0_event_flags.csv")?);
+            let mut reader =
+                csv::Reader::from_reader(File::open("./battleroyale/0_event_flags.csv")?);
 
             reader
                 .records()
                 .map(|r| {
                     let r = r?;
-                    Ok((
-                        r[1].parse::<u32>()?,
-                        r[2].parse::<bool>()?,
-                    ))
+                    Ok((r[1].parse::<u32>()?, r[2].parse::<bool>()?))
                 })
                 .collect::<Result<Vec<(u32, bool)>, Box<dyn Error>>>()?
         };
 
         Ok(Configuration {
-            loot: read_loot_collection(File::open(
-                "./battleroyale/0_loot.csv",
-            )?)?,
+            loot: read_loot_collection(File::open("./battleroyale/0_loot.csv")?)?,
             maps: HashMap::from([(
                 String::from("0"),
                 MapConfiguration {
@@ -176,9 +172,7 @@ where
             let r = r?;
 
             let weight = r[1].parse::<u32>()?;
-            tracing::info!("Weight: {weight}");
             let pool = r[2].parse::<u32>()?;
-            tracing::info!("Pool: {weight}");
 
             let mut items = vec![];
             for i in 0..4 {
@@ -204,7 +198,9 @@ where
     Ok(result)
 }
 
-fn read_bespoke_monster_spawn_collection<R>(reader: R) -> Result<Vec<BespokeMonsterSpawnPoint>, Box<dyn Error>>
+fn read_bespoke_monster_spawn_collection<R>(
+    reader: R,
+) -> Result<Vec<BespokeMonsterSpawnPoint>, Box<dyn Error>>
 where
     R: Read,
 {
@@ -321,6 +317,18 @@ impl Into<BlockPoint> for &MapPosition {
 
 #[derive(Clone, Copy, Debug, Deserialize, Serialize)]
 pub struct MapId(pub i32);
+
+impl Into<game::cs::MapId> for &MapId {
+    fn into(self) -> game::cs::MapId {
+        game::cs::MapId(self.0)
+    }
+}
+
+impl From<&game::cs::MapId> for MapId {
+    fn from(value: &game::cs::MapId) -> Self {
+        Self(value.0)
+    }
+}
 
 #[derive(Deserialize, Serialize)]
 pub struct RingConfiguration {}

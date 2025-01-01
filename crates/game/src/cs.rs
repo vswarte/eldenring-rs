@@ -30,6 +30,7 @@ mod team_relation;
 mod location;
 mod havok_man;
 mod field_area;
+mod fe_man;
 
 pub use map_id::*;
 pub use camera::*;
@@ -63,3 +64,4 @@ pub use team_relation::*;
 pub use location::*;
 pub use havok_man::*;
 pub use field_area::*;
+pub use fe_man::*;

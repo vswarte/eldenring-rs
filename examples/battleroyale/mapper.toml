@@ -82,7 +82,16 @@ captures = ["", "SPAWN_CHR"]
 
 [[patterns]]
 pattern = "48 8b d3 e8 $ { ' } 48 8b 5c 24 38 48 8b 03 48 89 87 18 02 00 00"
-captures = ["", "NET_CHR_SYNC_SETUP_ENTITY_HANDLE"]
+captures = ["", "NET_CHR_SYNC_SETUP_ENTITY_1"]
+
+[[patterns]]
+pattern = "41 b0 01 48 8b d6 48 8b 89 e0 e5 01 00 e8 $ { ' } 90"
+captures = ["", "NET_CHR_SYNC_SETUP_ENTITY_2"]
+
+[[patterns]]
+pattern = "41 b8 ff 0f 00 00 48 8b d6 48 8b 89 e0 e5 01 00 e8 $ { ' } 90"
+captures = ["", "NET_CHR_SYNC_SETUP_ENTITY_3"]
+
 
 [[patterns]]
 pattern = "80 bd a8 01 00 00 00 74 ? b2 01 48 8b cf e8 $ { ' } 48 8b cf e8 $ { ' }"

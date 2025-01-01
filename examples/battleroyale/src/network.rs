@@ -18,6 +18,8 @@ pub struct MatchMessaging {}
 
 #[derive(Debug, Serialize, Deserialize)]
 pub enum Message {
+    /// Sent to initiate networking session.
+    Hello,
     /// Goes from host to clients to set the local players loadout.
     MatchDetails { spawn: PlayerSpawnPoint },
     MobSpawn {
@@ -92,6 +94,11 @@ impl MatchMessaging {
                 ))
             })
             .collect()
+    }
+
+    pub fn broadcast_hello(&self) {
+        let serialized = bincode::serialize(&Message::Hello).expect("Could not serialize hello message");
+        self.broadcast(serialized.as_slice());
     }
 
     /// Send message to all players in world.
