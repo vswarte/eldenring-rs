@@ -15,8 +15,8 @@ const FRIEND_TEAM_INDEX: (u8, u8) = (1, 1);
 const ENEMY_TEAM_INDEX: (u8, u8) = (13, 1);
 
 pub const OTHER_PLAYER_TEAM_TYPE: u8 = 0;
+pub const LOCAL_PLAYER_TEAM_TYPE: u8 = 1;
 pub const ENEMY_TEAM_TYPE: u8 = 7;
-pub const LOCAL_PLAYER_TEAM_TYPE: u8 = 78;
 
 type TeamRelationMatrix = [[u64; 79]; 79];
 
