@@ -13,6 +13,7 @@ use pain::{PainRing, SfxSpawnLocation};
 use player::Player;
 use spectator_camera::SpectatorCamera;
 use stage::Stage;
+use team::TeamRelations;
 use std::{
     cell::RefCell, collections::HashMap, error::Error, f32::consts::PI, sync::Arc, time::Duration,
 };
@@ -63,6 +64,7 @@ mod spectator_camera;
 mod stage;
 mod tool;
 mod ui;
+mod team;
 
 #[no_mangle]
 pub unsafe extern "C" fn DllMain(_hmodule: usize, reason: u32) -> bool {
@@ -168,6 +170,7 @@ fn init() -> Result<(), Box<dyn Error>> {
         let mut pain_ring = PainRing::new(location.clone(), config.clone());
         let mut spectator_camera = SpectatorCamera::new(game.clone());
         let mut ui = Ui::new(game.clone(), location.clone());
+        let mut team_relations = TeamRelations::new(game.clone(), location.clone());
 
         let mut patched_utility_effects = false;
         let mut active = false;
@@ -243,6 +246,7 @@ fn init() -> Result<(), Box<dyn Error>> {
                     stage.reset();
                     context.reset();
                     chr_spawner.reset();
+                    team_relations.reset();
                     active = false;
                     sent_hellos = false;
                 }
@@ -279,6 +283,7 @@ fn init() -> Result<(), Box<dyn Error>> {
                 }
 
                 gamemode.update(data.delta_time.time);
+                team_relations.update();
 
                 if game.match_active() && game.is_host() {
                     loadout.update();

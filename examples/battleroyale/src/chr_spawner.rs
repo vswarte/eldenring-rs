@@ -15,11 +15,12 @@ use game::{
     rva::RVA_GLOBAL_FIELD_AREA,
 };
 use pelite::pe::Pe;
+use rand::{distributions::WeightedIndex, prelude::Distribution, thread_rng};
 use serde::{Deserialize, Serialize};
 use util::{program::Program, singleton::get_instance};
 
 use crate::{
-    config::ConfigurationProvider,
+    config::{ConfigurationProvider, MonsterType},
     gamestate::GameStateProvider,
     network::MatchMessaging,
     rva::{
@@ -28,7 +29,7 @@ use crate::{
     ProgramLocationProvider,
 };
 
-const CHR_SPAWN_INDEX_START: u32 = 6;
+const CHR_SPAWN_INDEX_START: u32 = 20;
 const CHR_SPAWN_INTERVAL: Duration = Duration::from_secs(60);
 
 pub struct ChrSpawner {
@@ -72,19 +73,36 @@ impl ChrSpawner {
     fn spawn_initial_monsters(&mut self) {
         tracing::info!("Spawning initial monsters");
         let map = self.config.map(&self.game.stage()).unwrap();
-        map.bespoke_monster_spawns.iter().for_each(|m| {
+
+        map.monster_spawn_points.iter().for_each(|s| {
             let field_ins_handle = self.generate_field_ins_handle();
+            let m = self.pick_mob(s.pool);
+
             self.spawn_mob(
                 &field_ins_handle,
-                &game::cs::MapId(m.map.0),
-                &BlockPoint::from_xyz(m.position.0, m.position.1, m.position.2),
-                &m.orientation,
+                &game::cs::MapId(s.map.0),
+                &BlockPoint::from_xyz(s.position.0, s.position.1, s.position.2),
+                &s.orientation,
                 &m.npc_id,
                 &m.think_id,
                 &-1,
                 m.asset.as_str(),
             );
         });
+
+        // map.bespoke_monster_spawns.iter().for_each(|m| {
+        //     let field_ins_handle = self.generate_field_ins_handle();
+        //     self.spawn_mob(
+        //         &field_ins_handle,
+        //         &game::cs::MapId(m.map.0),
+        //         &BlockPoint::from_xyz(m.position.0, m.position.1, m.position.2),
+        //         &m.orientation,
+        //         &m.npc_id,
+        //         &m.think_id,
+        //         &-1,
+        //         m.asset.as_str(),
+        //     );
+        // });
     }
 
     /// Generate field ins handle for to-be spawned character.
@@ -95,6 +113,16 @@ impl ChrSpawner {
         };
         self.next_chr_index += 1;
         field_ins_handle
+    }
+
+    /// Select random mob from pool for spawning.
+    pub fn pick_mob(&self, pool: u32) -> MonsterType {
+        let map = self.config.map(&self.game.stage()).unwrap();
+        let monster_pool = map.monster_types.iter().filter(|l| l.pool == pool).collect::<Vec<_>>();
+        let weights = monster_pool.iter().map(|f| f.weight).collect::<Vec<u32>>();
+        let distribution = WeightedIndex::new(weights.as_slice()).unwrap();
+        let mut rng = thread_rng();
+        monster_pool[distribution.sample(&mut rng)].clone()
     }
 
     pub fn spawn_mob(

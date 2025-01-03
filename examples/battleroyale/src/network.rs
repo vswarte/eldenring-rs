@@ -21,7 +21,9 @@ pub enum Message {
     /// Sent to initiate networking session.
     Hello,
     /// Goes from host to clients to set the local players loadout.
-    MatchDetails { spawn: PlayerSpawnPoint },
+    MatchDetails {
+        spawn: PlayerSpawnPoint,
+    },
     MobSpawn {
         field_ins_handle_map_id: i32,
         field_ins_handle_selector: u32,
