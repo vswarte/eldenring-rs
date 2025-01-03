@@ -600,6 +600,8 @@ pub enum ChrAsmSlot {
     Bolt1 = 7,
     Arrow2 = 8,
     Bolt2 = 9,
+    Arrow3 = 10,
+    Bolt3 = 11,
     ProtectorHead = 12,
     ProtectorChest = 13,
     ProtectorHands = 14,
@@ -610,22 +612,23 @@ pub enum ChrAsmSlot {
     Accessory4 = 20,
     AccessoryCovenant = 21,
     // ----- Slots below are not used in the param id lists and handles -----
-    QuickSlot1 = 22,
-    QuickSlot2 = 23,
-    QuickSlot3 = 24,
-    QuickSlot4 = 25,
-    QuickSlot5 = 26,
-    QuickSlot6 = 27,
-    QuickSlot7 = 28,
-    QuickSlot8 = 29,
-    QuickSlot9 = 30,
-    QuickSlot10 = 31,
+    QuickItem1 = 22,
+    QuickItem2 = 23,
+    QuickItem3 = 24,
+    QuickItem4 = 25,
+    QuickItem5 = 26,
+    QuickItem6 = 27,
+    QuickItem7 = 28,
+    QuickItem8 = 29,
+    QuickItem9 = 30,
+    QuickItem10 = 31,
     Pouch1 = 32,
     Pouch2 = 33,
     Pouch3 = 34,
     Pouch4 = 35,
     Pouch5 = 36,
     Pouch6 = 37,
+    GreatRune = 38,
 }
 
 impl<T> Index<ChrAsmSlot> for [T] {
@@ -637,15 +640,7 @@ impl<T> Index<ChrAsmSlot> for [T] {
 }
 
 #[repr(C)]
-/// Describes how the character should be rendered in terms of selecting the
-/// appropriate parts to be rendered.
-///
-/// Source of name: RTTI in earlier games (vmt has been removed from ER after some patch?)
-pub struct ChrAsm {
-    unk0: i32,
-    unk4: i32,
-    /// Determines how you're holding your weapon. 1 is one-handed, 3 is dual wielded.
-    pub arm_style: u32,
+pub struct ChrAsmEquipmentSlots {
     /// Points to the slot in the equipment list used for rendering the left-hand weapon.
     /// 0 for primary, 1 for secondary, 2 for tertiary.
     pub left_weapon_slot: u32,
@@ -664,6 +659,31 @@ pub struct ChrAsm {
     /// Points to the slot in the equipment list used for rendering the right-hand bolt.
     /// 0 for primary, 1 for secondary.
     pub right_bolt_slot: u32,
+}
+#[repr(u32)]
+pub enum ChrAsmArmStyle {
+    EmptyHanded = 0,
+    OneHanded = 1,
+    LeftBothHands = 2,
+    RightBothHands = 3,
+}
+
+#[repr(C)]
+pub struct ChrAsmEquipment {
+    /// Determines how you're holding your weapon.
+    pub arm_style: ChrAsmArmStyle,
+    pub selected_slots: ChrAsmEquipmentSlots,
+}
+
+#[repr(C)]
+/// Describes how the character should be rendered in terms of selecting the
+/// appropriate parts to be rendered.
+///
+/// Source of name: RTTI in earlier games (vmt has been removed from ER after some patch?)
+pub struct ChrAsm {
+    unk0: i32,
+    unk4: i32,
+    equipment: ChrAsmEquipment,
     /// Holds references to the inventory slots for each equipment piece.
     pub gaitem_handles: [u32; 22],
     /// Holds the param IDs for each equipment piece.

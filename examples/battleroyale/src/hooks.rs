@@ -83,17 +83,17 @@ impl Hooks {
     unsafe fn patch_chr_sets(location: &ProgramLocationProvider) -> Result<(), HookError> {
         std::ptr::write_unaligned(
             transmute(location.get(RVA_SUMMON_BUDDY_CHRSET_ALLOC_SIZE)?),
-            &0xA00i32
+            &0xA00i32,
         );
 
         std::ptr::write_unaligned(
             transmute(location.get(RVA_SUMMON_BUDDY_CHRSET_MEMSET_SIZE)?),
-            &0xA00i32
+            &0xA00i32,
         );
 
         std::ptr::write_unaligned(
             transmute(location.get(RVA_SUMMON_BUDDY_CHRSET_CAPACITY)?),
-            &0xA0i32
+            &0xA0i32,
         );
         Ok(())
     }

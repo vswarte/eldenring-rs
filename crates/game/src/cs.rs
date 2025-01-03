@@ -1,4 +1,6 @@
 mod map_id;
+mod item_id;
+mod gaitem;
 mod camera;
 mod field_ins;
 mod chr_ins;
@@ -33,6 +35,8 @@ mod field_area;
 mod fe_man;
 
 pub use map_id::*;
+pub use item_id::*;
+pub use gaitem::*;
 pub use camera::*;
 pub use field_ins::*;
 pub use chr_ins::*;

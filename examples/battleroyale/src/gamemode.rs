@@ -1,6 +1,7 @@
 use std::{
     collections::HashMap,
     marker::Sync,
+    ptr::NonNull,
     sync::{
         atomic::{AtomicBool, Ordering},
         Arc, RwLock,
@@ -9,12 +10,15 @@ use std::{
 };
 
 use game::{
-    cs::{CSEventFlagMan, CSNetMan, CSSessionManager, FieldInsHandle, MapId},
+    cs::{CSEventFlagMan, CSNetMan, CSSessionManager, CSTeamTypeBase, FieldInsHandle, MapId},
     position::BlockPoint,
 };
-use util::{input::is_key_pressed, singleton::get_instance};
+use util::{
+    input::is_key_pressed,
+    singleton::get_instance,
+    team_relation::{CSTeamTypeEnemy, CSTeamTypeFriend, TEAM_TYPE_ENEMY, TEAM_TYPE_FRIEND},
+};
 
-use crate::{loadout::PlayerLoadout, message};
 use crate::{
     config::{ConfigurationProvider, MapPosition},
     gamestate::GameStateProvider,
@@ -22,6 +26,7 @@ use crate::{
     player::Player,
     ProgramLocationProvider,
 };
+use crate::{loadout::PlayerLoadout, message};
 
 use crate::{message::NotificationPresenter, spectator_camera::SpectatorCamera};
 
@@ -43,6 +48,8 @@ pub struct GameMode {
     sent_loadout: AtomicBool,
     /// Applied flag overrides for this match?
     applied_flag_overrides: AtomicBool,
+    /// Did we patch the team table?
+    patched_team_table: AtomicBool,
     /// Provides info about the games state like if we're in a match, score, alive players.
     game_state: Arc<GameStateProvider>,
     /// Manages player-related mechanics.
@@ -78,6 +85,7 @@ impl GameMode {
             player,
             end_requested_at: Default::default(),
             notification,
+            patched_team_table: Default::default(),
             config,
         }
     }
@@ -159,7 +167,7 @@ impl GameMode {
 
     /// Finishes the match and closes it.
     fn end_match(&self) {
-        // self.player.restore_original_levels();
+        self.player.restore_original_levels();
 
         // Disconnect the ugly way for now
         let cs_net_man = unsafe { get_instance::<CSNetMan>() }.unwrap().unwrap();

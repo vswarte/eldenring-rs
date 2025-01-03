@@ -1,8 +1,8 @@
 use std::ptr::NonNull;
 
-use crate::pointer::OwnedPtr;
+use crate::{pointer::OwnedPtr, Vector};
 
-use super::ChrAsm;
+use super::{ChrAsm, FieldInsHandle, ItemId};
 
 #[repr(C)]
 /// Source of name: RTTI
@@ -63,11 +63,15 @@ pub struct PlayerGameData {
     pub matching_weapon_level: u8,
     pub white_ring_active: u8,
     pub blue_ring_active: u8,
-    unke5: [u8; 0x7],
+    // unke5: [u8; 0x7],
+    pub team_type: u8,
+    unke6: [u8; 0x6],
     unkec: u32,
     unkf0: [u8; 0x4],
     pub solo_breakin_point: u32,
-    unkf8: [u8; 0x7],
+    unkf8: u32,
+    pub scadutree_blessing: u8,
+    pub reversed_spirit_ash: u8,
     pub rune_arc_active: u8,
     unk100: u8,
     pub max_hp_flask: u8,
@@ -115,7 +119,10 @@ pub struct PlayerGameData {
     gesture_game_data: usize,
     ride_game_data: usize,
     unk8e8: usize,
-    unk8f0: [u8; 0x10],
+    pub is_main_player: bool,
+    unk8f1: u8,
+    unk8f2: [u8; 6],
+    unk8f8: usize,
     unk900: u32,
     pub hp_estus_rate: f32,
     pub hp_estus_additional: u8,
@@ -123,11 +130,23 @@ pub struct PlayerGameData {
     pub fp_estus_rate: f32,
     pub fp_estus_additional: u8,
     _pad911: [u8; 3],
-    unk914: [u8; 0x164],
+    unk914: [u8; 0x3C],
+    pub mount_handle: FieldInsHandle,
+    unk958: [u8; 0x10f],
+    pub quickmatch_kill_count: u8,
+    unka68: [u8; 11],
     menu_ref_special_effect_1: usize,
     menu_ref_special_effect_2: usize,
     menu_ref_special_effect_3: usize,
-    unka90: [u8; 0x58],
+    // unka90: [u8; 0x1c],
+    // isUsingFesteringBloodyFinger
+    pub is_using_festering_bloody_finger: bool,
+    unka91: [u8; 3],
+    pub networked_speffect_entry_count: u32,
+    pub quick_match_team: u8,
+    unka99: [u8; 0x13],
+    pub quick_match_map_load_ready: bool,
+    unkaad: [u8; 0x3b],
 }
 
 #[repr(C)]
@@ -139,22 +158,33 @@ pub struct PlayerGameDataSpEffect {
 }
 
 #[repr(C)]
-pub struct EquipGameData {
-    vftable: usize,
-    unk8: [u32; 22],
-    unk60: usize,
-    unk68: u32,
-    pub chr_asm: ChrAsm,
-    _pad154: u32,
-    pub equip_inventory_data: EquipInventoryData,
-    pub equip_magic_data: OwnedPtr<EquipMagicData>,
-    pub equip_item_data: EquipItemData,
-    unk330: u32,
-    unk334: u32,
-    unk338: u32,
-    unk33c: u32,
-    unk340: u32,
-    unk344: u32,
+pub struct AcquiredProjectilesEntry {
+    pub item_id: ItemId,
+    unk4: u8,
+    unk5: u8,
+    unk6: u8,
+    unk7: u8,
+}
+
+#[repr(C)]
+pub struct AcquiredProjectiles {
+    pub entries: [AcquiredProjectilesEntry; 2048],
+    unk4000: u32,
+    unk4004: u32,
+    pub count: u32,
+    unk400c: u32,
+    unk4010: [usize; 256],
+}
+
+#[repr(C)]
+pub struct QMItemBackupVectorItem {
+    pub item_id: ItemId,
+    pub quantity: u32,
+}
+
+#[repr(C)]
+#[derive(Clone, Copy)]
+pub struct ChrAsmEquipEntries {
     pub weapon_primary_left: i32,
     pub weapon_primary_right: i32,
     pub weapon_secondary_left: i32,
@@ -171,11 +201,29 @@ pub struct EquipGameData {
     pub protector_chest: i32,
     pub protector_hands: i32,
     pub protector_legs: i32,
-    unk388: i32,
+    // Unused in Elden Ring
+    pub hair: i32,
     pub accessories: [i32; 4],
     pub covenant: i32,
     pub quick_tems: [i32; 10],
     pub pouch: [i32; 6],
+}
+
+#[repr(C)]
+pub struct EquipGameData {
+    vftable: usize,
+    unk8: [u32; 22],
+    unk60: usize,
+    unk68: u32,
+    pub chr_asm: ChrAsm,
+    _pad154: u32,
+    pub equip_inventory_data: EquipInventoryData,
+    pub equip_magic_data: OwnedPtr<EquipMagicData>,
+    pub equip_item_data: EquipItemData,
+    equip_gesture_data: usize,
+    pub acquired_projectiles: OwnedPtr<AcquiredProjectiles>,
+    pub qm_item_backup_vector: OwnedPtr<Vector<QMItemBackupVectorItem>>,
+    pub equipment_entries: ChrAsmEquipEntries,
     unk3e0: usize,
     unk3e8: usize,
     pub player_game_data: NonNull<PlayerGameData>,
@@ -183,8 +231,7 @@ pub struct EquipGameData {
 }
 
 #[repr(C)]
-pub struct EquipInventoryData {
-    vftable: usize,
+pub struct InventoryItemsData {
     /// How many items can one hold in total?
     pub global_capacity: u32,
 
@@ -212,14 +259,17 @@ pub struct EquipInventoryData {
 
     /// Contains the indices into the item ID mapping list.
     item_id_mapping_indices: OwnedPtr<[u16; 2017]>,
-
     unk68: u64,
     /// Contains table of item IDs and their corresponding location in the equip inventory data
     /// lists.
     item_id_mapping: *mut ItemIdMapping,
-
     unk78: u64,
+}
 
+#[repr(C)]
+pub struct EquipInventoryData {
+    vftable: usize,
+    pub items_data: InventoryItemsData,
     pub total_item_entry_count: u32,
     unk84: [u8; 0xa4],
 }
@@ -244,7 +294,7 @@ impl ItemIdMapping {
     }
 }
 
-impl EquipInventoryData {
+impl InventoryItemsData {
     pub fn normal_items(&self) -> &mut [EquipInventoryDataListEntry] {
         unsafe {
             std::slice::from_raw_parts_mut(
@@ -278,17 +328,14 @@ pub struct EquipInventoryDataListEntry {
     /// Handle to the gaitem instance which describes additional properties to the inventory item,
     /// like durability and gems in the case of weapons.
     pub gaitem_handle: u32,
-    /// Item ID without the category.
-    pub item_id: u16,
-    unk6: u8,
-    /// Item category, goods, weapon, protector, accessory, etc.
-    pub category: u8,
+    pub item_id: ItemId,
     /// Quantity of the item we have.
     pub quantity: u32,
     pub display_id: u32,
     unk10: u8,
     _pad11: [u8; 3],
     pub pot_group: i32,
+    unk18: u32,
 }
 
 #[repr(C)]
@@ -306,14 +353,14 @@ pub struct EquipItemData {
     pub quick_slots: [EquipDataItem; 10],
     pub pouch_slots: [EquipDataItem; 6],
     pub great_rune: EquipDataItem,
-    unk90: usize,
+    pub equip_entries: OwnedPtr<ChrAsmEquipEntries>,
     pub inventory: OwnedPtr<EquipInventoryData>,
-    unka0: i32,
+    pub selected_quick_slot: i32,
     unka4: u32,
 }
 
 #[repr(C)]
 pub struct EquipDataItem {
-    pub id: i32,
-    unk4: i32,
+    pub gaitem_handle: i32,
+    pub index: i32,
 }

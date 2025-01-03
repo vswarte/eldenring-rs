@@ -8,7 +8,7 @@ use steamworks::{
 };
 use util::{singleton::get_instance, steam};
 
-use crate::config::{MapId, MapPosition, PlayerSpawnPoint};
+use crate::{config::{MapId, MapPosition, PlayerSpawnPoint}, loadout::PlayerMatchDetails};
 
 const STEAM_MESSAGE_CHANNEL: u32 = 51234;
 const STEAM_MESSAGE_BATCH_SIZE: usize = 0x10;
@@ -23,6 +23,7 @@ pub enum Message {
     /// Goes from host to clients to set the local players loadout.
     MatchDetails {
         spawn: PlayerSpawnPoint,
+        partner: Option<u64>,
     },
     MobSpawn {
         field_ins_handle_map_id: i32,
@@ -68,11 +69,12 @@ impl MatchMessaging {
 
     pub fn send_match_details(
         &self,
-        loadout: &HashMap<u64, PlayerSpawnPoint>,
+        loadout: &HashMap<u64, PlayerMatchDetails>,
     ) -> Result<(), Box<dyn Error>> {
-        loadout.iter().for_each(|(remote, spawn)| {
+        loadout.iter().for_each(|(remote, match_details)| {
             let message = Message::MatchDetails {
-                spawn: spawn.clone(),
+                spawn: match_details.spawn.clone(),
+                partner: match_details.partner,
             };
 
             let serialized =

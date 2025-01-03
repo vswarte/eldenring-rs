@@ -100,3 +100,11 @@ captures = ["", "CHR_FLAGS_UNK1", "CHR_FLAGS_UNK2"]
 [[patterns]]
 pattern = "89 4e 08 8b 44 24 50 89 46 0c 48 8b 0d ? ? ? ? 48 8b 01 ba ' 00 05 00 00 41 b8 08 00 00 00 ff ? ? 48 89 46 18 48 85 c0 74 ? bf ' 50 00 00 00 89 7e 10 33 d2 41 b8 ' 00 05 00 00 48 8b c8 e8 6d 71 08 02 33 db"
 captures = ["", "SUMMON_BUDDY_CHRSET_ALLOC_SIZE", "SUMMON_BUDDY_CHRSET_CAPACITY", "SUMMON_BUDDY_CHRSET_MEMSET_SIZE"]
+
+[[patterns]]
+pattern = "e8 $ { ' } 85 c0 0f 85 ? ? ? ? 32 c0"
+captures = ["", "EQUIP_INVENTORY_DATA_REMOVE_ITEM"]
+
+[[patterns]]
+pattern = "48 8d ? 24 80 00 00 00 44 8b c0 e8 $ { ' }"
+captures = ["", "QM_BACKUP_ITEM"]

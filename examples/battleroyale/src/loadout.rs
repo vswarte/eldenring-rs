@@ -1,4 +1,7 @@
-use std::{collections::{HashMap, VecDeque}, sync::Arc};
+use std::{
+    collections::{HashMap, VecDeque},
+    sync::Arc,
+};
 
 use game::cs::CSSessionManager;
 use rand::prelude::*;
@@ -7,8 +10,14 @@ use util::singleton::get_instance;
 use crate::{
     config::{ConfigurationProvider, MapConfiguration, PlayerSpawnPoint},
     context::GameModeContext,
-    gamestate::GameStateProvider, network::MatchMessaging,
+    gamestate::GameStateProvider,
+    network::MatchMessaging,
 };
+
+pub struct PlayerMatchDetails {
+    pub spawn: PlayerSpawnPoint,
+    pub partner: Option<u64>,
+}
 
 pub struct PlayerLoadout {
     config: Arc<ConfigurationProvider>,
@@ -63,10 +72,20 @@ impl PlayerLoadout {
         if !self.sent_loadout && self.game.match_loading() {
             self.sent_loadout = true;
 
-            let mut loadouts = self.game.player_steam_ids()
+            let loadouts = self
+                .game
+                .player_steam_ids()
                 .into_iter()
                 .enumerate()
-                .map(|(index, remote)| (remote, self.spawn_point_for_player(index).clone()))
+                .map(|(index, remote)| {
+                    (
+                        remote,
+                        PlayerMatchDetails {
+                            spawn: self.spawn_point_for_player(index).clone(),
+                            partner: None,
+                        },
+                    )
+                })
                 .collect::<HashMap<_, _>>();
 
             // Remove host spawn point since we're the host and we need to apply it locally
@@ -87,7 +106,7 @@ impl PlayerLoadout {
     }
 
     /// Retrieves the generated spawn point for a particular player.
-        pub fn spawn_point_for_player(&self, player: usize) -> &PlayerSpawnPoint {
+    pub fn spawn_point_for_player(&self, player: usize) -> &PlayerSpawnPoint {
         self.spawn_points
             .get(player % self.spawn_points.len())
             .expect("Tried calling spawnpoint getter without having spawn points for a map.")

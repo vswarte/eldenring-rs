@@ -17,16 +17,13 @@ use game::{
 use pelite::pe::Pe;
 use rand::{distributions::WeightedIndex, prelude::Distribution, thread_rng};
 use serde::{Deserialize, Serialize};
-use util::{program::Program, singleton::get_instance};
+use util::{program::Program, singleton::get_instance, team_relation::TEAM_TYPE_ENEMY};
 
 use crate::{
-    config::{ConfigurationProvider, MonsterType},
-    gamestate::GameStateProvider,
-    network::MatchMessaging,
-    rva::{
-        RVA_CHR_FLAGS_UNK1, RVA_CHR_FLAGS_UNK2, RVA_NET_CHR_SYNC_SETUP_ENTITY_1, RVA_NET_CHR_SYNC_SETUP_ENTITY_2, RVA_NET_CHR_SYNC_SETUP_ENTITY_3, RVA_SPAWN_CHR
-    },
-    ProgramLocationProvider,
+    config::{ConfigurationProvider, MonsterType}, gamestate::GameStateProvider, network::MatchMessaging, rva::{
+        RVA_CHR_FLAGS_UNK1, RVA_CHR_FLAGS_UNK2, RVA_NET_CHR_SYNC_SETUP_ENTITY_1,
+        RVA_NET_CHR_SYNC_SETUP_ENTITY_2, RVA_NET_CHR_SYNC_SETUP_ENTITY_3, RVA_SPAWN_CHR,
+    }, team::ENEMY_TEAM_TYPE, ProgramLocationProvider
 };
 
 const CHR_SPAWN_INDEX_START: u32 = 20;
@@ -118,7 +115,11 @@ impl ChrSpawner {
     /// Select random mob from pool for spawning.
     pub fn pick_mob(&self, pool: u32) -> MonsterType {
         let map = self.config.map(&self.game.stage()).unwrap();
-        let monster_pool = map.monster_types.iter().filter(|l| l.pool == pool).collect::<Vec<_>>();
+        let monster_pool = map
+            .monster_types
+            .iter()
+            .filter(|l| l.pool == pool)
+            .collect::<Vec<_>>();
         let weights = monster_pool.iter().map(|f| f.weight).collect::<Vec<u32>>();
         let distribution = WeightedIndex::new(weights.as_slice()).unwrap();
         let mut rng = thread_rng();
@@ -137,9 +138,10 @@ impl ChrSpawner {
         model: &str,
     ) -> Result<(), Box<dyn Error>> {
         let world_chr_man = unsafe { get_instance::<WorldChrMan>() }.unwrap().unwrap();
-        let Some(main_player) = &world_chr_man.main_player else {
+
+        if world_chr_man.main_player.is_none() {
             return Ok(());
-        };
+        }
 
         let program = unsafe { Program::current() };
         let field_area = unsafe {
@@ -207,28 +209,27 @@ impl ChrSpawner {
         ) -> Option<NonNull<ChrIns>> =
             unsafe { std::mem::transmute(self.location.get(RVA_SPAWN_CHR).unwrap()) };
 
-        let setup_chrsync_1: extern "C" fn(&NetChrSync, &P2PEntityHandle) -> Option<NonNull<ChrIns>> = unsafe {
-            std::mem::transmute(
-                self.location
-                    .get(RVA_NET_CHR_SYNC_SETUP_ENTITY_1)
-                    .unwrap(),
-            )
+        let setup_chrsync_1: extern "C" fn(
+            &NetChrSync,
+            &P2PEntityHandle,
+        ) -> Option<NonNull<ChrIns>> = unsafe {
+            std::mem::transmute(self.location.get(RVA_NET_CHR_SYNC_SETUP_ENTITY_1).unwrap())
         };
 
-        let setup_chrsync_2: extern "C" fn(&NetChrSync, &P2PEntityHandle, bool) -> Option<NonNull<ChrIns>> = unsafe {
-            std::mem::transmute(
-                self.location
-                    .get(RVA_NET_CHR_SYNC_SETUP_ENTITY_2)
-                    .unwrap(),
-            )
+        let setup_chrsync_2: extern "C" fn(
+            &NetChrSync,
+            &P2PEntityHandle,
+            bool,
+        ) -> Option<NonNull<ChrIns>> = unsafe {
+            std::mem::transmute(self.location.get(RVA_NET_CHR_SYNC_SETUP_ENTITY_2).unwrap())
         };
 
-        let setup_chrsync_3: extern "C" fn(&NetChrSync, &P2PEntityHandle, u32) -> Option<NonNull<ChrIns>> = unsafe {
-            std::mem::transmute(
-                self.location
-                    .get(RVA_NET_CHR_SYNC_SETUP_ENTITY_3)
-                    .unwrap(),
-            )
+        let setup_chrsync_3: extern "C" fn(
+            &NetChrSync,
+            &P2PEntityHandle,
+            u32,
+        ) -> Option<NonNull<ChrIns>> = unsafe {
+            std::mem::transmute(self.location.get(RVA_NET_CHR_SYNC_SETUP_ENTITY_3).unwrap())
         };
 
         let mut chr_ins = spawn_chr(
@@ -237,6 +238,9 @@ impl ChrSpawner {
             field_ins_handle.clone(),
         )
         .expect("Could not spawn chr");
+
+        // set team type for all the enemies
+        unsafe { chr_ins.as_mut() }.team_type = ENEMY_TEAM_TYPE;
 
         let p2phandle = &unsafe { chr_ins.as_ref() }.p2p_entity_handle;
         setup_chrsync_1(world_chr_man.net_chr_sync.as_ref(), p2phandle);

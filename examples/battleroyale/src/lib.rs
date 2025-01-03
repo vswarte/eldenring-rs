@@ -13,7 +13,6 @@ use pain::{PainRing, SfxSpawnLocation};
 use player::Player;
 use spectator_camera::SpectatorCamera;
 use stage::Stage;
-use team::TeamRelations;
 use std::{
     cell::RefCell, collections::HashMap, error::Error, f32::consts::PI, sync::Arc, time::Duration,
 };
@@ -22,6 +21,7 @@ use steamworks_sys::{
     SetPersonaNameResponse_t_k_iCallback, SteamNetworkingMessagesSessionFailed_t,
     SteamNetworkingMessagesSessionRequest_t, SteamNetworkingMessagesSessionRequest_t_k_iCallback,
 };
+use team::TeamRelations;
 use ui::Ui;
 
 /// Implements a battle-royale gamemode on top of quickmatches.
@@ -195,7 +195,7 @@ fn init() -> Result<(), Box<dyn Error>> {
                         Message::Hello => {
                             tracing::info!("Received Hello");
                         }
-                        Message::MatchDetails { spawn } => {
+                        Message::MatchDetails { spawn, partner } => {
                             tracing::info!("Received match details");
                             context.set_spawn_point(spawn.clone());
                         }
@@ -275,9 +275,9 @@ fn init() -> Result<(), Box<dyn Error>> {
                     pain_ring.spawn_center_marker(&config::RingCenterPoint {
                         map: (&main_player.chr_ins.block_origin_override).into(),
                         position: config::MapPosition(
-                            main_player.block_position.0.0,
-                            main_player.block_position.0.1,
-                            main_player.block_position.0.2,
+                            main_player.block_position.0 .0,
+                            main_player.block_position.0 .1,
+                            main_player.block_position.0 .2,
                         ),
                     })
                 }

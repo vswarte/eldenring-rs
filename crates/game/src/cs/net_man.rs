@@ -2,7 +2,12 @@ use std::ptr::NonNull;
 
 use windows::core::PCWSTR;
 
-use crate::{dltx::DLString, fd4::{FD4StepBaseInterface, FD4Time}, pointer::OwnedPtr, stl::DoublyLinkedList};
+use crate::{
+    dltx::DLString,
+    fd4::{FD4StepBaseInterface, FD4Time},
+    pointer::OwnedPtr,
+    stl::DoublyLinkedList,
+};
 
 use super::{CSEzTask, CSEzUpdateTask, MapId, PlayerIns};
 
@@ -10,7 +15,21 @@ use super::{CSEzTask, CSEzUpdateTask, MapId, PlayerIns};
 #[dlrf::singleton("CSNetMan")]
 pub struct CSNetMan {
     vftable: usize,
-    unk8: [u8; 0x60],
+    unk8: u32,
+    unkc: u32,
+    unk10: [u8; 5],
+    freeze_game: bool,
+    unk16: bool,
+    unk17: bool,
+    // True if fps is low, prevents you from online play.
+    pub low_fps_penalty: bool,
+    pub server_connection_lost: bool,
+    unk1a: bool,
+    unk1b: u8,
+    pub map_id: MapId,
+    pub unk20: MapId,
+    pub play_region_id: u32,
+    unk28: [u8; 0x40],
     sos_db: usize,
     wandering_ghost_db: usize,
     /// Keeps track of all all bloodmessages in the world as well as any rating and created
@@ -219,5 +238,4 @@ impl QuickmatchSettings {
 }
 
 #[repr(C)]
-pub struct QuickmatchParticipant {
-}
+pub struct QuickmatchParticipant {}
