@@ -1,8 +1,11 @@
+use std::fmt::Display;
+
 use crate::pointer::OwnedPtr;
 
 use super::ItemId;
 
 #[repr(u8)]
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash)]
 pub enum GaitemCategory {
     Weapon = 0,
     Protector = 1,
@@ -30,8 +33,8 @@ impl From<u8> for GaitemCategory {
 #[repr(C)]
 pub struct CSGaitemIns {
     vftable: usize,
-    pub gaitem_handle: u32,
-    pub item_id: i32,
+    pub gaitem_handle: GaitemHandle,
+    pub item_id: ItemId,
 }
 
 #[repr(C)]
@@ -81,5 +84,18 @@ impl GaitemHandle {
 
     pub fn category(self) -> GaitemCategory {
         GaitemCategory::from((self.0 >> 28 & 7) as u8)
+    }
+}
+
+impl Display for GaitemHandle {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(
+            f,
+            "Gaitem Handle: {:0>8}, Category: {:?}, Selector: {:0>6}, Indexed: {:?}",
+            self.0,
+            self.category(),
+            self.to_selector(),
+            self.is_indexed()
+        )
     }
 }

@@ -1,6 +1,7 @@
 use std::sync::Arc;
 
-use game::pointer::OwnedPtr;
+use game::{cs::WorldChrMan, pointer::OwnedPtr};
+use util::singleton::get_instance;
 
 use crate::{
     gamestate::GameStateProvider,
@@ -47,6 +48,7 @@ pub struct TeamRelations {
     location: Arc<ProgramLocationProvider>,
     backup: TeamRelationBackup,
     applied_table_patches: bool,
+    overrided_teams: bool,
 }
 
 impl TeamRelations {
@@ -56,6 +58,7 @@ impl TeamRelations {
             location,
             backup: TeamRelationBackup::default(),
             applied_table_patches: false,
+            overrided_teams: false,
         }
     }
     pub fn update(&mut self) {
@@ -65,6 +68,34 @@ impl TeamRelations {
             self.patch_tables();
             self.applied_table_patches = true;
         }
+        if self.game.match_in_game() {
+            // temporary solution untill proper timing is found
+            self.override_teams();
+        }
+    }
+
+    fn override_teams(&mut self) {
+        if self.overrided_teams {
+            return;
+        }
+        if let Ok(Some(world_chr_man)) = unsafe { get_instance::<WorldChrMan>() } {
+            let main_player_hande = &world_chr_man
+                .main_player
+                .as_ref()
+                .unwrap()
+                .chr_ins
+                .field_ins_handle;
+            world_chr_man.player_chr_set.characters().for_each(|c| {
+                c.chr_ins.team_type = if &c.chr_ins.field_ins_handle == main_player_hande {
+                    LOCAL_PLAYER_TEAM_TYPE
+                } else {
+                    OTHER_PLAYER_TEAM_TYPE
+                }
+            })
+        } else {
+            return;
+        }
+        self.overrided_teams = true;
     }
     pub fn reset(&mut self) {
         self.restore_table();

@@ -2,8 +2,8 @@ use std::sync::{Arc, RwLock};
 
 use game::{
     cs::{
-        ChrAsmEquipEntries, ChrAsmSlot, EquipInventoryData, EquipInventoryDataListEntry,
-        ItemCategory, ItemId, QMItemBackupVectorItem, WorldChrMan,
+        ChrAsmEquipEntries, ChrAsmSlot, EquipInventoryData, EquipInventoryDataListEntry, ItemId,
+        QMItemBackupVectorItem, WorldChrMan,
     },
     Vector,
 };
@@ -11,7 +11,6 @@ use util::singleton::get_instance;
 
 use crate::{
     rva::{RVA_EQUIP_INVENTORY_DATA_REMOVE_ITEM, RVA_QM_BACKUP_ITEM, RVA_UNEQUIP_ITEM},
-    team::LOCAL_PLAYER_TEAM_TYPE,
     ProgramLocationProvider,
 };
 
@@ -56,9 +55,6 @@ impl Player {
 
         self.snapshot_levels();
         self.apply_levels_to_player(&PLAYER_LEVELS_IN_BATTLE);
-
-        // Battle royale local player team type
-        self.set_team_type(LOCAL_PLAYER_TEAM_TYPE);
     }
 
     pub fn restore_original_levels(&self) {

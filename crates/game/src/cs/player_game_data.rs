@@ -2,7 +2,7 @@ use std::ptr::NonNull;
 
 use crate::{pointer::OwnedPtr, Vector};
 
-use super::{ChrAsm, FieldInsHandle, ItemId};
+use super::{ChrAsm, FieldInsHandle, GaitemHandle, ItemId};
 
 #[repr(C)]
 /// Source of name: RTTI
@@ -327,7 +327,7 @@ impl InventoryItemsData {
 pub struct EquipInventoryDataListEntry {
     /// Handle to the gaitem instance which describes additional properties to the inventory item,
     /// like durability and gems in the case of weapons.
-    pub gaitem_handle: u32,
+    pub gaitem_handle: GaitemHandle,
     pub item_id: ItemId,
     /// Quantity of the item we have.
     pub quantity: u32,
@@ -335,7 +335,6 @@ pub struct EquipInventoryDataListEntry {
     unk10: u8,
     _pad11: [u8; 3],
     pub pot_group: i32,
-    unk18: u32,
 }
 
 #[repr(C)]
@@ -361,6 +360,6 @@ pub struct EquipItemData {
 
 #[repr(C)]
 pub struct EquipDataItem {
-    pub gaitem_handle: i32,
+    pub gaitem_handle: GaitemHandle,
     pub index: i32,
 }

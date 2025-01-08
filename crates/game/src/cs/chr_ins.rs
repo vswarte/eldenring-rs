@@ -13,8 +13,7 @@ use crate::Vector;
 
 use super::player_game_data::PlayerGameData;
 use super::{
-    CSMsbParts, CSMsbPartsEne, CSSessionManagerPlayerEntry, FieldInsBaseVmt, FieldInsHandle, MapId,
-    WorldBlockChr,
+    CSMsbParts, CSMsbPartsEne, CSSessionManagerPlayerEntry, FieldInsBaseVmt, FieldInsHandle, GaitemHandle, MapId, WorldBlockChr
 };
 
 #[repr(C)]
@@ -661,6 +660,7 @@ pub struct ChrAsmEquipmentSlots {
     pub right_bolt_slot: u32,
 }
 #[repr(u32)]
+#[derive(Debug)]
 pub enum ChrAsmArmStyle {
     EmptyHanded = 0,
     OneHanded = 1,
@@ -683,9 +683,9 @@ pub struct ChrAsmEquipment {
 pub struct ChrAsm {
     unk0: i32,
     unk4: i32,
-    equipment: ChrAsmEquipment,
+    pub equipment: ChrAsmEquipment,
     /// Holds references to the inventory slots for each equipment piece.
-    pub gaitem_handles: [u32; 22],
+    pub gaitem_handles: [GaitemHandle; 22],
     /// Holds the param IDs for each equipment piece.
     pub equipment_param_ids: [i32; 22],
     unkd4: u32,

@@ -1,5 +1,6 @@
 use game::cs::{
-    CSChrModelParamModifierModule, ChrAsm, ChrIns, ChrInsModuleContainer, ChrPhysicsModule, EquipInventoryData, PlayerGameData, PlayerIns
+    CSChrModelParamModifierModule, ChrAsm, ChrAsmEquipment, ChrIns, ChrInsModuleContainer,
+    ChrPhysicsModule, EquipInventoryData, PlayerGameData, PlayerIns,
 };
 use hudhook::imgui::{TableColumnSetup, TreeNodeFlags, Ui};
 
@@ -21,7 +22,10 @@ impl DebugDisplay for PlayerIns {
             ui.unindent();
         }
 
-        ui.text(format!("Steam ID: {:x}", unsafe { self.session_manager_player_entry.as_ref() }.steam_id));
+        ui.text(format!(
+            "Steam ID: {:x}",
+            unsafe { self.session_manager_player_entry.as_ref() }.steam_id
+        ));
         if ui.collapsing_header("Session Player Entry", TreeNodeFlags::empty()) {
             ui.indent();
             ui.unindent();
@@ -35,30 +39,49 @@ impl DebugDisplay for PlayerIns {
 
 impl DebugDisplay for ChrAsm {
     fn render_debug(&self, ui: &&mut Ui) {
-        ui.text(format!("Arm style: {:?}", self.arm_style));
-        ui.text(format!(
-            "Left-hand weapon slot: {:?}",
-            self.left_weapon_slot
-        ));
-        ui.text(format!(
-            "Right-hand weapon slot: {:?}",
-            self.right_weapon_slot
-        ));
-        ui.text(format!("Left-hand arrow slot: {:?}", self.left_arrow_slot));
-        ui.text(format!(
-            "Right-hand arrow slot: {:?}",
-            self.right_weapon_slot
-        ));
-        ui.text(format!("Left-hand bolt slot: {:?}", self.left_bolt_slot));
-        ui.text(format!("Right-hand bolt slot: {:?}", self.right_bolt_slot));
+        if ui.collapsing_header("ChrAsmEquipment", TreeNodeFlags::empty()) {
+            ui.indent();
+            self.equipment.render_debug(ui);
+            ui.unindent();
+        }
 
         for (i, e) in self.gaitem_handles.iter().enumerate() {
-            ui.text(format!("Gaitem {}: {:x?}", i, e));
+            ui.text(format!("Gaitem handle {}: {}", i, e.to_string()));
         }
 
         for (i, e) in self.equipment_param_ids.iter().enumerate() {
             ui.text(format!("Equipment param ID {}: {:?}", i, e));
         }
+    }
+}
+
+impl DebugDisplay for ChrAsmEquipment {
+    fn render_debug(&self, ui: &&mut Ui) {
+        ui.text(format!("Arm style: {:?}", self.arm_style));
+        ui.text(format!(
+            "Left-hand weapon slot: {:?}",
+            self.selected_slots.left_weapon_slot
+        ));
+        ui.text(format!(
+            "Right-hand weapon slot: {:?}",
+            self.selected_slots.right_weapon_slot
+        ));
+        ui.text(format!(
+            "Left-hand arrow slot: {:?}",
+            self.selected_slots.left_arrow_slot
+        ));
+        ui.text(format!(
+            "Right-hand arrow slot: {:?}",
+            self.selected_slots.right_weapon_slot
+        ));
+        ui.text(format!(
+            "Left-hand bolt slot: {:?}",
+            self.selected_slots.left_bolt_slot
+        ));
+        ui.text(format!(
+            "Right-hand bolt slot: {:?}",
+            self.selected_slots.right_bolt_slot
+        ));
     }
 }
 
@@ -84,9 +107,15 @@ impl DebugDisplay for PlayerGameData {
 
 impl DebugDisplay for EquipInventoryData {
     fn render_debug(&self, ui: &&mut Ui) {
-        ui.text(format!("Total item entry count: {}", self.total_item_entry_count));
+        ui.text(format!(
+            "Total item entry count: {}",
+            self.total_item_entry_count
+        ));
 
-        let label = format!("Normal Items ({}/{})", self.normal_item_count, self.normal_item_capacity);
+        let label = format!(
+            "Normal Items ({}/{})",
+            self.items_data.normal_item_count, self.items_data.normal_item_capacity
+        );
         if ui.collapsing_header(label.as_str(), TreeNodeFlags::empty()) {
             if let Some(_t) = ui.begin_table_header(
                 "equip-inventory-data-normal-items",
@@ -99,29 +128,33 @@ impl DebugDisplay for EquipInventoryData {
                     TableColumnSetup::new("Display ID"),
                 ],
             ) {
-                self.normal_items().iter().enumerate().for_each(|(index, item)| {
-                    ui.table_next_column();
-                    ui.text(index.to_string());
+                self.items_data
+                    .normal_items()
+                    .iter()
+                    .enumerate()
+                    .for_each(|(index, item)| {
+                        ui.table_next_column();
+                        ui.text(index.to_string());
 
-                    ui.table_next_column();
-                    ui.text(format!("{:x}", item.gaitem_handle));
+                        ui.table_next_column();
+                        ui.text(item.gaitem_handle.to_string());
 
-                    ui.table_next_column();
-                    ui.text(item.category.to_string());
+                        ui.table_next_column();
+                        ui.text(item.item_id.to_string());
 
-                    ui.table_next_column();
-                    ui.text(item.item_id.to_string());
+                        ui.table_next_column();
+                        ui.text(item.quantity.to_string());
 
-                    ui.table_next_column();
-                    ui.text(item.quantity.to_string());
-
-                    ui.table_next_column();
-                    ui.text(item.display_id.to_string());
-                });
+                        ui.table_next_column();
+                        ui.text(item.display_id.to_string());
+                    });
             }
         }
 
-        let label = format!("Key Items ({}/{})", self.key_item_count, self.key_item_capacity);
+        let label = format!(
+            "Key Items ({}/{})",
+            self.items_data.key_item_count, self.items_data.key_item_capacity
+        );
         if ui.collapsing_header(label.as_str(), TreeNodeFlags::empty()) {
             if let Some(_t) = ui.begin_table_header(
                 "equip-inventory-data-key-items",
@@ -134,29 +167,33 @@ impl DebugDisplay for EquipInventoryData {
                     TableColumnSetup::new("Display ID"),
                 ],
             ) {
-                self.key_items().iter().enumerate().for_each(|(index, item)| {
-                    ui.table_next_column();
-                    ui.text(index.to_string());
+                self.items_data
+                    .key_items()
+                    .iter()
+                    .enumerate()
+                    .for_each(|(index, item)| {
+                        ui.table_next_column();
+                        ui.text(index.to_string());
 
-                    ui.table_next_column();
-                    ui.text(format!("{:x}", item.gaitem_handle));
+                        ui.table_next_column();
+                        ui.text(item.gaitem_handle.to_string());
 
-                    ui.table_next_column();
-                    ui.text(item.category.to_string());
+                        ui.table_next_column();
+                        ui.text(item.item_id.to_string());
 
-                    ui.table_next_column();
-                    ui.text(item.item_id.to_string());
+                        ui.table_next_column();
+                        ui.text(item.quantity.to_string());
 
-                    ui.table_next_column();
-                    ui.text(item.quantity.to_string());
-
-                    ui.table_next_column();
-                    ui.text(item.display_id.to_string());
-                });
+                        ui.table_next_column();
+                        ui.text(item.display_id.to_string());
+                    });
             }
         }
 
-        let label = format!("Secondary Key Items ({}/{})", self.secondary_key_item_count, self.secondary_key_item_capacity);
+        let label = format!(
+            "Secondary Key Items ({}/{})",
+            self.items_data.secondary_key_item_count, self.items_data.secondary_key_item_capacity
+        );
         if ui.collapsing_header(label.as_str(), TreeNodeFlags::empty()) {
             if let Some(_t) = ui.begin_table_header(
                 "equip-inventory-data-secondary-key-items",
@@ -169,25 +206,26 @@ impl DebugDisplay for EquipInventoryData {
                     TableColumnSetup::new("Display ID"),
                 ],
             ) {
-                self.secondary_key_items().iter().enumerate().for_each(|(index, item)| {
-                    ui.table_next_column();
-                    ui.text(index.to_string());
+                self.items_data
+                    .secondary_key_items()
+                    .iter()
+                    .enumerate()
+                    .for_each(|(index, item)| {
+                        ui.table_next_column();
+                        ui.text(index.to_string());
 
-                    ui.table_next_column();
-                    ui.text(format!("{:x}", item.gaitem_handle));
+                        ui.table_next_column();
+                        ui.text(item.gaitem_handle.to_string());
 
-                    ui.table_next_column();
-                    ui.text(item.category.to_string());
+                        ui.table_next_column();
+                        ui.text(item.item_id.to_string());
 
-                    ui.table_next_column();
-                    ui.text(item.item_id.to_string());
+                        ui.table_next_column();
+                        ui.text(item.quantity.to_string());
 
-                    ui.table_next_column();
-                    ui.text(item.quantity.to_string());
-
-                    ui.table_next_column();
-                    ui.text(item.display_id.to_string());
-                });
+                        ui.table_next_column();
+                        ui.text(item.display_id.to_string());
+                    });
             }
         }
     }
@@ -202,7 +240,10 @@ impl DebugDisplay for ChrIns {
         ui.text(format!("Last killed by: {}", self.last_killed_by));
         ui.text(format!("Last used item: {}", self.last_used_item));
 
-        ui.text(format!("Block center origin 1: {}", self.block_origin_override));
+        ui.text(format!(
+            "Block center origin 1: {}",
+            self.block_origin_override
+        ));
         ui.text(format!("Block center origin 2: {}", self.block_origin));
 
         if ui.collapsing_header("Special Effect", TreeNodeFlags::empty()) {
@@ -268,9 +309,7 @@ impl DebugDisplay for CSChrModelParamModifierModule {
     fn render_debug(&self, ui: &&mut Ui) {
         if let Some(_t) = ui.begin_table_header(
             "chr-ins-model-param-modifier",
-            [
-                TableColumnSetup::new("Name"),
-            ],
+            [TableColumnSetup::new("Name")],
         ) {
             self.modifiers.items().iter().for_each(|modifier| {
                 ui.table_next_column();

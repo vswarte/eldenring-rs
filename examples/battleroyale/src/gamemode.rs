@@ -9,10 +9,7 @@ use std::{
     time::{Duration, Instant},
 };
 
-use game::{
-    cs::{CSEventFlagMan, CSNetMan, CSSessionManager, CSTeamTypeBase, FieldInsHandle, MapId},
-    position::BlockPoint,
-};
+use game::cs::{CSNetMan, FieldInsHandle};
 use util::{
     input::is_key_pressed,
     singleton::get_instance,
@@ -48,8 +45,6 @@ pub struct GameMode {
     sent_loadout: AtomicBool,
     /// Applied flag overrides for this match?
     applied_flag_overrides: AtomicBool,
-    /// Did we patch the team table?
-    patched_team_table: AtomicBool,
     /// Provides info about the games state like if we're in a match, score, alive players.
     game_state: Arc<GameStateProvider>,
     /// Manages player-related mechanics.
@@ -85,7 +80,6 @@ impl GameMode {
             player,
             end_requested_at: Default::default(),
             notification,
-            patched_team_table: Default::default(),
             config,
         }
     }
@@ -105,7 +99,7 @@ impl GameMode {
             }
         }
 
-        if game_state.match_loading() && !self.setup_player.swap(true, Ordering::Relaxed) {
+        if game_state.match_in_game() && !self.setup_player.swap(true, Ordering::Relaxed) {
             self.player.setup_for_match();
         }
 
