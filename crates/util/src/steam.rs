@@ -8,7 +8,7 @@ use std::{
 };
 
 use steamworks::{Client, ClientManager};
-use steamworks_sys::{uint8, ISteamNetworkingMessages};
+use steamworks_sys::ISteamNetworkingMessages;
 use vtable_rs::VPtr;
 
 pub fn client() -> &'static Client {

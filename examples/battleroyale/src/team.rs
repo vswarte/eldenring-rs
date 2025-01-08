@@ -69,7 +69,6 @@ impl TeamRelations {
             self.applied_table_patches = true;
         }
         if self.game.match_in_game() {
-            // temporary solution untill proper timing is found
             self.override_teams();
         }
     }

@@ -100,7 +100,7 @@ impl GameMode {
         }
 
         if game_state.match_in_game() && !self.setup_player.swap(true, Ordering::Relaxed) {
-            self.player.setup_for_match();
+            // self.player.setup_for_match();
         }
 
         if !game_state.match_active() {
@@ -161,7 +161,8 @@ impl GameMode {
 
     /// Finishes the match and closes it.
     fn end_match(&self) {
-        self.player.restore_original_levels();
+        // TODO(Axi)
+        // self.player.restore_original_levels();
 
         // Disconnect the ugly way for now
         let cs_net_man = unsafe { get_instance::<CSNetMan>() }.unwrap().unwrap();

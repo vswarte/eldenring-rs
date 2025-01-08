@@ -3,10 +3,6 @@ use game::cs::{
     SummonBuddyWarpManager, WorldChrMan,
 };
 use hudhook::imgui::{TableColumnSetup, TreeNodeFlags, Ui};
-use util::{
-    singleton::get_instance,
-    world_chr_man::{ChrDebugSpawnRequest, WorldChrManExt},
-};
 
 use super::DebugDisplay;
 

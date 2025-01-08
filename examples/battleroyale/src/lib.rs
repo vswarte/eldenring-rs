@@ -283,7 +283,8 @@ fn init() -> Result<(), Box<dyn Error>> {
                 }
 
                 gamemode.update(data.delta_time.time);
-                team_relations.update();
+                // TODO(Axi)
+                // team_relations.update();
 
                 if game.match_active() && game.is_host() {
                     loadout.update();

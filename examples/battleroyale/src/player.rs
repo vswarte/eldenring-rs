@@ -116,13 +116,14 @@ impl Player {
     pub fn clean_inventory(&self) {
         tracing::info!("Storing player items");
 
-        let player_game_data = &unsafe { get_instance::<WorldChrMan>() }
+        let equipment = &mut unsafe { get_instance::<WorldChrMan>() }
             .unwrap()
             .expect("Could not get WorldChrMan")
             .main_player
-            .as_ref()
+            .as_mut()
             .expect("Could not get main player")
-            .player_game_data;
+            .player_game_data
+            .equipment;
 
         let remove_item: fn(&EquipInventoryData, u32, u32) -> bool = unsafe {
             std::mem::transmute(
@@ -132,12 +133,10 @@ impl Player {
             )
         };
 
-        (0..player_game_data
-            .equipment
-            .equip_inventory_data
-            .total_item_entry_count)
+        (equipment.equip_inventory_data.items_data.key_item_capacity
+            ..equipment.equip_inventory_data.items_data.normal_item_count)
             .for_each(|i| {
-                remove_item(&player_game_data.equipment.equip_inventory_data, i, 1);
+                remove_item(&equipment.equip_inventory_data, i, 1);
             });
     }
 
@@ -160,34 +159,22 @@ impl Player {
         let qmv = equipment.qm_item_backup_vector.as_mut();
         qmv.end = qmv.begin;
 
-        (0..equipment.equip_inventory_data.total_item_entry_count).for_each(|i| {
-            let item_entry = self.get_item_entry_by_index(i);
-            backup_item_for_qm(
-                &equipment.qm_item_backup_vector,
-                &item_entry.item_id,
-                item_entry.quantity,
-            );
-        });
-    }
-
-    pub fn get_item_entry_by_index(&self, index: u32) -> &EquipInventoryDataListEntry {
-        let equip_inventory_items_data = &unsafe { get_instance::<WorldChrMan>() }
-            .unwrap()
-            .expect("Could not get WorldChrMan")
-            .main_player
-            .as_ref()
-            .expect("Could not get main player")
-            .player_game_data
-            .equipment
-            .equip_inventory_data
-            .items_data;
-
-        if index < equip_inventory_items_data.key_item_capacity {
-            &equip_inventory_items_data.key_items()[index as usize]
-        } else {
-            &equip_inventory_items_data.normal_items()
-                [(index - equip_inventory_items_data.key_item_count) as usize]
-        }
+        (equipment.equip_inventory_data.items_data.key_item_capacity
+            ..equipment.equip_inventory_data.items_data.normal_item_count)
+            .for_each(|i| {
+                if let Some(item_entry) = equipment
+                    .equip_inventory_data
+                    .items_data
+                    .normal_items()
+                    .get(i as usize)
+                {
+                    backup_item_for_qm(
+                        &equipment.qm_item_backup_vector,
+                        &item_entry.item_id,
+                        item_entry.quantity,
+                    );
+                }
+            });
     }
 
     pub fn snapshot_equipment(&self) {
@@ -255,18 +242,6 @@ impl Player {
         unequip_item(ChrAsmSlot::Pouch4, true);
         unequip_item(ChrAsmSlot::Pouch5, true);
         unequip_item(ChrAsmSlot::Pouch6, true);
-    }
-
-    pub fn set_team_type(&self, team_type: u8) {
-        let player_game_data = &mut unsafe { get_instance::<WorldChrMan>() }
-            .unwrap()
-            .expect("Could not get WorldChrMan")
-            .main_player
-            .as_mut()
-            .expect("Could not get main player")
-            .player_game_data;
-
-        player_game_data.team_type = team_type;
     }
 }
 
