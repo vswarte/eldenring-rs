@@ -100,6 +100,7 @@ impl GameMode {
         }
 
         if game_state.match_in_game() && !self.setup_player.swap(true, Ordering::Relaxed) {
+            // TODO(Axi)
             // self.player.setup_for_match();
         }
 
