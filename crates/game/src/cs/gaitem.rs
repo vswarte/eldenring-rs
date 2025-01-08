@@ -1,6 +1,31 @@
 use crate::pointer::OwnedPtr;
 
-use super::{ItemCategory, ItemId};
+use super::ItemId;
+
+#[repr(u8)]
+pub enum GaitemCategory {
+    Weapon = 0,
+    Protector = 1,
+    Accessory = 2,
+    Goods = 3,
+    Gem = 4,
+    // u4 max
+    None = 15,
+}
+
+impl From<u8> for GaitemCategory {
+    fn from(value: u8) -> Self {
+        match value {
+            0 => GaitemCategory::Weapon,
+            1 => GaitemCategory::Protector,
+            2 => GaitemCategory::Accessory,
+            3 => GaitemCategory::Goods,
+            4 => GaitemCategory::Gem,
+            15 => GaitemCategory::None,
+            _ => panic!("Invalid gaitem category"),
+        }
+    }
+}
 
 #[repr(C)]
 pub struct CSGaitemIns {
@@ -31,16 +56,15 @@ pub struct CSGaitemImp {
 
 #[repr(C)]
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash)]
-pub struct GaitemHandle(pub u32);
+pub struct GaitemHandle(u32);
 
 impl GaitemHandle {
     /// converts gaitem handle to selector
-    /// should be the same as param id of the item this handle points to
     pub const fn to_selector(self) -> u32 {
         self.0 & 0x00ffffff
     }
 
-    pub fn from_parts(selector: u32, category: ItemCategory) -> Self {
+    pub fn from_parts(selector: u32, category: GaitemCategory) -> Self {
         GaitemHandle(selector & 0x00FFFFFF | (category as u32 | 0xfffffff8) << 28)
     }
 
@@ -55,7 +79,7 @@ impl GaitemHandle {
         self.0 & 0xffff
     }
 
-    pub fn category(self) -> ItemCategory {
-        ItemCategory::from((self.0 >> 28 & 7) as u8)
+    pub fn category(self) -> GaitemCategory {
+        GaitemCategory::from((self.0 >> 28 & 7) as u8)
     }
 }

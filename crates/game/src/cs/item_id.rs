@@ -2,7 +2,7 @@ use std::fmt::Display;
 
 #[repr(C)]
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash)]
-pub struct ItemId(pub u32);
+pub struct ItemId(u32);
 
 #[repr(u8)]
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash)]
