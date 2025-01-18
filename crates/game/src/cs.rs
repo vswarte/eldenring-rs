@@ -29,6 +29,9 @@ mod world_sfx_man;
 mod team_relation;
 mod location;
 mod havok_man;
+mod bullet_ins;
+mod bullet_manager;
+mod targeting;
 
 pub use map_id::*;
 pub use camera::*;
@@ -61,3 +64,6 @@ pub use world_sfx_man::*;
 pub use team_relation::*;
 pub use location::*;
 pub use havok_man::*;
+pub use bullet_ins::*;
+pub use bullet_manager::*;
+pub use targeting::*;
