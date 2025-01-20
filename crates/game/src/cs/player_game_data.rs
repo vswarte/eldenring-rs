@@ -271,7 +271,14 @@ pub struct EquipInventoryData {
     vftable: usize,
     pub items_data: InventoryItemsData,
     pub total_item_entry_count: u32,
-    unk84: [u8; 0xa4],
+    unk84: [u8; 0x9C],
+    /// True will allow consumables stack up to 600 like in storage box.
+    pub unlimited_consumables: bool,
+    /// Should pots be limited to amount of pot "keys" items?
+    pub limited_pots: bool,
+    unk122: u8,
+    unk123: u8,
+    unk124: u32
 }
 
 #[repr(C)]

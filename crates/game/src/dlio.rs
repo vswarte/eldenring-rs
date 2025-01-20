@@ -115,7 +115,7 @@ pub trait DLFileDeviceVmt {
         &mut self,
         name_dlstring: &DLString,
         name_u16: *const u16,
-        param_4: usize,
+        operator_container: &mut DLFileOperatorContainer,
         allocator: &mut DLAllocatorBase,
         param_6: bool,
     ) -> *const u8;
@@ -276,6 +276,14 @@ pub struct BndEntry {
 }
 
 #[repr(C)]
+pub struct DLFileOperatorContainer {
+    pub allocator: OwnedPtr<DLAllocatorBase>,
+    read_file_operator: OwnedPtr<DLFileOperatorBase>,
+    write_file_operator: OwnedPtr<DLFileOperatorBase>,
+    flags: u32,
+}
+
+#[repr(C)]
 pub struct DLFileDeviceManager {
     pub devices: Vector<NonNull<DLFileDeviceBase>>,
     pub service_providers: Vector<NonNull<DLFileDeviceImageSPIBase>>,
@@ -297,11 +305,11 @@ impl DLFileDeviceVmt for DLFileDeviceBase {
         &mut self,
         name_dlstring: &DLString,
         name_u16: *const u16,
-        param_4: usize,
+        operator_container: &mut DLFileOperatorContainer,
         allocator: &mut DLAllocatorBase,
         param_6: bool,
     ) -> *const u8 {
-        (self.vftable.load_file)(self, name_dlstring, name_u16, param_4, allocator, param_6)
+        (self.vftable.load_file)(self, name_dlstring, name_u16, operator_container, allocator, param_6)
     }
 
     extern "C" fn file_enumerator(&self) -> *const u8 {
@@ -517,7 +525,8 @@ where
         let mut buffer = vec![0x0u8; length];
         self.buffer.read_exact(&mut buffer).unwrap();
 
-        unsafe { std::ptr::copy_nonoverlapping(buffer.as_ptr(), output, length) }
+        unsafe { std::ptr::copy_nonoverlapping(buffer.as_ptr(), output, length) };
+        self.result = DLFileOperatorResult::Success;
         length
     }
 
