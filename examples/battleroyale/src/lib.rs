@@ -88,13 +88,13 @@ pub unsafe extern "C" fn DllMain(_hmodule: usize, reason: u32) -> bool {
             // Give the CRT init a bit of leeway
             wait_for_system_init(5000).expect("System initialization timed out");
 
-            steam::register_callback(1251, |request: &SteamNetworkingMessagesSessionRequest_t| {
-                tracing::info!("Message sesson request from");
-            });
-
-            steam::register_callback(1252, |info: &SteamNetworkingMessagesSessionFailed_t| {
-                tracing::error!("Message session failed");
-            });
+            // steam::register_callback(1251, |request: &SteamNetworkingMessagesSessionRequest_t| {
+            //     tracing::info!("Message session request");
+            // });
+            //
+            // steam::register_callback(1252, |info: &SteamNetworkingMessagesSessionFailed_t| {
+            //     tracing::error!("Message session failed");
+            // });
 
             init().expect("Could not initialize gamemode");
         });

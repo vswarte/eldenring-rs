@@ -1,6 +1,9 @@
 use std::{collections::HashMap, error::Error};
 
-use game::{cs::{FieldInsHandle, WorldChrMan}, position::BlockPoint};
+use game::{
+    cs::{FieldInsHandle, WorldChrMan},
+    position::BlockPoint,
+};
 use serde::{Deserialize, Serialize};
 use steamworks::{
     networking_types::{NetworkingIdentity, SendFlags},
@@ -8,7 +11,10 @@ use steamworks::{
 };
 use util::{singleton::get_instance, steam};
 
-use crate::{config::{MapId, MapPosition, PlayerSpawnPoint}, loadout::PlayerMatchDetails};
+use crate::{
+    config::{MapId, MapPosition, PlayerSpawnPoint},
+    loadout::PlayerMatchDetails,
+};
 
 const STEAM_MESSAGE_CHANNEL: u32 = 51234;
 const STEAM_MESSAGE_BATCH_SIZE: usize = 0x10;
@@ -54,7 +60,7 @@ impl MatchMessaging {
             field_ins_handle_map_id: field_ins_handle.map_id.0,
             field_ins_handle_selector: field_ins_handle.selector.0,
             map: map.0,
-            pos: (pos.0.0, pos.0.1, pos.0.2),
+            pos: (pos.0 .0, pos.0 .1, pos.0 .2),
             orientation: *orientation,
             npc_param: *npc_param,
             think_param: *think_param,
@@ -101,7 +107,8 @@ impl MatchMessaging {
     }
 
     pub fn broadcast_hello(&self) {
-        let serialized = bincode::serialize(&Message::Hello).expect("Could not serialize hello message");
+        let serialized =
+            bincode::serialize(&Message::Hello).expect("Could not serialize hello message");
         self.broadcast(serialized.as_slice());
     }
 
@@ -109,10 +116,17 @@ impl MatchMessaging {
     fn broadcast(&self, data: &[u8]) -> Result<(), Box<dyn Error>> {
         let world_chr_man = unsafe { get_instance::<WorldChrMan>() }.unwrap().unwrap();
         world_chr_man.player_chr_set.characters().for_each(|p| {
-            self.send(
-                &unsafe { p.session_manager_player_entry.as_ref() }.steam_id,
-                data,
-            );
+            if world_chr_man
+                .main_player
+                .as_ref()
+                // Prevent us from broadcasting data to ourselves.
+                .is_some_and(|m| m.chr_ins.field_ins_handle != p.chr_ins.field_ins_handle)
+            {
+                self.send(
+                    &unsafe { p.session_manager_player_entry.as_ref() }.steam_id,
+                    data,
+                );
+            }
         });
 
         Ok(())

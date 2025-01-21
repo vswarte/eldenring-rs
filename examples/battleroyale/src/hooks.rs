@@ -59,7 +59,7 @@ impl Hooks {
         context: Arc<GameModeContext>,
         game: Arc<GameStateProvider>,
     ) -> Result<Self, HookError> {
-        Self::patch_chr_sets(&location);
+        Self::patch_chr_sets(&location)?;
 
         // Take control over the players death so we can apply the specator cam.
         Self::hook_player_character(&location, game.clone())?;
