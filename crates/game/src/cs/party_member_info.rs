@@ -50,11 +50,16 @@ pub struct PartyMemberInfo {
     vftable: usize,
     pub white_phantom_count: i32,
     pub red_phantom_count: i32,
-    pub in_world_player_count: i32,
-    pub player_count: i32,
+    /// all loaded players without npc
+    pub in_world_online_player_count: i32,
+    /// all loaded players including npc
+    pub in_world_players_count: i32,
+    /// same as loaded_online_player_count
     pub non_npc_player_count: i32,
-    pub all_player_count: i32,
+    /// in session player count including npc
     pub session_player_count: i32,
+    /// in session player count excluding npc
+    pub session_online_player_count: i32,
     unk24: u8,
     unk25: u8,
     unk26: u8,
