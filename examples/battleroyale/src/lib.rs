@@ -38,12 +38,7 @@ use game::{
 use gamemode::GameMode;
 use tracing_panic::panic_hook;
 use util::{
-    arxan,
-    input::is_key_pressed,
-    program::Program,
-    singleton::get_instance,
-    steam::{self, SteamCallback},
-    task::CSTaskImpExt,
+    arxan, input::is_key_pressed, program::Program, singleton::get_instance, steam::{self, SteamCallback}, system::wait_for_system_init, task::CSTaskImpExt
 };
 
 mod chr_spawner;
@@ -91,7 +86,7 @@ pub unsafe extern "C" fn DllMain(_hmodule: usize, reason: u32) -> bool {
 
         std::thread::spawn(|| {
             // Give the CRT init a bit of leeway
-            std::thread::sleep(Duration::from_secs(5));
+            wait_for_system_init(5000).expect("System initialization timed out");
 
             steam::register_callback(1251, |request: &SteamNetworkingMessagesSessionRequest_t| {
                 tracing::info!("Message sesson request from");

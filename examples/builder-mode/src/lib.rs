@@ -12,7 +12,7 @@ use nalgebra_glm::{Mat4, Vec3};
 use thiserror::Error;
 use tracing_panic::panic_hook;
 use util::{
-    camera::CSCamExt, geometry::{CSWorldGeomManExt, GeometrySpawnParameters, SpawnGeometryError}, input::is_key_pressed, singleton::get_instance, task::CSTaskImpExt
+    camera::CSCamExt, geometry::{CSWorldGeomManExt, GeometrySpawnParameters, SpawnGeometryError}, input::is_key_pressed, singleton::get_instance, system::wait_for_system_init, task::CSTaskImpExt
 };
 
 #[no_mangle]
@@ -25,7 +25,7 @@ pub unsafe extern "C" fn DllMain(_hmodule: usize, reason: u32) -> bool {
 
         std::thread::spawn(|| {
             // Give the CRT init a bit of leeway
-            std::thread::sleep(std::time::Duration::from_secs(5));
+            wait_for_system_init(5000).expect("System initialization timed out");
             init().expect("Could not initialize mod");
         });
     }

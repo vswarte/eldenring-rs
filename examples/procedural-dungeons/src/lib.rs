@@ -1,11 +1,10 @@
-use std::{
-    error::Error,
-    mem::forget,
-    thread::{sleep, spawn},
-    time::Duration,
-};
+use std::{error::Error, mem::forget, thread::spawn};
 
-use game::{cs::{CSTaskGroupIndex, CSTaskImp, CSWorldGeomMan, MapId, WorldChrMan}, fd4::FD4TaskData, position::{BlockPoint, HavokPosition}};
+use game::{
+    cs::{CSTaskGroupIndex, CSTaskImp, CSWorldGeomMan, MapId, WorldChrMan},
+    fd4::FD4TaskData,
+    position::{BlockPoint, HavokPosition},
+};
 use serde::{Deserialize, Serialize};
 use thiserror::Error;
 use tracing_panic::panic_hook;
@@ -13,6 +12,7 @@ use util::{
     geometry::{CSWorldGeomManExt, GeometrySpawnParameters},
     input::is_key_pressed,
     singleton::get_instance,
+    system::wait_for_system_init,
     task::CSTaskImpExt,
 };
 
@@ -26,7 +26,7 @@ pub unsafe extern "C" fn DllMain(_hmodule: usize, reason: u32) -> bool {
 
         spawn(|| {
             // Give the CRT init a bit of leeway
-            sleep(Duration::from_secs(5));
+            wait_for_system_init(5000).expect("System initialization timed out");
 
             init().expect("Could not initialize mod");
         });
@@ -121,7 +121,8 @@ impl Dungeon {
 
         // Always start with a prefab on which the player can spawn.
         let start = prefabs
-            .iter().find(|p| p.spawn.is_some())
+            .iter()
+            .find(|p| p.spawn.is_some())
             .ok_or(DungeonError::NoStartingPrefab)?;
 
         // Calculate the players entry into the dungeon
@@ -142,7 +143,9 @@ impl Dungeon {
 
     fn spawn_prefab(&self, prefab: &Prefab) {
         // TODO: get this outta here lmao
-        let world_geom_man = unsafe { get_instance::<CSWorldGeomMan>() }.unwrap().unwrap();
+        let world_geom_man = unsafe { get_instance::<CSWorldGeomMan>() }
+            .unwrap()
+            .unwrap();
         let prefab_origin = &self.center;
 
         tracing::info!("Spawning prefab {}", prefab.name);
