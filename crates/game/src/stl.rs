@@ -15,7 +15,7 @@ pub struct DoublyLinkedListNode<T> {
 
 #[repr(C)]
 pub struct DoublyLinkedList<T> {
-    pub allocator: usize,
+    allocator: usize,
     pub head: NonNull<DoublyLinkedListNode<T>>,
     pub count: u64,
 }

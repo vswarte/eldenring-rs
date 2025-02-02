@@ -153,7 +153,7 @@ pub struct CSMsbPartsGeom {
 #[repr(C)]
 /// Seems to describe how to draw the MSB part.
 pub struct CSMsbParts {
-    pub vfptr: usize,
+    vfptr: usize,
     pub draw_flags: u32,
     _padc: u32,
     unk10: usize,
@@ -164,7 +164,7 @@ pub struct CSMsbParts {
 #[repr(C)]
 /// Source of name: RTTI
 pub struct CSMsbPartsEne {
-    pub super_cs_msb_parts: CSMsbParts,
+    pub cs_msb_parts: CSMsbParts,
 }
 
 #[repr(C)]

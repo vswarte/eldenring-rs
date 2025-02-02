@@ -160,7 +160,7 @@ pub struct WorldBlockChr<T: 'static> {
     unkd0: [u8; 0x40],
     pub world_block_info2: usize,
     pub chr_set_ptr: NonNull<ChrSet<T>>,
-    pub allocator: usize,
+    allocator: usize,
     unk128: [u8; 0x30],
     pub map_id: MapId,
     unk15c: u32,

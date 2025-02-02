@@ -6,7 +6,7 @@ use super::{ChrIns, ChrSet};
 
 #[repr(C)]
 pub struct NetChrSync {
-    pub world_info_owner: usize,
+    world_info_owner: usize,
     pub chr_slot_count: u32,
     _padc: u32,
     pub net_chr_set_sync: [Option<OwnedPtr<NetChrSetSync>>; 196],

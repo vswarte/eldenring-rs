@@ -34,7 +34,7 @@ impl MapId {
     }
 
     pub const fn is_overworld(&self) -> bool {
-        self.area() > 50 && self.area() < 89
+        self.area() >= 50 && self.area() < 89
     }
 }
 

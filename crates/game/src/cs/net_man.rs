@@ -27,7 +27,7 @@ pub struct CSNetMan {
     unk1a: bool,
     unk1b: u8,
     pub map_id: MapId,
-    pub unk20: MapId,
+    unk20: MapId,
     pub play_region_id: u32,
     unk28: [u8; 0x40],
     sos_db: usize,

@@ -277,7 +277,7 @@ pub struct BndEntry {
 
 #[repr(C)]
 pub struct DLFileOperatorContainer {
-    pub allocator: OwnedPtr<DLAllocatorBase>,
+    allocator: OwnedPtr<DLAllocatorBase>,
     read_file_operator: OwnedPtr<DLFileOperatorBase>,
     write_file_operator: OwnedPtr<DLFileOperatorBase>,
     flags: u32,
@@ -332,7 +332,7 @@ where
     T: DLFileDeviceVmt,
 {
     pub vftable: VPtr<dyn DLFileOperatorVmt, Self>,
-    pub allocator: Option<NonNull<DLAllocatorBase>>,
+    allocator: Option<NonNull<DLAllocatorBase>>,
     pub result: DLFileOperatorResult,
     unk18: usize,
     pub io_state: u32,
