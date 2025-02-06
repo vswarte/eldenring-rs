@@ -348,9 +348,15 @@ pub struct EquipInventoryDataListEntry {
 pub struct EquipMagicData {
     vftable: usize,
     pub equip_game_data: NonNull<EquipGameData>,
-    pub entries: [EquipDataItem; 14],
+    pub entries: [EquipMagicItem; 14],
     pub selected_slot: u32,
     unk84: u32,
+}
+
+#[repr(C)]
+pub struct EquipMagicItem {
+    pub param_id: i32,
+    pub charges: i32,
 }
 
 #[repr(C)]
