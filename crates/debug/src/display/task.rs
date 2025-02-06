@@ -14,6 +14,7 @@ impl DebugDisplay for CSTaskGroup {
 impl DebugDisplay for CSTaskImp {
     fn render_debug(&self, ui: &&mut Ui) {
         if ui.collapsing_header("Task Groups", TreeNodeFlags::empty()) {
+            ui.indent();
             if let Some(_t) = ui.begin_table_header(
                 "task-group-table",
                 [
@@ -26,7 +27,9 @@ impl DebugDisplay for CSTaskImp {
                     ui.table_next_column();
                     ui.text(format!("{:x}", task_group.index));
 
-                    let name_bytes = task_group.name.iter()
+                    let name_bytes = task_group
+                        .name
+                        .iter()
                         .take_while(|c| **c != 0x0)
                         .cloned()
                         .collect::<Vec<_>>();
@@ -39,6 +42,7 @@ impl DebugDisplay for CSTaskImp {
                     ui.text(format!("{}", task_group.active));
                 }
             }
+            ui.unindent();
         }
     }
 }

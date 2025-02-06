@@ -5,7 +5,7 @@ use super::DebugDisplay;
 
 impl DebugDisplay for CSWorldGeomMan {
     fn render_debug(&self, ui: &&mut Ui) {
-        ui.text(format!("Loaded blocks: {}",  self.blocks.len()));
+        ui.text(format!("Loaded blocks: {}", self.blocks.len()));
         if ui.collapsing_header("Loaded blocks", TreeNodeFlags::empty()) {
             ui.indent();
             for block in self.blocks.iter() {
@@ -33,10 +33,7 @@ impl DebugDisplay for CSWorldGeomManBlockData {
             self.next_geom_ins_field_ins_index
         ));
 
-        ui.text(format!(
-            "Objects in vector: {}",
-            self.geom_ins_vector.len()
-        ));
+        ui.text(format!("Objects in vector: {}", self.geom_ins_vector.len()));
         if ui.collapsing_header("Geometry Vector", TreeNodeFlags::empty()) {
             for geometry_ins in self.geom_ins_vector.items() {
                 let name = unsafe {
@@ -100,6 +97,5 @@ impl DebugDisplay for CSWorldGeomManBlockData {
 }
 
 impl DebugDisplay for CSWorldGeomIns {
-    fn render_debug(&self, ui: &&mut Ui) {
-    }
+    fn render_debug(&self, _ui: &&mut Ui) {}
 }
