@@ -33,6 +33,7 @@ mod location;
 mod havok_man;
 mod field_area;
 mod fe_man;
+mod window;
 
 pub use map_id::*;
 pub use item_id::*;
@@ -69,3 +70,4 @@ pub use location::*;
 pub use havok_man::*;
 pub use field_area::*;
 pub use fe_man::*;
+pub use window::*;
