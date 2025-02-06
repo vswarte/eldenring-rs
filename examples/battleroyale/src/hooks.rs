@@ -82,18 +82,18 @@ impl Hooks {
     /// Patch summonbuddy chrset to allow for 160 entries
     unsafe fn patch_chr_sets(location: &ProgramLocationProvider) -> Result<(), HookError> {
         std::ptr::write_unaligned(
-            transmute(location.get(RVA_SUMMON_BUDDY_CHRSET_ALLOC_SIZE)?),
-            &0xA00i32,
+            location.get(RVA_SUMMON_BUDDY_CHRSET_ALLOC_SIZE)? as _,
+            0xA00i32,
         );
 
         std::ptr::write_unaligned(
-            transmute(location.get(RVA_SUMMON_BUDDY_CHRSET_MEMSET_SIZE)?),
-            &0xA00i32,
+            location.get(RVA_SUMMON_BUDDY_CHRSET_MEMSET_SIZE)? as _,
+            0xA00i32,
         );
 
         std::ptr::write_unaligned(
-            transmute(location.get(RVA_SUMMON_BUDDY_CHRSET_CAPACITY)?),
-            &0xA0i32,
+            location.get(RVA_SUMMON_BUDDY_CHRSET_CAPACITY)? as _,
+            0xA0i32,
         );
         Ok(())
     }

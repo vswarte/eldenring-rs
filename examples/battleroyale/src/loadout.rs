@@ -1,7 +1,4 @@
-use std::{
-    collections::{HashMap, VecDeque},
-    sync::Arc,
-};
+use std::{collections::HashMap, sync::Arc};
 
 use game::cs::CSSessionManager;
 use rand::prelude::*;
@@ -16,7 +13,7 @@ use crate::{
 
 pub struct PlayerMatchDetails {
     pub spawn: PlayerSpawnPoint,
-    pub partner: Option<u64>,
+    pub party: Vec<u64>,
 }
 
 pub struct PlayerLoadout {
@@ -27,6 +24,8 @@ pub struct PlayerLoadout {
     sent_loadout: bool,
     generated: bool,
     spawn_points: Vec<PlayerSpawnPoint>,
+    party_size: u32,
+    parties: HashMap<u64, Vec<u64>>,
 }
 
 impl PlayerLoadout {
@@ -44,6 +43,8 @@ impl PlayerLoadout {
             sent_loadout: false,
             generated: false,
             spawn_points: vec![],
+            party_size: 2,
+            parties: HashMap::new(),
         }
     }
 
@@ -67,6 +68,21 @@ impl PlayerLoadout {
                 .set_spawn_point(spawn_points.last().cloned().unwrap());
 
             self.spawn_points = spawn_points;
+
+            tracing::info!("Generated player pairs");
+
+            // Generate player parties
+            let mut players = self.game.player_steam_ids();
+            players.shuffle(&mut rng);
+
+            for chunk in players.chunks(self.party_size as usize) {
+                let party: Vec<u64> = chunk.to_vec();
+                for &member in chunk {
+                    self.parties.insert(member, party.clone());
+                }
+            }
+            tracing::info!("Generated player parties");
+            tracing::debug!("Parties: {:?}", self.parties);
         }
 
         if !self.sent_loadout && self.game.match_loading() {
@@ -82,7 +98,7 @@ impl PlayerLoadout {
                         remote,
                         PlayerMatchDetails {
                             spawn: self.spawn_point_for_player(index).clone(),
-                            partner: None,
+                            party: self.parties.get(&remote).unwrap().clone(),
                         },
                     )
                 })

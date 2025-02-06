@@ -74,9 +74,15 @@ pub struct ReceivedPacketReader {
     pub received_size: usize,
 }
 
+#[repr(C)]
+/// Source of name: RTTI
+pub struct PlayerSession {
+    pub vftable: VPtr<dyn NetworkSessionVmt, Self>,
+}
+
 /// Represents a network session with another player.
 pub struct PlayerNetworkSession {
-    pub vftable: VPtr<dyn NetworkSessionVmt, Self>,
+    pub player_session: PlayerSession,
     /// Steam ID for PC release.
     pub remote_identity: u64,
 }

@@ -1,8 +1,11 @@
-use std::sync::{Arc, RwLock};
+use std::sync::{
+    atomic::{AtomicBool, Ordering},
+    Arc, RwLock,
+};
 
 use game::{
     cs::{
-        ChrAsmEquipEntries, ChrAsmSlot, EquipInventoryData, EquipInventoryDataListEntry, ItemId,
+        CSMenuMan, ChrAsmEquipEntries, ChrAsmSlot, EquipInventoryData, ItemId,
         QMItemBackupVectorItem, WorldChrMan,
     },
     Vector,
@@ -30,6 +33,8 @@ pub const PLAYER_LEVELS_IN_BATTLE: PlayerLevels = PlayerLevels {
 pub struct Player {
     location: Arc<ProgramLocationProvider>,
 
+    applied_levels: AtomicBool,
+
     /// Holds the original levels for the player.
     pub levels_snapshot: RwLock<Option<PlayerLevels>>,
     /// Holds the original equipment for the player.
@@ -40,6 +45,7 @@ impl Player {
     pub fn new(location: Arc<ProgramLocationProvider>) -> Self {
         Self {
             location,
+            applied_levels: Default::default(),
             levels_snapshot: Default::default(),
             equipment_snapshot: Default::default(),
         }
@@ -50,22 +56,29 @@ impl Player {
 
         self.snapshot_equipment();
         self.store_items_in_backup();
-        self.clear_equipment();
+        // self.clear_equipment();
         self.clean_inventory();
 
         self.snapshot_levels();
         self.apply_levels_to_player(&PLAYER_LEVELS_IN_BATTLE);
+        self.applied_levels.store(true, Ordering::Relaxed);
+    }
+
+    pub fn reset_player(&self) {
+        tracing::info!("Resetting player after match");
+        self.restore_original_levels();
+        // self.restore_original_equipment();
+        self.enable_auto_save();
     }
 
     pub fn restore_original_levels(&self) {
         tracing::info!("Restoring levels after match");
-        let original = self
-            .levels_snapshot
-            .write()
-            .unwrap()
-            .take()
-            .expect("No levels to restore");
-        self.apply_levels_to_player(&original);
+        if self.applied_levels.load(Ordering::Relaxed) {
+            if let Some(original) = self.levels_snapshot.write().unwrap().take() {
+                self.apply_levels_to_player(&original)
+            }
+            self.applied_levels.store(false, Ordering::Relaxed);
+        }
     }
 
     /// Copies current player level into memory for later reapplication.
@@ -136,7 +149,15 @@ impl Player {
         (equipment.equip_inventory_data.items_data.key_item_capacity
             ..equipment.equip_inventory_data.items_data.normal_item_count)
             .for_each(|i| {
-                remove_item(&equipment.equip_inventory_data, i, 1);
+                if equipment
+                    .equip_inventory_data
+                    .items_data
+                    .normal_items()
+                    .get((i - equipment.equip_inventory_data.items_data.key_item_capacity) as usize)
+                    .is_some_and(|item| item.quantity > 0)
+                {
+                    remove_item(&equipment.equip_inventory_data, i, 1);
+                }
             });
     }
 
@@ -166,7 +187,11 @@ impl Player {
                     .equip_inventory_data
                     .items_data
                     .normal_items()
-                    .get(i as usize)
+                    .get((i - equipment.equip_inventory_data.items_data.key_item_capacity) as usize)
+                    .and_then(|item| match item.quantity > 0 {
+                        true => Some(item),
+                        false => None,
+                    })
                 {
                     backup_item_for_qm(
                         &equipment.qm_item_backup_vector,
@@ -242,6 +267,20 @@ impl Player {
         unequip_item(ChrAsmSlot::Pouch4, true);
         unequip_item(ChrAsmSlot::Pouch5, true);
         unequip_item(ChrAsmSlot::Pouch6, true);
+    }
+
+    pub fn disable_auto_save(&self) {
+        let menu_man = unsafe { get_instance::<CSMenuMan>() }
+            .unwrap()
+            .expect("Could not get CSMenuMan");
+        menu_man.disable_save_menu = 1;
+    }
+
+    pub fn enable_auto_save(&self) {
+        let menu_man = unsafe { get_instance::<CSMenuMan>() }
+            .unwrap()
+            .expect("Could not get CSMenu");
+        menu_man.disable_save_menu = 0;
     }
 }
 
