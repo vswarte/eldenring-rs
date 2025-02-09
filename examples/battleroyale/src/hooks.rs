@@ -1,4 +1,5 @@
 use std::marker::PhantomData;
+use std::mem::transmute;
 use std::sync::Arc;
 
 use game::cs::ChrIns;
@@ -24,6 +25,9 @@ use crate::rva::RVA_MSB_GET_EVENT_DATA_COUNT;
 use crate::rva::RVA_MSB_GET_PARTS_DATA_COUNT;
 use crate::rva::RVA_MSB_GET_POINT_DATA_COUNT;
 use crate::rva::RVA_SPAWN_DROPPED_ITEM_VFX;
+use crate::rva::RVA_SUMMON_BUDDY_CHRSET_ALLOC_SIZE;
+use crate::rva::RVA_SUMMON_BUDDY_CHRSET_CAPACITY;
+use crate::rva::RVA_SUMMON_BUDDY_CHRSET_MEMSET_SIZE;
 use crate::ProgramLocationProvider;
 
 static_detour! {
@@ -55,6 +59,8 @@ impl Hooks {
         context: Arc<GameModeContext>,
         game: Arc<GameStateProvider>,
     ) -> Result<Self, HookError> {
+        Self::patch_chr_sets(&location)?;
+
         // Take control over the players death so we can apply the specator cam.
         Self::hook_player_character(&location, game.clone())?;
 
@@ -73,6 +79,25 @@ impl Hooks {
         Ok(Self {})
     }
 
+    /// Patch summonbuddy chrset to allow for 160 entries
+    unsafe fn patch_chr_sets(location: &ProgramLocationProvider) -> Result<(), HookError> {
+        std::ptr::write_unaligned(
+            location.get(RVA_SUMMON_BUDDY_CHRSET_ALLOC_SIZE)? as _,
+            0xA00i32,
+        );
+
+        std::ptr::write_unaligned(
+            location.get(RVA_SUMMON_BUDDY_CHRSET_MEMSET_SIZE)? as _,
+            0xA00i32,
+        );
+
+        std::ptr::write_unaligned(
+            location.get(RVA_SUMMON_BUDDY_CHRSET_CAPACITY)? as _,
+            0xA0i32,
+        );
+        Ok(())
+    }
+
     unsafe fn patch_loot(
         location: &ProgramLocationProvider,
         gamemode: Arc<GameMode>,
@@ -88,7 +113,7 @@ impl Hooks {
             let gamemode = gamemode.clone();
             HOOK_SPAWN_DROPPED_ITEM_VFX
                 .initialize(
-                    std::mem::transmute(location.get(RVA_SPAWN_DROPPED_ITEM_VFX)?),
+                    transmute(location.get(RVA_SPAWN_DROPPED_ITEM_VFX)?),
                     move |param_1: usize, param_2: *mut u32, param_3: usize| {
                         if gamemode.running() {
                             *param_2 = 6109;
@@ -111,7 +136,7 @@ impl Hooks {
         {
             HOOK_CHR_INS_DEAD
                 .initialize(
-                    std::mem::transmute(location.get(RVA_CHR_INS_DEAD)?),
+                    transmute(location.get(RVA_CHR_INS_DEAD)?),
                     move |chr_ins: *mut ChrIns| {
                         let is_main_player = game
                             .local_player()
@@ -143,14 +168,14 @@ impl Hooks {
             // Override map ID on qm map load
             HOOK_GET_TARGET_MAP_ID
                 .initialize(
-                    std::mem::transmute(location.get(RVA_GET_TARGET_MAP_ID)?),
+                    transmute(location.get(RVA_GET_TARGET_MAP_ID)?),
                     move |map: *mut MapId| {
                         let result = HOOK_GET_TARGET_MAP_ID.call(map);
 
                         if let Some(point) = context.spawn_point() {
                             // if (*map).0 == 0x2D000000 {
-                                *map = MapId(point.map.0);
-                                tracing::info!("Patched target map ID {}", *map);
+                            *map = MapId(point.map.0);
+                            tracing::info!("Patched target map ID {}", *map);
                             // }
                         }
 
@@ -165,7 +190,7 @@ impl Hooks {
             let gamemode = gamemode.clone();
             HOOK_INITIAL_SPAWN_POSITION
                 .initialize(
-                    std::mem::transmute(location.get(RVA_INITIAL_SPAWN_POSITION)?),
+                    transmute(location.get(RVA_INITIAL_SPAWN_POSITION)?),
                     move |quickmatch_manager: *mut QuickmatchManager,
                           position: *mut ChunkPosition4,
                           orientation: usize,
@@ -219,7 +244,7 @@ impl Hooks {
             let gamemode = gamemode.clone();
             HOOK_MSB_GET_EVENT_DATA_COUNT
                 .initialize(
-                    std::mem::transmute(location.get(RVA_MSB_GET_EVENT_DATA_COUNT)?),
+                    transmute(location.get(RVA_MSB_GET_EVENT_DATA_COUNT)?),
                     move |msb_res_cap: usize, event_type: u32| {
                         if !gamemode.running() {
                             return HOOK_MSB_GET_EVENT_DATA_COUNT.call(msb_res_cap, event_type);
@@ -247,7 +272,7 @@ impl Hooks {
             let gamemode = gamemode.clone();
             HOOK_MSB_GET_PARTS_DATA_COUNT
                 .initialize(
-                    std::mem::transmute(location.get(RVA_MSB_GET_PARTS_DATA_COUNT)?),
+                    transmute(location.get(RVA_MSB_GET_PARTS_DATA_COUNT)?),
                     move |msb_res_cap: usize, parts_type: u32| {
                         if !gamemode.running() {
                             return HOOK_MSB_GET_PARTS_DATA_COUNT.call(msb_res_cap, parts_type);
@@ -272,7 +297,7 @@ impl Hooks {
             let gamemode = gamemode.clone();
             HOOK_MSB_GET_POINT_DATA_COUNT
                 .initialize(
-                    std::mem::transmute(location.get(RVA_MSB_GET_POINT_DATA_COUNT)?),
+                    transmute(location.get(RVA_MSB_GET_POINT_DATA_COUNT)?),
                     move |msb_res_cap: usize, point_type: u32| {
                         if !gamemode.running() {
                             return HOOK_MSB_GET_POINT_DATA_COUNT.call(msb_res_cap, point_type);
@@ -303,7 +328,7 @@ impl Hooks {
             let gamemode = gamemode.clone();
             HOOK_LOOKUP_MENU_TEXT
                 .initialize(
-                    std::mem::transmute(location.get(RVA_LOOKUP_MENU_TEXT)?),
+                    transmute(location.get(RVA_LOOKUP_MENU_TEXT)?),
                     move |msg_repository_imp: *const usize, entry: u32| {
                         let original = HOOK_LOOKUP_MENU_TEXT.call(msg_repository_imp, entry);
                         // tracing::info!("MenuText lookup {entry} -> {}", original.to_string().unwrap());

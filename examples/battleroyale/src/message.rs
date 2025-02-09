@@ -38,7 +38,7 @@ pub enum Message {
     HunterRankAdvanced2 = 39,
     HeartStolen = 40,
     MenuText = 41,
-    YouDiedWithFade= 50,
+    YouDiedWithFade = 50,
 }
 
 pub struct NotificationPresenter {

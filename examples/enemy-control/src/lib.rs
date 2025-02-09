@@ -1,22 +1,13 @@
-use std::{
-    cell::RefCell,
-    error::Error,
-    mem::forget,
-    ptr::NonNull,
-};
+use std::{cell::RefCell, error::Error, mem::forget, ptr::NonNull};
 
 use game::{
-    cs::{
-        CSTaskGroupIndex, CSTaskImp, ChrIns, EnemyIns,
-        WorldChrMan, WorldChrManDbg,
-    }, fd4::FD4TaskData,
+    cs::{CSTaskGroupIndex, CSTaskImp, ChrIns, EnemyIns, WorldChrMan, WorldChrManDbg},
+    fd4::FD4TaskData,
 };
 use tracing_panic::panic_hook;
 use util::{
-    input::is_key_pressed,
-    singleton::get_instance,
-    task::CSTaskImpExt,
-    world_chr_man::WorldChrManExt,
+    input::is_key_pressed, singleton::get_instance, system::wait_for_system_init,
+    task::CSTaskImpExt, world_chr_man::WorldChrManExt,
 };
 
 #[no_mangle]
@@ -29,7 +20,7 @@ pub unsafe extern "C" fn DllMain(_hmodule: usize, reason: u32) -> bool {
 
         std::thread::spawn(|| {
             // Give the CRT init a bit of leeway
-            std::thread::sleep(std::time::Duration::from_secs(5));
+            wait_for_system_init(5000).expect("System initialization timed out");
             init().expect("Could not initialize mod");
         });
     }

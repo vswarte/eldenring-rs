@@ -41,7 +41,7 @@ pub struct CSFD4FadePlate {
     pub fade_duration: FD4Time,
     unk60: u8,
     _pad64: [u8; 7],
-    pub allocator: usize,
+    allocator: usize,
     pub title: [u16; 8],
     unk80: u64,
     unk88: u64,

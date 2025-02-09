@@ -6,6 +6,7 @@ use vtable_rs::VPtr;
 use windows::core::PCWSTR;
 
 use crate::cs::ChrSetEntry;
+use crate::fd4::FD4Time;
 use crate::matrix::FSVector4;
 use crate::pointer::OwnedPtr;
 use crate::position::{BlockPoint, ChunkPosition4, HavokPosition, Quaternion};
@@ -13,8 +14,8 @@ use crate::Vector;
 
 use super::player_game_data::PlayerGameData;
 use super::{
-    CSMsbParts, CSMsbPartsEne, CSSessionManagerPlayerEntry, FieldInsBaseVmt, FieldInsHandle, MapId,
-    WorldBlockChr,
+    CSMsbParts, CSMsbPartsEne, CSSessionManagerPlayerEntry, FieldInsBaseVmt, FieldInsHandle,
+    GaitemHandle, MapId, PlayerNetworkSession, WorldBlockChr,
 };
 
 #[repr(C)]
@@ -49,6 +50,27 @@ pub trait ChrInsVmt: FieldInsBaseVmt {
 }
 
 #[repr(C)]
+pub struct NetChrSyncFlags(pub u8);
+
+impl NetChrSyncFlags {
+    pub fn set_unk2(&mut self, val: bool) {
+        self.0 = self.0 & 0b11111011 | (val as u8) << 2
+    }
+
+    pub const fn unk2(&self) -> bool {
+        self.0 & 0b00000100 != 0
+    }
+
+    pub fn set_distance_based_network_update_authority(&mut self, val: bool) {
+        self.0 = self.0 & 0b11011111 | (val as u8) << 5
+    }
+
+    pub const fn distance_based_network_update_authority(&self) -> bool {
+        self.0 & 0b00100000 != 0
+    }
+}
+
+#[repr(C)]
 /// Abstract base class to all characters. NPCs, Enemies, Players, Summons, Ghosts, even gesturing
 /// character on bloodmessages inherit from this.
 ///
@@ -58,13 +80,13 @@ pub struct ChrIns {
     pub field_ins_handle: FieldInsHandle,
     chr_set_entry: usize,
     unk18: usize,
-    unk20: u32,
+    pub backread_state: u32,
     unk24: u32,
     chr_res: usize,
     pub map_id_1: MapId,
     pub map_id_origin_1: i32,
-    pub map_id_2: MapId,
-    pub map_id_origin_2: i32,
+    pub block_origin_override: MapId,
+    pub block_origin: MapId,
     pub chr_set_cleanup: u32,
     _pad44: u32,
     unk48: usize,
@@ -73,7 +95,8 @@ pub struct ChrIns {
     pub think_param_id: i32,
     pub npc_id_1: i32,
     pub chr_type: i32,
-    pub team_type: i32,
+    pub team_type: u8,
+    pad6d: [u8; 3],
     pub p2p_entity_handle: P2PEntityHandle,
     unk78: usize,
     unk80_position: FSVector4,
@@ -103,7 +126,27 @@ pub struct ChrIns {
     pub character_id: u32,
     unk18c: u32,
     pub module_container: OwnedPtr<ChrInsModuleContainer>,
-    rest: [u8; 0x3E8],
+    unk198: usize,
+    unk1a0: f32,
+    unk1a4: f32,
+    unk1a8: f32,
+    unk1ac: f32,
+    unk1b0: f32,
+    unk1b4: f32,
+    unk1b8: f32,
+    unk1bc: f32,
+    unk1c0: u32,
+    pub chr_flags: u32,
+    unk1c8: u8,
+    pub net_chr_sync_flags: NetChrSyncFlags,
+    unk1ca: u8,
+    unk1cb: u8,
+    _pad1cc: u32,
+    unk1d0: FSVector4,
+    unk1e0: u32,
+    pub network_authority: u32,
+    pub event_entity_id: u32,
+    rest: [u8; 0x388],
 }
 
 #[repr(C)]
@@ -170,7 +213,7 @@ pub struct ChrInsModuleContainer {
     behavior_script: usize,
     pub time_act: OwnedPtr<CSChrTimeActModule>,
     resist: usize,
-    behavior: usize,
+    pub behavior: OwnedPtr<CSChrBehaviorModule>,
     behavior_sync: usize,
     ai: usize,
     pub super_armor: OwnedPtr<CSChrSuperArmorModule>,
@@ -294,13 +337,44 @@ pub struct CSChrTimeActModule {
     pub owner: NonNull<ChrIns>,
     hvk_anim: usize,
     chr_tae_anim_event: usize,
+    /// Circular buffer of animations to play.
     pub anim_queue: [CSChrTimeActModuleAnim; 10],
-    unkc0: u32,
-    unkc4: u32,
+    /// Index of the next animation to play or update.
+    pub write_idx: u32,
+    /// Index of the last animation played or updated.
+    pub read_idx: u32,
     unkc8: u32,
     unkcc: u32,
     unkd0: u32,
     unkd4: u32,
+}
+
+#[repr(C)]
+pub struct CSChrBehaviorModule {
+    vftable: usize,
+    pub owner: NonNull<ChrIns>,
+    unk10: usize,
+    unk18: usize,
+    unk20: usize,
+    unk28: usize,
+    pub root_motion: FSVector4,
+    unk40: [u8; 0x20],
+    unk60: [u8; 0xa48],
+    unkaa8: [u8; 0x58],
+    unkb00: [u8; 0xa48],
+    unk1548: [u8; 0x68],
+    unk15b0: FD4Time,
+    unk15c0: [u8; 0xc0],
+    pub ground_touch_state: u32,
+    unk1684: f32,
+    unk1688: f32,
+    unk168c: [u8; 0x104],
+    unk1790: FSVector4,
+    unk17a0: [u8; 0x10],
+    chr_behavior_debug_anim_helper: usize,
+    unk17b8: [u8; 0x10],
+    pub animation_speed: f32,
+    unk17cc: [u8; 0x1f4],
 }
 
 #[repr(C)]
@@ -558,6 +632,8 @@ pub enum ChrAsmSlot {
     Bolt1 = 7,
     Arrow2 = 8,
     Bolt2 = 9,
+    Arrow3 = 10,
+    Bolt3 = 11,
     ProtectorHead = 12,
     ProtectorChest = 13,
     ProtectorHands = 14,
@@ -568,22 +644,23 @@ pub enum ChrAsmSlot {
     Accessory4 = 20,
     AccessoryCovenant = 21,
     // ----- Slots below are not used in the param id lists and handles -----
-    QuickSlot1 = 22,
-    QuickSlot2 = 23,
-    QuickSlot3 = 24,
-    QuickSlot4 = 25,
-    QuickSlot5 = 26,
-    QuickSlot6 = 27,
-    QuickSlot7 = 28,
-    QuickSlot8 = 29,
-    QuickSlot9 = 30,
-    QuickSlot10 = 31,
+    QuickItem1 = 22,
+    QuickItem2 = 23,
+    QuickItem3 = 24,
+    QuickItem4 = 25,
+    QuickItem5 = 26,
+    QuickItem6 = 27,
+    QuickItem7 = 28,
+    QuickItem8 = 29,
+    QuickItem9 = 30,
+    QuickItem10 = 31,
     Pouch1 = 32,
     Pouch2 = 33,
     Pouch3 = 34,
     Pouch4 = 35,
     Pouch5 = 36,
     Pouch6 = 37,
+    GreatRune = 38,
 }
 
 impl<T> Index<ChrAsmSlot> for [T] {
@@ -595,15 +672,7 @@ impl<T> Index<ChrAsmSlot> for [T] {
 }
 
 #[repr(C)]
-/// Describes how the character should be rendered in terms of selecting the
-/// appropriate parts to be rendered.
-///
-/// Source of name: RTTI in earlier games (vmt has been removed from ER after some patch?)
-pub struct ChrAsm {
-    unk0: i32,
-    unk4: i32,
-    /// Determines how you're holding your weapon. 1 is one-handed, 3 is dual wielded.
-    pub arm_style: u32,
+pub struct ChrAsmEquipmentSlots {
     /// Points to the slot in the equipment list used for rendering the left-hand weapon.
     /// 0 for primary, 1 for secondary, 2 for tertiary.
     pub left_weapon_slot: u32,
@@ -622,8 +691,34 @@ pub struct ChrAsm {
     /// Points to the slot in the equipment list used for rendering the right-hand bolt.
     /// 0 for primary, 1 for secondary.
     pub right_bolt_slot: u32,
+}
+#[repr(u32)]
+#[derive(Debug)]
+pub enum ChrAsmArmStyle {
+    EmptyHanded = 0,
+    OneHanded = 1,
+    LeftBothHands = 2,
+    RightBothHands = 3,
+}
+
+#[repr(C)]
+pub struct ChrAsmEquipment {
+    /// Determines how you're holding your weapon.
+    pub arm_style: ChrAsmArmStyle,
+    pub selected_slots: ChrAsmEquipmentSlots,
+}
+
+#[repr(C)]
+/// Describes how the character should be rendered in terms of selecting the
+/// appropriate parts to be rendered.
+///
+/// Source of name: RTTI in earlier games (vmt has been removed from ER after some patch?)
+pub struct ChrAsm {
+    unk0: i32,
+    unk4: i32,
+    pub equipment: ChrAsmEquipment,
     /// Holds references to the inventory slots for each equipment piece.
-    pub gaitem_handles: [u32; 22],
+    pub gaitem_handles: [GaitemHandle; 22],
     /// Holds the param IDs for each equipment piece.
     pub equipment_param_ids: [i32; 22],
     unkd4: u32,
@@ -637,6 +732,6 @@ pub struct PlayerSessionHolder {
     vftable: usize,
     player_debug_session: usize,
     unk10: usize,
-    player_netword_session: usize,
+    pub player_network_session: OwnedPtr<PlayerNetworkSession>,
     unk18: usize,
 }

@@ -9,7 +9,7 @@ use crate::dltx::DLBasicString;
 /// Source of name: RTTI
 pub struct FD4BasicHashString {
     vftable: usize,
-    pub allocator: usize,
+    allocator: usize,
     /// The contained string we're hashing for.
     inner: DLBasicString,
     /// Hashed representation of the string field.

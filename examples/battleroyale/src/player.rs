@@ -1,83 +1,108 @@
-use std::sync::{Arc, RwLock};
+use std::sync::{
+    atomic::{AtomicBool, Ordering},
+    Arc, RwLock,
+};
 
-use game::cs::{ChrAsmSlot, EquipInventoryData, WorldChrMan};
+use game::{
+    cs::{
+        CSMenuMan, ChrAsmEquipEntries, ChrAsmSlot, EquipInventoryData, ItemId,
+        QMItemBackupVectorItem, WorldChrMan,
+    },
+    Vector,
+};
 use util::singleton::get_instance;
 
 use crate::{
-    rva::{RVA_TRANSFER_ITEM, RVA_UNEQUIP_ITEM},
+    rva::{RVA_EQUIP_INVENTORY_DATA_REMOVE_ITEM, RVA_QM_BACKUP_ITEM, RVA_UNEQUIP_ITEM},
     ProgramLocationProvider,
 };
 
 /// Levels applied to the player when in the battle.
 pub const PLAYER_LEVELS_IN_BATTLE: PlayerLevels = PlayerLevels {
-    level: 401,
+    level: 215,
     vigor: 60,
-    mind: 60,
-    endurance: 60,
-    strength: 60,
-    dexterity: 60,
-    intelligence: 60,
-    faith: 60,
-    arcane: 60,
+    mind: 15,
+    endurance: 35,
+    strength: 40,
+    dexterity: 48,
+    intelligence: 38,
+    faith: 30,
+    arcane: 28,
 };
 
 pub struct Player {
     location: Arc<ProgramLocationProvider>,
 
+    applied_levels: AtomicBool,
+
     /// Holds the original levels for the player.
-    pub snapshot: RwLock<Option<PlayerLevels>>,
+    pub levels_snapshot: RwLock<Option<PlayerLevels>>,
+    /// Holds the original equipment for the player.
+    pub equipment_snapshot: RwLock<Option<ChrAsmEquipEntries>>,
 }
 
 impl Player {
     pub fn new(location: Arc<ProgramLocationProvider>) -> Self {
         Self {
             location,
-            snapshot: Default::default(),
+            applied_levels: Default::default(),
+            levels_snapshot: Default::default(),
+            equipment_snapshot: Default::default(),
         }
     }
 
     pub fn setup_for_match(&self) {
         tracing::info!("Setting up player for match.");
 
-        self.clear_equipment();
-        self.store_items();
-        // self.snapshot_levels();
+        self.snapshot_equipment();
+        self.store_items_in_backup();
+        // self.clear_equipment();
+        self.clean_inventory();
+
+        self.snapshot_levels();
         self.apply_levels_to_player(&PLAYER_LEVELS_IN_BATTLE);
+        self.applied_levels.store(true, Ordering::Relaxed);
     }
 
-    // pub fn restore_original_levels(&self) {
-    //     tracing::info!("Restoring levels after match");
-    //     let original = self
-    //         .snapshot
-    //         .write()
-    //         .unwrap()
-    //         .take()
-    //         .expect("No levels to restore");
-    //     self.apply_levels_to_player(&original);
-    // }
-    //
-    // /// Copies current player level into memory for later reapplication.
-    // fn snapshot_levels(&self) {
-    //     let player_game_data = &unsafe { get_instance::<WorldChrMan>() }
-    //         .unwrap()
-    //         .expect("Could not get WorldChrMan")
-    //         .main_player
-    //         .as_ref()
-    //         .expect("Could not get main player")
-    //         .player_game_data;
-    //
-    //     *self.snapshot.write().unwrap() = Some(PlayerLevels {
-    //         level: player_game_data.level,
-    //         vigor: player_game_data.vigor,
-    //         mind: player_game_data.mind,
-    //         endurance: player_game_data.endurance,
-    //         strength: player_game_data.strength,
-    //         dexterity: player_game_data.dexterity,
-    //         intelligence: player_game_data.intelligence,
-    //         faith: player_game_data.faith,
-    //         arcane: player_game_data.arcane,
-    //     });
-    // }
+    pub fn reset_player(&self) {
+        tracing::info!("Resetting player after match");
+        self.restore_original_levels();
+        // self.restore_original_equipment();
+        self.enable_auto_save();
+    }
+
+    pub fn restore_original_levels(&self) {
+        tracing::info!("Restoring levels after match");
+        if self.applied_levels.load(Ordering::Relaxed) {
+            if let Some(original) = self.levels_snapshot.write().unwrap().take() {
+                self.apply_levels_to_player(&original)
+            }
+            self.applied_levels.store(false, Ordering::Relaxed);
+        }
+    }
+
+    /// Copies current player level into memory for later reapplication.
+    fn snapshot_levels(&self) {
+        let player_game_data = &unsafe { get_instance::<WorldChrMan>() }
+            .unwrap()
+            .expect("Could not get WorldChrMan")
+            .main_player
+            .as_ref()
+            .expect("Could not get main player")
+            .player_game_data;
+
+        *self.levels_snapshot.write().unwrap() = Some(PlayerLevels {
+            level: player_game_data.level,
+            vigor: player_game_data.vigor,
+            mind: player_game_data.mind,
+            endurance: player_game_data.endurance,
+            strength: player_game_data.strength,
+            dexterity: player_game_data.dexterity,
+            intelligence: player_game_data.intelligence,
+            faith: player_game_data.faith,
+            arcane: player_game_data.arcane,
+        });
+    }
 
     /// Applies a set of levels to the player
     fn apply_levels_to_player(&self, levels: &PlayerLevels) {
@@ -101,33 +126,94 @@ impl Player {
     }
 
     /// Store the players item in the storage box.
-    pub fn store_items(&self) {
+    pub fn clean_inventory(&self) {
         tracing::info!("Storing player items");
 
-        let player_game_data = &unsafe { get_instance::<WorldChrMan>() }
+        let equipment = &mut unsafe { get_instance::<WorldChrMan>() }
+            .unwrap()
+            .expect("Could not get WorldChrMan")
+            .main_player
+            .as_mut()
+            .expect("Could not get main player")
+            .player_game_data
+            .equipment;
+
+        let remove_item: fn(&EquipInventoryData, u32, u32) -> bool = unsafe {
+            std::mem::transmute(
+                self.location
+                    .get(RVA_EQUIP_INVENTORY_DATA_REMOVE_ITEM)
+                    .unwrap(),
+            )
+        };
+
+        (equipment.equip_inventory_data.items_data.key_item_capacity
+            ..equipment.equip_inventory_data.items_data.normal_item_count)
+            .for_each(|i| {
+                if equipment
+                    .equip_inventory_data
+                    .items_data
+                    .normal_items()
+                    .get((i - equipment.equip_inventory_data.items_data.key_item_capacity) as usize)
+                    .is_some_and(|item| item.quantity > 0)
+                {
+                    remove_item(&equipment.equip_inventory_data, i, 1);
+                }
+            });
+    }
+
+    /// Store the players item in quick match item backup vector.
+    pub fn store_items_in_backup(&self) {
+        tracing::info!("Storing player items in backup");
+
+        let equipment = &mut unsafe { get_instance::<WorldChrMan>() }
+            .unwrap()
+            .expect("Could not get WorldChrMan")
+            .main_player
+            .as_mut()
+            .expect("Could not get main player")
+            .player_game_data
+            .equipment;
+        let backup_item_for_qm: fn(&Vector<QMItemBackupVectorItem>, &ItemId, u32) -> bool =
+            unsafe { std::mem::transmute(self.location.get(RVA_QM_BACKUP_ITEM).unwrap()) };
+
+        // Clean vector so no duplicates are stored
+        let qmv = equipment.qm_item_backup_vector.as_mut();
+        qmv.end = qmv.begin;
+
+        (equipment.equip_inventory_data.items_data.key_item_capacity
+            ..equipment.equip_inventory_data.items_data.normal_item_count)
+            .for_each(|i| {
+                if let Some(item_entry) = equipment
+                    .equip_inventory_data
+                    .items_data
+                    .normal_items()
+                    .get((i - equipment.equip_inventory_data.items_data.key_item_capacity) as usize)
+                    .and_then(|item| match item.quantity > 0 {
+                        true => Some(item),
+                        false => None,
+                    })
+                {
+                    backup_item_for_qm(
+                        &equipment.qm_item_backup_vector,
+                        &item_entry.item_id,
+                        item_entry.quantity,
+                    );
+                }
+            });
+    }
+
+    pub fn snapshot_equipment(&self) {
+        let equipment_entries = &unsafe { get_instance::<WorldChrMan>() }
             .unwrap()
             .expect("Could not get WorldChrMan")
             .main_player
             .as_ref()
             .expect("Could not get main player")
-            .player_game_data;
-
-        let transfer_item: fn(u32, &EquipInventoryData, &EquipInventoryData, u32, bool) -> bool =
-            unsafe { std::mem::transmute(self.location.get(RVA_TRANSFER_ITEM).unwrap()) };
-
-        (0..player_game_data
+            .player_game_data
             .equipment
-            .equip_inventory_data
-            .total_item_entry_count)
-            .for_each(|i| {
-                transfer_item(
-                    i,
-                    &player_game_data.equipment.equip_inventory_data,
-                    &player_game_data.storage,
-                    99,
-                    true,
-                );
-            });
+            .equipment_entries;
+
+        *self.equipment_snapshot.write().unwrap() = Some(equipment_entries.clone());
     }
 
     /// Clear out players equipment
@@ -138,49 +224,63 @@ impl Player {
         let unequip_item: extern "C" fn(ChrAsmSlot, bool) =
             unsafe { std::mem::transmute(location_unequip_item) };
 
-        unequip_item(ChrAsmSlot::WeaponLeft1, false);
-        unequip_item(ChrAsmSlot::WeaponRight1, false);
+        unequip_item(ChrAsmSlot::WeaponLeft1, true);
+        unequip_item(ChrAsmSlot::WeaponRight1, true);
 
-        unequip_item(ChrAsmSlot::WeaponRight1, false);
-        unequip_item(ChrAsmSlot::WeaponLeft2, false);
-        unequip_item(ChrAsmSlot::WeaponRight2, false);
-        unequip_item(ChrAsmSlot::WeaponLeft3, false);
-        unequip_item(ChrAsmSlot::WeaponRight3, false);
+        unequip_item(ChrAsmSlot::WeaponRight1, true);
+        unequip_item(ChrAsmSlot::WeaponLeft2, true);
+        unequip_item(ChrAsmSlot::WeaponRight2, true);
+        unequip_item(ChrAsmSlot::WeaponLeft3, true);
+        unequip_item(ChrAsmSlot::WeaponRight3, true);
 
-        unequip_item(ChrAsmSlot::Arrow1, false);
-        unequip_item(ChrAsmSlot::Bolt1, false);
-        unequip_item(ChrAsmSlot::Arrow2, false);
-        unequip_item(ChrAsmSlot::Bolt2, false);
+        unequip_item(ChrAsmSlot::Arrow1, true);
+        unequip_item(ChrAsmSlot::Bolt1, true);
+        unequip_item(ChrAsmSlot::Arrow2, true);
+        unequip_item(ChrAsmSlot::Bolt2, true);
 
-        unequip_item(ChrAsmSlot::ProtectorHead, false);
-        unequip_item(ChrAsmSlot::ProtectorChest, false);
-        unequip_item(ChrAsmSlot::ProtectorHands, false);
-        unequip_item(ChrAsmSlot::ProtectorLegs, false);
+        unequip_item(ChrAsmSlot::ProtectorHead, true);
+        unequip_item(ChrAsmSlot::ProtectorChest, true);
+        unequip_item(ChrAsmSlot::ProtectorHands, true);
+        unequip_item(ChrAsmSlot::ProtectorLegs, true);
 
-        unequip_item(ChrAsmSlot::Accessory1, false);
-        unequip_item(ChrAsmSlot::Accessory2, false);
-        unequip_item(ChrAsmSlot::Accessory3, false);
-        unequip_item(ChrAsmSlot::Accessory4, false);
+        unequip_item(ChrAsmSlot::Accessory1, true);
+        unequip_item(ChrAsmSlot::Accessory2, true);
+        unequip_item(ChrAsmSlot::Accessory3, true);
+        unequip_item(ChrAsmSlot::Accessory4, true);
 
-        unequip_item(ChrAsmSlot::AccessoryCovenant, false);
+        unequip_item(ChrAsmSlot::AccessoryCovenant, true);
 
-        unequip_item(ChrAsmSlot::QuickSlot1, false);
-        unequip_item(ChrAsmSlot::QuickSlot2, false);
-        unequip_item(ChrAsmSlot::QuickSlot3, false);
-        unequip_item(ChrAsmSlot::QuickSlot4, false);
-        unequip_item(ChrAsmSlot::QuickSlot5, false);
-        unequip_item(ChrAsmSlot::QuickSlot6, false);
-        unequip_item(ChrAsmSlot::QuickSlot7, false);
-        unequip_item(ChrAsmSlot::QuickSlot8, false);
-        unequip_item(ChrAsmSlot::QuickSlot9, false);
-        unequip_item(ChrAsmSlot::QuickSlot10, false);
+        unequip_item(ChrAsmSlot::QuickItem1, true);
+        unequip_item(ChrAsmSlot::QuickItem2, true);
+        unequip_item(ChrAsmSlot::QuickItem3, true);
+        unequip_item(ChrAsmSlot::QuickItem4, true);
+        unequip_item(ChrAsmSlot::QuickItem5, true);
+        unequip_item(ChrAsmSlot::QuickItem6, true);
+        unequip_item(ChrAsmSlot::QuickItem7, true);
+        unequip_item(ChrAsmSlot::QuickItem8, true);
+        unequip_item(ChrAsmSlot::QuickItem9, true);
+        unequip_item(ChrAsmSlot::QuickItem10, true);
 
-        unequip_item(ChrAsmSlot::Pouch1, false);
-        unequip_item(ChrAsmSlot::Pouch2, false);
-        unequip_item(ChrAsmSlot::Pouch3, false);
-        unequip_item(ChrAsmSlot::Pouch4, false);
-        unequip_item(ChrAsmSlot::Pouch5, false);
-        unequip_item(ChrAsmSlot::Pouch6, false);
+        unequip_item(ChrAsmSlot::Pouch1, true);
+        unequip_item(ChrAsmSlot::Pouch2, true);
+        unequip_item(ChrAsmSlot::Pouch3, true);
+        unequip_item(ChrAsmSlot::Pouch4, true);
+        unequip_item(ChrAsmSlot::Pouch5, true);
+        unequip_item(ChrAsmSlot::Pouch6, true);
+    }
+
+    pub fn disable_auto_save(&self) {
+        let menu_man = unsafe { get_instance::<CSMenuMan>() }
+            .unwrap()
+            .expect("Could not get CSMenuMan");
+        menu_man.disable_save_menu = 1;
+    }
+
+    pub fn enable_auto_save(&self) {
+        let menu_man = unsafe { get_instance::<CSMenuMan>() }
+            .unwrap()
+            .expect("Could not get CSMenu");
+        menu_man.disable_save_menu = 0;
     }
 }
 

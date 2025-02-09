@@ -24,7 +24,7 @@ pub trait CSEzTaskVmt : FD4TaskBaseVmt {
 #[repr(C)]
 pub struct CSEzTask {
     // vftable: VPtr<CSEzTaskVmt>,
-    pub vftable: usize,
+    vftable: usize,
     unk8: u32,
     _padc: u32,
     pub task_proxy: NonNull<CSEzTaskProxy>,
@@ -81,7 +81,7 @@ pub struct CSTaskImp {
 #[repr(C)]
 pub struct CSTaskBase {
     vftable: usize,
-    pub allocator1: usize,
+    allocator: usize,
     pub task_groups: Vector<TaskGroupEntry>,
     pub task_group_index_max: u32,
     _pad34: u32,
@@ -97,7 +97,7 @@ pub struct TaskGroupEntry {
 #[repr(C)]
 pub struct CSTask {
     pub task_base: CSTaskBase,
-    pub allocator2: usize,
+    allocator: usize,
     unk40: usize,
     unk48: [usize; 3],
     unk60: [usize; 3],
@@ -110,7 +110,7 @@ pub struct CSTask {
 #[repr(C)]
 pub struct CSTaskRunner {
     vftable: usize,
-    pub task_queue: usize,
+    task_queue: usize,
     pub task_runner_manager: OwnedPtr<CSTaskRunnerManager>,
     unk18: u32,
     _pad1c: u32,
@@ -124,7 +124,7 @@ pub struct CSTaskRunnerEx {
 
 #[repr(C)]
 pub struct CSTaskRunnerManager {
-    pub allocator: usize,
+    allocator: usize,
     pub concurrent_task_group_count: usize,
     pub concurrent_task_group_policy: OwnedPtr<TaskGroupConcurrency>,
     pub current_concurrent_task_group: u32,

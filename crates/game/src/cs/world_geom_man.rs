@@ -4,7 +4,7 @@ use windows::core::PCWSTR;
 
 use crate::{pointer::OwnedPtr, Tree, Vector};
 
-use super::{FieldInsHandle, MapId};
+use super::{FieldInsHandle, MapId, WorldInfoOwner};
 
 #[repr(C)]
 /// Source of name: RTTI
@@ -12,7 +12,7 @@ use super::{FieldInsHandle, MapId};
 pub struct CSWorldGeomMan {
     vftable: usize,
     unk8: usize,
-    pub world_info_owner: usize,
+    pub world_info_owner: NonNull<WorldInfoOwner>,
     /// A tree of loaded maps hosting their geometry instances.
     pub blocks: Tree<CSWorldGeomManBlocksEntry>,
     /// Seemingly points to the current overlay world tile's map data
@@ -54,7 +54,8 @@ pub struct CSWorldGeomManBlockData {
     _pad335: [u8; 3],
     unk338: [u8; 0x50],
     pub sos_sign_geometry: Vector<OwnedPtr<OwnedPtr<CSWorldGeomIns>>>,
-    unk3a8: [u8; 0x300],
+    pub disable_on_singleplay_geometry: Vector<OwnedPtr<OwnedPtr<CSWorldGeomIns>>>,
+    unk3c8: [u8; 0x2E0],
 }
 
 #[repr(C)]
@@ -123,7 +124,8 @@ pub struct CSWorldGeomInfo {
     pub forward_draw_envmap_blend_type: bool,
     unk180: u16,
     unk182: u16,
-    unk184: u8,
+    /// Hides the object whenever the player is alone, used for fogwalls and such.
+    pub disable_on_singleplay: u8,
     unk185: u8,
     unk186: u16,
     unk188: usize,
@@ -153,7 +155,7 @@ pub struct CSMsbPartsGeom {
 #[repr(C)]
 /// Seems to describe how to draw the MSB part.
 pub struct CSMsbParts {
-    pub vfptr: usize,
+    vfptr: usize,
     pub draw_flags: u32,
     _padc: u32,
     unk10: usize,
@@ -164,7 +166,7 @@ pub struct CSMsbParts {
 #[repr(C)]
 /// Source of name: RTTI
 pub struct CSMsbPartsEne {
-    pub super_cs_msb_parts: CSMsbParts,
+    pub cs_msb_parts: CSMsbParts,
 }
 
 #[repr(C)]

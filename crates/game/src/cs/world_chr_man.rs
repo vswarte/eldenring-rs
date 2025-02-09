@@ -160,7 +160,7 @@ pub struct WorldBlockChr<T: 'static> {
     unkd0: [u8; 0x40],
     pub world_block_info2: usize,
     pub chr_set_ptr: NonNull<ChrSet<T>>,
-    pub allocator: usize,
+    allocator: usize,
     unk128: [u8; 0x30],
     pub map_id: MapId,
     unk15c: u32,
@@ -283,7 +283,7 @@ impl<T> ChrSet<T> {
 pub struct ChrSetEntry<T> {
     pub chr_ins: Option<NonNull<T>>,
     unk8: u16,
-    unka: u8,
+    pub entry_flags: u8,
     _padb: [u8; 5],
 }
 
@@ -329,20 +329,41 @@ pub struct WorldGridAreaChr {
 #[repr(C)]
 /// Source of name: "SummonBuddy" mentioned in DLRF metadata for the update fn.
 pub struct SummonBuddyManager {
-    vftable: usize,
+    allocator: usize,
     unk8: usize,
     unk10: usize,
     unk18: usize,
     pub to_spawn_buddy_param: i32,
     pub spawned_buddy_param: i32,
     unk28: usize,
-    pub chr_set: OwnedPtr<ChrSet<ChrIns>>,
-    unk38: [u8; 0xb0],
-    pub warp: OwnedPtr<SummonBuddyManagerWarp>,
+    pub chr_set: NonNull<ChrSet<ChrIns>>,
+    unk38: u32,
+    unk3c: u32,
+    unk40: usize,
+    unk48: usize,
+    unk50: usize,
+    unk58: usize,
+    unk60: usize,
+    unk68: usize,
+    pub summon_groups: Tree<()>,
+    unk88: i32,
+    pub buddy_disappear_delay_sec: f32,
+    unk90: f32,
+    unk94: u32,
+    unk98: u32,
+    unk9c: u32,
+    unka0: FSVector4,
+    unkb0: f32,
+    unkb4: u32,
+    unkb8: u32,
+    pub next_buddy_slot: u32,
+    // unk38: [u8; 0xb0],
+    // pub warp: OwnedPtr<SummonBuddyWarpManager>,
+    // TODO: some debug structures after this
 }
 
 #[repr(C)]
-pub struct SummonBuddyManagerWarp {
+pub struct SummonBuddyWarpManager {
     allocator: usize,
     root_node: usize,
     unk10: usize,

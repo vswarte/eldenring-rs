@@ -1,4 +1,7 @@
 use display::DebugDisplay;
+use game::cs::CSWindowImp;
+use game::cs::FieldArea;
+use game::rva::RVA_GLOBAL_FIELD_AREA;
 use hudhook::eject;
 use hudhook::hooks::dx12::ImguiDx12Hooks;
 use hudhook::imgui;
@@ -6,6 +9,8 @@ use hudhook::imgui::*;
 use hudhook::windows::Win32::Foundation::HINSTANCE;
 use hudhook::Hudhook;
 use hudhook::ImguiRenderLoop;
+
+use pelite::pe::Pe;
 
 use game::cs::CSCamera;
 use game::cs::CSEventFlagMan;
@@ -15,14 +20,14 @@ use game::cs::CSSessionManager;
 use game::cs::CSTaskGroup;
 use game::cs::CSTaskImp;
 use game::cs::CSWorldGeomMan;
-use game::cs::MsbRepository;
 use game::cs::WorldAreaTime;
 use game::cs::WorldChrMan;
-use game::dlio::DLFileDeviceManager;
 use game::fd4::FD4ParamRepository;
 
 use display::render_debug_singleton;
 use tracing_panic::panic_hook;
+use util::program::Program;
+use util::system::wait_for_system_init;
 
 mod display;
 
@@ -35,6 +40,8 @@ pub unsafe extern "C" fn DllMain(hmodule: HINSTANCE, reason: u32) -> bool {
         tracing_subscriber::fmt().with_writer(appender).init();
 
         std::thread::spawn(move || {
+            wait_for_system_init(5000).expect("Timeout waiting for system init");
+
             if let Err(e) = Hudhook::builder()
                 .with::<ImguiDx12Hooks>(EldenRingDebugGui::new())
                 .with_hmodule(hmodule)
@@ -50,22 +57,58 @@ pub unsafe extern "C" fn DllMain(hmodule: HINSTANCE, reason: u32) -> bool {
     true
 }
 
-struct EldenRingDebugGui;
+struct EldenRingDebugGui {
+    size: [f32; 2],
+    scale: f32,
+}
 
 impl EldenRingDebugGui {
     fn new() -> Self {
-        Self {}
+        Self {
+            size: [600., 400.],
+            scale: 1.0,
+        }
     }
 }
 
 impl ImguiRenderLoop for EldenRingDebugGui {
+    fn initialize(&mut self, ctx: &mut Context, _render_context: &mut dyn hudhook::RenderContext) {
+        if let Ok(Some(window)) = unsafe { util::singleton::get_instance::<CSWindowImp>() } {
+            if window.screen_width > 1920 {
+                self.scale = window.screen_width as f32 / 1920.0;
+                self.size[0] *= self.scale;
+                self.size[1] *= self.scale;
+            }
+            ctx.style_mut()
+                .scale_all_sizes(f32::max(self.scale / 2.0, 1.0));
+        }
+    }
+
     fn render(&mut self, ui: &mut Ui) {
+        let program = unsafe { Program::current() };
+
         ui.window("Elden Ring Rust Bindings Debug")
             .position([0., 0.], imgui::Condition::FirstUseEver)
-            .size([600., 400.], imgui::Condition::FirstUseEver)
+            .size(self.size, imgui::Condition::FirstUseEver)
             .build(|| {
+                ui.set_window_font_scale(self.scale);
                 let tabs = ui.tab_bar("main-tabs").unwrap();
                 if let Some(item) = ui.tab_item("World") {
+                    if ui.collapsing_header("FieldArea", TreeNodeFlags::empty()) {
+                        ui.indent();
+
+                        if let Some(field_area) = unsafe {
+                            (*(program.rva_to_va(RVA_GLOBAL_FIELD_AREA).unwrap()
+                                as *const *const FieldArea))
+                                .as_ref()
+                        } {
+                            field_area.render_debug(&ui);
+                        }
+
+                        ui.unindent();
+                    }
+
+                    // render_debug_singleton::<FieldArea>(&ui);
                     render_debug_singleton::<CSEventFlagMan>(&ui);
                     render_debug_singleton::<WorldChrMan>(&ui);
                     render_debug_singleton::<CSWorldGeomMan>(&ui);
@@ -80,17 +123,16 @@ impl ImguiRenderLoop for EldenRingDebugGui {
                 }
 
                 if let Some(item) = ui.tab_item("Resource") {
-                    if ui.collapsing_header("DLFileDeviceManager", TreeNodeFlags::empty()) {
-                        let file_device_manager =
-                            unsafe { &*(0x1448464c0usize as *mut DLFileDeviceManager) };
-
-                        file_device_manager.render_debug(&ui);
-                    }
+                    // if ui.collapsing_header("DLFileDeviceManager", TreeNodeFlags::empty()) {
+                    //     let file_device_manager =
+                    //         unsafe { &*(0x1448464c0usize as *mut DLFileDeviceManager) };
+                    //
+                    //     file_device_manager.render_debug(&ui);
+                    // }
 
                     render_debug_singleton::<CSTaskGroup>(&ui);
                     render_debug_singleton::<CSTaskImp>(&ui);
                     render_debug_singleton::<FD4ParamRepository>(&ui);
-                    render_debug_singleton::<MsbRepository>(&ui);
                     item.end();
                 }
 

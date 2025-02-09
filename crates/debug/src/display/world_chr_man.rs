@@ -1,11 +1,8 @@
 use game::cs::{
-    ChrIns, ChrSet, OpenFieldChrSet, PlayerIns, SummonBuddyManager, SummonBuddyManagerWarp, WorldChrMan,
+    ChrIns, ChrSet, NetChrSetSync, OpenFieldChrSet, PlayerIns, SummonBuddyManager,
+    SummonBuddyWarpManager, WorldChrMan,
 };
 use hudhook::imgui::{TableColumnSetup, TreeNodeFlags, Ui};
-use util::{
-    singleton::get_instance,
-    world_chr_man::{ChrDebugSpawnRequest, WorldChrManExt},
-};
 
 use super::DebugDisplay;
 
@@ -67,7 +64,9 @@ impl DebugDisplay for WorldChrMan {
                 };
 
                 if ui.collapsing_header(format!("ChrSet {i}"), TreeNodeFlags::empty()) {
+                    ui.indent();
                     chr_set.render_debug(ui);
+                    ui.unindent();
                 }
             }
             ui.unindent();
@@ -93,6 +92,25 @@ impl DebugDisplay for WorldChrMan {
             None => ui.text("No SummonBuddyManager instance"),
         }
 
+        if ui.collapsing_header("NetChrSync", TreeNodeFlags::empty()) {
+            ui.indent();
+
+            for (i, entry) in self
+                .net_chr_sync
+                .net_chr_set_sync
+                .iter()
+                .enumerate()
+                .filter_map(|(i, s)| s.as_ref().map(|s| (i, s)))
+            {
+                if ui.collapsing_header(format!("NetChrSetSync {i}"), TreeNodeFlags::empty()) {
+                    ui.indent();
+                    entry.render_debug(ui);
+                    ui.unindent();
+                }
+            }
+            ui.unindent();
+        }
+
         if ui.collapsing_header("Debug Character Creator", TreeNodeFlags::empty()) {
             ui.input_text(
                 "Last Created Character",
@@ -100,26 +118,24 @@ impl DebugDisplay for WorldChrMan {
             )
             .read_only(true)
             .build();
-
-            if ui.button("Spawn Character Creator") {
-                let world_chr_man = unsafe { get_instance::<WorldChrMan>() }.unwrap().unwrap();
-                if let Some(main_player) = &world_chr_man.main_player {
-                    let (x, y, z) = main_player.chr_ins.module_container.physics.position.xyz();
-
-                    world_chr_man.spawn_debug_character(&ChrDebugSpawnRequest {
-                        chr_id: 4730,
-                        chara_init_param_id: 0,
-                        npc_param_id: 47300000,
-                        npc_think_param_id: 47300000,
-                        event_entity_id: 123123,
-                        talk_id: 0,
-                        pos_x: x,
-                        pos_y: y,
-                        pos_z: z,
-                    });
-                }
-            }
         }
+    }
+}
+
+impl DebugDisplay for NetChrSetSync {
+    fn render_debug(&self, ui: &&mut Ui) {
+        ui.text(format!("Character capacity: {}", self.capacity));
+
+        if ui.collapsing_header("Readback Flags", TreeNodeFlags::empty()) {
+            ui.indent();
+            self.update_flags()
+                .iter()
+                .enumerate()
+                .for_each(|e| ui.text(format!("{} {:016b}", e.0, e.1.0)));
+            ui.unindent();
+        }
+
+        ui.text(format!("Character capacity: {}", self.capacity));
     }
 }
 
@@ -161,7 +177,9 @@ impl DebugDisplay for ChrSet<ChrIns> {
 
                     ui.table_next_column();
                     let chr_ins = unsafe { e.chr_set_entry.as_ref().chr_ins.as_ref() };
-                    ui.text(format!("{}", unsafe { &chr_ins.unwrap().as_ref().field_ins_handle }));
+                    ui.text(format!("{}", unsafe {
+                        &chr_ins.unwrap().as_ref().field_ins_handle
+                    }));
                 });
             }
             ui.unindent();
@@ -182,7 +200,9 @@ impl DebugDisplay for ChrSet<ChrIns> {
 
                     ui.table_next_column();
                     let chr_ins = unsafe { e.chr_set_entry.as_ref().chr_ins.as_ref() };
-                    ui.text(format!("{}", unsafe { &chr_ins.unwrap().as_ref().field_ins_handle }));
+                    ui.text(format!("{}", unsafe {
+                        &chr_ins.unwrap().as_ref().field_ins_handle
+                    }));
                 });
             }
             ui.unindent();
@@ -207,7 +227,7 @@ impl DebugDisplay for ChrSet<PlayerIns> {
                     ),
                     TreeNodeFlags::empty(),
                 ) {
-                    player_ins.chr_ins.render_debug(ui)
+                    player_ins.render_debug(ui)
                 }
             });
             ui.unindent();
@@ -228,7 +248,9 @@ impl DebugDisplay for ChrSet<PlayerIns> {
 
                     ui.table_next_column();
                     let chr_ins = unsafe { e.chr_set_entry.as_ref().chr_ins.as_ref() };
-                    ui.text(format!("{}", unsafe { &chr_ins.unwrap().as_ref().chr_ins.field_ins_handle }));
+                    ui.text(format!("{}", unsafe {
+                        &chr_ins.unwrap().as_ref().chr_ins.field_ins_handle
+                    }));
                 });
             }
             ui.unindent();
@@ -249,7 +271,9 @@ impl DebugDisplay for ChrSet<PlayerIns> {
 
                     ui.table_next_column();
                     let chr_ins = unsafe { e.chr_set_entry.as_ref().chr_ins.as_ref() };
-                    ui.text(format!("{}", unsafe { &chr_ins.unwrap().as_ref().chr_ins.field_ins_handle }));
+                    ui.text(format!("{}", unsafe {
+                        &chr_ins.unwrap().as_ref().chr_ins.field_ins_handle
+                    }));
                 });
             }
             ui.unindent();
@@ -270,12 +294,13 @@ impl DebugDisplay for SummonBuddyManager {
             self.to_spawn_buddy_param
         ));
         ui.text(format!("Spawned buddy param: {}", self.spawned_buddy_param));
+        ui.text(format!("Next summony buddy slot: {}", self.next_buddy_slot));
 
-        self.warp.render_debug(ui);
+        // self.w.render_debug(ui);
     }
 }
 
-impl DebugDisplay for SummonBuddyManagerWarp {
+impl DebugDisplay for SummonBuddyWarpManager {
     fn render_debug(&self, ui: &&mut Ui) {
         ui.text(format!(
             "Trigger time ray block: {}",

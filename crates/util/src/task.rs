@@ -97,9 +97,9 @@ impl FD4TaskBaseVmt for RecurringTask {
 
     extern "C" fn execute(&mut self, data: &FD4TaskData) {
         // Run the task if cancellation wasn't requested.
-        if !self.unregister_requested.load(Ordering::Relaxed) {
+        // if !self.unregister_requested.load(Ordering::Relaxed) {
             (self.closure)(data);
-        }
+        // }
 
         // TODO: implement the games unregister fn to properly get the task removed from the task
         // pool instead of just not running the closure.

@@ -1,6 +1,6 @@
 use game::cs::{
     CSEventFlagMan, CSNetMan, CSQuickMatchingCtrlState, CSSessionManager, ChrIns, FieldInsHandle,
-    LobbyState, WorldChrMan,
+    LobbyState, MapId, WorldChrMan,
 };
 use util::singleton::get_instance;
 
@@ -11,13 +11,26 @@ const ONE_30TH_SECOND: f32 = 1.0 / 30.0;
 const ONE_15TH_SECOND: f32 = 1.0 / 15.0;
 
 impl GameStateProvider {
-    /// Is anything happening related to quickmatch?
+    /// Is quickmatch happening in any capacity?
     pub fn match_active(&self) -> bool {
         unsafe { get_instance::<CSNetMan>() }
             .unwrap()
             .map(|n| {
                 n.quickmatch_manager.quickmatching_ctrl.current_state
                     != CSQuickMatchingCtrlState::None
+            })
+            .unwrap_or_default()
+    }
+
+    /// Host is accepting new people and clients are waiting for lobby to fill up.
+    pub fn match_onboarding(&self) -> bool {
+        unsafe { get_instance::<CSNetMan>() }
+            .unwrap()
+            .map(|n| {
+                n.quickmatch_manager.quickmatching_ctrl.current_state
+                    == CSQuickMatchingCtrlState::HostInvite
+                    || n.quickmatch_manager.quickmatching_ctrl.current_state
+                        == CSQuickMatchingCtrlState::GuestInviteWait
             })
             .unwrap_or_default()
     }
@@ -114,7 +127,7 @@ impl GameStateProvider {
             })
     }
 
-    pub fn last_killed_by(&self) -> Option<FieldInsHandle> {
+    pub fn killed_by(&self) -> Option<FieldInsHandle> {
         unsafe { get_instance::<WorldChrMan>() }
             .unwrap()
             .and_then(|n| {
@@ -149,6 +162,27 @@ impl GameStateProvider {
     /// Returns the chosen stage from the battleroyale context. Fixed to 0 for now.
     pub fn stage(&self) -> u32 {
         return 0;
+    }
+
+    /// Is the match's result definitive?
+    pub fn match_concluded(&self) -> bool {
+        self.alive_players().len() == 1
+    }
+
+    /// Is the local player the winner of the match?
+    pub fn is_winner(&self) -> bool {
+        self.match_concluded() && self.local_player_is_alive()
+    }
+
+    pub fn is_in_roundtable(&self) -> bool {
+        unsafe { get_instance::<WorldChrMan>() }
+            .unwrap()
+            .and_then(|n| {
+                n.main_player
+                    .as_ref()
+                    .map(|p| p.chr_ins.map_id_1 == MapId::from_parts(11, 10, 0, 0))
+            })
+            .unwrap_or_default()
     }
 }
 

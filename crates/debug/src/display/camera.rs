@@ -6,19 +6,27 @@ use super::DebugDisplay;
 impl DebugDisplay for CSCamera {
     fn render_debug(&self, ui: &&mut Ui) {
         if ui.collapsing_header("Pers cam 1", TreeNodeFlags::empty()) {
+            ui.indent();
             self.pers_cam_1.render_debug(ui);
+            ui.unindent();
         }
 
         if ui.collapsing_header("Pers cam 2", TreeNodeFlags::empty()) {
+            ui.indent();
             self.pers_cam_2.render_debug(ui);
+            ui.unindent();
         }
 
         if ui.collapsing_header("Pers cam 3", TreeNodeFlags::empty()) {
+            ui.indent();
             self.pers_cam_3.render_debug(ui);
+            ui.unindent();
         }
 
         if ui.collapsing_header("Pers cam 4", TreeNodeFlags::empty()) {
+            ui.indent();
             self.pers_cam_4.render_debug(ui);
+            ui.unindent();
         }
 
         ui.text(format!("Camera mask: {}", self.camera_mask));
@@ -33,7 +41,9 @@ impl DebugDisplay for CSCam {
         ui.text(format!("Near plane: {}", self.near_plane));
 
         if ui.collapsing_header("Matrix", TreeNodeFlags::empty()) {
+            ui.indent();
             self.matrix.render_debug(ui);
+            ui.unindent();
         }
     }
 }

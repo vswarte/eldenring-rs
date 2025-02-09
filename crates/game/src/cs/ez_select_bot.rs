@@ -13,7 +13,7 @@ pub struct CSEzSelectBot {
 
 #[repr(C)]
 pub struct CSEzSelectBotString {
-    pub allocator: *const ffi::c_void,
+    allocator: *const ffi::c_void,
     pub string: DLBasicString,
     unk28: u64,
 }

@@ -11,7 +11,7 @@ use crate::matrix::FSVector4;
 use crate::pointer::OwnedPtr;
 use crate::Tree;
 
-use super::{FieldInsHandle, MapId, NetChrSync, PlayerIns};
+use super::{FieldInsHandle, MapId, NetChrSync, PlayerIns, WorldInfoOwner};
 
 #[repr(C)]
 /// Source of name: RTTI
@@ -19,7 +19,7 @@ use super::{FieldInsHandle, MapId, NetChrSync, PlayerIns};
 pub struct WorldSfxMan {
     vftable: usize,
     unk8: usize,
-    world_info_owner: usize,
+    world_info_owner: NonNull<WorldInfoOwner>,
 
     world_area_sfx_count: u32,
     _pad1c: u32,

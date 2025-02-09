@@ -1,6 +1,4 @@
 use std::{
-    collections::HashMap,
-    marker::Sync,
     sync::{
         atomic::{AtomicBool, Ordering},
         Arc, RwLock,
@@ -8,16 +6,18 @@ use std::{
     time::{Duration, Instant},
 };
 
-use game::{
-    cs::{CSEventFlagMan, CSNetMan, CSSessionManager, FieldInsHandle, MapId},
-    position::BlockPoint,
-};
+use game::cs::{CSNetMan, FieldInsHandle};
 use util::{input::is_key_pressed, singleton::get_instance};
 
 use crate::{
-    config::{ConfigurationProvider, MapPoint, MapPosition}, gamestate::GameStateProvider, loot::LootGenerator, network::{MatchMessaging, Message}, pain::PainRing, player::Player, ProgramLocationProvider
+    config::{ConfigurationProvider, MapPosition},
+    gamestate::GameStateProvider,
+    network::{MatchMessaging, Message},
+    player::Player,
+    ProgramLocationProvider,
 };
-use crate::loadout::PlayerLoadout;
+use crate::{loadout::PlayerLoadout, message};
+
 use crate::{message::NotificationPresenter, spectator_camera::SpectatorCamera};
 
 #[derive(Clone, Debug, PartialEq)]
@@ -34,6 +34,8 @@ pub struct GameMode {
     _running: AtomicBool,
     /// Did we apply the player levels yet?
     setup_player: AtomicBool,
+    /// Did we disable auto-save yet?
+    disabled_auto_save: AtomicBool,
     /// As a host, did send the loadout to the participants?
     sent_loadout: AtomicBool,
     /// Applied flag overrides for this match?
@@ -67,12 +69,11 @@ impl GameMode {
         Self {
             _running: Default::default(),
             setup_player: Default::default(),
+            disabled_auto_save: Default::default(),
             sent_loadout: Default::default(),
             applied_flag_overrides: Default::default(),
             game_state,
-            // player_loadout: Default::default(),
             player,
-            // spawn_point: Default::default(),
             end_requested_at: Default::default(),
             notification,
             config,
@@ -94,8 +95,13 @@ impl GameMode {
             }
         }
 
-        if game_state.match_loading() && !self.setup_player.swap(true, Ordering::Relaxed) {
+        if game_state.match_in_game() && !self.setup_player.swap(true, Ordering::Relaxed) {
             self.player.setup_for_match();
+        }
+
+        if game_state.match_loading() && !self.disabled_auto_save.load(Ordering::Relaxed) {
+            self.player.disable_auto_save();
+            self.disabled_auto_save.store(true, Ordering::Relaxed);
         }
 
         if !game_state.match_active() {
@@ -118,26 +124,36 @@ impl GameMode {
         self._running.load(Ordering::Relaxed)
     }
 
+    /// called from main task loop because it can actually detect that player
+    /// returned to the roundtable
+    pub fn reset(&self) {
+        self.player.reset_player();
+    }
+
     /// Should request the session to end.
     fn should_request_end_match(&self) -> bool {
         return false;
 
+        if !self.game_state.match_in_game() {
+            return false;
+        }
+
         match self.end_requested_at.read().unwrap().as_ref() {
             Some(_) => false,
-            None => self.game_state.alive_players().len() == 1,
+            None => self.game_state.match_concluded(),
         }
     }
 
     /// Request that a match is ended.
     fn request_end_match(&self) {
-        // /// Display the results
-        // let message = if self.game_state.local_player_is_alive() {
-        //     message::Message::Victory
-        // } else {
-        //     message::Message::Defeat
-        // };
-        //
-        // self.notification.present_mp_message(message);
+        /// Display the results
+        let message = if self.game_state.local_player_is_alive() {
+            message::Message::Victory
+        } else {
+            message::Message::Defeat
+        };
+
+        self.notification.present_mp_message(message);
 
         *self.end_requested_at.write().unwrap() = Some(Instant::now());
     }
@@ -152,8 +168,6 @@ impl GameMode {
 
     /// Finishes the match and closes it.
     fn end_match(&self) {
-        // self.player.restore_original_levels();
-
         // Disconnect the ugly way for now
         let cs_net_man = unsafe { get_instance::<CSNetMan>() }.unwrap().unwrap();
         cs_net_man
