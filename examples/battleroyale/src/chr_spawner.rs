@@ -20,10 +20,15 @@ use serde::{Deserialize, Serialize};
 use util::{program::Program, singleton::get_instance, team_relation::TEAM_TYPE_ENEMY};
 
 use crate::{
-    config::{ConfigurationProvider, MonsterType}, gamestate::GameStateProvider, network::MatchMessaging, rva::{
+    config::{ConfigurationProvider, MonsterType},
+    gamestate::GameStateProvider,
+    network::MatchMessaging,
+    rva::{
         RVA_CHR_FLAGS_UNK1, RVA_CHR_FLAGS_UNK2, RVA_NET_CHR_SYNC_SETUP_ENTITY_1,
         RVA_NET_CHR_SYNC_SETUP_ENTITY_2, RVA_NET_CHR_SYNC_SETUP_ENTITY_3, RVA_SPAWN_CHR,
-    }, team::ENEMY_TEAM_TYPE, ProgramLocationProvider
+    },
+    team::ENEMY_TEAM_TYPE,
+    ProgramLocationProvider,
 };
 
 const CHR_SPAWN_INDEX_START: u32 = 20;
@@ -84,7 +89,8 @@ impl ChrSpawner {
                 &m.think_id,
                 &-1,
                 m.asset.as_str(),
-            );
+            )
+            .expect("Could not spawn mob");
         });
 
         // map.bespoke_monster_spawns.iter().for_each(|m| {

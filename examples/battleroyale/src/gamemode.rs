@@ -1,7 +1,4 @@
 use std::{
-    collections::HashMap,
-    marker::Sync,
-    ptr::NonNull,
     sync::{
         atomic::{AtomicBool, Ordering},
         Arc, RwLock,
@@ -10,11 +7,7 @@ use std::{
 };
 
 use game::cs::{CSNetMan, FieldInsHandle};
-use util::{
-    input::is_key_pressed,
-    singleton::get_instance,
-    team_relation::{CSTeamTypeEnemy, CSTeamTypeFriend, TEAM_TYPE_ENEMY, TEAM_TYPE_FRIEND},
-};
+use util::{input::is_key_pressed, singleton::get_instance};
 
 use crate::{
     config::{ConfigurationProvider, MapPosition},
@@ -41,6 +34,8 @@ pub struct GameMode {
     _running: AtomicBool,
     /// Did we apply the player levels yet?
     setup_player: AtomicBool,
+    /// Did we disable auto-save yet?
+    disabled_auto_save: AtomicBool,
     /// As a host, did send the loadout to the participants?
     sent_loadout: AtomicBool,
     /// Applied flag overrides for this match?
@@ -74,6 +69,7 @@ impl GameMode {
         Self {
             _running: Default::default(),
             setup_player: Default::default(),
+            disabled_auto_save: Default::default(),
             sent_loadout: Default::default(),
             applied_flag_overrides: Default::default(),
             game_state,
@@ -100,8 +96,12 @@ impl GameMode {
         }
 
         if game_state.match_in_game() && !self.setup_player.swap(true, Ordering::Relaxed) {
-            // TODO(Axi)
-            // self.player.setup_for_match();
+            self.player.setup_for_match();
+        }
+
+        if game_state.match_loading() && !self.disabled_auto_save.load(Ordering::Relaxed) {
+            self.player.disable_auto_save();
+            self.disabled_auto_save.store(true, Ordering::Relaxed);
         }
 
         if !game_state.match_active() {
@@ -122,6 +122,12 @@ impl GameMode {
     /// Returns whether or not the custom gamemode is running.
     pub fn running(&self) -> bool {
         self._running.load(Ordering::Relaxed)
+    }
+
+    /// called from main task loop because it can actually detect that player
+    /// returned to the roundtable
+    pub fn reset(&self) {
+        self.player.reset_player();
     }
 
     /// Should request the session to end.
@@ -162,9 +168,6 @@ impl GameMode {
 
     /// Finishes the match and closes it.
     fn end_match(&self) {
-        // TODO(Axi)
-        // self.player.restore_original_levels();
-
         // Disconnect the ugly way for now
         let cs_net_man = unsafe { get_instance::<CSNetMan>() }.unwrap().unwrap();
         cs_net_man

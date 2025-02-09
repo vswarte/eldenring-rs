@@ -9,11 +9,11 @@ use crate::{
     ProgramLocationProvider,
 };
 
-const NEUTRAL_TEAM_INDEX: (u8, u8) = (0, 0);
+const NEUTRAL_TEAM_INDEX: (usize, usize) = (0, 0);
 // Host to Host
-const FRIEND_TEAM_INDEX: (u8, u8) = (1, 1);
+const FRIEND_TEAM_INDEX: (usize, usize) = (1, 1);
 // Invader to host
-const ENEMY_TEAM_INDEX: (u8, u8) = (13, 1);
+const ENEMY_TEAM_INDEX: (usize, usize) = (13, 1);
 
 pub const OTHER_PLAYER_TEAM_TYPE: u8 = 0;
 pub const LOCAL_PLAYER_TEAM_TYPE: u8 = 1;
@@ -68,37 +68,43 @@ impl TeamRelations {
             self.patch_tables();
             self.applied_table_patches = true;
         }
-        if self.game.match_in_game() {
-            self.override_teams();
-        }
     }
 
-    fn override_teams(&mut self) {
+    pub fn override_teams(&mut self, party: Vec<u64>) {
         if self.overrided_teams {
             return;
         }
         if let Ok(Some(world_chr_man)) = unsafe { get_instance::<WorldChrMan>() } {
-            let main_player_hande = &world_chr_man
-                .main_player
-                .as_ref()
-                .unwrap()
-                .chr_ins
-                .field_ins_handle;
             world_chr_man.player_chr_set.characters().for_each(|c| {
-                c.chr_ins.team_type = if &c.chr_ins.field_ins_handle == main_player_hande {
+                c.chr_ins.team_type = if c.chr_ins.field_ins_handle
+                    == world_chr_man
+                        .main_player
+                        .as_ref()
+                        .unwrap()
+                        .chr_ins
+                        .field_ins_handle
+                    || party.contains(
+                        &c.player_session_holder
+                            .player_network_session
+                            .remote_identity,
+                    ) {
                     LOCAL_PLAYER_TEAM_TYPE
                 } else {
                     OTHER_PLAYER_TEAM_TYPE
-                }
+                };
             })
         } else {
             return;
         }
+
         self.overrided_teams = true;
     }
+
     pub fn reset(&mut self) {
-        self.restore_table();
-        self.applied_table_patches = false;
+        if self.applied_table_patches {
+            self.restore_table();
+            self.applied_table_patches = false;
+        }
     }
 
     unsafe fn ai_matrix(&self) -> OwnedPtr<TeamRelationMatrix> {
@@ -123,41 +129,37 @@ impl TeamRelations {
         let mut ai_matrix = unsafe { self.ai_matrix() };
         let mut hit_matrix = unsafe { self.hit_matrix() };
 
-        let enemy_relation = hit_matrix[ENEMY_TEAM_INDEX.0 as usize][ENEMY_TEAM_INDEX.1 as usize];
-        let friend_relation =
-            hit_matrix[FRIEND_TEAM_INDEX.0 as usize][FRIEND_TEAM_INDEX.1 as usize];
-        let neutral_relation =
-            hit_matrix[NEUTRAL_TEAM_INDEX.0 as usize][NEUTRAL_TEAM_INDEX.1 as usize];
+        let enemy_relation = hit_matrix[ENEMY_TEAM_INDEX.0][ENEMY_TEAM_INDEX.1];
+        let friend_relation = hit_matrix[FRIEND_TEAM_INDEX.0][FRIEND_TEAM_INDEX.1];
+        let neutral_relation = hit_matrix[NEUTRAL_TEAM_INDEX.0][NEUTRAL_TEAM_INDEX.1];
+
+        let enemy = ENEMY_TEAM_TYPE as usize;
+        let local_player = LOCAL_PLAYER_TEAM_TYPE as usize;
+        let other_player = OTHER_PLAYER_TEAM_TYPE as usize;
 
         // local player to local player
-        hit_matrix[LOCAL_PLAYER_TEAM_TYPE as usize][LOCAL_PLAYER_TEAM_TYPE as usize] =
-            friend_relation;
-        ai_matrix[LOCAL_PLAYER_TEAM_TYPE as usize][LOCAL_PLAYER_TEAM_TYPE as usize] =
-            friend_relation;
+        hit_matrix[local_player][local_player] = friend_relation;
+        ai_matrix[local_player][local_player] = friend_relation;
         // local player to enemy
-        hit_matrix[LOCAL_PLAYER_TEAM_TYPE as usize][ENEMY_TEAM_TYPE as usize] = enemy_relation;
-        ai_matrix[LOCAL_PLAYER_TEAM_TYPE as usize][ENEMY_TEAM_TYPE as usize] = enemy_relation;
+        hit_matrix[local_player][enemy] = enemy_relation;
+        ai_matrix[local_player][enemy] = enemy_relation;
         // local player to other player
-        hit_matrix[LOCAL_PLAYER_TEAM_TYPE as usize][OTHER_PLAYER_TEAM_TYPE as usize] =
-            enemy_relation;
-        ai_matrix[LOCAL_PLAYER_TEAM_TYPE as usize][OTHER_PLAYER_TEAM_TYPE as usize] =
-            enemy_relation;
+        hit_matrix[local_player][other_player] = enemy_relation;
+        ai_matrix[local_player][other_player] = enemy_relation;
 
         // enemy to enemy
-        hit_matrix[ENEMY_TEAM_TYPE as usize][ENEMY_TEAM_TYPE as usize] = neutral_relation;
-        ai_matrix[ENEMY_TEAM_TYPE as usize][ENEMY_TEAM_TYPE as usize] = neutral_relation;
+        hit_matrix[enemy][enemy] = neutral_relation;
+        ai_matrix[enemy][enemy] = neutral_relation;
         // enemy to local player
-        hit_matrix[ENEMY_TEAM_TYPE as usize][LOCAL_PLAYER_TEAM_TYPE as usize] = enemy_relation;
-        ai_matrix[ENEMY_TEAM_TYPE as usize][LOCAL_PLAYER_TEAM_TYPE as usize] = enemy_relation;
+        hit_matrix[enemy][local_player] = enemy_relation;
+        ai_matrix[enemy][local_player] = enemy_relation;
         // enemy to other player
-        hit_matrix[ENEMY_TEAM_TYPE as usize][OTHER_PLAYER_TEAM_TYPE as usize] = enemy_relation;
-        ai_matrix[ENEMY_TEAM_TYPE as usize][OTHER_PLAYER_TEAM_TYPE as usize] = enemy_relation;
+        hit_matrix[enemy][other_player] = enemy_relation;
+        ai_matrix[enemy][other_player] = enemy_relation;
 
         // other player to other player
-        hit_matrix[OTHER_PLAYER_TEAM_TYPE as usize][OTHER_PLAYER_TEAM_TYPE as usize] =
-            friend_relation;
-        ai_matrix[OTHER_PLAYER_TEAM_TYPE as usize][OTHER_PLAYER_TEAM_TYPE as usize] =
-            friend_relation;
+        hit_matrix[other_player][other_player] = friend_relation;
+        ai_matrix[other_player][other_player] = friend_relation;
         // other relations can be left as they are
         // because they are handled by remore players from their side
     }
@@ -166,59 +168,43 @@ impl TeamRelations {
         let ai_matrix = unsafe { self.ai_matrix() };
         let hit_matrix = unsafe { self.hit_matrix() };
 
-        self.backup.enemy_to_ememy_ai =
-            ai_matrix[ENEMY_TEAM_TYPE as usize][ENEMY_TEAM_TYPE as usize];
-        self.backup.enemy_to_enemy_hit =
-            hit_matrix[ENEMY_TEAM_TYPE as usize][ENEMY_TEAM_TYPE as usize];
-        self.backup.enemy_to_player_ai =
-            ai_matrix[ENEMY_TEAM_TYPE as usize][LOCAL_PLAYER_TEAM_TYPE as usize];
-        self.backup.enemy_to_player_hit =
-            hit_matrix[ENEMY_TEAM_TYPE as usize][LOCAL_PLAYER_TEAM_TYPE as usize];
-        self.backup.enemy_to_participant_ai =
-            ai_matrix[ENEMY_TEAM_TYPE as usize][OTHER_PLAYER_TEAM_TYPE as usize];
-        self.backup.enemy_to_participant_hit =
-            hit_matrix[ENEMY_TEAM_TYPE as usize][OTHER_PLAYER_TEAM_TYPE as usize];
-        self.backup.player_to_teammate_ai =
-            ai_matrix[LOCAL_PLAYER_TEAM_TYPE as usize][LOCAL_PLAYER_TEAM_TYPE as usize];
-        self.backup.player_to_teammate_hit =
-            hit_matrix[LOCAL_PLAYER_TEAM_TYPE as usize][LOCAL_PLAYER_TEAM_TYPE as usize];
-        self.backup.player_to_enemy_ai =
-            ai_matrix[LOCAL_PLAYER_TEAM_TYPE as usize][ENEMY_TEAM_TYPE as usize];
-        self.backup.player_to_enemy_hit =
-            hit_matrix[LOCAL_PLAYER_TEAM_TYPE as usize][ENEMY_TEAM_TYPE as usize];
-        self.backup.player_to_participant_ai =
-            ai_matrix[LOCAL_PLAYER_TEAM_TYPE as usize][OTHER_PLAYER_TEAM_TYPE as usize];
-        self.backup.player_to_participant_hit =
-            hit_matrix[LOCAL_PLAYER_TEAM_TYPE as usize][OTHER_PLAYER_TEAM_TYPE as usize];
+        let enemy = ENEMY_TEAM_TYPE as usize;
+        let local_player = LOCAL_PLAYER_TEAM_TYPE as usize;
+        let other_player = OTHER_PLAYER_TEAM_TYPE as usize;
+
+        self.backup.enemy_to_ememy_ai = ai_matrix[enemy][enemy];
+        self.backup.enemy_to_enemy_hit = hit_matrix[enemy][enemy];
+        self.backup.enemy_to_player_ai = ai_matrix[enemy][local_player];
+        self.backup.enemy_to_player_hit = hit_matrix[enemy][local_player];
+        self.backup.enemy_to_participant_ai = ai_matrix[enemy][other_player];
+        self.backup.enemy_to_participant_hit = hit_matrix[enemy][other_player];
+        self.backup.player_to_teammate_ai = ai_matrix[local_player][local_player];
+        self.backup.player_to_teammate_hit = hit_matrix[local_player][local_player];
+        self.backup.player_to_enemy_ai = ai_matrix[local_player][enemy];
+        self.backup.player_to_enemy_hit = hit_matrix[local_player][enemy];
+        self.backup.player_to_participant_ai = ai_matrix[local_player][other_player];
+        self.backup.player_to_participant_hit = hit_matrix[local_player][other_player];
     }
 
     fn restore_table(&self) {
         let mut ai_matrix = unsafe { self.ai_matrix() };
         let mut hit_matrix = unsafe { self.hit_matrix() };
 
-        ai_matrix[ENEMY_TEAM_TYPE as usize][ENEMY_TEAM_TYPE as usize] =
-            self.backup.enemy_to_ememy_ai;
-        hit_matrix[ENEMY_TEAM_TYPE as usize][ENEMY_TEAM_TYPE as usize] =
-            self.backup.enemy_to_enemy_hit;
-        ai_matrix[ENEMY_TEAM_TYPE as usize][LOCAL_PLAYER_TEAM_TYPE as usize] =
-            self.backup.enemy_to_player_ai;
-        hit_matrix[ENEMY_TEAM_TYPE as usize][LOCAL_PLAYER_TEAM_TYPE as usize] =
-            self.backup.enemy_to_player_hit;
-        ai_matrix[ENEMY_TEAM_TYPE as usize][OTHER_PLAYER_TEAM_TYPE as usize] =
-            self.backup.enemy_to_participant_ai;
-        hit_matrix[ENEMY_TEAM_TYPE as usize][OTHER_PLAYER_TEAM_TYPE as usize] =
-            self.backup.enemy_to_participant_hit;
-        ai_matrix[LOCAL_PLAYER_TEAM_TYPE as usize][LOCAL_PLAYER_TEAM_TYPE as usize] =
-            self.backup.player_to_teammate_ai;
-        hit_matrix[LOCAL_PLAYER_TEAM_TYPE as usize][LOCAL_PLAYER_TEAM_TYPE as usize] =
-            self.backup.player_to_teammate_hit;
-        ai_matrix[LOCAL_PLAYER_TEAM_TYPE as usize][ENEMY_TEAM_TYPE as usize] =
-            self.backup.player_to_enemy_ai;
-        hit_matrix[LOCAL_PLAYER_TEAM_TYPE as usize][ENEMY_TEAM_TYPE as usize] =
-            self.backup.player_to_enemy_hit;
-        ai_matrix[LOCAL_PLAYER_TEAM_TYPE as usize][OTHER_PLAYER_TEAM_TYPE as usize] =
-            self.backup.player_to_participant_ai;
-        hit_matrix[LOCAL_PLAYER_TEAM_TYPE as usize][OTHER_PLAYER_TEAM_TYPE as usize] =
-            self.backup.player_to_participant_hit;
+        let enemy = ENEMY_TEAM_TYPE as usize;
+        let local_player = LOCAL_PLAYER_TEAM_TYPE as usize;
+        let other_player = OTHER_PLAYER_TEAM_TYPE as usize;
+
+        ai_matrix[enemy][enemy] = self.backup.enemy_to_ememy_ai;
+        hit_matrix[enemy][enemy] = self.backup.enemy_to_enemy_hit;
+        ai_matrix[enemy][local_player] = self.backup.enemy_to_player_ai;
+        hit_matrix[enemy][local_player] = self.backup.enemy_to_player_hit;
+        ai_matrix[enemy][other_player] = self.backup.enemy_to_participant_ai;
+        hit_matrix[enemy][other_player] = self.backup.enemy_to_participant_hit;
+        ai_matrix[local_player][local_player] = self.backup.player_to_teammate_ai;
+        hit_matrix[local_player][local_player] = self.backup.player_to_teammate_hit;
+        ai_matrix[local_player][enemy] = self.backup.player_to_enemy_ai;
+        hit_matrix[local_player][enemy] = self.backup.player_to_enemy_hit;
+        ai_matrix[local_player][other_player] = self.backup.player_to_participant_ai;
+        hit_matrix[local_player][other_player] = self.backup.player_to_participant_hit;
     }
 }

@@ -1,6 +1,6 @@
 use game::cs::{
     CSEventFlagMan, CSNetMan, CSQuickMatchingCtrlState, CSSessionManager, ChrIns, FieldInsHandle,
-    LobbyState, WorldChrMan,
+    LobbyState, MapId, WorldChrMan,
 };
 use util::singleton::get_instance;
 
@@ -172,6 +172,17 @@ impl GameStateProvider {
     /// Is the local player the winner of the match?
     pub fn is_winner(&self) -> bool {
         self.match_concluded() && self.local_player_is_alive()
+    }
+
+    pub fn is_in_roundtable(&self) -> bool {
+        unsafe { get_instance::<WorldChrMan>() }
+            .unwrap()
+            .and_then(|n| {
+                n.main_player
+                    .as_ref()
+                    .map(|p| p.chr_ins.map_id_1 == MapId::from_parts(11, 10, 0, 0))
+            })
+            .unwrap_or_default()
     }
 }
 

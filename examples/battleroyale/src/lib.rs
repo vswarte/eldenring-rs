@@ -38,7 +38,13 @@ use game::{
 use gamemode::GameMode;
 use tracing_panic::panic_hook;
 use util::{
-    arxan, input::is_key_pressed, program::Program, singleton::get_instance, steam::{self, SteamCallback}, system::wait_for_system_init, task::CSTaskImpExt
+    arxan,
+    input::is_key_pressed,
+    program::Program,
+    singleton::get_instance,
+    steam::{self, SteamCallback},
+    system::wait_for_system_init,
+    task::CSTaskImpExt,
 };
 
 mod chr_spawner;
@@ -57,9 +63,9 @@ mod player;
 mod rva;
 mod spectator_camera;
 mod stage;
+mod team;
 mod tool;
 mod ui;
-mod team;
 
 #[no_mangle]
 pub unsafe extern "C" fn DllMain(_hmodule: usize, reason: u32) -> bool {
@@ -125,7 +131,7 @@ fn init() -> Result<(), Box<dyn Error>> {
         player,
     ));
 
-    let hooks = unsafe {
+    unsafe {
         Hooks::place(
             location.clone(),
             gamemode.clone(),
@@ -147,7 +153,7 @@ fn init() -> Result<(), Box<dyn Error>> {
             messaging.clone(),
         );
 
-        let mut loot_generator = Arc::new(LootGenerator::new(config.clone()));
+        let loot_generator = Arc::new(LootGenerator::new(config.clone()));
 
         let mut chr_spawner = ChrSpawner::new(
             location.clone(),
@@ -171,6 +177,7 @@ fn init() -> Result<(), Box<dyn Error>> {
         let mut active = false;
         let mut running = false;
         let mut sent_hellos = false;
+        let mut roundtable_reset_requested = false;
 
         cs_task.run_recurring(
             move |data: &FD4TaskData| {
@@ -190,9 +197,10 @@ fn init() -> Result<(), Box<dyn Error>> {
                         Message::Hello => {
                             tracing::info!("Received Hello");
                         }
-                        Message::MatchDetails { spawn, partner } => {
+                        Message::MatchDetails { spawn, party } => {
                             tracing::info!("Received match details");
                             context.set_spawn_point(spawn.clone());
+                            team_relations.override_teams(party.clone());
                         }
                         Message::MobSpawn {
                             map,
@@ -205,19 +213,21 @@ fn init() -> Result<(), Box<dyn Error>> {
                             field_ins_handle_map_id,
                             field_ins_handle_selector,
                         } => {
-                            chr_spawner.spawn_mob(
-                                &FieldInsHandle {
-                                    selector: FieldInsSelector(*field_ins_handle_selector),
-                                    map_id: game::cs::MapId(*field_ins_handle_map_id),
-                                },
-                                &game::cs::MapId(*map),
-                                &BlockPoint::from_xyz(pos.0, pos.1, pos.2),
-                                orientation,
-                                npc_param,
-                                think_param,
-                                chara_init_param,
-                                model.as_str(),
-                            );
+                            chr_spawner
+                                .spawn_mob(
+                                    &FieldInsHandle {
+                                        selector: FieldInsSelector(*field_ins_handle_selector),
+                                        map_id: game::cs::MapId(*field_ins_handle_map_id),
+                                    },
+                                    &game::cs::MapId(*map),
+                                    &BlockPoint::from_xyz(pos.0, pos.1, pos.2),
+                                    orientation,
+                                    npc_param,
+                                    think_param,
+                                    chara_init_param,
+                                    model.as_str(),
+                                )
+                                .expect("Failed to spawn mob");
                         }
                     }
                 }
@@ -232,6 +242,7 @@ fn init() -> Result<(), Box<dyn Error>> {
                 if game.match_active() && !active {
                     tracing::info!("Starting battleroyale");
                     active = true;
+                // TODO: properly handle map change
                 } else if !game.match_active() && active {
                     tracing::info!("Stopping battleroyale");
                     ui.reset();
@@ -242,8 +253,13 @@ fn init() -> Result<(), Box<dyn Error>> {
                     context.reset();
                     chr_spawner.reset();
                     team_relations.reset();
+
                     active = false;
                     sent_hellos = false;
+                    roundtable_reset_requested = true;
+                } else if roundtable_reset_requested && game.is_in_roundtable() {
+                    gamemode.reset();
+                    roundtable_reset_requested = false;
                 }
 
                 // Trigger logic that needs to run when player has spawned in map.
@@ -278,8 +294,7 @@ fn init() -> Result<(), Box<dyn Error>> {
                 }
 
                 gamemode.update(data.delta_time.time);
-                // TODO(Axi)
-                // team_relations.update();
+                team_relations.update();
 
                 if game.match_active() && game.is_host() {
                     loadout.update();

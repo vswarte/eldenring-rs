@@ -11,10 +11,7 @@ use steamworks::{
 };
 use util::{singleton::get_instance, steam};
 
-use crate::{
-    config::{MapId, MapPosition, PlayerSpawnPoint},
-    loadout::PlayerMatchDetails,
-};
+use crate::{config::PlayerSpawnPoint, loadout::PlayerMatchDetails};
 
 const STEAM_MESSAGE_CHANNEL: u32 = 51234;
 const STEAM_MESSAGE_BATCH_SIZE: usize = 0x10;
@@ -29,7 +26,7 @@ pub enum Message {
     /// Goes from host to clients to set the local players loadout.
     MatchDetails {
         spawn: PlayerSpawnPoint,
-        partner: Option<u64>,
+        party: Vec<u64>,
     },
     MobSpawn {
         field_ins_handle_map_id: i32,
@@ -80,7 +77,7 @@ impl MatchMessaging {
         loadout.iter().for_each(|(remote, match_details)| {
             let message = Message::MatchDetails {
                 spawn: match_details.spawn.clone(),
-                partner: match_details.partner,
+                party: match_details.party.clone(),
             };
 
             let serialized =
@@ -109,7 +106,9 @@ impl MatchMessaging {
     pub fn broadcast_hello(&self) {
         let serialized =
             bincode::serialize(&Message::Hello).expect("Could not serialize hello message");
-        self.broadcast(serialized.as_slice());
+        if let Err(e) = self.broadcast(serialized.as_slice()) {
+            tracing::error!("Could not broadcast hello message: {}", e);
+        }
     }
 
     /// Send message to all players in world.
