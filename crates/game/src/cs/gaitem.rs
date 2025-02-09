@@ -12,8 +12,7 @@ pub enum GaitemCategory {
     Accessory = 2,
     Goods = 3,
     Gem = 4,
-    // u4 max
-    None = 15,
+    Invalid = 255,
 }
 
 impl From<u8> for GaitemCategory {
@@ -24,8 +23,10 @@ impl From<u8> for GaitemCategory {
             2 => GaitemCategory::Accessory,
             3 => GaitemCategory::Goods,
             4 => GaitemCategory::Gem,
-            15 => GaitemCategory::None,
-            _ => panic!("Invalid gaitem category"),
+            _ => {
+                tracing::warn!("Unknown GaitemCategory: {}", value);
+                GaitemCategory::Invalid
+            }
         }
     }
 }
@@ -68,7 +69,7 @@ impl GaitemHandle {
     }
 
     pub fn from_parts(selector: u32, category: GaitemCategory) -> Self {
-        GaitemHandle(selector & 0x00FFFFFF | (category as u32 | 0xfffffff8) << 28)
+        GaitemHandle(selector & 0x00FFFFFF | ((category as u32) | 0xfffffff8) << 28)
     }
 
     /// returns true if the gaitem handle has index

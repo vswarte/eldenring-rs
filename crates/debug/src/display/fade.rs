@@ -7,7 +7,7 @@ impl DebugDisplay for CSFade {
     fn render_debug(&self, ui: &&mut Ui) {
         ui.text("Fade plates");
         for fade_plate in self.fade_plates.iter() {
-            let title = unsafe {
+            let _ = unsafe {
                 windows::core::PCWSTR::from_raw(fade_plate.title.as_ptr())
                     .to_string()
                     .unwrap()

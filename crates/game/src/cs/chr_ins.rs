@@ -6,6 +6,7 @@ use vtable_rs::VPtr;
 use windows::core::PCWSTR;
 
 use crate::cs::ChrSetEntry;
+use crate::fd4::FD4Time;
 use crate::matrix::FSVector4;
 use crate::pointer::OwnedPtr;
 use crate::position::{BlockPoint, ChunkPosition4, HavokPosition, Quaternion};
@@ -13,7 +14,8 @@ use crate::Vector;
 
 use super::player_game_data::PlayerGameData;
 use super::{
-    CSMsbParts, CSMsbPartsEne, CSSessionManagerPlayerEntry, FieldInsBaseVmt, FieldInsHandle, GaitemHandle, MapId, WorldBlockChr
+    CSMsbParts, CSMsbPartsEne, CSSessionManagerPlayerEntry, FieldInsBaseVmt, FieldInsHandle,
+    GaitemHandle, MapId, PlayerNetworkSession, WorldBlockChr,
 };
 
 #[repr(C)]
@@ -211,7 +213,7 @@ pub struct ChrInsModuleContainer {
     behavior_script: usize,
     pub time_act: OwnedPtr<CSChrTimeActModule>,
     resist: usize,
-    behavior: usize,
+    pub behavior: OwnedPtr<CSChrBehaviorModule>,
     behavior_sync: usize,
     ai: usize,
     pub super_armor: OwnedPtr<CSChrSuperArmorModule>,
@@ -345,6 +347,34 @@ pub struct CSChrTimeActModule {
     unkcc: u32,
     unkd0: u32,
     unkd4: u32,
+}
+
+#[repr(C)]
+pub struct CSChrBehaviorModule {
+    vftable: usize,
+    pub owner: NonNull<ChrIns>,
+    unk10: usize,
+    unk18: usize,
+    unk20: usize,
+    unk28: usize,
+    pub root_motion: FSVector4,
+    unk40: [u8; 0x20],
+    unk60: [u8; 0xa48],
+    unkaa8: [u8; 0x58],
+    unkb00: [u8; 0xa48],
+    unk1548: [u8; 0x68],
+    unk15b0: FD4Time,
+    unk15c0: [u8; 0xc0],
+    pub ground_touch_state: u32,
+    unk1684: f32,
+    unk1688: f32,
+    unk168c: [u8; 0x104],
+    unk1790: FSVector4,
+    unk17a0: [u8; 0x10],
+    chr_behavior_debug_anim_helper: usize,
+    unk17b8: [u8; 0x10],
+    pub animation_speed: f32,
+    unk17cc: [u8; 0x1f4],
 }
 
 #[repr(C)]
@@ -702,6 +732,6 @@ pub struct PlayerSessionHolder {
     vftable: usize,
     player_debug_session: usize,
     unk10: usize,
-    player_network_session: usize,
+    pub player_network_session: OwnedPtr<PlayerNetworkSession>,
     unk18: usize,
 }

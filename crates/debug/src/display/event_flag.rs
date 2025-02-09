@@ -14,7 +14,9 @@ impl DebugDisplay for CSEventFlagMan {
         .build();
 
         if ui.collapsing_header("CSFD4VirtualMemory", TreeNodeFlags::empty()) {
+            ui.indent();
             self.virtual_memory_flag.render_debug(ui);
+            ui.unindent();
         }
     }
 }
@@ -43,6 +45,7 @@ impl DebugDisplay for CSFD4VirtualMemoryFlag {
         .build();
 
         if ui.collapsing_header("Block Descriptors", TreeNodeFlags::empty()) {
+            ui.indent();
             if let Some(_t) = ui.begin_table_header(
                 "event-flags-groups",
                 [
@@ -58,6 +61,7 @@ impl DebugDisplay for CSFD4VirtualMemoryFlag {
                     ui.text(e.location_mode.to_string());
                 });
             }
+            ui.unindent();
         }
 
         let virtual_memory_flag = &mut unsafe { get_instance::<CSEventFlagMan>() }

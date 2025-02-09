@@ -17,6 +17,7 @@ impl DebugDisplay for FD4ParamRepository {
                     TableColumnSetup::new("Bytes"),
                 ],
             ) {
+                ui.indent();
                 for res_cap in self.res_rep.res_cap_holder.entries() {
                     ui.table_next_column();
                     ui.text(res_cap.res_cap.name.to_string());
@@ -33,6 +34,7 @@ impl DebugDisplay for FD4ParamRepository {
                     let bytes_ptr = res_cap.data.as_ref().map(|d| d.as_ptr());
                     ui.text(format!("{:x?}", { bytes_ptr }));
                 }
+                ui.unindent();
             }
         }
     }

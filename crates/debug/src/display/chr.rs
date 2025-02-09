@@ -3,7 +3,7 @@ use game::cs::{
     ChrInsModuleContainer, ChrPhysicsModule, EquipGameData, EquipInventoryData, EquipItemData,
     EquipMagicData, PlayerGameData, PlayerIns,
 };
-use hudhook::imgui::{TableColumnSetup, TreeNodeFlags, Ui};
+use hudhook::imgui::{TableColumnSetup, TableFlags, TreeNodeFlags, Ui};
 
 use super::DebugDisplay;
 
@@ -23,12 +23,9 @@ impl DebugDisplay for PlayerIns {
             ui.unindent();
         }
 
-        ui.text(format!(
-            "Steam ID: {:x}",
-            unsafe { self.session_manager_player_entry.as_ref() }.steam_id
-        ));
         if ui.collapsing_header("Session Player Entry", TreeNodeFlags::empty()) {
             ui.indent();
+            unsafe { self.session_manager_player_entry.as_ref() }.render_debug(ui);
             ui.unindent();
         }
 
@@ -88,46 +85,44 @@ impl DebugDisplay for ChrAsmEquipment {
 
 impl DebugDisplay for ChrAsmEquipEntries {
     fn render_debug(&self, ui: &&mut Ui) {
+        ui.text(format!("Primary Left weapon: {}", self.weapon_primary_left));
         ui.text(format!(
-            "Primary Left weapon: {:?}",
-            self.weapon_primary_left
-        ));
-        ui.text(format!(
-            "Primary Right weapon: {:?}",
+            "Primary Right weapon: {}",
             self.weapon_primary_right
         ));
         ui.text(format!(
-            "Secondary Left weapon: {:?}",
+            "Secondary Left weapon: {}",
             self.weapon_secondary_left
         ));
         ui.text(format!(
-            "Secondary Right weapon: {:?}",
+            "Secondary Right weapon: {}",
             self.weapon_secondary_right
         ));
         ui.text(format!(
-            "Tertiary Left weapon: {:?}",
+            "Tertiary Left weapon: {}",
             self.weapon_tertiary_left
         ));
         ui.text(format!(
-            "Tertiary Right weapon: {:?}",
+            "Tertiary Right weapon: {}",
             self.weapon_tertiary_right
         ));
 
-        ui.text(format!("Primary Left arrow: {:?}", self.arrow_primary));
-        ui.text(format!("Primary Left bolt: {:?}", self.bolt_primary));
-        ui.text(format!("Secondary Left arrow: {:?}", self.arrow_secondary));
-        ui.text(format!("Secondary Left bolt: {:?}", self.bolt_secondary));
-        ui.text(format!("Tertiary Left arrow: {:?}", self.arrow_tertiary));
-        ui.text(format!("Tertiary Left bolt: {:?}", self.bolt_tertiary));
+        ui.text(format!("Primary Left arrow: {}", self.arrow_primary));
+        ui.text(format!("Primary Left bolt: {}", self.bolt_primary));
+        ui.text(format!("Secondary Left arrow: {}", self.arrow_secondary));
+        ui.text(format!("Secondary Left bolt: {}", self.bolt_secondary));
+        ui.text(format!("Tertiary Left arrow: {}", self.arrow_tertiary));
+        ui.text(format!("Tertiary Left bolt: {}", self.bolt_tertiary));
 
-        ui.text(format!("Protector Head: {:?}", self.protector_head));
-        ui.text(format!("Protector Chest: {:?}", self.protector_chest));
-        ui.text(format!("Protector Hands: {:?}", self.protector_hands));
-        ui.text(format!("Protector Legs: {:?}", self.protector_legs));
+        ui.text(format!("Protector Head: {}", self.protector_head));
+        ui.text(format!("Protector Chest: {}", self.protector_chest));
+        ui.text(format!("Protector Hands: {}", self.protector_hands));
+        ui.text(format!("Protector Legs: {}", self.protector_legs));
 
-        ui.text(format!("Hair???: {:?}", self.hair));
+        ui.text(format!("Hair???: {}", self.hair));
 
         if ui.collapsing_header("Accessories", TreeNodeFlags::empty()) {
+            ui.indent();
             if let Some(_t) = ui.begin_table_header(
                 "chr-asm-equip-entries-accessories",
                 [
@@ -145,11 +140,13 @@ impl DebugDisplay for ChrAsmEquipEntries {
                         ui.text(item.to_string());
                     });
             }
+            ui.unindent();
         }
 
         ui.text(format!("Covenant: {:?}", self.covenant));
 
         if ui.collapsing_header("Quick Items", TreeNodeFlags::empty()) {
+            ui.indent();
             if let Some(_t) = ui.begin_table_header(
                 "chr-asm-equip-entries-quick-items",
                 [
@@ -167,9 +164,11 @@ impl DebugDisplay for ChrAsmEquipEntries {
                         ui.text(item.to_string());
                     });
             }
+            ui.unindent();
         }
 
         if ui.collapsing_header("Pouch", TreeNodeFlags::empty()) {
+            ui.indent();
             if let Some(_t) = ui.begin_table_header(
                 "chr-asm-equip-entries-pouch",
                 [
@@ -185,6 +184,7 @@ impl DebugDisplay for ChrAsmEquipEntries {
                     ui.text(item.to_string());
                 });
             }
+            ui.unindent();
         }
     }
 }
@@ -203,11 +203,15 @@ impl DebugDisplay for PlayerGameData {
         ui.text(format!("Team Type: {:?}", self.team_type));
 
         if ui.collapsing_header("EquipGameData", TreeNodeFlags::empty()) {
+            ui.indent();
             self.equipment.render_debug(ui);
+            ui.unindent();
         }
 
         if ui.collapsing_header("Storage Box EquipInventoryData", TreeNodeFlags::empty()) {
+            ui.indent();
             self.storage.render_debug(ui);
+            ui.unindent();
         }
     }
 }
@@ -215,21 +219,29 @@ impl DebugDisplay for PlayerGameData {
 impl DebugDisplay for EquipGameData {
     fn render_debug(&self, ui: &&mut Ui) {
         if ui.collapsing_header("EquipInventoryData", TreeNodeFlags::empty()) {
+            ui.indent();
             self.equip_inventory_data.render_debug(ui);
+            ui.unindent();
         }
         if ui.collapsing_header("EquipMagicData", TreeNodeFlags::empty()) {
+            ui.indent();
             self.equip_magic_data.render_debug(ui);
+            ui.unindent();
         }
         if ui.collapsing_header("EquipItemData", TreeNodeFlags::empty()) {
+            ui.indent();
             self.equip_item_data.render_debug(ui);
+            ui.unindent();
         }
 
         if ui.collapsing_header("QuickMatch Item Backup Vector", TreeNodeFlags::empty()) {
+            ui.indent();
             if let Some(_t) = ui.begin_table_header(
                 "equip-game-data-qm-item-backup-vector",
                 [
+                    TableColumnSetup::new("Index"),
                     TableColumnSetup::new("ItemId"),
-                    TableColumnSetup::new("Count"),
+                    TableColumnSetup::new("Quantity"),
                 ],
             ) {
                 self.qm_item_backup_vector
@@ -242,12 +254,12 @@ impl DebugDisplay for EquipGameData {
 
                         ui.table_next_column();
                         ui.text(item.item_id.to_string());
+
+                        ui.table_next_column();
+                        ui.text(item.quantity.to_string());
                     });
             }
-        }
-
-        if ui.collapsing_header("Equipment Entries", TreeNodeFlags::empty()) {
-            self.equipment_entries.render_debug(ui);
+            ui.unindent();
         }
     }
 }
@@ -257,11 +269,13 @@ impl DebugDisplay for EquipMagicData {
         ui.text(format!("Selected slot: {}", self.selected_slot));
 
         if ui.collapsing_header("EquipDataItem", TreeNodeFlags::empty()) {
+            ui.indent();
             if let Some(_t) = ui.begin_table_header(
                 "equip-magic-data-entries",
                 [
-                    TableColumnSetup::new("Gaitem Handle"),
                     TableColumnSetup::new("Index"),
+                    TableColumnSetup::new("Param ID"),
+                    TableColumnSetup::new("Charges"),
                 ],
             ) {
                 self.entries.iter().enumerate().for_each(|(index, item)| {
@@ -269,9 +283,13 @@ impl DebugDisplay for EquipMagicData {
                     ui.text(index.to_string());
 
                     ui.table_next_column();
-                    ui.text(item.gaitem_handle.to_string());
+                    ui.text(item.param_id.to_string());
+
+                    ui.table_next_column();
+                    ui.text(item.charges.to_string());
                 });
             }
+            ui.unindent();
         }
     }
 }
@@ -281,12 +299,15 @@ impl DebugDisplay for EquipItemData {
         ui.text(format!("Selected quick slot: {}", self.selected_quick_slot));
 
         if ui.collapsing_header("Quick slots", TreeNodeFlags::empty()) {
-            if let Some(_t) = ui.begin_table_header(
+            ui.indent();
+            if let Some(_t) = ui.begin_table_header_with_flags(
                 "equip-item-data-quick-slots",
                 [
-                    TableColumnSetup::new("Gaitem Handle"),
                     TableColumnSetup::new("Index"),
+                    TableColumnSetup::new("Gaitem Handle"),
+                    TableColumnSetup::new("Inventory Index"),
                 ],
+                TableFlags::RESIZABLE | TableFlags::SIZING_FIXED_FIT,
             ) {
                 self.quick_slots
                     .iter()
@@ -294,20 +315,28 @@ impl DebugDisplay for EquipItemData {
                     .for_each(|(index, item)| {
                         ui.table_next_column();
                         ui.text(index.to_string());
+                        ui.align_text_to_frame_padding();
 
                         ui.table_next_column();
                         ui.text(item.gaitem_handle.to_string());
+
+                        ui.table_next_column();
+                        ui.text(item.index.to_string());
                     });
             }
+            ui.unindent();
         }
 
         if ui.collapsing_header("Pouch slots", TreeNodeFlags::empty()) {
-            if let Some(_t) = ui.begin_table_header(
+            ui.indent();
+            if let Some(_t) = ui.begin_table_header_with_flags(
                 "equip-item-data-pouch-slots",
                 [
-                    TableColumnSetup::new("Gaitem Handle"),
                     TableColumnSetup::new("Index"),
+                    TableColumnSetup::new("Gaitem Handle"),
+                    TableColumnSetup::new("Inventory Index"),
                 ],
+                TableFlags::RESIZABLE | TableFlags::SIZING_FIXED_FIT,
             ) {
                 self.pouch_slots
                     .iter()
@@ -318,8 +347,12 @@ impl DebugDisplay for EquipItemData {
 
                         ui.table_next_column();
                         ui.text(item.gaitem_handle.to_string());
+
+                        ui.table_next_column();
+                        ui.text(item.index.to_string());
                     });
             }
+            ui.unindent();
         }
 
         ui.text(format!(
@@ -328,7 +361,9 @@ impl DebugDisplay for EquipItemData {
         ));
 
         if ui.collapsing_header("Equipment Entries", TreeNodeFlags::empty()) {
+            ui.indent();
             self.equip_entries.render_debug(ui);
+            ui.unindent();
         }
 
         ui.text(format!("Selected Quick Slot: {}", self.selected_quick_slot));
@@ -347,7 +382,8 @@ impl DebugDisplay for EquipInventoryData {
             self.items_data.normal_item_count, self.items_data.normal_item_capacity
         );
         if ui.collapsing_header(label.as_str(), TreeNodeFlags::empty()) {
-            if let Some(_t) = ui.begin_table_header(
+            ui.indent();
+            if let Some(_t) = ui.begin_table_header_with_flags(
                 "equip-inventory-data-normal-items",
                 [
                     TableColumnSetup::new("Index"),
@@ -356,6 +392,7 @@ impl DebugDisplay for EquipInventoryData {
                     TableColumnSetup::new("Quantity"),
                     TableColumnSetup::new("Display ID"),
                 ],
+                TableFlags::RESIZABLE | TableFlags::SIZING_FIXED_FIT,
             ) {
                 self.items_data
                     .normal_items()
@@ -378,6 +415,7 @@ impl DebugDisplay for EquipInventoryData {
                         ui.text(item.display_id.to_string());
                     });
             }
+            ui.unindent();
         }
 
         let label = format!(
@@ -385,7 +423,8 @@ impl DebugDisplay for EquipInventoryData {
             self.items_data.key_item_count, self.items_data.key_item_capacity
         );
         if ui.collapsing_header(label.as_str(), TreeNodeFlags::empty()) {
-            if let Some(_t) = ui.begin_table_header(
+            ui.indent();
+            if let Some(_t) = ui.begin_table_header_with_flags(
                 "equip-inventory-data-key-items",
                 [
                     TableColumnSetup::new("Index"),
@@ -394,6 +433,7 @@ impl DebugDisplay for EquipInventoryData {
                     TableColumnSetup::new("Quantity"),
                     TableColumnSetup::new("Display ID"),
                 ],
+                TableFlags::RESIZABLE | TableFlags::SIZING_FIXED_FIT,
             ) {
                 self.items_data
                     .key_items()
@@ -416,6 +456,7 @@ impl DebugDisplay for EquipInventoryData {
                         ui.text(item.display_id.to_string());
                     });
             }
+            ui.unindent();
         }
 
         let label = format!(
@@ -423,7 +464,8 @@ impl DebugDisplay for EquipInventoryData {
             self.items_data.secondary_key_item_count, self.items_data.secondary_key_item_capacity
         );
         if ui.collapsing_header(label.as_str(), TreeNodeFlags::empty()) {
-            if let Some(_t) = ui.begin_table_header(
+            ui.indent();
+            if let Some(_t) = ui.begin_table_header_with_flags(
                 "equip-inventory-data-secondary-key-items",
                 [
                     TableColumnSetup::new("Index"),
@@ -432,6 +474,7 @@ impl DebugDisplay for EquipInventoryData {
                     TableColumnSetup::new("Quantity"),
                     TableColumnSetup::new("Display ID"),
                 ],
+                TableFlags::RESIZABLE | TableFlags::SIZING_FIXED_FIT,
             ) {
                 self.items_data
                     .secondary_key_items()
@@ -454,6 +497,7 @@ impl DebugDisplay for EquipInventoryData {
                         ui.text(item.display_id.to_string());
                     });
             }
+            ui.unindent();
         }
     }
 }
@@ -474,7 +518,8 @@ impl DebugDisplay for ChrIns {
         ui.text(format!("Block center origin 2: {}", self.block_origin));
 
         if ui.collapsing_header("Special Effect", TreeNodeFlags::empty()) {
-            if let Some(_t) = ui.begin_table_header(
+            ui.indent();
+            if let Some(_t) = ui.begin_table_header_with_flags(
                 "chr-ins-special-effects",
                 [
                     TableColumnSetup::new("ID"),
@@ -483,6 +528,7 @@ impl DebugDisplay for ChrIns {
                     TableColumnSetup::new("Duration2"),
                     TableColumnSetup::new("Interval Timer"),
                 ],
+                TableFlags::RESIZABLE | TableFlags::SIZING_FIXED_FIT,
             ) {
                 self.special_effect.entries().for_each(|entry| {
                     ui.table_next_column();
@@ -501,10 +547,13 @@ impl DebugDisplay for ChrIns {
                     ui.text(format!("{}", entry.interval_timer));
                 });
             }
+            ui.unindent();
         }
 
         if ui.collapsing_header("Modules", TreeNodeFlags::empty()) {
+            ui.indent();
             self.module_container.render_debug(ui);
+            ui.unindent();
         }
     }
 }
