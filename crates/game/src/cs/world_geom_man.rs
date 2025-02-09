@@ -54,7 +54,8 @@ pub struct CSWorldGeomManBlockData {
     _pad335: [u8; 3],
     unk338: [u8; 0x50],
     pub sos_sign_geometry: Vector<OwnedPtr<OwnedPtr<CSWorldGeomIns>>>,
-    unk3a8: [u8; 0x300],
+    pub disable_on_singleplay_geometry: Vector<OwnedPtr<OwnedPtr<CSWorldGeomIns>>>,
+    unk3c8: [u8; 0x2E0],
 }
 
 #[repr(C)]
@@ -123,7 +124,8 @@ pub struct CSWorldGeomInfo {
     pub forward_draw_envmap_blend_type: bool,
     unk180: u16,
     unk182: u16,
-    unk184: u8,
+    /// Hides the object whenever the player is alone, used for fogwalls and such.
+    pub disable_on_singleplay: u8,
     unk185: u8,
     unk186: u16,
     unk188: usize,
