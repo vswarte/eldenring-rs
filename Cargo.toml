@@ -58,6 +58,9 @@ features = [
     "Win32_System_Memory",
 ]
 
+[workspace.dependencies.clippy]
+version = "0.0.302"
+
 [patch.crates-io]
 libudis86-sys = { git = 'https://github.com/vars1ty/libudis86-sys.git' }
 

@@ -1,0 +1,14 @@
+repos:
+  - repo: https://github.com/doublify/pre-commit-rust
+    rev: v1.0
+    hooks:
+      - id: cargo-check
+      - id: fmt
+
+  - repo: local
+    hooks:
+      - id: rust-test
+        name: Rust Tests
+        entry: cargo test
+        language: system
+        types: [rust]
