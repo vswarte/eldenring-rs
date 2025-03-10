@@ -147,7 +147,7 @@ impl Hooks {
                         }
 
                         // Disable character collision
-                        chr_ins.as_mut().unwrap().chr_ctrl.flags |= 2;
+                        chr_ins.as_mut().unwrap().chr_ctrl.flags.set_disable_player_collision(true);
                         tracing::info!("Caught ChrIns death");
                     },
                 )?

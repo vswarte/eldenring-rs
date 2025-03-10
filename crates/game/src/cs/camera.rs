@@ -1,5 +1,9 @@
-use crate::matrix::FSMatrix4x4;
+use std::ptr::NonNull;
+
+use crate::matrix::{FSMatrix4x4, FSVector4};
 use crate::pointer::OwnedPtr;
+
+use super::ChrIns;
 
 #[repr(C)]
 /// Source of name: RTTI
@@ -37,3 +41,35 @@ pub struct CSCam {
 }
 
 pub type CSPersCam = CSCam;
+
+#[repr(C)]
+pub struct ChrCam {
+    pub pers_cam: CSPersCam,
+    ex_follow_cam: OwnedPtr<CSPersCam>,
+    aim_cam: OwnedPtr<CSPersCam>,
+    dist_view_cam: OwnedPtr<CSPersCam>,
+    unk78: u32,
+    pub camera_type: ChrCamType,
+    unk80: [u8; 0xc],
+    pub pad_accelleration: FSVector4,
+    pub move_accelleration: FSVector4,
+    unkb0: f32,
+    pub is_movement_locked: bool,
+    unkb5: [u8; 0x11b],
+    position_recorder: [u8; 0xf20],
+    unk10f0: usize,
+    unk10f8: [u8; 0x30],
+    pub death_cam_target: Option<NonNull<ChrIns>>,
+}
+
+#[repr(u32)]
+pub enum ChrCamType {
+    Unk0 = 0,
+    Unk1 = 1,
+    Unk2 = 2,
+    Unk3 = 3,
+    Unk4 = 4,
+    Unk5 = 5,
+    Unk6 = 6,
+    DeathCam = 7,
+}
