@@ -1,0 +1,32 @@
+#[repr(C)]
+/// Source of name: RTTI
+#[dlrf::singleton("CSRegulationManager")]
+pub struct CSRegulationManager { 
+  pub unk_ptr_0x0_0x0ffc: usize, 
+  pub cs_regulation_step_ptr_0x8_0x0ffc: usize, 
+  pub global_main_heap_allocator_ptr_0x10_0x0ffc: usize, 
+  pub unk_ptr_0x18_0x0ff8: usize, 
+  pub unk_ptr_0x20_0x0ff8: usize, 
+  pub unk_ptr_0x28_0x0ff8: usize, 
+  pub unk_ptr_0x30_0x0ffc: usize,
+  pub unk_0x38: i32,
+  pub unk_0x3c: i32,
+  pub unk_0x40: i32,
+  pub unk_0x48: i32,
+  pub unk_0x4c: i32,
+  pub unk_0x50: i32,
+  pub unk_0x54: i32,
+  pub unk_0x58: i32,
+  pub unk_0x5c: i32,
+  pub unk_0x60: i32,
+  pub unk_0x64: i32,
+  pub unk_0x68: f32,
+  pub unk_0x6c: f32,
+  pub unk_0x70: i32,
+  pub unk_0x74: f32,
+  pub unk_0x78: i32,
+  pub unk_0x7c: i32,
+  pub unk_0x80: i32,
+  pub unk_0x84: i32,
+  pub unk_ptr_0x88: usize,
+}

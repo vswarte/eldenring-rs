@@ -34,6 +34,7 @@ mod havok_man;
 mod field_area;
 mod fe_man;
 mod window;
+mod regulation_manager;
 
 pub use map_id::*;
 pub use item_id::*;
@@ -71,3 +72,4 @@ pub use havok_man::*;
 pub use field_area::*;
 pub use fe_man::*;
 pub use window::*;
+pub use regulation_manager::*;

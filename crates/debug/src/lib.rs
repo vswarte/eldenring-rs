@@ -22,6 +22,7 @@ use game::cs::CSTaskImp;
 use game::cs::CSWorldGeomMan;
 use game::cs::WorldAreaTime;
 use game::cs::WorldChrMan;
+use game::cs::CSRegulationManager;
 use game::fd4::FD4ParamRepository;
 
 use display::render_debug_singleton;
@@ -111,6 +112,7 @@ impl ImguiRenderLoop for EldenRingDebugGui {
                     // render_debug_singleton::<FieldArea>(&ui);
                     render_debug_singleton::<CSEventFlagMan>(&ui);
                     render_debug_singleton::<WorldChrMan>(&ui);
+                    render_debug_singleton::<CSRegulationManager>(&ui);
                     render_debug_singleton::<CSWorldGeomMan>(&ui);
                     render_debug_singleton::<WorldAreaTime>(&ui);
                     item.end();
