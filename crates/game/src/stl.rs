@@ -167,3 +167,22 @@ pub struct TreeNode<T> {
     _pad1a: [u8; 6],
     value: T,
 }
+
+pub struct DLFixedVector<T, const N: usize>
+where
+    T: Sized,
+{
+    elements: [T; N],
+    // TODO: fact-check this
+    unk1: usize,
+    count: usize,
+}
+
+impl<T, const N: usize> DLFixedVector<T, N>
+where
+    T: Sized,
+{
+    pub fn iter(&self) -> impl Iterator<Item = &T> {
+        self.elements[0..self.count].iter()
+    }
+}

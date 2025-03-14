@@ -34,6 +34,8 @@ mod havok_man;
 mod field_area;
 mod fe_man;
 mod window;
+mod job;
+mod world_scene_draw_param_manager;
 
 pub use map_id::*;
 pub use item_id::*;
@@ -71,3 +73,5 @@ pub use havok_man::*;
 pub use field_area::*;
 pub use fe_man::*;
 pub use window::*;
+pub use job::*;
+pub use world_scene_draw_param_manager::*;

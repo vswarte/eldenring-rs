@@ -125,6 +125,7 @@ pub struct CSDebugChrCreatorInitData {
     spawn_count: u32,
     unkf0: [u8; 0x10],
 }
+
 #[repr(C)]
 pub struct ChrSetHolder<T: 'static> {
     pub chr_set: NonNull<ChrSet<T>>,

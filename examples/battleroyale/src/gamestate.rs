@@ -147,7 +147,7 @@ impl GameStateProvider {
     pub fn is_host(&self) -> bool {
         unsafe { get_instance::<CSSessionManager>() }
             .unwrap()
-            .map(|s| s.lobby_state == LobbyState::HostingLobby)
+            .map(|s| s.lobby_state == LobbyState::Host)
             .unwrap_or_default()
     }
 

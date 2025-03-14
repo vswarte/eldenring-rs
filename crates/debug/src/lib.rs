@@ -1,5 +1,6 @@
 use display::DebugDisplay;
 use game::cs::CSWindowImp;
+use game::cs::CSWorldSceneDrawParamManager;
 use game::cs::FieldArea;
 use game::rva::RVA_GLOBAL_FIELD_AREA;
 use hudhook::eject;
@@ -123,13 +124,6 @@ impl ImguiRenderLoop for EldenRingDebugGui {
                 }
 
                 if let Some(item) = ui.tab_item("Resource") {
-                    // if ui.collapsing_header("DLFileDeviceManager", TreeNodeFlags::empty()) {
-                    //     let file_device_manager =
-                    //         unsafe { &*(0x1448464c0usize as *mut DLFileDeviceManager) };
-                    //
-                    //     file_device_manager.render_debug(&ui);
-                    // }
-
                     render_debug_singleton::<CSTaskGroup>(&ui);
                     render_debug_singleton::<CSTaskImp>(&ui);
                     render_debug_singleton::<FD4ParamRepository>(&ui);
@@ -139,6 +133,7 @@ impl ImguiRenderLoop for EldenRingDebugGui {
                 if let Some(item) = ui.tab_item("Render") {
                     render_debug_singleton::<CSCamera>(&ui);
                     render_debug_singleton::<CSFade>(&ui);
+                    render_debug_singleton::<CSWorldSceneDrawParamManager>(&ui);
                     item.end();
                 }
                 tabs.end();

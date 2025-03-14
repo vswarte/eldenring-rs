@@ -29,6 +29,7 @@ impl DebugDisplay for PlayerIns {
             ui.unindent();
         }
 
+        ui.text(format!("Invincibility timer: {}", self.invincibility_timer_for_net_player));
         ui.text(format!("Locked on enemy: {}", self.locked_on_enemy));
         ui.text(format!("Block position: {}", self.block_position));
         ui.text(format!("Block orientation: {}", self.block_orientation));

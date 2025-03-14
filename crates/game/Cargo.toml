@@ -1,9 +1,12 @@
 [package]
-name = "game"
-version.workspace = true
-edition.workspace = true
-repository.workspace = true
-license.workspace = true
+name = "eldenring"
+version = "0.1.1"
+edition = "2021"
+repository = "https://github.com/vswarte/eldenring-rs"
+license = "MIT OR Apache-2.0"
+readme = false
+description = "Raw structures and bindings for From Software's title Elden Ring"
+
 
 [lints.rust]
 unused = "allow"
@@ -12,24 +15,30 @@ unused = "allow"
 log = "0.4.1"
 toml = "0.7.2"
 rand = "0.8"
-dlrf.workspace = true
-tracing.workspace = true
-thiserror.workspace = true
-nalgebra-glm.workspace = true
-nalgebra.workspace = true
-windows.workspace = true
-zerocopy.workspace = true
-zerocopy-derive.workspace = true
-byteorder.workspace = true
-pelite.workspace = true
-dataview.workspace = true
-vtable-rs.workspace = true
-contextual = "0.1.6"
 
-[dependencies.retour]
-version = "0.3"
+dlrf = { version = "0.1.0", package = "eldenring-dlrf" }
+tracing = "0.1"
+thiserror = "1"
+nalgebra-glm = "0.18"
+nalgebra = "0.32"
+zerocopy = "0.7"
+zerocopy-derive = "0.7"
+byteorder = "1"
+pelite = "0.10"
+dataview = "~1.0"
+vtable-rs = "0.1.4"
+
+[dependencies.windows]
+version = "0.54"
 features = [
-    "static-detour",
+    "Win32_Foundation",
+	"Win32_System_Kernel",
+	"Win32_System_Threading",
+	"Win32_UI_WindowsAndMessaging",
+	"Win32_UI_Input_KeyboardAndMouse",
+	"Win32_System_Diagnostics_Debug",
+	"Win32_System_LibraryLoader",
+    "Win32_System_Memory",
 ]
 
 [build-dependencies]
@@ -39,7 +48,3 @@ regex = "1"
 [build-dependencies.serde]
 version = "1"
 features = ["derive"]
-
-[build-dependencies.quick-xml]
-version = "0.31"
-features = ["serialize"]
