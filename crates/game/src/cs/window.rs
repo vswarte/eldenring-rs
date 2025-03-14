@@ -15,7 +15,9 @@ pub struct CSWindowImp {
     screen_mode_ctrl: usize,
     unk40: [u8; 0x2c],
     pub runtime_window_config: CSWindowScreenConfig,
-    pub xml_window_config: CSWindowScreenConfig,
+    /// represents config that will be saved to disk
+    /// values from here will take priority over runtime_window_config
+    pub persistent_window_config: CSWindowScreenConfig,
     unk134: [u8; 0x25F4],
 }
 

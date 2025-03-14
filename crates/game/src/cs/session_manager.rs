@@ -2,9 +2,16 @@ use std::ptr::NonNull;
 
 use windows::Win32::Foundation::FILETIME;
 
-use crate::{dlcr::{AESDecrypter, AESEncrypter, DLSerialCipherKey}, dlkr::{DLAllocatorBase, DLPlainLightMutex}, dltx::{DLCodedString, DLInplaceStr}, fd4::FD4Time, pointer::OwnedPtr, DoublyLinkedList, Vector};
+use crate::{
+    dlcr::{AESDecrypter, AESEncrypter, DLSerialCipherKey},
+    dlkr::{DLAllocatorBase, DLPlainLightMutex},
+    dltx::{DLCodedString, DLInplaceStr},
+    fd4::FD4Time,
+    pointer::OwnedPtr,
+    DoublyLinkedList, Vector,
+};
 
-use super::CSEzUpdateTask;
+use super::{CSEzTask, CSEzUpdateTask};
 
 #[repr(u32)]
 #[derive(Debug, PartialEq)]
@@ -34,7 +41,7 @@ pub enum ProtocolState {
 }
 
 impl ProtocolState {
-    /// Seems to be checked for packet 39, 
+    /// Seems to be checked for packet 39,
     fn should_handle_some_packets(&self) -> bool {
         match self {
             ProtocolState::Inactive => false,
@@ -97,8 +104,8 @@ pub struct CSSessionManager {
     unk1d4: f32,
     unk1d8: f32,
     unk1dc: u32,
-    pub update_task: CSEzUpdateTask<Self>,
-    unk208: CSEzUpdateTask<Self>,
+    pub update_task: CSEzUpdateTask<CSEzTask, Self>,
+    unk208: CSEzUpdateTask<CSEzTask, Self>,
     unk230: i8,
     unk231: u8,
     unk232: u8,
