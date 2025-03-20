@@ -28,3 +28,9 @@ impl Quaternion {
         EulerAngles(euler.x, euler.y, euler.z)
     }
 }
+
+impl From<Quaternion> for glm::Quat {
+    fn from(val: Quaternion) -> Self {
+        glm::quat(val.0, val.1, val.2, val.3)
+    }
+}
