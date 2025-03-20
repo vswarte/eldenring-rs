@@ -2,8 +2,8 @@ use std::ptr::NonNull;
 
 use crate::pointer::OwnedPtr;
 
-use super::FD4ResRep;
 use super::resource::FD4ResCap;
+use super::FD4ResRep;
 
 #[repr(C)]
 #[dlrf::singleton("FD4ParamRepository")]

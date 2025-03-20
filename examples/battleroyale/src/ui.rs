@@ -55,7 +55,6 @@ impl Ui {
         (display_fullscreen_message)(menu_man, FullscreenMessage::Commence);
     }
 
-
     fn present_match_result(&self, win: bool) {
         let Some(menu_man) = unsafe { get_instance::<CSMenuMan>() }.unwrap() else {
             return;
@@ -68,7 +67,7 @@ impl Ui {
             true => FullscreenMessage::Victory,
             false => FullscreenMessage::Defeat,
         };
- 
+
         (display_fullscreen_message)(menu_man, message);
     }
 }

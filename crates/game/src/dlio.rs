@@ -309,7 +309,14 @@ impl DLFileDeviceVmt for DLFileDeviceBase {
         allocator: &mut DLAllocatorBase,
         param_6: bool,
     ) -> *const u8 {
-        (self.vftable.load_file)(self, name_dlstring, name_u16, operator_container, allocator, param_6)
+        (self.vftable.load_file)(
+            self,
+            name_dlstring,
+            name_u16,
+            operator_container,
+            allocator,
+            param_6,
+        )
     }
 
     extern "C" fn file_enumerator(&self) -> *const u8 {

@@ -239,9 +239,7 @@ where
     Ok(result)
 }
 
-fn read_monster_spawn_collection<R>(
-    reader: R,
-) -> Result<Vec<MonsterSpawnPoint>, Box<dyn Error>>
+fn read_monster_spawn_collection<R>(reader: R) -> Result<Vec<MonsterSpawnPoint>, Box<dyn Error>>
 where
     R: Read,
 {
@@ -269,9 +267,7 @@ where
     Ok(result)
 }
 
-fn read_monster_type_collection<R>(
-    reader: R,
-) -> Result<Vec<MonsterType>, Box<dyn Error>>
+fn read_monster_type_collection<R>(reader: R) -> Result<Vec<MonsterType>, Box<dyn Error>>
 where
     R: Read,
 {

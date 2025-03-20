@@ -23,7 +23,10 @@ impl WorldChrManExt for WorldChrMan {
 
         name_bytes.resize(0x20, 0x0);
 
-        self.debug_chr_creator.init_data.name.clone_from_slice(name_bytes.as_mut());
+        self.debug_chr_creator
+            .init_data
+            .name
+            .clone_from_slice(name_bytes.as_mut());
 
         self.debug_chr_creator.init_data.chara_init_param_id = request.chara_init_param_id;
         self.debug_chr_creator.init_data.npc_param_id = request.npc_param_id;

@@ -7,7 +7,7 @@ use windows::Win32::System::LibraryLoader::GetModuleHandleA;
 #[derive(Copy, Clone)]
 pub enum Program<'a> {
     File(PeFile<'a>),
-    Mapping(PeView<'a>)
+    Mapping(PeView<'a>),
 }
 
 impl Program<'_> {

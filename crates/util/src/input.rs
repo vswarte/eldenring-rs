@@ -1,8 +1,8 @@
-use std::sync::Mutex;
-use std::time;
-use std::sync;
 use std::collections;
 use std::collections::hash_map::Entry;
+use std::sync;
+use std::sync::Mutex;
+use std::time;
 use std::time::Duration;
 use windows::Win32::UI::Input::KeyboardAndMouse;
 
@@ -19,15 +19,15 @@ pub fn is_key_pressed(key: i32) -> bool {
             Entry::Occupied(mut o) => {
                 if o.get().elapsed() > DEBOUNCE_TIMEOUT {
                     o.insert(now);
-                    return true
+                    return true;
                 } else {
-                    return false
+                    return false;
                 }
-            },
+            }
             collections::hash_map::Entry::Vacant(v) => {
                 v.insert(now);
-                return true
-            },
+                return true;
+            }
         }
     }
 

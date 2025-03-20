@@ -1,4 +1,6 @@
+use crash_handler::{make_crash_event, CrashContext, CrashEventResult, CrashHandler};
 use display::DebugDisplay;
+use game::cs::CSSfxImp;
 use game::cs::CSWindowImp;
 use game::cs::FieldArea;
 use game::rva::RVA_GLOBAL_FIELD_AREA;
@@ -38,6 +40,20 @@ pub unsafe extern "C" fn DllMain(hmodule: HINSTANCE, reason: u32) -> bool {
 
         let appender = tracing_appender::rolling::never("./", "chains-debug.log");
         tracing_subscriber::fmt().with_writer(appender).init();
+
+        let handler = CrashHandler::attach(unsafe {
+            make_crash_event(move |context: &CrashContext| {
+                tracing::error!(
+                    "Exception: {:x} at {:x}",
+                    context.exception_code,
+                    (*(*context.exception_pointers).ExceptionRecord).ExceptionAddress as usize
+                );
+
+                CrashEventResult::Handled(false)
+            })
+        })
+        .unwrap();
+        std::mem::forget(handler);
 
         std::thread::spawn(move || {
             wait_for_system_init(5000).expect("Timeout waiting for system init");
@@ -107,12 +123,12 @@ impl ImguiRenderLoop for EldenRingDebugGui {
 
                         ui.unindent();
                     }
-
+                    render_debug_singleton::<CSSfxImp>(&ui);
                     // render_debug_singleton::<FieldArea>(&ui);
-                    render_debug_singleton::<CSEventFlagMan>(&ui);
-                    render_debug_singleton::<WorldChrMan>(&ui);
-                    render_debug_singleton::<CSWorldGeomMan>(&ui);
-                    render_debug_singleton::<WorldAreaTime>(&ui);
+                    // render_debug_singleton::<CSEventFlagMan>(&ui);
+                    // render_debug_singleton::<WorldChrMan>(&ui);
+                    // render_debug_singleton::<CSWorldGeomMan>(&ui);
+                    // render_debug_singleton::<WorldAreaTime>(&ui);
                     item.end();
                 }
 
@@ -142,6 +158,9 @@ impl ImguiRenderLoop for EldenRingDebugGui {
                     item.end();
                 }
                 tabs.end();
+                if ui.button_with_size("Eject", [100., 25.]) {
+                    hudhook::eject();
+                }
             });
     }
 }

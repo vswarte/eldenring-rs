@@ -15,6 +15,7 @@ tracing.workspace = true
 tracing-subscriber.workspace = true
 tracing-appender.workspace = true
 tracing-panic.workspace = true
+crash-handler.workspace = true
 
 [dependencies.hudhook]
 git = "https://github.com/veeenu/hudhook"
