@@ -1,10 +1,8 @@
 use game::{
     cs::CSSfxImp,
-    gxffx::{
-        FxrListNode, FxrResourceContainer, FxrWrapper, GXFfxGraphicsResourceManager, GXFfxSceneCtrl,
-    },
+    gxffx::{FxrListNode, FxrWrapper, GXFfxGraphicsResourceManager, GXFfxSceneCtrl},
 };
-use hudhook::imgui::{TreeNodeFlags, Ui};
+use hudhook::imgui::{TableColumnSetup, TreeNodeFlags, Ui};
 
 use super::DebugDisplay;
 
@@ -36,48 +34,45 @@ impl DebugDisplay for GXFfxSceneCtrl {
 impl DebugDisplay for GXFfxGraphicsResourceManager {
     fn render_debug(&self, ui: &&mut Ui) {
         if ui.collapsing_header("Graphics Resource Manager", TreeNodeFlags::empty()) {
-            ui.text(format!(
-                "resource_container: {:#01x}",
-                self.resource_container as *const _ as usize
-            ));
             ui.indent();
-            self.resource_container.render_debug(ui);
+            render_graphics_resource_manager(
+                self.resource_container.fxr_definitions.iter().map(|f| f),
+                ui,
+            );
             ui.unindent();
         }
     }
 }
 
-impl DebugDisplay for FxrResourceContainer {
-    fn render_debug(&self, ui: &&mut Ui) {
-        if ui.collapsing_header("Resource Container", TreeNodeFlags::empty()) {
-            ui.indent();
-            ui.text(format!(
-                "fxr_list_head: {:#01x}",
-                self.fxr_list_head as *const _ as usize
-            ));
-            // self.fxr_list_head.render_debug(ui);
-            ui.unindent();
-        }
+// TODO: Address crashing
+fn render_graphics_resource_manager<'a>(
+    fxr_nodes: impl Iterator<Item = &'a FxrListNode>,
+    ui: &&mut Ui,
+) {
+    if let Some(_t) = ui.begin_table_header(
+        "gx-ffx-graphics-resource-manager",
+        [
+            TableColumnSetup::new("ID"),
+            TableColumnSetup::new("FXR Ptr"),
+        ],
+    ) {
+        fxr_nodes.for_each(|fxr_node| {
+            fxr_node.render_debug(ui);
+        });
     }
 }
 
 impl DebugDisplay for FxrWrapper {
     fn render_debug(&self, ui: &&mut Ui) {
-        ui.text(format!("FXR ptr: {:#01x}", self.fxr));
+        ui.text(format!("{:#01x}", self.fxr));
     }
 }
 
 impl DebugDisplay for FxrListNode {
     fn render_debug(&self, ui: &&mut Ui) {
-        if ui.collapsing_header("Fxr List Node", TreeNodeFlags::empty()) {
-            ui.text(format!("Fxr List Node: {:#01x}", self as *const _ as usize));
-
-            ui.indent();
-            ui.text(format!("ID: {:#01x}", self.id));
-            self.next.render_debug(ui);
-            self.prev.render_debug(ui);
-            self.fxr_wrapper.render_debug(ui);
-            ui.unindent();
-        }
+        ui.table_next_column();
+        ui.text(format!("{}", self.id));
+        ui.table_next_column();
+        self.fxr_wrapper.render_debug(ui);
     }
 }
