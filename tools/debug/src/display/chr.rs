@@ -582,10 +582,6 @@ impl DebugDisplay for ChrPhysicsModule {
     fn render_debug(&self, ui: &&mut Ui) {
         ui.text(format!("Position: {}", self.position));
         ui.text(format!("Orientation: {}", self.orientation));
-        ui.text(format!(
-            "Orientation: {:?}",
-            self.orientation.to_euler_angles()
-        ));
     }
 }
 
