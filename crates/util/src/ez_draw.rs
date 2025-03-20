@@ -1,7 +1,10 @@
 use game::{cs::CSEzDraw, matrix::FSVector4, position::HavokPosition};
 use pelite::pe::Pe;
 
-use crate::{program::Program, rva::{RVA_CS_EZ_DRAW_DRAW_LINE, RVA_CS_EZ_DRAW_SET_COLOR}};
+use crate::{
+    program::Program,
+    rva::{RVA_CS_EZ_DRAW_DRAW_LINE, RVA_CS_EZ_DRAW_SET_COLOR},
+};
 
 pub trait CSEzDrawExt {
     /// Draw line using havok pos.

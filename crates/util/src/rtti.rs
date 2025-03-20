@@ -140,7 +140,8 @@ impl Class<'_> {
     /// # Safety
     /// Does not validate whether or not the index is actually contained within the VMT.
     pub unsafe fn vmt_index(&self, index: u32) -> Option<NonNull<Va>> {
-        let ptr = self.program
+        let ptr = self
+            .program
             .rva_to_va(self.vftable + VA_SIZE * index)
             .ok()? as *const u64 as *mut u64;
 

@@ -12,7 +12,12 @@ impl Sub<FSVector4> for FSVector4 {
     type Output = FSVector4;
 
     fn sub(self, rhs: FSVector4) -> Self::Output {
-        FSVector4(self.0 - rhs.0, self.1 - rhs.1, self.2 - rhs.2, self.3 - rhs.3)
+        FSVector4(
+            self.0 - rhs.0,
+            self.1 - rhs.1,
+            self.2 - rhs.2,
+            self.3 - rhs.3,
+        )
     }
 }
 
@@ -20,7 +25,12 @@ impl Add<FSVector4> for FSVector4 {
     type Output = FSVector4;
 
     fn add(self, rhs: FSVector4) -> Self::Output {
-        FSVector4(self.0 - rhs.0, self.1 - rhs.1, self.2 - rhs.2, self.3 - rhs.3)
+        FSVector4(
+            self.0 - rhs.0,
+            self.1 - rhs.1,
+            self.2 - rhs.2,
+            self.3 - rhs.3,
+        )
     }
 }
 
@@ -31,10 +41,10 @@ pub struct FSMatrix4x4(pub FSVector4, pub FSVector4, pub FSVector4, pub FSVector
 impl From<FSMatrix4x4> for Mat4 {
     fn from(val: FSMatrix4x4) -> Self {
         Mat4::from_columns(&[
-            Vec4::new(val.0.0, val.0.1, val.0.2, val.0.3),
-            Vec4::new(val.1.0, val.1.1, val.1.2, val.1.3),
-            Vec4::new(val.2.0, val.2.1, val.2.2, val.2.3),
-            Vec4::new(val.3.0, val.3.1, val.3.2, val.3.3),
+            Vec4::new(val.0 .0, val.0 .1, val.0 .2, val.0 .3),
+            Vec4::new(val.1 .0, val.1 .1, val.1 .2, val.1 .3),
+            Vec4::new(val.2 .0, val.2 .1, val.2 .2, val.2 .3),
+            Vec4::new(val.3 .0, val.3 .1, val.3 .2, val.3 .3),
         ])
     }
 }

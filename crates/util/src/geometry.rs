@@ -61,7 +61,9 @@ impl CSWorldGeomManExt for CSWorldGeomMan {
         };
 
         let initialize_spawn_geometry_request = unsafe {
-            transmute::<u64, fn(&mut GeometrySpawnRequest, u32)>(initialize_spawn_geometry_request_va)
+            transmute::<u64, fn(&mut GeometrySpawnRequest, u32)>(
+                initialize_spawn_geometry_request_va,
+            )
         };
 
         let spawn_geometry =

@@ -83,7 +83,5 @@ impl DebugDisplay for CSGparamIdLerper {
 }
 
 impl DebugDisplay for CSWorldAreaBlockSceneDrawParam {
-    fn render_debug(&self, ui: &&mut Ui) {
-
-    }
+    fn render_debug(&self, ui: &&mut Ui) {}
 }
