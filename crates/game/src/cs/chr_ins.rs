@@ -136,8 +136,7 @@ pub struct ChrIns {
     unk1b8: f32,
     unk1bc: f32,
     unk1c0: u32,
-    pub chr_flags: u32,
-    unk1c8: u8,
+    pub chr_flags: ChrInsFlags,
     pub net_chr_sync_flags: NetChrSyncFlags,
     unk1ca: u8,
     unk1cb: u8,
@@ -147,6 +146,54 @@ pub struct ChrIns {
     pub network_authority: u32,
     pub event_entity_id: u32,
     rest: [u8; 0x388],
+}
+
+#[repr(C)]
+pub struct ChrInsFlags([u8; 5]);
+
+impl ChrInsFlags {
+    // byte 0 bit 5 No gravity
+    // byte 1 bit 3 Enabe render
+    // byte 1 bit 7 Death flag
+    // byte 2 bit 4 Disable floating name
+    // byte 4 bit 2 Trigger falldeath camera (See note below)
+
+    pub fn set_no_gravity(&mut self, val: bool) {
+        self.0[0] = self.0[0] & 0b11011111 | (val as u8) << 5;
+    }
+    pub const fn no_gravity(&self) -> bool {
+        self.0[0] & 0b00100000 != 0
+    }
+
+    pub fn set_enable_render(&mut self, val: bool) {
+        self.0[1] = self.0[1] & 0b11110111 | (val as u8) << 3;
+    }
+    pub const fn enable_render(&self) -> bool {
+        self.0[1] & 0b00001000 != 0
+    }
+
+    pub fn set_death_flag(&mut self, val: bool) {
+        self.0[1] = self.0[1] & 0b01111111 | (val as u8) << 7;
+    }
+    pub const fn death_flag(&self) -> bool {
+        self.0[1] & 0b10000000 != 0
+    }
+
+    pub fn set_disable_floating_name(&mut self, val: bool) {
+        self.0[2] = self.0[2] & 0b11101111 | (val as u8) << 4;
+    }
+    pub const fn disable_floating_name(&self) -> bool {
+        self.0[2] & 0b00010000 != 0
+    }
+
+    pub fn set_trigger_falldeath_camera(&mut self, val: bool) {
+        self.0[4] = self.0[4] & 0b11111011 | (val as u8) << 2;
+    }
+    /// This flag can only trigger death camera, not disable it.
+    /// If you want to disable it, check state on ChrCam instead.
+    pub const fn trigger_falldeath_camera(&self) -> bool {
+        self.0[4] & 0b00000100 != 0
+    }
 }
 
 #[repr(C)]
@@ -542,9 +589,38 @@ pub struct ChrCtrl {
     pub ragdoll_ins: usize,
     pub chr_collision: usize,
     unk38: [u8; 0xb8],
-    pub flags: u32,
+    pub flags: ChrCtrlFlags,
     unkf1: [u8; 0x34],
     pub chr_ragdoll_state: u8,
+}
+
+#[repr(C)]
+pub struct ChrCtrlFlags([u8; 4]);
+
+impl ChrCtrlFlags {
+    // byte 0 bit 0 Disable player collision
+    // byte 0 bit 1 Disable hit
+    // byte 0 bit 2-4 and 6 Disable map collision
+    pub fn set_disable_player_collision(&mut self, val: bool) {
+        self.0[0] = self.0[0] & 0b11111110 | val as u8;
+    }
+    pub const fn disable_player_collision(&self) -> bool {
+        self.0[0] & 0b00000001 != 0
+    }
+
+    pub fn set_disable_hit(&mut self, val: bool) {
+        self.0[0] = self.0[0] & 0b11111101 | (val as u8) << 1;
+    }
+    pub const fn disable_hit(&self) -> bool {
+        self.0[0] & 0b00000010 != 0
+    }
+
+    pub fn set_disable_map_collision(&mut self, val: bool) {
+        self.0[0] = self.0[0] & 0b11111011 | (val as u8) << 2;
+    }
+    pub const fn disable_map_collision(&self) -> bool {
+        self.0[0] & 0b00000100 != 0
+    }
 }
 
 #[repr(C)]

@@ -21,22 +21,26 @@ pub trait CSEzTaskVmt: FD4TaskBaseVmt {
     fn register_task(&mut self);
     /// Called to clean up the task.
     fn free_task(&mut self);
-    /// Getter for the task group.
-    fn get_task_group(&self) -> u32;
+}
+
+#[vtable_rs::vtable]
+pub trait CSEzTaskProxyVmt: FD4TaskBaseVmt {
+    fn get_task_group(&self) -> CSTaskGroupIndex;
 }
 
 #[repr(C)]
 pub struct CSEzTask {
-    // vftable: VPtr<CSEzTaskVmt>,
-    vftable: usize,
+    /// Derived from FD4TaskBase
+    pub vftable: VPtr<dyn CSEzTaskVmt, Self>,
     unk8: u32,
     _padc: u32,
+    // ----
     pub task_proxy: NonNull<CSEzTaskProxy>,
 }
 
 #[repr(C)]
-pub struct CSEzUpdateTask<TSubject> {
-    pub base_task: CSEzTask,
+pub struct CSEzUpdateTask<TEzTask, TSubject> {
+    pub base_task: TEzTask,
 
     /// Whatever this update task is operating on
     pub subject: NonNull<TSubject>,
@@ -45,13 +49,14 @@ pub struct CSEzUpdateTask<TSubject> {
     pub executor: fn(&TSubject, f32),
 }
 
+type CSEzVoidTask<TEzTask, TSubject> = CSEzUpdateTask<TEzTask, TSubject>;
+
 #[repr(C)]
 pub struct CSEzTaskProxy {
-    // vftable: VPtr<CSEzTaskVmt>,
-    vftable: usize,
+    vftable: VPtr<dyn CSEzTaskProxyVmt, Self>,
     unk8: u32,
     _padc: u32,
-    pub task: NonNull<CSEzTask>,
+    pub task: Option<NonNull<CSEzTask>>,
 }
 
 #[repr(C)]

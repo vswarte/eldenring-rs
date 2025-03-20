@@ -11,7 +11,7 @@ use crate::{
     DoublyLinkedList, Vector,
 };
 
-use super::CSEzUpdateTask;
+use super::{CSEzTask, CSEzUpdateTask};
 
 #[repr(u32)]
 #[derive(Debug, PartialEq)]
@@ -104,8 +104,8 @@ pub struct CSSessionManager {
     unk1d4: f32,
     unk1d8: f32,
     unk1dc: u32,
-    pub update_task: CSEzUpdateTask<Self>,
-    unk208: CSEzUpdateTask<Self>,
+    pub update_task: CSEzUpdateTask<CSEzTask, Self>,
+    unk208: CSEzUpdateTask<CSEzTask, Self>,
     unk230: i8,
     unk231: u8,
     unk232: u8,

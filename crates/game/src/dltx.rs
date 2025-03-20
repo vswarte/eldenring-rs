@@ -30,6 +30,13 @@ impl ToString for DLBasicString {
     }
 }
 
+impl DLBasicString {
+    /// Safety: The caller must ensure that the string is valid UTF-16 and that the length is correct.
+    pub unsafe fn raw(&self) -> &[u8] {
+        &self.inner
+    }
+}
+
 #[repr(C)]
 #[derive(Default)]
 pub struct DLString {
@@ -42,6 +49,13 @@ pub struct DLString {
 impl ToString for DLString {
     fn to_string(&self) -> String {
         self.inner.to_string()
+    }
+}
+
+impl DLString {
+    /// Safety: The caller must ensure that the string is valid UTF-16 and that the length is correct.
+    pub unsafe fn raw(&self) -> &[u8] {
+        self.inner.raw()
     }
 }
 

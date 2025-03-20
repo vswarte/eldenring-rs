@@ -5,7 +5,7 @@ use std::{
 };
 
 use game::{
-    cs::{CSTaskGroupIndex, CSTaskImp},
+    cs::{CSEzTask, CSEzTaskProxy, CSEzUpdateTask, CSTaskGroupIndex, CSTaskImp},
     fd4::{FD4TaskBase, FD4TaskData, FD4TaskRequestEntry},
 };
 use retour::static_detour;
@@ -75,19 +75,33 @@ pub unsafe extern "C" fn DllMain(_base: usize, reason: u32) -> bool {
 
 /// Determines the label for a given FD4TaskBase instance
 fn label_task(task: &FD4TaskBase) -> Option<String> {
-    Some(String::from("Unknown"))
-    // let mut name = lookup_rtti_classname(&*task.vftable as usize)?;
-    // if name.as_str() == "CS::CSEzTaskProxy" {
-    //     let proxied_task_vftable = unsafe {
-    //         (task as *const FD4TaskBase as *const CSEzTaskProxy)
-    //             .as_ref()
-    //             .map(|p| p.task.as_ref().vftable as usize)?
-    //     };
-    //
-    //     name = lookup_rtti_classname(proxied_task_vftable)?;
-    // }
-    //
-    // Some(name)
+    let mut name = lookup_rtti_classname(*task.vftable as *const _ as usize)?;
+    if name.as_str() == "CS::CSEzTaskProxy" {
+        if let Some(proxied_task) = unsafe {
+            (task as *const FD4TaskBase as *const CSEzTaskProxy)
+                .as_ref()
+                .and_then(|task| task.task.as_ref().and_then(|t| Some(t.as_ref())))
+        } {
+            let proxied_task_vftable = *proxied_task.vftable as *const _ as *const usize;
+            let proxied_task_classname = lookup_rtti_classname(proxied_task_vftable as usize)?;
+
+            let executor_addr = if proxied_task_classname.starts_with("CS::CSEzUpdateTask<")
+                || proxied_task_classname.starts_with("CS::CSEzVoidTask<")
+            {
+                unsafe {
+                    transmute::<&CSEzTask, &CSEzUpdateTask<CSEzTask, usize>>(proxied_task).executor
+                        as usize
+                }
+            } else {
+                proxied_task_vftable as usize
+            };
+            name = format!("{} @ {:#x}", proxied_task_classname, executor_addr);
+        } else {
+            name = String::from("Unknown Task Type");
+        }
+    }
+
+    Some(name)
 }
 
 const VFTABLES: LazyLock<RwLock<HashMap<usize, Option<String>>>> = LazyLock::new(Default::default);
