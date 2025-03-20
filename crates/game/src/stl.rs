@@ -186,3 +186,24 @@ where
         self.elements[0..self.count].iter()
     }
 }
+
+#[repr(C)]
+pub struct CSFixedList<T, const N: usize>
+where
+    T: Sized,
+{
+    vftable: usize,
+    pub data: [CSFixedListEntry<T>; N],
+    unk1: u32,
+    unk2: u32,
+    pub head_ptr: OwnedPtr<CSFixedListEntry<T>>,
+    pub head: CSFixedListEntry<T>,
+}
+
+#[repr(C)]
+pub struct CSFixedListEntry<T> {
+    pub data: T,
+    pub next: Option<NonNull<CSFixedListEntry<T>>>,
+    pub previous: Option<NonNull<CSFixedListEntry<T>>>,
+    index: usize,
+}

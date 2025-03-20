@@ -47,7 +47,7 @@ pub struct CSNetMan {
     penalty_manager: usize,
     /// Task that updates the structure (pulls in new data from server, spawn received signs,
     /// stains and messages, spawns ghost replays, etc)
-    pub update_task: CSEzUpdateTask<Self>,
+    pub update_task: CSEzUpdateTask<CSEzTask, Self>,
     unkf0: u32,
     unkf4: u32, // Probably padding
     unkf8: usize,
