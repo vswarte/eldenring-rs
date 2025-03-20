@@ -84,7 +84,7 @@ checksum = "ace50bade8e6234aa140d9a2f552bbee1db4d353f69b8217bc503490fc1a9f26"
 
 [[package]]
 name = "binary-mapper"
-version = "0.1.0"
+version = "0.4.0"
 dependencies = [
  "clap",
  "memmap",
@@ -236,11 +236,11 @@ dependencies = [
 
 [[package]]
 name = "debug"
-version = "0.1.0"
+version = "0.4.0"
 dependencies = [
- "eldenring 0.2.1 (registry+https://github.com/rust-lang/crates.io-index)",
- "eldenring-dlrf 0.1.0 (registry+https://github.com/rust-lang/crates.io-index)",
- "eldenring-util 0.1.2 (registry+https://github.com/rust-lang/crates.io-index)",
+ "eldenring 0.2.1",
+ "eldenring-dlrf 0.1.0",
+ "eldenring-util 0.1.2",
  "hudhook",
  "pelite",
  "tracing",
@@ -279,31 +279,7 @@ checksum = "0c72fd7544210701e5411289c06003b7ba97f11c02e539be843d50e481bb7a84"
 dependencies = [
  "byteorder",
  "dataview",
- "eldenring-dlrf 0.1.0 (registry+https://github.com/rust-lang/crates.io-index)",
- "log",
- "nalgebra",
- "nalgebra-glm",
- "pelite",
- "rand",
- "regex",
- "serde",
- "serde_derive",
- "thiserror",
- "toml 0.7.8",
- "tracing",
- "vtable-rs",
- "windows",
- "zerocopy 0.7.35",
- "zerocopy-derive 0.7.35",
-]
-
-[[package]]
-name = "eldenring"
-version = "0.2.1"
-dependencies = [
- "byteorder",
- "dataview",
- "eldenring-dlrf 0.1.0 (registry+https://github.com/rust-lang/crates.io-index)",
+ "eldenring-dlrf 0.1.0",
  "log",
  "nalgebra",
  "nalgebra-glm",
@@ -329,7 +305,7 @@ checksum = "c9326b9959907306d53bb6a6a23c7dae59d8249f94a3dcf391d962dd18b93eb5"
 dependencies = [
  "byteorder",
  "dataview",
- "eldenring-dlrf 0.1.0 (registry+https://github.com/rust-lang/crates.io-index)",
+ "eldenring-dlrf 0.1.0",
  "log",
  "nalgebra",
  "nalgebra-glm",
@@ -348,10 +324,20 @@ dependencies = [
 ]
 
 [[package]]
-name = "eldenring-dlrf"
-version = "0.1.0"
+name = "eldenring"
+version = "0.4.0"
 dependencies = [
- "eldenring-dlrf-derive",
+ "eldenring-dlrf 0.4.0",
+ "nalgebra",
+ "nalgebra-glm",
+ "pelite",
+ "regex",
+ "serde",
+ "serde_derive",
+ "thiserror",
+ "tracing",
+ "vtable-rs",
+ "windows",
 ]
 
 [[package]]
@@ -360,7 +346,14 @@ version = "0.1.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "d4ac79f8a0b0bf09bf1cda02d3566a38d75bf981fea5dacf1d73e50c1f19aea6"
 dependencies = [
- "eldenring-dlrf-derive",
+ "eldenring-dlrf-derive 0.1.0",
+]
+
+[[package]]
+name = "eldenring-dlrf"
+version = "0.4.0"
+dependencies = [
+ "eldenring-dlrf-derive 0.4.0",
 ]
 
 [[package]]
@@ -374,11 +367,21 @@ dependencies = [
 ]
 
 [[package]]
+name = "eldenring-dlrf-derive"
+version = "0.4.0"
+dependencies = [
+ "quote",
+ "syn",
+]
+
+[[package]]
 name = "eldenring-util"
 version = "0.1.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "64090d0f246d49a90926f7c2274769bd769b033856003fa9115eaa4685e60eba"
 dependencies = [
- "eldenring 0.2.1 (registry+https://github.com/rust-lang/crates.io-index)",
- "eldenring-dlrf 0.1.0 (registry+https://github.com/rust-lang/crates.io-index)",
+ "eldenring 0.1.5",
+ "eldenring-dlrf 0.1.0",
  "pelite",
  "steamworks",
  "steamworks-sys",
@@ -391,12 +394,10 @@ dependencies = [
 
 [[package]]
 name = "eldenring-util"
-version = "0.1.2"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "64090d0f246d49a90926f7c2274769bd769b033856003fa9115eaa4685e60eba"
+version = "0.4.0"
 dependencies = [
- "eldenring 0.1.5",
- "eldenring-dlrf 0.1.0 (registry+https://github.com/rust-lang/crates.io-index)",
+ "eldenring 0.4.0",
+ "eldenring-dlrf 0.4.0",
  "pelite",
  "steamworks",
  "steamworks-sys",

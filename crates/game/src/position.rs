@@ -25,7 +25,7 @@ use std::{
 use nalgebra::{Vector, Vector3};
 
 /// Represents a position relative to some block center.
-#[repr(C)]
+#[repr(C, align(16))]
 #[derive(Debug, Clone, Copy, PartialEq)]
 pub struct BlockPosition(pub f32, pub f32, pub f32, pub f32);
 
@@ -67,7 +67,7 @@ impl Sub<PositionDelta> for BlockPosition {
 }
 
 /// Represents a position in havok physics space
-#[repr(C)]
+#[repr(C, align(16))]
 #[derive(Debug, Clone, Copy, PartialEq)]
 pub struct HavokPosition(pub f32, pub f32, pub f32, pub f32);
 

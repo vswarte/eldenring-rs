@@ -97,7 +97,7 @@ impl CSWorldGeomManExt for CSWorldGeomMan {
         initialize_spawn_geometry_request(&mut request, 0x5);
         request.set_asset(asset);
 
-        let (x, y, z) = parameters.position.xyz();
+        let BlockPosition(x, y, z, _) = parameters.position;
         request.pos_x = x;
         request.pos_y = y;
         request.pos_z = z;

@@ -1,9 +1,9 @@
 [package]
 name = "eldenring"
-version = "0.2.1"
-edition = "2021"
-repository = "https://github.com/vswarte/eldenring-rs"
-license = "MIT OR Apache-2.0"
+version.workspace = true
+edition.workspace = true
+repository.workspace = true
+license.workspace = true
 readme = false
 description = "Raw structures and bindings for From Software's title Elden Ring"
 
@@ -11,33 +11,14 @@ description = "Raw structures and bindings for From Software's title Elden Ring"
 unused = "allow"
 
 [dependencies]
-log = "0.4.1"
-toml = "0.7.2"
-rand = "0.8"
-dlrf = { version = "0.1", package = "eldenring-dlrf" }
-tracing = "0.1"
-thiserror = "1"
-nalgebra-glm = "0.18"
-nalgebra = "0.32"
-zerocopy = "0.7"
-zerocopy-derive = "0.7"
-byteorder = "1"
-pelite = "0.10"
-dataview = "~1.0"
-vtable-rs = "0.1.4"
-
-[dependencies.windows]
-version = "0.54"
-features = [
-    "Win32_Foundation",
-	"Win32_System_Kernel",
-	"Win32_System_Threading",
-	"Win32_UI_WindowsAndMessaging",
-	"Win32_UI_Input_KeyboardAndMouse",
-	"Win32_System_Diagnostics_Debug",
-	"Win32_System_LibraryLoader",
-    "Win32_System_Memory",
-]
+dlrf.workspace = true
+tracing.workspace = true
+thiserror.workspace = true
+nalgebra-glm.workspace = true
+nalgebra.workspace = true
+pelite.workspace = true
+vtable-rs.workspace = true
+windows.workspace = true
 
 [build-dependencies]
 serde_derive = "1"

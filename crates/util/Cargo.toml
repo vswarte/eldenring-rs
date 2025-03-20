@@ -1,32 +1,20 @@
 [package]
 name = "eldenring-util"
-version = "0.1.2"
-edition = "2021"
-repository = "https://github.com/vswarte/eldenring-rs"
-license = "MIT OR Apache-2.0"
+version.workspace = true
+edition.workspace = true
+repository.workspace = true
+license.workspace = true
 readme = false
 description = "Implement common helpers for Elden Ring modding"
 
 [dependencies]
-thiserror = "1"
-dlrf = { version = "0.1", package = "eldenring-dlrf" }
-game = { version = "0.2", package = "eldenring" }
-tracing = "0.1"
-pelite = "0.10"
+dlrf.workspace = true
+game.workspace = true
+thiserror.workspace = true
+tracing.workspace = true
+pelite.workspace = true
+vtable-rs.workspace = true
+windows.workspace = true
 undname = "2"
 steamworks-sys = "0.10"
 steamworks = "0.10"
-vtable-rs = "0.1.4"
-
-[dependencies.windows]
-version = "0.54"
-features = [
-    "Win32_Foundation",
-	"Win32_System_Kernel",
-	"Win32_System_Threading",
-	"Win32_UI_WindowsAndMessaging",
-	"Win32_UI_Input_KeyboardAndMouse",
-	"Win32_System_Diagnostics_Debug",
-	"Win32_System_LibraryLoader",
-    "Win32_System_Memory",
-]
