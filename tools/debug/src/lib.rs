@@ -2,7 +2,6 @@ use display::DebugDisplay;
 use game::cs::CSWindowImp;
 use game::cs::CSWorldSceneDrawParamManager;
 use game::cs::FieldArea;
-use game::rva::RVA_GLOBAL_FIELD_AREA;
 use hudhook::eject;
 use hudhook::hooks::dx12::ImguiDx12Hooks;
 use hudhook::imgui;
@@ -26,11 +25,13 @@ use game::cs::WorldChrMan;
 use game::fd4::FD4ParamRepository;
 
 use display::render_debug_singleton;
+use rva::RVA_GLOBAL_FIELD_AREA;
 use tracing_panic::panic_hook;
 use util::program::Program;
 use util::system::wait_for_system_init;
 
 mod display;
+mod rva;
 
 #[no_mangle]
 pub unsafe extern "C" fn DllMain(hmodule: HINSTANCE, reason: u32) -> bool {

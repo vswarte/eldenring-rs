@@ -21,8 +21,8 @@ use vtable_rs::VPtr;
 const REGISTER_TASK_PATTERN: &[Atom] =
     pattern!("e8 ? ? ? ? 48 8b 0d ? ? ? ? 4c 8b c7 8b d3 e8 $ { ' }");
 
-const REGISTER_TASK_VA: LazyLock<u64> = LazyLock::new(|| {
-    let program = unsafe { Program::current() };
+static REGISTER_TASK_VA: LazyLock<u64> = LazyLock::new(|| {
+    let program = Program::current();
     let mut matches = [0u32; 2];
 
     if !program

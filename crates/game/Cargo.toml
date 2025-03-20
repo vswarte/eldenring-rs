@@ -1,12 +1,11 @@
 [package]
 name = "eldenring"
-version = "0.1.1"
+version = "0.2.1"
 edition = "2021"
 repository = "https://github.com/vswarte/eldenring-rs"
 license = "MIT OR Apache-2.0"
 readme = false
 description = "Raw structures and bindings for From Software's title Elden Ring"
-
 
 [lints.rust]
 unused = "allow"
@@ -15,8 +14,7 @@ unused = "allow"
 log = "0.4.1"
 toml = "0.7.2"
 rand = "0.8"
-
-dlrf = { version = "0.1.0", package = "eldenring-dlrf" }
+dlrf = { version = "0.1", package = "eldenring-dlrf" }
 tracing = "0.1"
 thiserror = "1"
 nalgebra-glm = "0.18"

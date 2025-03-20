@@ -15,3 +15,6 @@ pub mod team_relation;
 pub mod world_area_time;
 pub mod world_chr_man;
 pub mod system;
+pub mod ez_draw;
+
+pub(crate) mod rva;

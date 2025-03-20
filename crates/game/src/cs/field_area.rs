@@ -2,7 +2,7 @@ use std::ptr::NonNull;
 
 use crate::{
     pointer::OwnedPtr,
-    position::{BlockPoint, HavokPosition},
+    position::{BlockPosition, HavokPosition},
     Tree,
 };
 

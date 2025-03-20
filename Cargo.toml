@@ -1,15 +1,15 @@
 [workspace]
 members = [
-    "crates/debug",
     "crates/game",
     "crates/util",
     "crates/dlrf",
-    "examples/builder-mode",
-    "examples/enemy-control",
-    "examples/procedural-dungeons",
-    "examples/battleroyale",
-    "tools/export-singletons",
-    "tools/profiler",
+    # "examples/builder-mode",
+    # "examples/enemy-control",
+    # "examples/procedural-dungeons",
+    # "examples/battleroyale",
+    # "tools/export-singletons",
+    # "tools/profiler",
+    "tools/debug",
     "tools/binary-mapper",
 ]
 resolver = "2"
@@ -57,9 +57,6 @@ features = [
 	"Win32_System_LibraryLoader",
     "Win32_System_Memory",
 ]
-
-[patch.crates-io]
-libudis86-sys = { git = 'https://github.com/vars1ty/libudis86-sys.git' }
 
 [profile.release]
 strip = true

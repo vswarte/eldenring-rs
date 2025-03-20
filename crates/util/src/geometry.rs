@@ -1,7 +1,6 @@
-use std::{mem::transmute, sync::LazyLock};
+use std::mem::transmute;
 
-use game::position::BlockPoint;
-use pelite::pattern::Atom;
+use game::position::BlockPosition;
 use pelite::pe::Pe;
 use thiserror::Error;
 
@@ -10,13 +9,9 @@ use game::cs::GeometrySpawnRequest;
 use game::cs::MapId;
 
 use crate::program::Program;
-
-const CS_WORLD_GEOM_MAN_BLOCK_DATA_BY_MAP_ID_PATTERN: &[Atom] =
-    pelite::pattern!("83 cb 02 89 5c 24 20 48 8d 54 24 38 e8 $ { ' }");
-const INITIALIZE_SPAWN_GEOMETRY_REQUEST_PATTERN: &[Atom] =
-    pelite::pattern!("b2 08 48 8d 4d 00 e8 $ { ' }");
-const SPAWN_GEOMETRY_PATTERN: &[Atom] =
-    pelite::pattern!("8b 01 89 85 d8 00 00 00 48 8d 55 00 49 8b ce e8 $ { ' }");
+use crate::rva::RVA_CS_WORLD_GEOM_MAN_BLOCK_DATA_BY_MAP_ID;
+use crate::rva::RVA_INITIALIZE_SPAWN_GEOMETRY_REQUEST;
+use crate::rva::RVA_SPAWN_GEOMETRY;
 
 #[derive(Debug, Error)]
 pub enum SpawnGeometryError {
@@ -26,7 +21,7 @@ pub enum SpawnGeometryError {
 
 pub struct GeometrySpawnParameters {
     pub map_id: MapId,
-    pub position: BlockPoint,
+    pub position: BlockPosition,
     pub rot_x: f32,
     pub rot_y: f32,
     pub rot_z: f32,
@@ -51,64 +46,26 @@ impl CSWorldGeomManExt for CSWorldGeomMan {
     ) -> Result<(), SpawnGeometryError> {
         tracing::info!("Spawning {asset}");
 
-        const CS_WORLD_GEOM_MAN_BLOCK_DATA_BY_MAP_ID_VA: LazyLock<u64> = LazyLock::new(|| {
-            let program = unsafe { Program::current() };
-            let mut matches = [0u32; 2];
-
-            if !program
-                .scanner()
-                .finds_code(CS_WORLD_GEOM_MAN_BLOCK_DATA_BY_MAP_ID_PATTERN, &mut matches)
-            {
-                panic!("Could not find CS_WORLD_GEOM_MAN_BLOCK_DATA_BY_MAP_ID_PATTERN or found duplicates.");
-            }
-
-            program.rva_to_va(matches[1]).unwrap()
-        });
-
-        const INITIALIZE_SPAWN_GEOMETRY_REQUEST_VA: LazyLock<u64> = LazyLock::new(|| {
-            let program = unsafe { Program::current() };
-            let mut matches = [0u32; 2];
-
-            if !program
-                .scanner()
-                .finds_code(INITIALIZE_SPAWN_GEOMETRY_REQUEST_PATTERN, &mut matches)
-            {
-                panic!(
-                    "Could not find INITIALIZE_SPAWN_GEOMETRY_REQUEST_PATTERN or found duplicates."
-                );
-            }
-
-            program.rva_to_va(matches[1]).unwrap()
-        });
-
-        const SPAWN_GEOMETRY_VA: LazyLock<u64> = LazyLock::new(|| {
-            let program = unsafe { Program::current() };
-            let mut matches = [0u32; 2];
-
-            if !program
-                .scanner()
-                .finds_code(SPAWN_GEOMETRY_PATTERN, &mut matches)
-            {
-                panic!("Could not find SPAWN_GEOMETRY_PATTERN or found duplicates.");
-            }
-
-            program.rva_to_va(matches[1]).unwrap()
-        });
+        let cs_world_geom_man_block_data_by_map_id_va = Program::current()
+            .rva_to_va(RVA_CS_WORLD_GEOM_MAN_BLOCK_DATA_BY_MAP_ID)
+            .unwrap();
+        let initialize_spawn_geometry_request_va = Program::current()
+            .rva_to_va(RVA_INITIALIZE_SPAWN_GEOMETRY_REQUEST)
+            .unwrap();
+        let spawn_geometry_va = Program::current().rva_to_va(RVA_SPAWN_GEOMETRY).unwrap();
 
         let block_data_by_map_id = unsafe {
-            transmute::<_, fn(&CSWorldGeomMan, &MapId) -> u64>(
-                *CS_WORLD_GEOM_MAN_BLOCK_DATA_BY_MAP_ID_VA,
+            transmute::<u64, fn(&CSWorldGeomMan, &MapId) -> u64>(
+                cs_world_geom_man_block_data_by_map_id_va,
             )
         };
 
         let initialize_spawn_geometry_request = unsafe {
-            transmute::<_, fn(&mut GeometrySpawnRequest, u32)>(
-                *INITIALIZE_SPAWN_GEOMETRY_REQUEST_VA,
-            )
+            transmute::<u64, fn(&mut GeometrySpawnRequest, u32)>(initialize_spawn_geometry_request_va)
         };
 
         let spawn_geometry =
-            unsafe { transmute::<_, fn(u64, &GeometrySpawnRequest) -> u64>(*SPAWN_GEOMETRY_VA) };
+            unsafe { transmute::<u64, fn(u64, &GeometrySpawnRequest) -> u64>(spawn_geometry_va) };
 
         let mut request = GeometrySpawnRequest {
             asset_string: [0u16; 0x20],

@@ -177,7 +177,6 @@ pub struct CSSessionManagerPlayerEntry {
     unke4: u32,
     unke8: u8,
     unke9: u8,
-    // Seems to be used by the 250 "protocol" packet.
     p2p_control_byte: u8,
     unkeb: u8,
     unkec: u8,

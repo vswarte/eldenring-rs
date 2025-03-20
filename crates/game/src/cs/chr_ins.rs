@@ -9,7 +9,8 @@ use crate::cs::ChrSetEntry;
 use crate::fd4::FD4Time;
 use crate::matrix::FSVector4;
 use crate::pointer::OwnedPtr;
-use crate::position::{BlockPoint, ChunkPosition4, HavokPosition, Quaternion};
+use crate::position::{BlockPosition, HavokPosition};
+use crate::rotation::Quaternion;
 use crate::Vector;
 
 use super::player_game_data::PlayerGameData;
@@ -598,7 +599,7 @@ pub struct PlayerIns {
     pub locked_on_enemy: FieldInsHandle, // 0x6b0
     pub session_manager_player_entry: NonNull<CSSessionManagerPlayerEntry>,
     /// Position within the current block.
-    pub block_position: BlockPoint,
+    pub block_position: BlockPosition,
     /// Angle as radians. Relative to the orientation of the current block.
     pub block_orientation: f32,
 }

@@ -36,6 +36,7 @@ mod fe_man;
 mod window;
 mod job;
 mod world_scene_draw_param_manager;
+mod rend_man;
 
 pub use map_id::*;
 pub use item_id::*;
@@ -75,3 +76,4 @@ pub use fe_man::*;
 pub use window::*;
 pub use job::*;
 pub use world_scene_draw_param_manager::*;
+pub use rend_man::*;

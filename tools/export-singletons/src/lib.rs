@@ -16,7 +16,7 @@ pub unsafe extern "C" fn DllMain(_base: usize, reason: u32) -> bool {
 
         let mut fh = File::create("singleton.csv")
             .expect("Could not create export file");
-        let program = unsafe { Program::current() };
+        let program = Program::current();
 
         // Give the game a bit of time to populate up the DLRF structures
         // before dumping the statics.

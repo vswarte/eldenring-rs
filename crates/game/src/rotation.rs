@@ -1,0 +1,30 @@
+use nalgebra_glm as glm;
+use std::fmt::Display;
+
+use crate::matrix::FSVector4;
+
+#[repr(C)]
+#[derive(Debug, Clone, Copy, PartialEq)]
+pub struct Quaternion(pub f32, pub f32, pub f32, pub f32);
+
+#[repr(C)]
+#[derive(Debug, Clone, Copy, PartialEq)]
+pub struct EulerAngles(pub f32, pub f32, pub f32);
+
+impl Display for Quaternion {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(
+            f,
+            "Quaternion({}, {}, {}, {})",
+            self.0, self.1, self.2, self.3
+        )
+    }
+}
+
+impl Quaternion {
+    pub fn to_euler_angles(&self) -> EulerAngles {
+        let euler = glm::quat_euler_angles(&glm::quat(self.0, self.1, self.2, self.3));
+
+        EulerAngles(euler.x, euler.y, euler.z)
+    }
+}
