@@ -13,7 +13,10 @@
 /// coords requires knowing the world coordinates of the chunk center and going from havok position
 /// to chunk position requires either the chunk position of the havok aabb center or reference
 /// coordinate where both chunk and havok position are known.
-use std::{fmt::Display, ops::{Add, Sub}};
+use std::{
+    fmt::Display,
+    ops::{Add, Sub},
+};
 
 use nalgebra::{Vector, Vector3};
 
@@ -43,7 +46,7 @@ impl Display for BlockPoint {
 
 impl Into<Vector3<f32>> for BlockPoint {
     fn into(self) -> Vector3<f32> {
-        Vector3::new(self.0.0, self.0.1, self.0.2)
+        Vector3::new(self.0 .0, self.0 .1, self.0 .2)
     }
 }
 

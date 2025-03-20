@@ -93,7 +93,7 @@ pub trait DLSeekableInputStreamVmt: DLInputStreamVmt {
 
 #[repr(u32)]
 pub enum DLFileDeviceDriveType {
-    Unknown = 0x0,
+    Fixed = 0x0,
     CdRom = 0x1,
     Default = 0x2,
 }
@@ -113,16 +113,16 @@ pub trait DLFileDeviceVmt {
 
     fn load_file(
         &mut self,
-        name_dlstring: &DLString,
-        name_u16: *const u16,
+        path: &DLString,
+        path_wstring: *const u16,
         operator_container: &mut DLFileOperatorContainer,
         allocator: &mut DLAllocatorBase,
-        param_6: bool,
+        temp: bool,
     ) -> *const u8;
 
-    fn file_enumerator(&self) -> *const u8;
+    fn get_file_enumerator(&self) -> *const u8;
 
-    fn drive_type(&self) -> DLFileDeviceDriveType {
+    fn get_drive_type(&self) -> DLFileDeviceDriveType {
         DLFileDeviceDriveType::Default
     }
 
@@ -309,15 +309,22 @@ impl DLFileDeviceVmt for DLFileDeviceBase {
         allocator: &mut DLAllocatorBase,
         param_6: bool,
     ) -> *const u8 {
-        (self.vftable.load_file)(self, name_dlstring, name_u16, operator_container, allocator, param_6)
+        (self.vftable.load_file)(
+            self,
+            name_dlstring,
+            name_u16,
+            operator_container,
+            allocator,
+            param_6,
+        )
     }
 
-    extern "C" fn file_enumerator(&self) -> *const u8 {
-        (self.vftable.file_enumerator)(self)
+    extern "C" fn get_file_enumerator(&self) -> *const u8 {
+        (self.vftable.get_file_enumerator)(self)
     }
 
-    extern "C" fn drive_type(&self) -> DLFileDeviceDriveType {
-        (self.vftable.drive_type)(self)
+    extern "C" fn get_drive_type(&self) -> DLFileDeviceDriveType {
+        (self.vftable.get_drive_type)(self)
     }
 
     extern "C" fn unk5(&self) -> bool {

@@ -1,5 +1,5 @@
-use crate::pointer::OwnedPtr;
 use crate::fd4::FD4Time;
+use crate::pointer::OwnedPtr;
 
 #[repr(C)]
 /// Controls fades in the game. Used for cutscene transitions and such.
@@ -22,7 +22,7 @@ pub struct CSFD4FadeSystem {
 }
 
 #[repr(C)]
-/// A fade plate 
+/// A fade plate
 ///
 /// Source of name: RTTI
 pub struct CSFD4FadePlate {
@@ -35,7 +35,7 @@ pub struct CSFD4FadePlate {
     pub start_color: CSFD4FadePlateColor,
     /// Stores the color we're transitioning towards.
     pub end_color: CSFD4FadePlateColor,
-    /// Stores the amount of seconds pending until the LERP to end_color is finished. 
+    /// Stores the amount of seconds pending until the LERP to end_color is finished.
     pub fade_timer: FD4Time,
     /// Stores the time a transition to the target color should take in total.
     pub fade_duration: FD4Time,
@@ -68,6 +68,11 @@ impl From<&CSFD4FadePlateColor> for [f32; 4] {
 
 impl From<[f32; 4]> for CSFD4FadePlateColor {
     fn from(val: [f32; 4]) -> Self {
-        Self { r: val[0], g: val[1], b: val[2], a: val[3] }
+        Self {
+            r: val[0],
+            g: val[1],
+            b: val[2],
+            a: val[3],
+        }
     }
 }

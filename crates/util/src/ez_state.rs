@@ -55,7 +55,7 @@ impl EzStateEvent {
             value_type: 1,
         })
         .chain(args.map(|f| (*f).into()))
-            .collect();
+        .collect();
 
         Self {
             vmt: Default::default(),

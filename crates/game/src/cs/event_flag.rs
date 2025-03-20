@@ -100,10 +100,8 @@ impl CSFD4VirtualMemoryFlag {
                 self.flag_blocks
                     .add(descriptor.location.holder_offset as usize)
                     .as_mut()?
-            }
-            2 => unsafe {
-                (*descriptor.location.external_location).as_mut()
-            }
+            },
+            2 => unsafe { (*descriptor.location.external_location).as_mut() },
             _ => return None,
         })
     }

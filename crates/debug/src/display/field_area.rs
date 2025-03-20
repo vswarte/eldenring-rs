@@ -54,7 +54,10 @@ impl DebugDisplay for WorldInfoOwner {
                             TreeNodeFlags::empty(),
                         ) {
                             ui.indent();
-                            ui.text(format!("Center physics coords: {}", entry.block.physics_center));
+                            ui.text(format!(
+                                "Center physics coords: {}",
+                                entry.block.physics_center
+                            ));
                             ui.unindent();
                         }
                     });

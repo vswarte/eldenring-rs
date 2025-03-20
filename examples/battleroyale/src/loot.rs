@@ -44,7 +44,10 @@ impl LootGenerator {
     }
 
     /// Generate spawn locations and corresponding loot for current map init.
-    pub fn initial_map_loot(&self, map: &MapConfiguration) -> Vec<(LootSpawnPoint, LootTableEntry)> {
+    pub fn initial_map_loot(
+        &self,
+        map: &MapConfiguration,
+    ) -> Vec<(LootSpawnPoint, LootTableEntry)> {
         // For now just populate all spawn locations.
         map.item_spawn_points
             .iter()

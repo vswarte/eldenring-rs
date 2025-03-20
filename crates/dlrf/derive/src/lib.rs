@@ -1,6 +1,6 @@
-use syn::{ItemStruct, LitStr};
-use quote::quote;
 use proc_macro::TokenStream;
+use quote::quote;
+use syn::{ItemStruct, LitStr};
 
 #[proc_macro_attribute]
 pub fn singleton(args: TokenStream, input: TokenStream) -> TokenStream {

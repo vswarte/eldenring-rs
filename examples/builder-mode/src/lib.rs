@@ -2,17 +2,24 @@ use std::{
     error::Error,
     f32::consts::PI,
     mem::forget,
-    sync::{LazyLock, Mutex}
+    sync::{LazyLock, Mutex},
 };
 
 use game::{
-    cs::{CSCamera, CSTaskGroupIndex, CSTaskImp, CSWorldGeomMan, WorldChrMan}, fd4::FD4TaskData, position::BlockPoint
+    cs::{CSCamera, CSTaskGroupIndex, CSTaskImp, CSWorldGeomMan, WorldChrMan},
+    fd4::FD4TaskData,
+    position::BlockPoint,
 };
 use nalgebra_glm::{Mat4, Vec3};
 use thiserror::Error;
 use tracing_panic::panic_hook;
 use util::{
-    camera::CSCamExt, geometry::{CSWorldGeomManExt, GeometrySpawnParameters, SpawnGeometryError}, input::is_key_pressed, singleton::get_instance, system::wait_for_system_init, task::CSTaskImpExt
+    camera::CSCamExt,
+    geometry::{CSWorldGeomManExt, GeometrySpawnParameters, SpawnGeometryError},
+    input::is_key_pressed,
+    singleton::get_instance,
+    system::wait_for_system_init,
+    task::CSTaskImpExt,
 };
 
 #[no_mangle]
@@ -126,10 +133,7 @@ impl BuilderCamera {
 
         // let offset = (self.target_camera_coordinates - self.previous_camera_coordinates);
 
-        let camera_worldspace = nalgebra_glm::translate(
-            &origin,
-            &self.target_camera_coordinates,
-        );
+        let camera_worldspace = nalgebra_glm::translate(&origin, &self.target_camera_coordinates);
 
         let camera_matrix = camera_worldspace * self.lookdown;
         camera.pers_cam_1.matrix = camera_matrix.into();
@@ -189,7 +193,8 @@ impl BuilderCamera {
             player_chunk_pos.0 + physics_pos_delta.0,
             player_chunk_pos.1 + physics_pos_delta.1,
             player_chunk_pos.2 + physics_pos_delta.2,
-        ).xyz();
+        )
+        .xyz();
 
         world_geom_man.spawn_geometry(
             SPAWNABLE_ASSETS[self.selected_asset],

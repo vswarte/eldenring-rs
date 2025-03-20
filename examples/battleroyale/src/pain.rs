@@ -108,8 +108,8 @@ impl PainRing {
         let field_area = unsafe {
             (*(program.rva_to_va(RVA_GLOBAL_FIELD_AREA).unwrap() as *const *const FieldArea))
                 .as_ref()
-        }.unwrap();
-
+        }
+        .unwrap();
 
         let spawn_sfx: fn(&u32, &SfxSpawnLocation) -> bool =
             unsafe { std::mem::transmute(self.location.get(RVA_SFX_SPAWN).unwrap()) };
@@ -121,12 +121,10 @@ impl PainRing {
             *const FSVector4,
             *const FSVector4,
             *const PlayerIns,
-        ) -> bool =
-            unsafe { std::mem::transmute(self.location.get(RVA_WORLD_CAST_RAY).unwrap()) };
+        ) -> bool = unsafe { std::mem::transmute(self.location.get(RVA_WORLD_CAST_RAY).unwrap()) };
 
         let world_chr_man = unsafe { get_instance::<WorldChrMan>() }.unwrap().unwrap();
         if let Some(main_player) = &world_chr_man.main_player {
-
             // Since the raycast and sfx spawn are all in physics space we need to find the
             // WorldBlockInfo for this block to obtain the center of the block in said physics
             // space.

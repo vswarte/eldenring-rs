@@ -47,9 +47,7 @@ pub struct NotificationPresenter {
 
 impl NotificationPresenter {
     pub fn new(location: Arc<ProgramLocationProvider>) -> Self {
-        Self {
-            location,
-        }
+        Self { location }
     }
 
     /// Displays state message on the screen ala "YOU DIED"
@@ -58,9 +56,8 @@ impl NotificationPresenter {
             return;
         };
 
-        let display_message: extern "C" fn(&mut CSMenuMan, Message) = unsafe {
-            std::mem::transmute(self.location.get(RVA_PRESENT_MP_MESSAGE).unwrap())
-        };
+        let display_message: extern "C" fn(&mut CSMenuMan, Message) =
+            unsafe { std::mem::transmute(self.location.get(RVA_PRESENT_MP_MESSAGE).unwrap()) };
 
         (display_message)(menu_man, message);
     }

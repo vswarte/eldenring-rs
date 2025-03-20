@@ -1,4 +1,8 @@
-use std::{cell::UnsafeCell, ptr::NonNull, sync::{atomic::AtomicBool, Arc}};
+use std::{
+    cell::UnsafeCell,
+    ptr::NonNull,
+    sync::{atomic::AtomicBool, Arc},
+};
 
 use vtable_rs::VPtr;
 
@@ -31,7 +35,7 @@ pub struct FD4TaskBase {
 }
 
 impl FD4TaskBaseVmt for FD4TaskBase {
-    extern "C" fn get_runtime_class(&self) ->  &DLRuntimeClass {
+    extern "C" fn get_runtime_class(&self) -> &DLRuntimeClass {
         unimplemented!()
     }
 
@@ -39,7 +43,7 @@ impl FD4TaskBaseVmt for FD4TaskBase {
         unimplemented!()
     }
 
-    extern "C" fn execute(&mut self,data: &FD4TaskData) {
+    extern "C" fn execute(&mut self, data: &FD4TaskData) {
         unimplemented!()
     }
 }
