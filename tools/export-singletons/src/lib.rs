@@ -14,8 +14,7 @@ pub unsafe extern "C" fn DllMain(_base: usize, reason: u32) -> bool {
         tracing_subscriber::fmt().with_writer(appender).init();
         tracing::debug!("Setup logging");
 
-        let mut fh = File::create("singleton.csv")
-            .expect("Could not create export file");
+        let mut fh = File::create("singleton.csv").expect("Could not create export file");
         let program = unsafe { Program::current() };
 
         // Give the game a bit of time to populate up the DLRF structures

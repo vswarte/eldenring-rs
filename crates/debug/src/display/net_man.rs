@@ -1,4 +1,7 @@
-use game::cs::{CSBattleRoyalContext, CSNetBloodMessageDb, CSNetBloodMessageDbItem, CSNetMan, CSQuickMatchingCtrl, QuickmatchManager};
+use game::cs::{
+    CSBattleRoyalContext, CSNetBloodMessageDb, CSNetBloodMessageDbItem, CSNetMan,
+    CSQuickMatchingCtrl, QuickmatchManager,
+};
 use hudhook::imgui::{TableColumnSetup, TreeNodeFlags, Ui};
 
 use super::DebugDisplay;
@@ -144,19 +147,13 @@ impl DebugDisplay for CSBattleRoyalContext {
         .read_only(true)
         .build();
 
-        ui.input_text(
-            "Match Map (enum)",
-            &mut self.match_player_count.to_string(),
-        )
-        .read_only(true)
-        .build();
+        ui.input_text("Match Map (enum)", &mut self.match_player_count.to_string())
+            .read_only(true)
+            .build();
 
-        ui.input_text(
-            "Password",
-            &mut self.password.to_string(),
-        )
-        .read_only(true)
-        .build();
+        ui.input_text("Password", &mut self.password.to_string())
+            .read_only(true)
+            .build();
 
         ui.input_text(
             "Participant count",
@@ -169,12 +166,8 @@ impl DebugDisplay for CSBattleRoyalContext {
 
 impl DebugDisplay for CSQuickMatchingCtrl {
     fn render_debug(&self, ui: &&mut Ui) {
-        ui.input_text(
-            "Match state",
-            &mut format!("{:?}", self.current_state),
-        )
-        .read_only(true)
-        .build();
-
+        ui.input_text("Match state", &mut format!("{:?}", self.current_state))
+            .read_only(true)
+            .build();
     }
 }

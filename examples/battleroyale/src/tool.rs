@@ -13,9 +13,9 @@ pub fn sample_spawn_point() {
     tracing::info!(
         "Sampled point: map = {:x}. pos = ({} {} {}). angle = {}",
         main_player.chr_ins.map_id_1.0,
-        main_player.block_position.0.0,
-        main_player.block_position.0.1,
-        main_player.block_position.0.2,
+        main_player.block_position.0 .0,
+        main_player.block_position.0 .1,
+        main_player.block_position.0 .2,
         main_player.block_orientation,
     );
 }

@@ -1,6 +1,13 @@
-use std::{collections::HashMap, mem::transmute, sync::{LazyLock, RwLock}};
+use std::{
+    collections::HashMap,
+    mem::transmute,
+    sync::{LazyLock, RwLock},
+};
 
-use game::{cs::{CSTaskGroupIndex, CSTaskImp}, fd4::{FD4TaskBase, FD4TaskData, FD4TaskRequestEntry}};
+use game::{
+    cs::{CSTaskGroupIndex, CSTaskImp},
+    fd4::{FD4TaskBase, FD4TaskData, FD4TaskRequestEntry},
+};
 use retour::static_detour;
 use util::{
     program::Program, rtti::vftable_classname, singleton::get_instance, task::CSTaskImpExt,
@@ -24,7 +31,8 @@ pub unsafe extern "C" fn DllMain(_base: usize, reason: u32) -> bool {
                             .and_then(label_task)
                             .unwrap_or(String::from("Unknown Task Type"));
 
-                        let task_group_label: CSTaskGroupIndex = unsafe { transmute(task_group_index - 0x90000000) };
+                        let task_group_label: CSTaskGroupIndex =
+                            unsafe { transmute(task_group_index - 0x90000000) };
                         let span_label = format!("{task_group_label:?} {task}");
                         let _span = tracy_client::Client::running().map(|c| {
                             c.span_alloc(

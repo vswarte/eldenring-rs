@@ -1,8 +1,10 @@
 use std::ffi;
 
 use vtable_rs::VPtr;
-use windows::Win32::System::Threading::{DeleteCriticalSection, EnterCriticalSection, InitializeCriticalSection, LeaveCriticalSection, CRITICAL_SECTION};
-
+use windows::Win32::System::Threading::{
+    DeleteCriticalSection, EnterCriticalSection, InitializeCriticalSection, LeaveCriticalSection,
+    CRITICAL_SECTION,
+};
 
 #[vtable_rs::vtable]
 pub trait DLPlainLightMutexVmt {
@@ -43,11 +45,10 @@ impl DLPlainLightMutex {
     pub fn unlock(&mut self) {
         unsafe { LeaveCriticalSection(&mut self.critical_section) }
     }
-
 }
 
 impl DLPlainLightMutexVmt for DLPlainLightMutex {
-    extern "C" fn destructor(&mut self, param_2:bool) {
+    extern "C" fn destructor(&mut self, param_2: bool) {
         unimplemented!();
     }
 }

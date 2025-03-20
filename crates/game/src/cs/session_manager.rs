@@ -2,7 +2,14 @@ use std::ptr::NonNull;
 
 use windows::Win32::Foundation::FILETIME;
 
-use crate::{dlcr::{AESDecrypter, AESEncrypter, DLSerialCipherKey}, dlkr::{DLAllocatorBase, DLPlainLightMutex}, dltx::{DLCodedString, DLInplaceStr}, fd4::FD4Time, pointer::OwnedPtr, DoublyLinkedList, Vector};
+use crate::{
+    dlcr::{AESDecrypter, AESEncrypter, DLSerialCipherKey},
+    dlkr::{DLAllocatorBase, DLPlainLightMutex},
+    dltx::{DLCodedString, DLInplaceStr},
+    fd4::FD4Time,
+    pointer::OwnedPtr,
+    DoublyLinkedList, Vector,
+};
 
 use super::CSEzUpdateTask;
 
@@ -34,7 +41,7 @@ pub enum ProtocolState {
 }
 
 impl ProtocolState {
-    /// Seems to be checked for packet 39, 
+    /// Seems to be checked for packet 39,
     fn should_handle_some_packets(&self) -> bool {
         match self {
             ProtocolState::Inactive => false,

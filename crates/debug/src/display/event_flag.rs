@@ -6,12 +6,9 @@ use super::DebugDisplay;
 
 impl DebugDisplay for CSEventFlagMan {
     fn render_debug(&self, ui: &&mut Ui) {
-        ui.input_text(
-            "World type",
-            &mut self.world_type.to_string(),
-        )
-        .read_only(true)
-        .build();
+        ui.input_text("World type", &mut self.world_type.to_string())
+            .read_only(true)
+            .build();
 
         if ui.collapsing_header("CSFD4VirtualMemory", TreeNodeFlags::empty()) {
             ui.indent();

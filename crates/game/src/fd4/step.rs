@@ -56,7 +56,6 @@ pub struct FD4StepTemplateBase0x18 {
     unk28: NonNull<DLAllocatorBase>,
 }
 
-
 /// Source of name: RTTI
 #[repr(C)]
 pub struct FD4StepBaseInterface<const N: usize, T> {

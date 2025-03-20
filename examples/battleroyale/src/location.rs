@@ -4,7 +4,6 @@ use pelite::pe::{Pe, Rva, Va};
 use thiserror::Error;
 use util::program::Program;
 
-
 #[derive(Debug, Error)]
 pub enum LocationProviderError {
     #[error("Could not convert RVA to VA")]
@@ -17,7 +16,9 @@ pub struct ProgramLocationProvider {
 
 impl ProgramLocationProvider {
     pub fn new() -> Self {
-        Self {  program: unsafe { Program::current() } }
+        Self {
+            program: unsafe { Program::current() },
+        }
     }
 
     pub fn get(&self, rva: u32) -> Result<Va, LocationProviderError> {

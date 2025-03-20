@@ -7,10 +7,14 @@ use crate::dlkr::DLPlainConditionSignal;
 use crate::dlrf::DLRuntimeClass;
 use crate::fd4::{FD4TaskBase, FD4TaskBaseVmt, FD4TaskData};
 use crate::pointer::OwnedPtr;
-use crate::{dlkr::DLPlainLightMutex, fd4::{FD4BasicHashString, FD4Time}, Tree, Vector};
+use crate::{
+    dlkr::DLPlainLightMutex,
+    fd4::{FD4BasicHashString, FD4Time},
+    Tree, Vector,
+};
 
 #[vtable_rs::vtable]
-pub trait CSEzTaskVmt : FD4TaskBaseVmt {
+pub trait CSEzTaskVmt: FD4TaskBaseVmt {
     /// Called by execute() in the case of CSEzTask.
     fn eztask_execute(&mut self, data: &FD4TaskData);
     /// Called to register the task to the appropriate runtime.

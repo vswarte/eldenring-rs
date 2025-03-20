@@ -43,11 +43,7 @@ impl FieldInsSelector {
     /// Create a new FieldInsSelector by its components.
     pub fn from_parts(field_ins_type: u32, container: u32, index: u32) -> Self {
         let mapping = &FIELD_INS_TYPE_MAPPING[field_ins_type as usize];
-        Self(
-            index & 0xFFFFF
-            | container << mapping.container_shift
-            | field_ins_type << 0x1C
-        )
+        Self(index & 0xFFFFF | container << mapping.container_shift | field_ins_type << 0x1C)
     }
 
     /// Extracts the type map index

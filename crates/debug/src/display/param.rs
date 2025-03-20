@@ -5,7 +5,10 @@ use super::DebugDisplay;
 
 impl DebugDisplay for FD4ParamRepository {
     fn render_debug(&self, ui: &&mut hudhook::imgui::Ui) {
-        ui.text(format!("ResCapHolder map bucket count: {:?}", self.res_rep.res_cap_holder.bucket_count));
+        ui.text(format!(
+            "ResCapHolder map bucket count: {:?}",
+            self.res_rep.res_cap_holder.bucket_count
+        ));
 
         if ui.collapsing_header("Resources", TreeNodeFlags::empty()) {
             if let Some(_t) = ui.begin_table_header(
