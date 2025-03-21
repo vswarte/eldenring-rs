@@ -91,7 +91,7 @@ dependencies = [
  "pelite",
  "rayon",
  "serde",
- "toml 0.8.20",
+ "toml",
 ]
 
 [[package]]
@@ -117,12 +117,6 @@ name = "bytemuck"
 version = "1.22.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "b6b1fc10dbac614ebc03540c9dbd60e83887fda27794998c6528f1782047d540"
-
-[[package]]
-name = "byteorder"
-version = "1.5.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "1fd0f2584146f6f2ef48085050886acf353beff7305ebd1ae69500e27c67f64b"
 
 [[package]]
 name = "cc"
@@ -238,9 +232,9 @@ dependencies = [
 name = "debug"
 version = "0.4.4"
 dependencies = [
- "eldenring 0.2.1",
- "eldenring-dlrf 0.1.0",
- "eldenring-util 0.1.2",
+ "eldenring",
+ "eldenring-dlrf",
+ "eldenring-util",
  "hudhook",
  "pelite",
  "tracing",
@@ -273,61 +267,9 @@ checksum = "48c757948c5ede0e46177b7add2e67155f70e33c07fea8284df6576da70b3719"
 
 [[package]]
 name = "eldenring"
-version = "0.1.5"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "0c72fd7544210701e5411289c06003b7ba97f11c02e539be843d50e481bb7a84"
-dependencies = [
- "byteorder",
- "dataview",
- "eldenring-dlrf 0.1.0",
- "log",
- "nalgebra",
- "nalgebra-glm",
- "pelite",
- "rand",
- "regex",
- "serde",
- "serde_derive",
- "thiserror",
- "toml 0.7.8",
- "tracing",
- "vtable-rs",
- "windows",
- "zerocopy 0.7.35",
- "zerocopy-derive 0.7.35",
-]
-
-[[package]]
-name = "eldenring"
-version = "0.2.1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "c9326b9959907306d53bb6a6a23c7dae59d8249f94a3dcf391d962dd18b93eb5"
-dependencies = [
- "byteorder",
- "dataview",
- "eldenring-dlrf 0.1.0",
- "log",
- "nalgebra",
- "nalgebra-glm",
- "pelite",
- "rand",
- "regex",
- "serde",
- "serde_derive",
- "thiserror",
- "toml 0.7.8",
- "tracing",
- "vtable-rs",
- "windows",
- "zerocopy 0.7.35",
- "zerocopy-derive 0.7.35",
-]
-
-[[package]]
-name = "eldenring"
 version = "0.4.4"
 dependencies = [
- "eldenring-dlrf 0.4.4",
+ "eldenring-dlrf",
  "nalgebra",
  "nalgebra-glm",
  "pelite",
@@ -342,28 +284,9 @@ dependencies = [
 
 [[package]]
 name = "eldenring-dlrf"
-version = "0.1.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "d4ac79f8a0b0bf09bf1cda02d3566a38d75bf981fea5dacf1d73e50c1f19aea6"
-dependencies = [
- "eldenring-dlrf-derive 0.1.0",
-]
-
-[[package]]
-name = "eldenring-dlrf"
 version = "0.4.4"
 dependencies = [
- "eldenring-dlrf-derive 0.4.4",
-]
-
-[[package]]
-name = "eldenring-dlrf-derive"
-version = "0.1.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "efdc42c2685073fe6a24fdb49037e02a2b9eacd52dafb2041ca240a0a70be42f"
-dependencies = [
- "quote",
- "syn",
+ "eldenring-dlrf-derive",
 ]
 
 [[package]]
@@ -376,28 +299,10 @@ dependencies = [
 
 [[package]]
 name = "eldenring-util"
-version = "0.1.2"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "64090d0f246d49a90926f7c2274769bd769b033856003fa9115eaa4685e60eba"
-dependencies = [
- "eldenring 0.1.5",
- "eldenring-dlrf 0.1.0",
- "pelite",
- "steamworks",
- "steamworks-sys",
- "thiserror",
- "tracing",
- "undname",
- "vtable-rs",
- "windows",
-]
-
-[[package]]
-name = "eldenring-util"
 version = "0.4.4"
 dependencies = [
- "eldenring 0.4.4",
- "eldenring-dlrf 0.4.4",
+ "eldenring",
+ "eldenring-dlrf",
  "pelite",
  "steamworks",
  "steamworks-sys",
@@ -413,17 +318,6 @@ name = "equivalent"
 version = "1.0.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "877a4ace8713b0bcf2a4e7eec82529c029f1d0619886d18145fea96c3ffe5c0f"
-
-[[package]]
-name = "getrandom"
-version = "0.2.15"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "c4567c8db10ae91089c99af84c68c38da3ec2f087c3f82960bcdbf3656b6f4d7"
-dependencies = [
- "cfg-if",
- "libc",
- "wasi",
-]
 
 [[package]]
 name = "gl_generator"
@@ -763,15 +657,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "439ee305def115ba05938db6eb1644ff94165c5ab5e9420d1c1bcedbba909391"
 
 [[package]]
-name = "ppv-lite86"
-version = "0.2.21"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "85eae3c4ed2f50dcfe72643da4befc30deadb458a9b590d720cde2f2b1e97da9"
-dependencies = [
- "zerocopy 0.8.24",
-]
-
-[[package]]
 name = "proc-macro2"
 version = "1.0.94"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -787,36 +672,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "1885c039570dc00dcb4ff087a89e185fd56bae234ddc7f056a945bf36467248d"
 dependencies = [
  "proc-macro2",
-]
-
-[[package]]
-name = "rand"
-version = "0.8.5"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "34af8d1a0e25924bc5b7c43c079c942339d8f0a8b57c39049bef581b46327404"
-dependencies = [
- "libc",
- "rand_chacha",
- "rand_core",
-]
-
-[[package]]
-name = "rand_chacha"
-version = "0.3.1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "e6c10a63a0fa32252be49d21e7709d4d4baf8d231c2dbce1eaa8141b9b127d88"
-dependencies = [
- "ppv-lite86",
- "rand_core",
-]
-
-[[package]]
-name = "rand_core"
-version = "0.6.4"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "ec0be4795e2f6a28069bec0b5ff3e2ac9bafc99e6a9a7dc3547996c5c816922c"
-dependencies = [
- "getrandom",
 ]
 
 [[package]]
@@ -1074,18 +929,6 @@ dependencies = [
 
 [[package]]
 name = "toml"
-version = "0.7.8"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "dd79e69d3b627db300ff956027cc6c3798cef26d22526befdfcd12feeb6d2257"
-dependencies = [
- "serde",
- "serde_spanned",
- "toml_datetime",
- "toml_edit 0.19.15",
-]
-
-[[package]]
-name = "toml"
 version = "0.8.20"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "cd87a5cdd6ffab733b2f74bc4fd7ee5fff6634124999ac278c35fc78c6120148"
@@ -1093,7 +936,7 @@ dependencies = [
  "serde",
  "serde_spanned",
  "toml_datetime",
- "toml_edit 0.22.24",
+ "toml_edit",
 ]
 
 [[package]]
@@ -1107,19 +950,6 @@ dependencies = [
 
 [[package]]
 name = "toml_edit"
-version = "0.19.15"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "1b5bb770da30e5cbfde35a2d7b9b8a2c4b8ef89548a7a6aeab5c9a576e3e7421"
-dependencies = [
- "indexmap",
- "serde",
- "serde_spanned",
- "toml_datetime",
- "winnow 0.5.40",
-]
-
-[[package]]
-name = "toml_edit"
 version = "0.22.24"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "17b4795ff5edd201c7cd6dca065ae59972ce77d1b80fa0a84d94950ece7d1474"
@@ -1128,7 +958,7 @@ dependencies = [
  "serde",
  "serde_spanned",
  "toml_datetime",
- "winnow 0.7.4",
+ "winnow",
 ]
 
 [[package]]
@@ -1274,12 +1104,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "wasi"
-version = "0.11.0+wasi-snapshot-preview1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "9c8d87e72b64a3b4db28d11ce29237c246188f4f51057d65a7eab63b7987e423"
-
-[[package]]
 name = "wide"
 version = "0.7.32"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1415,15 +1239,6 @@ checksum = "589f6da84c646204747d1270a2a5661ea66ed1cced2631d546fdfb155959f9ec"
 
 [[package]]
 name = "winnow"
-version = "0.5.40"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "f593a95398737aeed53e489c785df13f3618e41dbcd6718c6addbf1395aa6876"
-dependencies = [
- "memchr",
-]
-
-[[package]]
-name = "winnow"
 version = "0.7.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "0e97b544156e9bebe1a0ffbc03484fc1ffe3100cbce3ffb17eac35f7cdd7ab36"
@@ -1436,44 +1251,3 @@ name = "xml-rs"
 version = "0.8.25"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "c5b940ebc25896e71dd073bad2dbaa2abfe97b0a391415e22ad1326d9c54e3c4"
-
-[[package]]
-name = "zerocopy"
-version = "0.7.35"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "1b9b4fd18abc82b8136838da5d50bae7bdea537c574d8dc1a34ed098d6c166f0"
-dependencies = [
- "byteorder",
- "zerocopy-derive 0.7.35",
-]
-
-[[package]]
-name = "zerocopy"
-version = "0.8.24"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "2586fea28e186957ef732a5f8b3be2da217d65c5969d4b1e17f973ebbe876879"
-dependencies = [
- "zerocopy-derive 0.8.24",
-]
-
-[[package]]
-name = "zerocopy-derive"
-version = "0.7.35"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "fa4f8080344d4671fb4e831a13ad1e68092748387dfc4f55e356242fae12ce3e"
-dependencies = [
- "proc-macro2",
- "quote",
- "syn",
-]
-
-[[package]]
-name = "zerocopy-derive"
-version = "0.8.24"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "a996a8f63c5c4448cd959ac1bab0aaa3306ccfd060472f85943ee0750f0169be"
-dependencies = [
- "proc-macro2",
- "quote",
- "syn",
-]

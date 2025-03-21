@@ -6,9 +6,9 @@ repository.workspace = true
 license.workspace = true
 
 [dependencies]
-util = { version = "0.1.2", package = "eldenring-util" }
-dlrf = { version = "0.1.0", package = "eldenring-dlrf" }
-game = { version = "0.2.0", package = "eldenring" }
+util.workspace = true
+dlrf.workspace = true
+game.workspace = true
 windows.workspace = true
 pelite.workspace = true
 tracing.workspace = true
