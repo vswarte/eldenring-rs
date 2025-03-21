@@ -10,7 +10,7 @@ use hudhook::windows::Win32::Foundation::HINSTANCE;
 use hudhook::Hudhook;
 use hudhook::ImguiRenderLoop;
 
-use pelite::pe::Pe;
+use pelite::pe64::Pe;
 
 use game::cs::CSCamera;
 use game::cs::CSEventFlagMan;

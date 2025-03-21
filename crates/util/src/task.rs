@@ -13,7 +13,7 @@ use game::{
     dlrf::DLRuntimeClass,
     fd4::FD4TaskBaseVmt,
 };
-use pelite::pe::Pe;
+use pelite::pe64::Pe;
 use pelite::{pattern, pattern::Atom};
 use std::sync::LazyLock;
 use vtable_rs::VPtr;

@@ -1,8 +1,7 @@
 use dlrf::DLRFSingleton;
 use pelite::pattern;
 use pelite::pattern::Atom;
-use pelite::pe::Pe;
-use pelite::pe::Rva;
+use pelite::pe64::{Pe, Rva};
 use std::collections;
 use std::sync;
 use thiserror::Error;

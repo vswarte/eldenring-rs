@@ -1,5 +1,5 @@
-use game::{cs::CSEzDraw, matrix::FSVector4, position::HavokPosition};
-use pelite::pe::Pe;
+use game::{cs::CSEzDraw, matrix::FSVector4, position::HavokPosition, rotation::EulerAngles};
+use pelite::pe64::Pe;
 
 use crate::{
     program::Program,

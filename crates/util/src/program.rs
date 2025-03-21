@@ -2,7 +2,7 @@
 
 use std::sync::LazyLock;
 
-use pelite::pe::{Pe, PeFile, PeObject, PeView};
+use pelite::pe64::{Pe, PeFile, PeObject, PeView};
 use windows::core::PCSTR;
 use windows::Win32::System::LibraryLoader::GetModuleHandleA;
 
