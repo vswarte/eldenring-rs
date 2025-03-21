@@ -1,4 +1,4 @@
-# Eldenring-rs🔩  Elden Ring rust bindings
+# Eldenring-rs 🔩  Elden Ring rust bindings
 Rust bindings to facilitate mod creation for Elden Ring.
 
 <details>
