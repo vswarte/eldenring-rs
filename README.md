@@ -2,7 +2,9 @@
 Rust bindings to facilitate mod creation for Elden Ring.
 
 <details>
+
 <summary>Example mod code</summary>
+
 ```rust
 use eldenring::{
     cs::{CSTaskImp, RendMan, WorldChrMan},
@@ -86,6 +88,7 @@ pub unsafe extern "C" fn DllMain(_hmodule: usize, reason: u32) -> bool {
 
 Result:
 ![Debug line rendered by example mode code](img/example-mod-debug-line.png) 
+
 </details>
 
 # Credits (aside listed contributors to this repository)
