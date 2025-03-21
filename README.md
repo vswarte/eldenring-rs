@@ -3,7 +3,7 @@ Rust bindings to facilitate mod creation for Elden Ring.
 
 <details>
 
-<summary>Example mod code</summary>
+<summary>Example mod code: render debug line</summary>
 
 ```rust
 use eldenring::{
