@@ -56,7 +56,7 @@ pub unsafe extern "C" fn DllMain(_hmodule: usize, reason: u32) -> bool {
                     let physics = &player.chr_ins.module_container.physics;
 
                     // Make a directional vector that points forward following the players
-                    // rotation. Multiply it by 5 to move the point 5 meter into that direction.
+                    // rotation.
                     let directional_vector = {
                         let forward = glm::vec3(0.0, 0.0, -1.0);
                         glm::quat_rotate_vec3(&physics.orientation.into(), &forward)
@@ -65,7 +65,7 @@ pub unsafe extern "C" fn DllMain(_hmodule: usize, reason: u32) -> bool {
                     // Set color for the to-be-rendered line.
                     ez_draw.set_color(&FSVector4(0.0, 0.0, 1.0, 1.0));
 
-                    // Draw the line from the players position to 5 meter in front of the player.
+                    // Draw the line from the players position to a meter in front of the player.
                     ez_draw.draw_line(
                         &physics.position,
                         &(physics.position
