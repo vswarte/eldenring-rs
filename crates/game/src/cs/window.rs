@@ -1,4 +1,7 @@
-use windows::Win32::Foundation::HWND;
+use windows::{
+    core::PCWSTR,
+    Win32::Foundation::{HINSTANCE, HWND},
+};
 
 #[repr(C)]
 /// Source of name: RTTI
@@ -6,12 +9,13 @@ use windows::Win32::Foundation::HWND;
 pub struct CSWindowImp {
     vftable: usize,
     pub window_handle: HWND,
-    unk10: [u8; 0x10],
+    pub lp_window_name: PCWSTR,
+    pub lp_class_name: PCWSTR,
     pub screen_pos_x: i32,
     pub screen_pos_y: i32,
     pub screen_width: i32,
     pub screen_height: i32,
-    pub base_addr: usize,
+    pub h_instance: HINSTANCE,
     screen_mode_ctrl: usize,
     unk40: [u8; 0x2c],
     pub runtime_window_config: CSWindowScreenConfig,

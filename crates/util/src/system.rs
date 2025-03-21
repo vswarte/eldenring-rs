@@ -1,17 +1,17 @@
-use std::sync;
-use std::sync::atomic::AtomicPtr;
+/// OG comes from Dasaav
+/// https://github.com/Dasaav-dsv/libER/blob/main/source/dantelion2/system.cpp
+use std::sync::atomic::{AtomicPtr, Ordering};
+use std::time::{Duration, Instant};
 
 use pelite::pattern;
 use pelite::pattern::Atom;
 use pelite::pe64::{Pe, PeView, Rva};
 use thiserror::Error;
-use windows::core::PCSTR;
-use windows::Win32::System::LibraryLoader::GetModuleHandleA;
 
-// WinMain -> SetBaseAddr
-// used to set base executable address for CSWindowImp
+// WinMain -> SethInstance
+// used to set global hInstance later used by CSWindow
 // and can be used to determine if the game has finished initializing
-const GLOBAL_INIT_BASE_ADDR_PATTERN: &[Atom] = pattern!(
+const GLOBAL_SET_HINSTANCE_PATTERN: &[Atom] = pattern!(
     "
     48 8b ce
     48 8b f8
@@ -22,53 +22,38 @@ const GLOBAL_INIT_BASE_ADDR_PATTERN: &[Atom] = pattern!(
     "
 );
 
-static GLOBAL_INIT_BASE_ADDR: sync::OnceLock<AtomicPtr<usize>> = sync::OnceLock::new();
+static GLOBAL_HINSTANCE: AtomicPtr<usize> = AtomicPtr::new(0x0 as _);
 
 #[derive(Error, Debug)]
 pub enum SystemInitError {
-    #[error("System initialization timed out after {0}ms")]
-    Timeout(i32),
+    #[error("System initialization timed out")]
+    Timeout,
+    #[error("Could not translate RVA to VA")]
+    InvalidRva,
 }
-/// Wait for the system to finish initializing.
-/// returns an error if the system initialization timed out.
-/// -1 for no timeout will wait indefinitely.
-/// https://github.com/Dasaav-dsv/libER/blob/main/source/dantelion2/system.cpp
-pub fn wait_for_system_init(timeout: i32) -> Result<(), SystemInitError> {
-    let global_init_flip_counter = GLOBAL_INIT_BASE_ADDR.get_or_init(|| {
-        let module = unsafe {
-            let handle = GetModuleHandleA(PCSTR(std::ptr::null())).unwrap().0 as *const u8;
-            PeView::module(handle)
-        };
 
+/// Wait for the system to finish initializing by waiting a global hInstance to be populated for CSWindow.
+/// This happens after the CRT init and after duplicate instance checks.
+pub fn wait_for_system_init(module: &PeView, timeout: Duration) -> Result<(), SystemInitError> {
+    if GLOBAL_HINSTANCE.load(Ordering::Relaxed) == 0x0 as _ {
         let mut captures = [Rva::default(); 2];
         module
             .scanner()
-            .finds_code(GLOBAL_INIT_BASE_ADDR_PATTERN, &mut captures);
+            .finds_code(GLOBAL_SET_HINSTANCE_PATTERN, &mut captures);
 
-        let global_init_flip_counter = module.rva_to_va(captures[1]).unwrap();
-        (global_init_flip_counter as *mut usize).into()
-    });
+        let global_hinstance = module
+            .rva_to_va(captures[1])
+            .map_err(|_| SystemInitError::InvalidRva)?;
 
-    let counter = global_init_flip_counter.load(std::sync::atomic::Ordering::Relaxed);
+        GLOBAL_HINSTANCE.store(global_hinstance as _, Ordering::Relaxed);
+    }
 
-    if timeout >= 0 {
-        let start = std::time::Instant::now();
-        let timeout_duration = std::time::Duration::from_millis(timeout as u64);
-
-        // Counter is updated by game and is expected to change outside of code that the compiler
-        // knows.
-        #[allow(clippy::while_immutable_condition)]
-        while unsafe { *counter } == 0 {
-            if start.elapsed() > timeout_duration {
-                return Err(SystemInitError::Timeout(timeout));
-            }
-            std::thread::yield_now();
+    let start = Instant::now();
+    while unsafe { *GLOBAL_HINSTANCE.load(Ordering::Relaxed) } == 0 {
+        if start.elapsed() > timeout {
+            return Err(SystemInitError::Timeout);
         }
-    } else {
-        #[allow(clippy::while_immutable_condition)]
-        while unsafe { *counter } == 0 {
-            std::thread::yield_now();
-        }
+        std::thread::yield_now();
     }
 
     Ok(())
