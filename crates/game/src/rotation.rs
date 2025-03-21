@@ -3,11 +3,11 @@ use std::fmt::Display;
 
 use crate::matrix::FSVector4;
 
-#[repr(C)]
+#[repr(C, align(16))]
 #[derive(Debug, Clone, Copy, PartialEq)]
 pub struct Quaternion(pub f32, pub f32, pub f32, pub f32);
 
-#[repr(C)]
+#[repr(C, align(16))]
 #[derive(Debug, Clone, Copy, PartialEq)]
 pub struct EulerAngles(pub f32, pub f32, pub f32);
 
