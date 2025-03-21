@@ -41,3 +41,7 @@ captures = ["", "INITIALIZE_SPAWN_GEOMETRY_REQUEST"]
 [[patterns]]
 pattern = "8b 01 89 85 d8 00 00 00 48 8d 55 00 49 8b ce e8 $ { ' }"
 captures = ["", "SPAWN_GEOMETRY"]
+
+[[patterns]]
+pattern = "ba 58 00 00 02 e8 $ { ' }"
+captures = ["", "CS_PHYS_WORLD_CAST_RAY"]

@@ -4,7 +4,8 @@ use crate::pointer::OwnedPtr;
 #[dlrf::singleton("CSHavokMan")]
 #[repr(C)]
 pub struct CSHavokMan {
-    pub unk0: [u8; 0x98],
+    vftable: usize,
+    unk8: [u8; 0x90],
     pub phys_world: OwnedPtr<CSPhysWorld>,
 }
 
