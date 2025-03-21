@@ -9,7 +9,7 @@ members = [
 ]
 
 [workspace.package]
-version = "0.4.0"
+version = "0.4.3"
 edition = "2021"
 repository = "https://github.com/vswarte/chains-bindings"
 license = "MIT OR Apache-2.0"

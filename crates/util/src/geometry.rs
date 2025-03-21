@@ -1,7 +1,7 @@
 use std::mem::transmute;
 
 use game::position::BlockPosition;
-use pelite::pe::Pe;
+use pelite::pe64::Pe;
 use thiserror::Error;
 
 use game::cs::CSWorldGeomMan;

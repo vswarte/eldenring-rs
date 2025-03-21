@@ -7,7 +7,7 @@ use crate::program::Program;
 use game::cs::CharacterTypePropertiesTable;
 use pelite::pattern;
 use pelite::pattern::Atom;
-use pelite::pe::Pe;
+use pelite::pe64::Pe;
 
 const CHARACTER_TYPE_PROPERTIES_PATTERN: &[Atom] = pattern!(
     "

@@ -5,7 +5,7 @@ use crate::program::Program;
 use game::cs::CharacterDebugFlags;
 use pelite::pattern;
 use pelite::pattern::Atom;
-use pelite::pe::Pe;
+use pelite::pe64::Pe;
 
 const CHARACTER_DEBUG_FLAGS_PATTERN: &[Atom] = pattern!(
     "

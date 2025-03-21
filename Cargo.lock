@@ -84,7 +84,7 @@ checksum = "ace50bade8e6234aa140d9a2f552bbee1db4d353f69b8217bc503490fc1a9f26"
 
 [[package]]
 name = "binary-mapper"
-version = "0.4.0"
+version = "0.4.3"
 dependencies = [
  "clap",
  "memmap",
@@ -236,7 +236,7 @@ dependencies = [
 
 [[package]]
 name = "debug"
-version = "0.4.0"
+version = "0.4.3"
 dependencies = [
  "eldenring 0.2.1",
  "eldenring-dlrf 0.1.0",
@@ -325,9 +325,9 @@ dependencies = [
 
 [[package]]
 name = "eldenring"
-version = "0.4.0"
+version = "0.4.3"
 dependencies = [
- "eldenring-dlrf 0.4.0",
+ "eldenring-dlrf 0.4.3",
  "nalgebra",
  "nalgebra-glm",
  "pelite",
@@ -351,9 +351,9 @@ dependencies = [
 
 [[package]]
 name = "eldenring-dlrf"
-version = "0.4.0"
+version = "0.4.3"
 dependencies = [
- "eldenring-dlrf-derive 0.4.0",
+ "eldenring-dlrf-derive 0.4.3",
 ]
 
 [[package]]
@@ -368,7 +368,7 @@ dependencies = [
 
 [[package]]
 name = "eldenring-dlrf-derive"
-version = "0.4.0"
+version = "0.4.3"
 dependencies = [
  "quote",
  "syn",
@@ -394,10 +394,10 @@ dependencies = [
 
 [[package]]
 name = "eldenring-util"
-version = "0.4.0"
+version = "0.4.3"
 dependencies = [
- "eldenring 0.4.0",
- "eldenring-dlrf 0.4.0",
+ "eldenring 0.4.3",
+ "eldenring-dlrf 0.4.3",
  "pelite",
  "steamworks",
  "steamworks-sys",
