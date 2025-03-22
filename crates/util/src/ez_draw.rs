@@ -1,4 +1,4 @@
-use game::{cs::CSEzDraw, matrix::FSVector4, position::HavokPosition, rotation::EulerAngles};
+use game::{cs::CSEzDraw, matrix::FSVector4, position::{HavokPosition, PositionDelta}, rotation::EulerAngles};
 use pelite::pe64::Pe;
 
 use crate::{
@@ -22,7 +22,7 @@ pub trait CSEzDrawExt {
     fn draw_wedge(
         &self,
         origin: &HavokPosition,
-        angle: &EulerAngles,
+        direction: &PositionDelta,
         inner_length: f32,
         outer_length: f32,
         degrees: f32,
@@ -35,7 +35,7 @@ type FnDrawCapsule =
     extern "C" fn(*const CSEzDraw, *const HavokPosition, *const HavokPosition, f32);
 type FnDrawSphere = extern "C" fn(*const CSEzDraw, *const HavokPosition, f32);
 type FnDrawFan =
-    extern "C" fn(*const CSEzDraw, *const HavokPosition, *const EulerAngles, f32, f32, f32);
+    extern "C" fn(*const CSEzDraw, *const HavokPosition, *const HavokPosition, f32, f32, f32);
 
 impl CSEzDrawExt for CSEzDraw {
     fn set_color(&self, color: &FSVector4) {
@@ -89,7 +89,7 @@ impl CSEzDrawExt for CSEzDraw {
     fn draw_wedge(
         &self,
         origin: &HavokPosition,
-        angle: &EulerAngles,
+        direction: &PositionDelta,
         inner_length: f32,
         outer_length: f32,
         degrees: f32,
@@ -102,6 +102,13 @@ impl CSEzDrawExt for CSEzDraw {
             )
         };
 
-        target(self, origin, angle, inner_length, outer_length, degrees);
+        let direction = HavokPosition(
+            direction.0,
+            direction.1,
+            direction.2,
+            0.0,
+        );
+
+        target(self, origin, &direction, inner_length, outer_length, degrees);
     }
 }
