@@ -818,6 +818,7 @@ pub struct PlayerSessionHolder {
 }
 
 #[repr(i32)]
+#[derive(Clone, Debug, PartialEq, Eq, Hash)]
 pub enum ChrType {
     None = -1,
     Local = 0,
@@ -833,4 +834,10 @@ pub enum ChrType {
     Invader2 = 16,
     BluePhantom = 17,
     Invader3 = 18,
+}
+
+impl From<ChrType> for i32 {
+    fn from(val: ChrType) -> Self {
+        val as i32
+    }
 }
