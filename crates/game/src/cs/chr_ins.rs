@@ -95,7 +95,7 @@ pub struct ChrIns {
     pub chr_ctrl: OwnedPtr<ChrCtrl>,
     pub think_param_id: i32,
     pub npc_id_1: i32,
-    pub chr_type: i32,
+    pub chr_type: ChrType,
     pub team_type: u8,
     pad6d: [u8; 3],
     pub p2p_entity_handle: P2PEntityHandle,
@@ -815,4 +815,22 @@ pub struct PlayerSessionHolder {
     unk10: usize,
     pub player_network_session: OwnedPtr<PlayerNetworkSession>,
     unk18: usize,
+}
+
+#[repr(i32)]
+pub enum ChrType {
+    None = -1,
+    Local = 0,
+    WhitePhantom = 1,
+    BlackPhantom = 2,
+    Ghost = 3,
+    Ghost1 = 4,
+    Npc = 5,
+    GrayPhantom = 8,
+    Arena = 13,
+    Quickmatch = 14,
+    Invader = 15,
+    Invader2 = 16,
+    BluePhantom = 17,
+    Invader3 = 18,
 }
