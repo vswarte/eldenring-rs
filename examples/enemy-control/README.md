@@ -1,3 +1,0 @@
-# Enemy Control example
-
-## TODO:

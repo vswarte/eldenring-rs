@@ -1,7 +1,7 @@
 use std::error::Error;
 
 use pelite::pattern::Atom;
-use pelite::pe::Pe;
+use pelite::pe64::Pe;
 
 use crate::program::Program;
 

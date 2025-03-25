@@ -1,3 +1,0 @@
-# Procedural Dungeons example
-
-## TODO:

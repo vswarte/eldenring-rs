@@ -169,6 +169,25 @@ pub struct TreeNode<T> {
     value: T,
 }
 
+pub struct DLFixedVector<T, const N: usize>
+where
+    T: Sized,
+{
+    elements: [T; N],
+    // TODO: fact-check this
+    unk1: usize,
+    count: usize,
+}
+
+impl<T, const N: usize> DLFixedVector<T, N>
+where
+    T: Sized,
+{
+    pub fn iter(&self) -> impl Iterator<Item = &T> {
+        self.elements[0..self.count].iter()
+    }
+}
+
 #[repr(C)]
 pub struct CSFixedList<T, const N: usize>
 where

@@ -3,9 +3,7 @@ use std::sync::atomic::AtomicPtr;
 
 use pelite::pattern;
 use pelite::pattern::Atom;
-use pelite::pe::Pe;
-use pelite::pe::PeView;
-use pelite::pe::Rva;
+use pelite::pe64::{Pe, PeView, Rva};
 use thiserror::Error;
 use windows::core::PCSTR;
 use windows::Win32::System::LibraryLoader::GetModuleHandleA;

@@ -1,8 +1,7 @@
 use dlrf::DLRFSingleton;
 use pelite::pattern;
 use pelite::pattern::Atom;
-use pelite::pe::Pe;
-use pelite::pe::Rva;
+use pelite::pe64::{Pe, Rva};
 use std::collections;
 use std::sync;
 use thiserror::Error;
@@ -32,16 +31,14 @@ pub enum LookupError {
 /// Some singletons aren't necessarily always instanciated and available.
 /// Discovered singletons are cached so invokes after the first will be much faster.
 ///
-/// # SAFETY
+/// # Safety
 /// All bets are off if you grab a ref to a singleton without understanding the conditions around
 /// shared access like multithreaded access and locking. The best place to use this is from the
 /// task runtime after extensively considering what phases of the game loop update or read a
 /// singleton.
 pub unsafe fn get_instance<T: DLRFSingleton>() -> Result<Option<&'static mut T>, LookupError> {
-    let table = SINGLETON_MAP.get_or_init(move || {
-        let program = unsafe { Program::current() };
-
-        build_singleton_table(&program)
+    let table = SINGLETON_MAP.get_or_init(|| {
+        build_singleton_table(&Program::current())
             .map_err(LookupError::SingletonMapCreation)
             .expect("Could not create singleton map")
     });

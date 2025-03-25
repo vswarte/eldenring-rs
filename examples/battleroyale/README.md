@@ -1,3 +1,0 @@
-# Battle Royale example
-
-## TODO:

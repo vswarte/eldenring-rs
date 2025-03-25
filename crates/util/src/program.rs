@@ -1,6 +1,8 @@
 // TODO: replace with pelite
 
-use pelite::pe::{Pe, PeFile, PeObject, PeView};
+use std::sync::LazyLock;
+
+use pelite::pe64::{Pe, PeFile, PeObject, PeView};
 use windows::core::PCSTR;
 use windows::Win32::System::LibraryLoader::GetModuleHandleA;
 
@@ -10,11 +12,15 @@ pub enum Program<'a> {
     Mapping(PeView<'a>),
 }
 
+static CURRENT_BASE: LazyLock<Program> = LazyLock::new(|| {
+    let module = unsafe { GetModuleHandleA(PCSTR(std::ptr::null())).unwrap().0 } as *const u8;
+    Program::Mapping(unsafe { PeView::module(module) })
+});
+
 impl Program<'_> {
     /// Returns the currently running programing.
-    pub unsafe fn current() -> Self {
-        let module = GetModuleHandleA(PCSTR(std::ptr::null())).unwrap().0 as *const u8;
-        Program::Mapping(PeView::module(module))
+    pub fn current() -> Self {
+        *CURRENT_BASE
     }
 }
 

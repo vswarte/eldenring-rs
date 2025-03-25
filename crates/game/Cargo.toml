@@ -1,36 +1,24 @@
 [package]
-name = "game"
+name = "eldenring"
 version.workspace = true
 edition.workspace = true
 repository.workspace = true
 license.workspace = true
+readme = false
+description = "Raw structures and bindings for From Software's title Elden Ring"
 
 [lints.rust]
 unused = "allow"
 
 [dependencies]
-log = "0.4.1"
-toml = "0.7.2"
-rand = "0.8"
 dlrf.workspace = true
 tracing.workspace = true
 thiserror.workspace = true
 nalgebra-glm.workspace = true
 nalgebra.workspace = true
-windows.workspace = true
-zerocopy.workspace = true
-zerocopy-derive.workspace = true
-byteorder.workspace = true
 pelite.workspace = true
-dataview.workspace = true
 vtable-rs.workspace = true
-contextual = "0.1.6"
-
-[dependencies.retour]
-version = "0.3"
-features = [
-    "static-detour",
-]
+windows.workspace = true
 
 [build-dependencies]
 serde_derive = "1"
@@ -39,7 +27,3 @@ regex = "1"
 [build-dependencies.serde]
 version = "1"
 features = ["derive"]
-
-[build-dependencies.quick-xml]
-version = "0.31"
-features = ["serialize"]

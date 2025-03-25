@@ -2,9 +2,11 @@ pub mod arxan;
 pub mod camera;
 pub mod character_debug_flags;
 pub mod character_type_properties;
+pub mod ez_draw;
 pub mod ez_state;
 pub mod fade;
 pub mod geometry;
+pub mod havok;
 pub mod input;
 pub mod program;
 pub mod rtti;
@@ -15,3 +17,5 @@ pub mod task;
 pub mod team_relation;
 pub mod world_area_time;
 pub mod world_chr_man;
+
+pub(crate) mod rva;

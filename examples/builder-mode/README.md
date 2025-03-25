@@ -1,3 +1,0 @@
-# Builder Mode example
-
-## TODO:

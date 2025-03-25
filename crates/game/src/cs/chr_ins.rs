@@ -9,7 +9,8 @@ use crate::cs::ChrSetEntry;
 use crate::fd4::FD4Time;
 use crate::matrix::FSVector4;
 use crate::pointer::OwnedPtr;
-use crate::position::{BlockPoint, ChunkPosition4, HavokPosition, Quaternion};
+use crate::position::{BlockPosition, HavokPosition};
+use crate::rotation::Quaternion;
 use crate::Vector;
 
 use super::player_game_data::PlayerGameData;
@@ -666,11 +667,15 @@ pub struct PlayerIns {
     pub chr_asm: OwnedPtr<ChrAsm>,
     chr_asm_model_res: usize,
     chr_asm_model_ins: usize,
-    unk650: [u8; 0x60],
-    pub locked_on_enemy: FieldInsHandle,
+    unk650: [u8; 0x28],
+    /// Set on player spawn and maybe on arena respawn?
+    /// Players cannot be hurt if this is above 0.
+    pub invincibility_timer_for_net_player: f32,
+    unk67c: [u8; 0x34],
+    pub locked_on_enemy: FieldInsHandle, // 0x6b0
     pub session_manager_player_entry: NonNull<CSSessionManagerPlayerEntry>,
     /// Position within the current block.
-    pub block_position: BlockPoint,
+    pub block_position: BlockPosition,
     /// Angle as radians. Relative to the orientation of the current block.
     pub block_orientation: f32,
 }
