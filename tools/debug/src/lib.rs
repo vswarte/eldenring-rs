@@ -157,9 +157,6 @@ impl ImguiRenderLoop for EldenRingDebugGui {
                     item.end();
                 }
                 tabs.end();
-                if ui.button_with_size("Eject", [100., 25.]) {
-                    hudhook::eject();
-                }
             });
     }
 }
