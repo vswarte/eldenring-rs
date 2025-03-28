@@ -125,12 +125,10 @@ impl ImguiRenderLoop for EldenRingDebugGui {
 
                         ui.unindent();
                     }
-                    render_debug_singleton::<CSSfxImp>(&ui);
-                    // render_debug_singleton::<FieldArea>(&ui);
-                    // render_debug_singleton::<CSEventFlagMan>(&ui);
-                    // render_debug_singleton::<WorldChrMan>(&ui);
-                    // render_debug_singleton::<CSWorldGeomMan>(&ui);
-                    // render_debug_singleton::<WorldAreaTime>(&ui);
+                    render_debug_singleton::<CSEventFlagMan>(&ui);
+                    render_debug_singleton::<WorldChrMan>(&ui);
+                    render_debug_singleton::<CSWorldGeomMan>(&ui);
+                    render_debug_singleton::<WorldAreaTime>(&ui);
                     item.end();
                 }
 
@@ -151,6 +149,11 @@ impl ImguiRenderLoop for EldenRingDebugGui {
                     render_debug_singleton::<CSCamera>(&ui);
                     render_debug_singleton::<CSFade>(&ui);
                     render_debug_singleton::<CSWorldSceneDrawParamManager>(&ui);
+                    item.end();
+                }
+
+                if let Some(item) = ui.tab_item("SFX") {
+                    render_debug_singleton::<CSSfxImp>(&ui);
                     item.end();
                 }
                 tabs.end();
