@@ -1,4 +1,9 @@
-use game::{cs::CSEzDraw, matrix::FSVector4, position::{HavokPosition, PositionDelta}, rotation::EulerAngles};
+use game::{
+    cs::CSEzDraw,
+    matrix::FSVector4,
+    position::{HavokPosition, PositionDelta},
+    rotation::EulerAngles,
+};
 use pelite::pe64::Pe;
 
 use crate::{
@@ -102,13 +107,15 @@ impl CSEzDrawExt for CSEzDraw {
             )
         };
 
-        let direction = HavokPosition(
-            direction.0,
-            direction.1,
-            direction.2,
-            0.0,
-        );
+        let direction = HavokPosition(direction.0, direction.1, direction.2, 0.0);
 
-        target(self, origin, &direction, inner_length, outer_length, degrees);
+        target(
+            self,
+            origin,
+            &direction,
+            inner_length,
+            outer_length,
+            degrees,
+        );
     }
 }

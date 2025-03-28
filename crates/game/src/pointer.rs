@@ -5,6 +5,7 @@ use std::{
 
 /// Pointer to a structure that the containing structure owns.
 #[repr(C)]
+#[derive(Debug)]
 pub struct OwnedPtr<T>(NonNull<T>);
 
 impl<T> OwnedPtr<T> {
