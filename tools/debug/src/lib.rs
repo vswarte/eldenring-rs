@@ -125,6 +125,8 @@ impl ImguiRenderLoop for EldenRingDebugGui {
 
                         ui.unindent();
                     }
+
+                    // render_debug_singleton::<FieldArea>(&ui);
                     render_debug_singleton::<CSEventFlagMan>(&ui);
                     render_debug_singleton::<WorldChrMan>(&ui);
                     render_debug_singleton::<CSWorldGeomMan>(&ui);
