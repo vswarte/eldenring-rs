@@ -7,7 +7,7 @@ use crate::program::Program;
 use game::cs::CharacterTypePropertiesTable;
 use pelite::pattern;
 use pelite::pattern::Atom;
-use pelite::pe::Pe;
+use pelite::pe64::Pe;
 
 const CHARACTER_TYPE_PROPERTIES_PATTERN: &[Atom] = pattern!(
     "
@@ -30,7 +30,7 @@ const CHARACTER_TYPE_PROPERTIES_PATTERN: &[Atom] = pattern!(
 
 pub static CHARACTER_TYPE_PROPERTIES: LazyLock<RwLock<CharacterPropertiesHolder>> =
     LazyLock::new(|| {
-        let program = unsafe { Program::current() };
+        let program = Program::current();
 
         let mut matches = [0; 2];
         if !program

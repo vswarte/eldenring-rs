@@ -1,3 +1,4 @@
 /target
 desktop.ini
-.vscode/settings.json
+.vscode/
+crates/game/target

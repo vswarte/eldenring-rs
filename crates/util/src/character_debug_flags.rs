@@ -5,7 +5,7 @@ use crate::program::Program;
 use game::cs::CharacterDebugFlags;
 use pelite::pattern;
 use pelite::pattern::Atom;
-use pelite::pe::Pe;
+use pelite::pe64::Pe;
 
 const CHARACTER_DEBUG_FLAGS_PATTERN: &[Atom] = pattern!(
     "
@@ -21,7 +21,7 @@ const CHARACTER_DEBUG_FLAGS_PATTERN: &[Atom] = pattern!(
 
 pub static CHARACTER_DEBUG_FLAGS: LazyLock<RwLock<&mut CharacterDebugFlags>> =
     LazyLock::new(|| {
-        let program = unsafe { Program::current() };
+        let program = Program::current();
 
         let mut matches = [0; 2];
 

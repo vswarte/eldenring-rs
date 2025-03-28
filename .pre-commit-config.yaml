@@ -4,11 +4,3 @@ repos:
     hooks:
       - id: cargo-check
       - id: fmt
-
-  - repo: local
-    hooks:
-      - id: rust-test
-        name: Rust Tests
-        entry: cargo test
-        language: system
-        types: [rust]

@@ -1,7 +1,0 @@
-[[patterns]]
-pattern = "48 8b cf ff 90 78 05 00 00 0f b6 08 41 88 4e 32 48 8b 1d $ { ' }"
-captures = ["", "GLOBAL_FIELD_AREA"]
-
-[[patterns]]
-pattern = "48 8b d7 48 8b 89 60 08 00 00 e8 $ { ' } 90"
-captures = ["", "FE_PUSH_SERVER_ANNOUNCEMENT_MESSAGE"]

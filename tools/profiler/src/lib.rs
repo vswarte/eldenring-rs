@@ -1,6 +1,13 @@
-use std::{collections::HashMap, mem::transmute, sync::{LazyLock, RwLock}};
+use std::{
+    collections::HashMap,
+    mem::transmute,
+    sync::{LazyLock, RwLock},
+};
 
-use game::{cs::{CSTaskGroupIndex, CSTaskImp}, fd4::{FD4TaskBase, FD4TaskData, FD4TaskRequestEntry}};
+use game::{
+    cs::{CSEzTask, CSEzTaskProxy, CSEzUpdateTask, CSTaskGroupIndex, CSTaskImp},
+    fd4::{FD4TaskBase, FD4TaskData, FD4TaskRequestEntry},
+};
 use retour::static_detour;
 use util::{
     program::Program, rtti::vftable_classname, singleton::get_instance, task::CSTaskImpExt,
@@ -24,7 +31,8 @@ pub unsafe extern "C" fn DllMain(_base: usize, reason: u32) -> bool {
                             .and_then(label_task)
                             .unwrap_or(String::from("Unknown Task Type"));
 
-                        let task_group_label: CSTaskGroupIndex = unsafe { transmute(task_group_index - 0x90000000) };
+                        let task_group_label: CSTaskGroupIndex =
+                            unsafe { transmute(task_group_index - 0x90000000) };
                         let span_label = format!("{task_group_label:?} {task}");
                         let _span = tracy_client::Client::running().map(|c| {
                             c.span_alloc(
@@ -67,19 +75,33 @@ pub unsafe extern "C" fn DllMain(_base: usize, reason: u32) -> bool {
 
 /// Determines the label for a given FD4TaskBase instance
 fn label_task(task: &FD4TaskBase) -> Option<String> {
-    Some(String::from("Unknown"))
-    // let mut name = lookup_rtti_classname(&*task.vftable as usize)?;
-    // if name.as_str() == "CS::CSEzTaskProxy" {
-    //     let proxied_task_vftable = unsafe {
-    //         (task as *const FD4TaskBase as *const CSEzTaskProxy)
-    //             .as_ref()
-    //             .map(|p| p.task.as_ref().vftable as usize)?
-    //     };
-    //
-    //     name = lookup_rtti_classname(proxied_task_vftable)?;
-    // }
-    //
-    // Some(name)
+    let mut name = lookup_rtti_classname(*task.vftable as *const _ as usize)?;
+    if name.as_str() == "CS::CSEzTaskProxy" {
+        if let Some(proxied_task) = unsafe {
+            (task as *const FD4TaskBase as *const CSEzTaskProxy)
+                .as_ref()
+                .and_then(|task| task.task.as_ref().and_then(|t| Some(t.as_ref())))
+        } {
+            let proxied_task_vftable = *proxied_task.vftable as *const _ as *const usize;
+            let proxied_task_classname = lookup_rtti_classname(proxied_task_vftable as usize)?;
+
+            let executor_addr = if proxied_task_classname.starts_with("CS::CSEzUpdateTask<")
+                || proxied_task_classname.starts_with("CS::CSEzVoidTask<")
+            {
+                unsafe {
+                    transmute::<&CSEzTask, &CSEzUpdateTask<CSEzTask, usize>>(proxied_task).executor
+                        as usize
+                }
+            } else {
+                proxied_task_vftable as usize
+            };
+            name = format!("{} @ {:#x}", proxied_task_classname, executor_addr);
+        } else {
+            name = String::from("Unknown Task Type");
+        }
+    }
+
+    Some(name)
 }
 
 const VFTABLES: LazyLock<RwLock<HashMap<usize, Option<String>>>> = LazyLock::new(Default::default);

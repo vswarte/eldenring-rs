@@ -14,7 +14,7 @@ impl CSTeamTypeVmt for CSTeamTypeNeutral {
         if self_target {
             return team_relation.self_target;
         }
-        return false;
+        false
     }
 }
 
@@ -31,7 +31,7 @@ impl CSTeamTypeVmt for CSTeamTypeFriend {
         if self_target {
             return team_relation.self_target;
         }
-        return team_relation.friendly_target;
+        team_relation.friendly_target
     }
 }
 
@@ -48,7 +48,7 @@ impl CSTeamTypeVmt for CSTeamTypeEnemy {
         if self_target {
             return team_relation.self_target;
         }
-        return team_relation.oppose_target;
+        team_relation.oppose_target
     }
 }
 
@@ -65,10 +65,10 @@ impl CSTeamTypeVmt for CSTeamTypeRival {
         if self_target {
             return team_relation.self_target;
         }
-        if (team_relation.oppose_target == false) && (team_relation.friendly_target == false) {
+        if !team_relation.oppose_target && !team_relation.friendly_target {
             return false;
         }
-        return true;
+        true
     }
 }
 

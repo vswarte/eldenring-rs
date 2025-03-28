@@ -1,5 +1,3 @@
-use pelite::Pod;
-
 #[repr(C)]
 pub struct CharacterTypePropertiesEntry {
     unk0: u8,

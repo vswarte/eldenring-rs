@@ -11,7 +11,7 @@ use crate::matrix::FSVector4;
 use crate::pointer::OwnedPtr;
 use crate::Tree;
 
-use super::{FieldInsHandle, MapId, NetChrSync, PlayerIns};
+use super::{ChrCam, FieldInsHandle, MapId, NetChrSync, PlayerIns};
 
 #[repr(C)]
 /// Source of name: RTTI
@@ -81,6 +81,23 @@ pub struct WorldChrMan {
     unk1e600: usize,
     unk1e608: [u8; 0x40],
     pub debug_chr_creator: OwnedPtr<CSDebugChrCreator>,
+    unk1e650: usize,
+    unk1e658: usize,
+    unk1e660: usize,
+    unk1e668: usize,
+    unk1e670: [u8; 0x18],
+    unk1e688: usize,
+    unk1e690: usize,
+    unk1e698: usize,
+    unk1e6a0: usize,
+    unk1e6a8: usize,
+    unk1e6b0: usize,
+    unk1e6b8: [u8; 0x628],
+    pub chr_cam: Option<NonNull<ChrCam>>,
+    // tasks and other stuff
+    // list of players by distance may be useful
+    // see ghidra structure for reference
+    unk1ece8: [u8; 0x6f8],
 }
 
 #[repr(C)]
@@ -125,6 +142,7 @@ pub struct CSDebugChrCreatorInitData {
     spawn_count: u32,
     unkf0: [u8; 0x10],
 }
+
 #[repr(C)]
 pub struct ChrSetHolder<T: 'static> {
     pub chr_set: NonNull<ChrSet<T>>,

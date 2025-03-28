@@ -28,7 +28,12 @@ pub trait DLAllocatorVmt {
 
     fn reallocate(&mut self, allocation: *const u8, size: usize) -> *const u8;
 
-    fn reallocate_aligned(&mut self, allocation: *const u8, size: usize, alignment: usize) -> *const u8;
+    fn reallocate_aligned(
+        &mut self,
+        allocation: *const u8,
+        size: usize,
+        alignment: usize,
+    ) -> *const u8;
 
     fn deallocate(&mut self, allocation: *const u8);
 
@@ -38,7 +43,12 @@ pub trait DLAllocatorVmt {
 
     fn reallocate_second(&mut self, allocation: *const u8, size: usize) -> *const u8;
 
-    fn reallocate_aligned_second(&mut self, allocation: *const u8, size: usize, alignment: usize) -> *const u8;
+    fn reallocate_aligned_second(
+        &mut self,
+        allocation: *const u8,
+        size: usize,
+        alignment: usize,
+    ) -> *const u8;
 
     fn deallocate_second(&mut self, allocation: *const u8);
 
@@ -60,7 +70,7 @@ pub struct DLAllocatorBase {
 }
 
 impl DLAllocatorVmt for DLAllocatorBase {
-    extern "C" fn destructor(&mut self,param_2:bool) {
+    extern "C" fn destructor(&mut self, param_2: bool) {
         todo!()
     }
 
@@ -72,7 +82,7 @@ impl DLAllocatorVmt for DLAllocatorBase {
         todo!()
     }
 
-    extern "C" fn heap_flags(&self) ->  &u64 {
+    extern "C" fn heap_flags(&self) -> &u64 {
         todo!()
     }
 
@@ -92,47 +102,57 @@ impl DLAllocatorVmt for DLAllocatorBase {
         todo!()
     }
 
-    extern "C" fn allocation_size(&self,allocation: *const u8) -> usize {
+    extern "C" fn allocation_size(&self, allocation: *const u8) -> usize {
         todo!()
     }
 
-    extern "C" fn allocate(&mut self,size:usize) ->  *const u8 {
+    extern "C" fn allocate(&mut self, size: usize) -> *const u8 {
         todo!()
     }
 
-    extern "C" fn allocate_aligned(&mut self, size:usize, alignment:usize) ->  *const u8 {
+    extern "C" fn allocate_aligned(&mut self, size: usize, alignment: usize) -> *const u8 {
         (self.vftable.allocate_aligned)(self, size, alignment)
     }
 
-    extern "C" fn reallocate(&mut self,allocation: *const u8,size:usize) ->  *const u8 {
+    extern "C" fn reallocate(&mut self, allocation: *const u8, size: usize) -> *const u8 {
         todo!()
     }
 
-    extern "C" fn reallocate_aligned(&mut self,allocation: *const u8,size:usize,alignment:usize) ->  *const u8 {
+    extern "C" fn reallocate_aligned(
+        &mut self,
+        allocation: *const u8,
+        size: usize,
+        alignment: usize,
+    ) -> *const u8 {
         todo!()
     }
 
-    extern "C" fn deallocate(&mut self,allocation: *const u8) {
+    extern "C" fn deallocate(&mut self, allocation: *const u8) {
         todo!()
     }
 
-    extern "C" fn allocate_second(&mut self,size:usize) ->  *const u8 {
+    extern "C" fn allocate_second(&mut self, size: usize) -> *const u8 {
         todo!()
     }
 
-    extern "C" fn allocate_aligned_second(&mut self,size:usize,alignment:usize) ->  *const u8 {
+    extern "C" fn allocate_aligned_second(&mut self, size: usize, alignment: usize) -> *const u8 {
         todo!()
     }
 
-    extern "C" fn reallocate_second(&mut self,allocation: *const u8,size:usize) ->  *const u8 {
+    extern "C" fn reallocate_second(&mut self, allocation: *const u8, size: usize) -> *const u8 {
         todo!()
     }
 
-    extern "C" fn reallocate_aligned_second(&mut self,allocation: *const u8,size:usize,alignment:usize) ->  *const u8 {
+    extern "C" fn reallocate_aligned_second(
+        &mut self,
+        allocation: *const u8,
+        size: usize,
+        alignment: usize,
+    ) -> *const u8 {
         todo!()
     }
 
-    extern "C" fn deallocate_second(&mut self,allocation: *const u8) {
+    extern "C" fn deallocate_second(&mut self, allocation: *const u8) {
         todo!()
     }
 
@@ -140,11 +160,11 @@ impl DLAllocatorVmt for DLAllocatorBase {
         todo!()
     }
 
-    extern "C" fn allocation_belongs_to_first_allocator(&mut self,allocation: *const u8) -> bool {
+    extern "C" fn allocation_belongs_to_first_allocator(&mut self, allocation: *const u8) -> bool {
         todo!()
     }
 
-    extern "C" fn allocation_belongs_to_second_allocator(&mut self,allocation: *const u8) -> bool {
+    extern "C" fn allocation_belongs_to_second_allocator(&mut self, allocation: *const u8) -> bool {
         todo!()
     }
 
@@ -156,7 +176,7 @@ impl DLAllocatorVmt for DLAllocatorBase {
         todo!()
     }
 
-    extern "C" fn get_memory_block_for_allocation(&mut self,allocation: *const u8) ->  *const u8 {
+    extern "C" fn get_memory_block_for_allocation(&mut self, allocation: *const u8) -> *const u8 {
         todo!()
     }
 }

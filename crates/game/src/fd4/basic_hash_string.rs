@@ -16,7 +16,7 @@ pub struct FD4BasicHashString {
     pub hash: u32,
     /// Indicates whether or not the hash field is populated.
     pub needs_hashing: u8,
-    _pad35: [u8; 7],
+    _pad35: [u8; 0xB],
 }
 
 impl AsRef<DLBasicString> for FD4BasicHashString {
@@ -28,5 +28,15 @@ impl AsRef<DLBasicString> for FD4BasicHashString {
 impl Display for FD4BasicHashString {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         write!(f, "{}", self)
+    }
+}
+
+#[cfg(test)]
+mod test {
+    use crate::fd4::FD4BasicHashString;
+
+    #[test]
+    fn proper_sizes() {
+        assert_eq!(0x40, size_of::<FD4BasicHashString>());
     }
 }

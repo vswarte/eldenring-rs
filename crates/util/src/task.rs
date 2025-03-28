@@ -13,7 +13,7 @@ use game::{
     dlrf::DLRuntimeClass,
     fd4::FD4TaskBaseVmt,
 };
-use pelite::pe::Pe;
+use pelite::pe64::Pe;
 use pelite::{pattern, pattern::Atom};
 use std::sync::LazyLock;
 use vtable_rs::VPtr;
@@ -21,8 +21,8 @@ use vtable_rs::VPtr;
 const REGISTER_TASK_PATTERN: &[Atom] =
     pattern!("e8 ? ? ? ? 48 8b 0d ? ? ? ? 4c 8b c7 8b d3 e8 $ { ' }");
 
-const REGISTER_TASK_VA: LazyLock<u64> = LazyLock::new(|| {
-    let program = unsafe { Program::current() };
+static REGISTER_TASK_VA: LazyLock<u64> = LazyLock::new(|| {
+    let program = Program::current();
     let mut matches = [0u32; 2];
 
     if !program
@@ -98,7 +98,7 @@ impl FD4TaskBaseVmt for RecurringTask {
     extern "C" fn execute(&mut self, data: &FD4TaskData) {
         // Run the task if cancellation wasn't requested.
         // if !self.unregister_requested.load(Ordering::Relaxed) {
-            (self.closure)(data);
+        (self.closure)(data);
         // }
 
         // TODO: implement the games unregister fn to properly get the task removed from the task

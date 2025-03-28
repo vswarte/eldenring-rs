@@ -2,22 +2,32 @@ use std::ptr::NonNull;
 
 use windows::Win32::Foundation::FILETIME;
 
-use crate::{dlcr::{AESDecrypter, AESEncrypter, DLSerialCipherKey}, dlkr::{DLAllocatorBase, DLPlainLightMutex}, dltx::{DLCodedString, DLInplaceStr}, fd4::FD4Time, pointer::OwnedPtr, DoublyLinkedList, Vector};
+use crate::{
+    dlcr::{AESDecrypter, AESEncrypter, DLSerialCipherKey},
+    dlkr::{DLAllocatorBase, DLPlainLightMutex},
+    dltx::{DLCodedString, DLInplaceStr},
+    fd4::FD4Time,
+    pointer::OwnedPtr,
+    DoublyLinkedList, Vector,
+};
 
-use super::CSEzUpdateTask;
+use super::{CSEzTask, CSEzUpdateTask};
 
 #[repr(u32)]
 #[derive(Debug, PartialEq)]
+/// Various states for an online lobby to be in.
+///
+/// Source of name: Sekiro Debug Menu
 pub enum LobbyState {
-    Offline = 0x0,
-    CreatingLobby = 0x1,
-    FailedCreatingLobby = 0x2,
-    HostingLobby = 0x3,
-    JoiningLobby = 0x4,
-    FailedJoiningLobby = 0x5,
-    InActiveLobby = 0x6,
-    LeavingLobby = 0x7,
-    FailedLeavingLobby = 0x8,
+    None = 0x0,
+    TryToCreateSession = 0x1,
+    FailedToCreateSession = 0x2,
+    Host = 0x3,
+    TryToJoinSession = 0x4,
+    FailedToJoinSesion = 0x5,
+    Client = 0x6,
+    OnLeaveSession = 0x7,
+    FailedToLeaveSession = 0x8,
 }
 
 #[repr(u32)]
@@ -34,7 +44,7 @@ pub enum ProtocolState {
 }
 
 impl ProtocolState {
-    /// Seems to be checked for packet 39, 
+    /// Seems to be checked for packet 39,
     fn should_handle_some_packets(&self) -> bool {
         match self {
             ProtocolState::Inactive => false,
@@ -81,8 +91,8 @@ pub struct CSSessionManager {
     pub players: Vector<CSSessionManagerPlayerEntry>,
     pub host_player: CSSessionManagerPlayerEntry,
     unk190: usize,
-    unk198: FD4Time,
-    unk1a8: FD4Time,
+    protocol_state_1_timeout: FD4Time,
+    protocol_state_2_timeout: FD4Time,
     unk1b8: usize,
     unk1c0: u8,
     unk1c1: u8,
@@ -97,16 +107,16 @@ pub struct CSSessionManager {
     unk1d4: f32,
     unk1d8: f32,
     unk1dc: u32,
-    pub update_task: CSEzUpdateTask<Self>,
-    unk208: CSEzUpdateTask<Self>,
+    pub update_task: CSEzUpdateTask<CSEzTask, Self>,
+    unk208: CSEzUpdateTask<CSEzTask, Self>,
     unk230: i8,
     unk231: u8,
     unk232: u8,
     unk233: u8,
     unk234: u32,
-    serial_cipher_key: OwnedPtr<DLSerialCipherKey>,
-    aes_encrypter: OwnedPtr<AESEncrypter>,
-    aes_decrypter: OwnedPtr<AESDecrypter>,
+    pub serial_cipher_key: OwnedPtr<DLSerialCipherKey>,
+    pub aes_encrypter: OwnedPtr<AESEncrypter>,
+    pub aes_decrypter: OwnedPtr<AESDecrypter>,
     unk250: u32,
     unk254: u32,
     unk258: u32,
@@ -167,7 +177,6 @@ pub struct CSSessionManagerPlayerEntry {
     unke4: u32,
     unke8: u8,
     unke9: u8,
-    // Seems to be used by the 250 "protocol" packet.
     p2p_control_byte: u8,
     unkeb: u8,
     unkec: u8,

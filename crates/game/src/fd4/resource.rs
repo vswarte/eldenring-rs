@@ -16,7 +16,7 @@ use crate::fd4::FD4BasicHashString;
 #[repr(C)]
 pub struct FD4ResCap<T>
 where
-    T: AsRef<FD4ResCap<T>>
+    T: AsRef<FD4ResCap<T>>,
 {
     vftable: usize,
     /// Name of the resource contained in the ResCap
@@ -73,7 +73,6 @@ where
 ///
 /// Bucket # = fnv(resource name) % bucket count
 ///
-/// ```
 /// +----------------------------------------------------------------------....
 /// |                        FD4ResCapHolder<T>'s map
 /// +-------------------------------------------------------+--------------....
@@ -85,7 +84,6 @@ where
 /// |                  |                  |                 |
 /// |                  |                  |                 |
 /// +------------------+------------------+-----------------+--------------....
-/// ```
 ///
 /// Source of name: DLRF reflection data
 #[repr(C)]
@@ -209,7 +207,7 @@ impl FD4FileCapUnk8AProperties {
 #[repr(C)]
 pub struct FD4FileCap<T>
 where
-    T: AsRef<FD4ResCap<T>>
+    T: AsRef<FD4ResCap<T>>,
 {
     pub res_cap: FD4ResCap<T>,
     load_process: usize,
@@ -222,7 +220,7 @@ where
 
 impl<T> AsRef<FD4ResCap<T>> for FD4FileCap<T>
 where
-    T: AsRef<FD4ResCap<T>>
+    T: AsRef<FD4ResCap<T>>,
 {
     fn as_ref(&self) -> &FD4ResCap<T> {
         &self.res_cap

@@ -1,7 +1,11 @@
-use std::{ops::{Deref, DerefMut}, ptr::NonNull};
+use std::{
+    ops::{Deref, DerefMut},
+    ptr::NonNull,
+};
 
-/// Pointer to a structure that the containing owns.
+/// Pointer to a structure that the containing structure owns.
 #[repr(C)]
+#[derive(Debug)]
 pub struct OwnedPtr<T>(NonNull<T>);
 
 impl<T> OwnedPtr<T> {

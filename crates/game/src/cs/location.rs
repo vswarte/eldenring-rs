@@ -6,7 +6,7 @@ use windows::core::PSTR;
 use crate::dlut::DLReferenceCountObjectVmt;
 
 #[vtable_rs::vtable]
-pub trait CSFD4LocationPoseVmt : DLReferenceCountObjectVmt {
+pub trait CSFD4LocationPoseVmt: DLReferenceCountObjectVmt {
     fn unk2(&self);
 
     fn unk3(&self);
@@ -28,7 +28,7 @@ pub trait CSFD4LocationPoseVmt : DLReferenceCountObjectVmt {
     fn unk10(&self);
 }
 
-/// Tracks the amount of references for 
+/// Tracks the amount of references for
 ///
 /// Source of name: RTTI
 #[repr(C)]
