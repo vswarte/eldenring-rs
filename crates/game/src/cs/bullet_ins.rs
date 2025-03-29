@@ -1,9 +1,8 @@
 use std::ptr::NonNull;
 use std::ffi::OsStr;
 use vtable_rs::VPtr;
-use crate::matrix::FSVector4;
-use crate::position::HavokPosition;
 use crate::rotation::Quaternion;
+use crate::position::{DirectionalVector, HavokPosition};
 
 use super::{FieldInsBaseVmt, FieldInsHandle, CSBulletTargetingSystemOwner, CSTargetingSystemBase, };
 
@@ -39,11 +38,12 @@ pub struct CSBulletIns {
     unk4ac: u32,
     unk4b0_struct: [u8; 0x660],
     pub time_alive: f32,
-    pub life: f32,
-    pub life_max: f32,
-    pub accel_time: f32,
-    pub create_interval_time_left: f32,
-    pub create_time_timer: f32,
+    // TODO: check relevant usages before exposing any of this
+    life: f32,
+    life_max: f32,
+    accel_time: f32,
+    create_interval_time_left: f32,
+    create_time_timer: f32,
     unkb28: u32,
     unkb2c: u32,
     pub targeting_owner: CSBulletTargetingSystemOwner,
@@ -70,8 +70,8 @@ pub struct CSBulletIns {
 pub struct BulletPhysics {
     pub position: HavokPosition,
     pub orientation: Quaternion,
-    pub velocity: FSVector4,
-    pub velocity2: FSVector4,
+    pub velocity: DirectionalVector,
+    velocity2: DirectionalVector,
 }
 
 #[vtable_rs::vtable]

@@ -17,5 +17,6 @@ pub mod team_relation;
 pub mod world_area_time;
 pub mod world_chr_man;
 pub mod havok;
+pub mod bullet_manager;
 
 pub(crate) mod rva;
