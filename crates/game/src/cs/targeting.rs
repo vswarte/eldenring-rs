@@ -1,11 +1,11 @@
 use std::ptr::NonNull;
 use vtable_rs::VPtr;
 
+use crate::matrix::FSVector4;
 use crate::position::HavokPosition;
 use crate::rotation::Quaternion;
-use crate::matrix::FSVector4;
 
-use super::{CSBulletIns, FieldInsHandle, ChrIns, SpecialEffect};
+use super::{CSBulletIns, ChrIns, FieldInsHandle, SpecialEffect};
 
 #[repr(C)]
 pub struct NpcThinkParamLookupResult {
@@ -30,14 +30,18 @@ pub trait CSTargetingSystemOwnerVmt {
     /// = position + forward * hit_radius
     ///
     /// For bullets: uses bullet's position and hit radius but chr owner's forward
-    fn get_outmost_forward_position<'a>(&self, out: &'a mut HavokPosition) -> &'a mut HavokPosition;
+    fn get_outmost_forward_position<'a>(&self, out: &'a mut HavokPosition)
+        -> &'a mut HavokPosition;
 
     /// The point on the hit capsule that is in front of the owner.
     ///
     /// = position + forward * hit_radius + (0, hit_height)
     ///
     /// For bullets: uses bullet's position and hit radius but chr owner's forward
-    fn get_outmost_forward_position_height_offset<'a>(&self, out: &'a mut HavokPosition) -> &'a mut HavokPosition;
+    fn get_outmost_forward_position_height_offset<'a>(
+        &self,
+        out: &'a mut HavokPosition,
+    ) -> &'a mut HavokPosition;
 
     fn get_orientation<'a>(&self, out: &'a mut Quaternion) -> &'a mut Quaternion;
 
@@ -79,7 +83,12 @@ pub trait CSTargetingSystemOwnerVmt {
 
     fn unkc8(&mut self) -> usize;
 
-    fn get_sight_search_modifiers(&self, rate_out: &mut f32, add_out: &mut f32, is_nonpositive_rate_out: &mut bool);
+    fn get_sight_search_modifiers(
+        &self,
+        rate_out: &mut f32,
+        add_out: &mut f32,
+        is_nonpositive_rate_out: &mut bool,
+    );
 
     fn get_hearing_search_rate(&self) -> f32;
 
@@ -183,4 +192,20 @@ enum SearchSlotIndex {
     LowFriend = 7,
     Corpse = 8,
     LastMemory = 11,
+}
+
+#[cfg(test)]
+mod test {
+    use crate::cs::{
+        CSAiTargetingSystemOwner, CSBulletTargetingSystemOwner, CSTargetingSystemBase,
+        CSTargetingSystemOwner,
+    };
+
+    #[test]
+    fn proper_sizes() {
+        assert_eq!(0x8, size_of::<CSTargetingSystemOwner>());
+        assert_eq!(0x30, size_of::<CSBulletTargetingSystemOwner>());
+        assert_eq!(0x18, size_of::<CSAiTargetingSystemOwner>());
+        assert_eq!(0x1d0, size_of::<CSTargetingSystemBase>());
+    }
 }

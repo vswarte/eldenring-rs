@@ -1,10 +1,10 @@
-use std::ptr::NonNull;
-use std::ffi::OsStr;
-use vtable_rs::VPtr;
-use crate::rotation::Quaternion;
 use crate::position::{DirectionalVector, HavokPosition};
+use crate::rotation::Quaternion;
+use std::ffi::OsStr;
+use std::ptr::NonNull;
+use vtable_rs::VPtr;
 
-use super::{FieldInsBaseVmt, FieldInsHandle, CSBulletTargetingSystemOwner, CSTargetingSystemBase, };
+use super::{CSBulletTargetingSystemOwner, CSTargetingSystemBase, FieldInsBaseVmt, FieldInsHandle};
 
 pub struct BulletParamLookupResult {
     pub param_row: usize,
@@ -114,7 +114,7 @@ pub struct CSBulletState {
 pub struct CSBulletWaitState {
     pub base: CSBulletState,
     unk28: u32,
-    _pad2c: [u8; 4]
+    _pad2c: [u8; 4],
 }
 
 #[repr(C)]
@@ -136,4 +136,22 @@ pub struct CSBulletExplosionState {
 /// Source of name: RTTI
 pub struct CSBulletNULLState {
     pub base: CSBulletState,
+}
+
+#[cfg(test)]
+mod test {
+    use crate::cs::{
+        CSBulletExplosionState, CSBulletFlyState, CSBulletIns, CSBulletNULLState, CSBulletState,
+        CSBulletWaitState,
+    };
+
+    #[test]
+    fn proper_sizes() {
+        assert_eq!(0xe30, size_of::<CSBulletIns>());
+        assert_eq!(0x28, size_of::<CSBulletState>());
+        assert_eq!(0x30, size_of::<CSBulletWaitState>());
+        assert_eq!(0x30, size_of::<CSBulletFlyState>());
+        assert_eq!(0x28, size_of::<CSBulletExplosionState>());
+        assert_eq!(0x28, size_of::<CSBulletNULLState>());
+    }
 }

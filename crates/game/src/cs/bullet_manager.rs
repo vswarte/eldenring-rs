@@ -124,3 +124,13 @@ pub struct BulletSpawnData {
     unk100: u8,
     pad101: [u8; 15],
 }
+
+#[cfg(test)]
+mod test {
+    use crate::cs::CSBulletManager;
+
+    #[test]
+    fn proper_sizes() {
+        assert_eq!(0x280, size_of::<CSBulletManager>());
+    }
+}
