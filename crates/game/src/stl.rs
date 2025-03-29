@@ -39,6 +39,10 @@ impl<T> DoublyLinkedList<T> {
     pub fn len(&self) -> usize {
         self.count as usize
     }
+
+    pub fn is_empty(&self) -> bool {
+        self.len() == 0
+    }
 }
 
 #[repr(C)]
@@ -56,7 +60,7 @@ impl<T> Vector<T>
 where
     T: Sized,
 {
-    pub fn items(&self) -> &mut [T] {
+    pub fn items(&self) -> &[T] {
         let Some(start) = self.begin else {
             return &mut [];
         };
@@ -77,6 +81,10 @@ where
         };
 
         (end.as_ptr() as usize - start.as_ptr() as usize) / size_of::<T>()
+    }
+
+    pub fn is_empty(&self) -> bool {
+        self.len() == 0
     }
 
     // TODO: setup CXX for this shit
@@ -126,6 +134,10 @@ pub struct Tree<T> {
 impl<T> Tree<T> {
     pub fn len(&self) -> usize {
         self.size
+    }
+
+    pub fn is_empty(&self) -> bool {
+        self.len() == 0
     }
 
     pub fn iter(&self) -> impl Iterator<Item = &mut T> {
