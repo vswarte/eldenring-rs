@@ -1,6 +1,11 @@
 # Eldenring-rs 🔩  Elden Ring rust bindings
 Rust bindings to facilitate mod creation for Elden Ring.
 
+[![Build Status](https://github.com/vswarte/eldenring-rs/actions/workflows/rust.yml/badge.svg)](https://github.com/vswarte/eldenring-rs/actions)
+[![Crates.io](https://img.shields.io/crates/v/eldenring.svg)](https://crates.io/crates/eldenring)
+[![Documentation](https://docs.rs/eldenring/badge.svg)](https://docs.rs/eldenring)
+![Crates.io License](https://img.shields.io/crates/l/eldenring)
+
 <details>
 
 <summary>Example mod code: render debug line</summary>
