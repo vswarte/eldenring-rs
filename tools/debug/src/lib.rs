@@ -87,7 +87,7 @@ impl ImguiRenderLoop for EldenRingDebugGui {
     }
 
     fn render(&mut self, ui: &mut Ui) {
-        let program = unsafe { Program::current() };
+        let program = Program::current();
 
         ui.window("Elden Ring Rust Bindings Debug")
             .position([0., 0.], imgui::Condition::FirstUseEver)
