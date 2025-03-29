@@ -87,7 +87,7 @@ pub trait CSTargetingSystemOwnerVmt {
 
     fn get_hearing_sound_level_overwrite(&self) -> i32;
 
-    fn get_special_effect(&self) -> &mut SpecialEffect;
+    fn get_special_effect(&mut self) -> &mut SpecialEffect;
 
     fn unkf8(&self) -> f32;
 
@@ -125,13 +125,13 @@ pub trait CSTargetingSystemOwnerVmt {
 
     fn is_search_lvl2_action_approach(&self) -> bool;
 
-    fn ai_get_targeting_system(&self) -> &mut CSTargetingSystemBase;
+    fn ai_get_targeting_system(&mut self) -> &mut CSTargetingSystemBase;
 }
 
 #[repr(C)]
 /// Source of name: RTTI
 pub struct CSTargetingSystemOwner {
-    pub vftable: VPtr<dyn CSTargetingSystemOwnerVmt, Self>,
+    vftable: VPtr<dyn CSTargetingSystemOwnerVmt, Self>,
 }
 
 #[repr(C)]
@@ -154,7 +154,7 @@ pub struct CSAiTargetingSystemOwner {
 #[repr(C)]
 /// Source of name: RTTI
 pub struct CSTargetingSystemBase {
-    pub vftable: usize,
+    vftable: usize,
     pub system_owner: NonNull<CSTargetingSystemOwner>,
     pub search_sys: CSTargetSearchSys,
     unk8: [u8; 0x120],
@@ -163,7 +163,7 @@ pub struct CSTargetingSystemBase {
 #[repr(C)]
 /// Source of name: RTTI
 pub struct CSTargetSearchSys {
-    pub vftable: usize,
+    vftable: usize,
     pub system_owner: NonNull<CSTargetingSystemOwner>,
     pub search_slots: [usize; 14],
     unk80: u16,

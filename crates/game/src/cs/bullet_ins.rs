@@ -16,8 +16,8 @@ pub struct BulletParamLookupResult {
 #[repr(C)]
 /// Source of name: RTTI
 pub struct CSBulletIns {
-    /// No new virtual functions
-    pub vftable: VPtr<dyn FieldInsBaseVmt, Self>,
+    /// No new virtual functions compared to FieldInsBase.
+    vftable: VPtr<dyn FieldInsBaseVmt, Self>,
     pub field_ins_handle: FieldInsHandle,
     pub physics: BulletPhysics,
     unk50: u32,
@@ -71,6 +71,7 @@ pub struct BulletPhysics {
     pub position: HavokPosition,
     pub orientation: Quaternion,
     pub velocity: DirectionalVector,
+    // TODO: figure out difference between these two vectors.
     velocity2: DirectionalVector,
 }
 
