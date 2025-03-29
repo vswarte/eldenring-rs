@@ -1,4 +1,5 @@
 use std::ffi;
+use std::fmt::Display;
 use std::marker;
 use std::marker::PhantomData;
 use std::mem;
@@ -12,8 +13,8 @@ pub struct DLBasicString {
     pub capacity: usize,
 }
 
-impl ToString for DLBasicString {
-    fn to_string(&self) -> String {
+impl Display for DLBasicString {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         let slice_size = self.length * mem::size_of::<u16>();
         let bytes = if slice_size >= 16 {
             let ptr = usize::from_le_bytes(self.inner[0..8].try_into().unwrap());
@@ -26,12 +27,14 @@ impl ToString for DLBasicString {
                 .collect::<Vec<u16>>()
         };
 
-        String::from_utf16_lossy(bytes.as_slice())
+        write!(f, "{}", String::from_utf16_lossy(bytes.as_slice()))
     }
 }
-
 impl DLBasicString {
-    /// Safety: The caller must ensure that the string is valid UTF-16 and that the length is correct.
+    /// # Safety
+    ///
+    /// The caller must ensure that the string is actually a DLBasicString and is
+    /// initialized.
     pub unsafe fn raw(&self) -> &[u8] {
         &self.inner
     }
@@ -46,14 +49,17 @@ pub struct DLString {
     unk2c: u32,
 }
 
-impl ToString for DLString {
-    fn to_string(&self) -> String {
-        self.inner.to_string()
+impl Display for DLString {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "{}", self.inner)
     }
 }
 
 impl DLString {
-    /// Safety: The caller must ensure that the string is valid UTF-16 and that the length is correct.
+    /// # Safety
+    ///
+    /// The caller must ensure that the string is actually a DLString and is
+    /// initialized.
     pub unsafe fn raw(&self) -> &[u8] {
         self.inner.raw()
     }
@@ -67,9 +73,9 @@ pub struct DLCodedString<const U: usize> {
     inner: DLBasicString,
 }
 
-impl<const U: usize> ToString for DLCodedString<U> {
-    fn to_string(&self) -> String {
-        self.inner.to_string()
+impl<const U: usize> Display for DLCodedString<U> {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "{}", self.inner)
     }
 }
 
@@ -83,9 +89,8 @@ pub struct DLInplaceStr<const U: usize, const N: usize> {
     bytes: [u16; N],
 }
 
-impl<const U: usize, const N: usize> ToString for DLInplaceStr<U, N> {
-    fn to_string(&self) -> String {
-        let bytes = &self.bytes[0..N];
-        String::from_utf16_lossy(bytes)
+impl<const U: usize, const N: usize> Display for DLInplaceStr<U, N> {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "{}", self.inner)
     }
 }

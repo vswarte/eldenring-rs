@@ -44,13 +44,13 @@ where
 {
     extern "C" fn run(&mut self, data: *const std::ffi::c_void) {
         unsafe {
-            (self.closure)(std::mem::transmute(data));
+            (self.closure)(&*(data as *const D));
         }
     }
 
     extern "C" fn run_other(&mut self, data: *const std::ffi::c_void, _p3: u64, _p4: bool) {
         unsafe {
-            (self.closure)(std::mem::transmute(data));
+            (self.closure)(&*(data as *const D));
         }
     }
 

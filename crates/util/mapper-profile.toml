@@ -1,12 +1,4 @@
 [[patterns]]
-pattern = "48 8b cf ff 90 78 05 00 00 0f b6 08 41 88 4e 32 48 8b 1d $ { ' }"
-captures = ["", "GLOBAL_FIELD_AREA"]
-
-[[patterns]]
-pattern = "48 8b d7 48 8b 89 60 08 00 00 e8 $ { ' } 90"
-captures = ["", "FE_PUSH_SERVER_ANNOUNCEMENT_MESSAGE"]
-
-[[patterns]]
 pattern = "40 57 48 83 ec 40 48 c7 44 24 20 fe ff ff ff 48 89 5c 24 50 48 89 6c 24 58 48 89 74 24 60 49 8b f0 48 8b fa 48 8b d9 48 8d 69 28"
 captures = ["CS_EZ_DRAW_DRAW_LINE"]
 
@@ -21,10 +13,6 @@ captures = ["CS_EZ_DRAW_DRAW_SPHERE"]
 [[patterns]]
 pattern = "f3 44 0f 11 6c 24 20 41 0f 28 df 4c 8d 45 e0 48 8d 55 90 48 8b cb e8 $ { ' }"
 captures = ["", "CS_EZ_DRAW_DRAW_WEDGE"]
-
-[[patterns]]
-pattern = "f3 0f 11 45 fc f3 0f 11 7c 24 30 f3 44 0f 11 54 24 28 f3 44 0f 11 4c 24 20 0f 28 de 4c 8d 45 00 48 8d 55 f0 48 8b cb e8 $ { ' }"
-captures = ["", "CS_EZ_DRAW_DRAW_PROJECTOR_CONE"]
 
 [[patterns]]
 pattern = "48 83 ec 28 48 63 41 20 f3 0f 10 22 f3 0f 10 4a 04 f3 0f 10 52 08 48 8b 4c c1 10 f3 0f 10 5a 0c"

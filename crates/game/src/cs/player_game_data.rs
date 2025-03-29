@@ -308,7 +308,7 @@ impl ItemIdMapping {
 }
 
 impl InventoryItemsData {
-    pub fn normal_items(&self) -> &mut [EquipInventoryDataListEntry] {
+    pub fn normal_items(&self) -> &[EquipInventoryDataListEntry] {
         unsafe {
             std::slice::from_raw_parts_mut(
                 self.normal_item_head.as_ptr(),
@@ -317,7 +317,7 @@ impl InventoryItemsData {
         }
     }
 
-    pub fn key_items(&self) -> &mut [EquipInventoryDataListEntry] {
+    pub fn key_items(&self) -> &[EquipInventoryDataListEntry] {
         unsafe {
             std::slice::from_raw_parts_mut(
                 self.key_item_head.as_ptr(),
@@ -326,7 +326,7 @@ impl InventoryItemsData {
         }
     }
 
-    pub fn secondary_key_items(&self) -> &mut [EquipInventoryDataListEntry] {
+    pub fn secondary_key_items(&self) -> &[EquipInventoryDataListEntry] {
         unsafe {
             std::slice::from_raw_parts_mut(
                 self.secondary_key_item_head.as_ptr(),
