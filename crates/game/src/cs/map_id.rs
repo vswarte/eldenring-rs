@@ -13,7 +13,7 @@ impl MapId {
     /// Constructs a MapId from seperate parts.
     pub const fn from_parts(area: i8, block: i8, region: i8, index: i8) -> Self {
         Self(
-            (index as i32) << 0 | (region as i32) << 8 | (block as i32) << 16 | (area as i32) << 24,
+            (index as i32) | (region as i32) << 8 | (block as i32) << 16 | (area as i32) << 24,
         )
     }
 
@@ -30,7 +30,7 @@ impl MapId {
     }
 
     pub const fn index(&self) -> i32 {
-        self.0 >> 0 & 0xFF
+        self.0 & 0xFF
     }
 
     pub const fn is_overworld(&self) -> bool {
@@ -38,9 +38,9 @@ impl MapId {
     }
 }
 
-impl Into<i32> for MapId {
-    fn into(self) -> i32 {
-        self.0
+impl From<MapId> for i32 {
+    fn from(val: MapId) -> Self {
+        val.0
     }
 }
 

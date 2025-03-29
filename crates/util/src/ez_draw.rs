@@ -1,4 +1,4 @@
-use game::{cs::CSEzDraw, matrix::FSVector4, position::{HavokPosition, PositionDelta}, rotation::EulerAngles};
+use game::{cs::CSEzDraw, matrix::FSVector4, position::{HavokPosition, PositionDelta}};
 use pelite::pe64::Pe;
 
 use crate::{
