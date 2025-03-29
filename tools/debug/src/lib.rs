@@ -1,4 +1,5 @@
 use display::DebugDisplay;
+use game::cs::CSBulletManager;
 use game::cs::CSWindowImp;
 use game::cs::CSWorldSceneDrawParamManager;
 use game::cs::FieldArea;
@@ -115,6 +116,7 @@ impl ImguiRenderLoop for EldenRingDebugGui {
                     render_debug_singleton::<WorldChrMan>(&ui);
                     render_debug_singleton::<CSWorldGeomMan>(&ui);
                     render_debug_singleton::<WorldAreaTime>(&ui);
+                    render_debug_singleton::<CSBulletManager>(&ui);
                     item.end();
                 }
 

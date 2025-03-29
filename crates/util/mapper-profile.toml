@@ -45,3 +45,7 @@ captures = ["", "SPAWN_GEOMETRY"]
 [[patterns]]
 pattern = "ba 58 00 00 02 e8 $ { ' }"
 captures = ["", "CS_PHYS_WORLD_CAST_RAY"]
+
+[[patterns]]
+pattern = "40 53 55 56 57 48 81 ec 98 07 00 00 48 c7 44 24 50 fe ff ff ff"
+captures = ["CS_BULLET_MANAGER_SPAWN_BULLET"]
