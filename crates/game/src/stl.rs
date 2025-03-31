@@ -68,6 +68,17 @@ where
         let end = self.end.unwrap();
         let count = (end.as_ptr() as usize - start.as_ptr() as usize) / size_of::<T>();
 
+        unsafe { std::slice::from_raw_parts(start.as_ptr(), count) }
+    }
+
+    pub fn items_mut(&mut self) -> &mut [T] {
+        let Some(start) = self.begin else {
+            return &mut [];
+        };
+
+        let end = self.end.unwrap();
+        let count = (end.as_ptr() as usize - start.as_ptr() as usize) / size_of::<T>();
+
         unsafe { std::slice::from_raw_parts_mut(start.as_ptr(), count) }
     }
 
