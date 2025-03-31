@@ -1,7 +1,6 @@
 name: Rust
 
 on:
-  - push
   - pull_request
 
 env:
@@ -29,12 +28,12 @@ jobs:
         with:
           components: clippy, rustfmt
 
-      - name: Run Clippy (linting)
+      - name: Clippy
         run: cargo clippy -- -D warnings
 
-      - name: Run tests
+      - name: Tests
         run: cargo test --verbose
 
-      - name: Check formatting
+      - name: Formatting
         run: cargo fmt -- --check
 
