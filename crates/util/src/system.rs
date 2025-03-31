@@ -55,6 +55,9 @@ pub fn wait_for_system_init(timeout: i32) -> Result<(), SystemInitError> {
         let start = std::time::Instant::now();
         let timeout_duration = std::time::Duration::from_millis(timeout as u64);
 
+        // Counter is updated by game and is expected to change outside of code that the compiler
+        // knows.
+        #[allow(clippy::while_immutable_condition)]
         while unsafe { *counter } == 0 {
             if start.elapsed() > timeout_duration {
                 return Err(SystemInitError::Timeout(timeout));
@@ -62,6 +65,7 @@ pub fn wait_for_system_init(timeout: i32) -> Result<(), SystemInitError> {
             std::thread::yield_now();
         }
     } else {
+        #[allow(clippy::while_immutable_condition)]
         while unsafe { *counter } == 0 {
             std::thread::yield_now();
         }

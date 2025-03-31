@@ -33,5 +33,7 @@ pub static CHARACTER_DEBUG_FLAGS: LazyLock<RwLock<&mut CharacterDebugFlags>> =
         }
 
         tracing::debug!("Found character properties pattern");
-        RwLock::new(unsafe { transmute::<_, _>(program.rva_to_va(matches[1] + 1).unwrap()) })
+        RwLock::new(unsafe {
+            transmute::<u64, &mut CharacterDebugFlags>(program.rva_to_va(matches[1] + 1).unwrap())
+        })
     });
