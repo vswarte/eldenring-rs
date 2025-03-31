@@ -111,6 +111,11 @@ impl Display for HavokPosition {
 #[derive(Debug, Clone, Copy, PartialEq)]
 pub struct PositionDelta(pub f32, pub f32, pub f32);
 
+/// A (potentially non-normal) directional vector.
+#[repr(C)]
+#[derive(Debug, Clone, Copy, PartialEq)]
+pub struct DirectionalVector(pub f32, pub f32, pub f32, pub f32);
+
 #[cfg(test)]
 mod test {
     use crate::position::{BlockPosition, PositionDelta};
