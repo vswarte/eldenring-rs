@@ -39,6 +39,10 @@ impl<T> DoublyLinkedList<T> {
     pub fn len(&self) -> usize {
         self.count as usize
     }
+
+    pub fn is_empty(&self) -> bool {
+        self.len() == 0
+    }
 }
 
 #[repr(C)]
@@ -56,7 +60,18 @@ impl<T> Vector<T>
 where
     T: Sized,
 {
-    pub fn items(&self) -> &mut [T] {
+    pub fn items(&self) -> &[T] {
+        let Some(start) = self.begin else {
+            return &mut [];
+        };
+
+        let end = self.end.unwrap();
+        let count = (end.as_ptr() as usize - start.as_ptr() as usize) / size_of::<T>();
+
+        unsafe { std::slice::from_raw_parts(start.as_ptr(), count) }
+    }
+
+    pub fn items_mut(&mut self) -> &mut [T] {
         let Some(start) = self.begin else {
             return &mut [];
         };
@@ -79,40 +94,8 @@ where
         (end.as_ptr() as usize - start.as_ptr() as usize) / size_of::<T>()
     }
 
-    // TODO: setup CXX for this shit
-    pub fn push(&mut self, item: T) {
-        let end = self.end.unwrap();
-        let new_end = end.as_ptr() as usize + size_of::<T>();
-
-        // Check if we're not going oob, otherwise reloc
-        if new_end > self.capacity.unwrap().as_ptr() as usize {
-            todo!("Implement vector relocs");
-        }
-
-        // Write data to tail
-        unsafe { copy_nonoverlapping(&item as _, end.as_ptr(), 1) };
-
-        // Up the end
-        self.end = Some(NonNull::new(new_end as *mut T).unwrap());
-    }
-
-    // TODO: setup CXX for this shit
-    pub fn push_front(&mut self, item: T) {
-        let end = self.end.unwrap();
-        let start = self.begin.unwrap();
-        let new_end = end.as_ptr() as usize + size_of::<T>();
-
-        // Check if we're not going oob, otherwise reloc
-        if new_end > self.capacity.unwrap().as_ptr() as usize {
-            todo!("Implement vector relocs");
-        }
-
-        let count = (end.as_ptr() as usize - start.as_ptr() as usize) / size_of::<T>();
-
-        // Copy existing items back one slot
-        unsafe { copy_nonoverlapping(start.as_ptr(), start.add(1).as_ptr(), count) }
-        // Write data to start
-        unsafe { copy_nonoverlapping(&item as _, self.begin.unwrap().as_ptr(), 1) };
+    pub fn is_empty(&self) -> bool {
+        self.len() == 0
     }
 }
 
@@ -126,6 +109,10 @@ pub struct Tree<T> {
 impl<T> Tree<T> {
     pub fn len(&self) -> usize {
         self.size
+    }
+
+    pub fn is_empty(&self) -> bool {
+        self.len() == 0
     }
 
     pub fn iter(&self) -> impl Iterator<Item = &mut T> {

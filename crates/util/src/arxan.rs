@@ -25,6 +25,13 @@ pub fn get_arxan_code_restoration_rvas(program: &Program) -> Vec<u32> {
 }
 
 /// Disables the arxan code restoration routine at the given RVA.
+///
+/// # Safety
+/// Caller must ensure that:
+///  - Specified program/module has not unloaded.
+///  - The RVA is a valid conditional jump like we see with arxans code restoration routines.
+///  - The RVA points to writeable memory (ala VirtualProtect).
+///  - Nothing else is writing to the memory at specified RVA.
 pub unsafe fn disable_code_restoration_at(
     program: &Program,
     rva: u32,
@@ -43,6 +50,12 @@ pub unsafe fn disable_code_restoration_at(
 /// Avoid using this unless you absolutely have to hook the games memory image and you are
 /// absolutely certain the game is removing your hooks. Prefer using the task runtime over hooking
 /// the memory image where ever you can.
+///
+/// # Safety
+/// Caller must ensure that:
+///  - Specified program/module has not unloaded.
+///  - The memory image is writeable.
+///  - The code restoration checks are not mutated during runtime.
 pub unsafe fn disable_code_restoration(program: &Program) -> Result<(), Box<dyn Error>> {
     let rvas = get_arxan_code_restoration_rvas(program);
     for rva in rvas {
