@@ -328,10 +328,7 @@ impl InventoryItemsData {
 
     pub fn key_items(&self) -> &[EquipInventoryDataListEntry] {
         unsafe {
-            std::slice::from_raw_parts(
-                self.key_item_head.as_ptr(),
-                self.key_item_count as usize,
-            )
+            std::slice::from_raw_parts(self.key_item_head.as_ptr(), self.key_item_count as usize)
         }
     }
 
@@ -361,7 +358,6 @@ impl InventoryItemsData {
             )
         }
     }
-
 }
 
 #[repr(C)]
