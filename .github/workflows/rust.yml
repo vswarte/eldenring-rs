@@ -18,9 +18,6 @@ jobs:
         with:
           components: clippy, rustfmt
 
-      - name: Cache Cargo dependencies
-        uses: Swatinem/rust-cache@v2
-
       - name: Build project
         run: cargo build --verbose
 
