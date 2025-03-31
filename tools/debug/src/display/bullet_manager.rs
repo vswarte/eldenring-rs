@@ -1,5 +1,5 @@
 use game::cs::{CSBulletIns, CSBulletManager};
-use hudhook::imgui::{TableColumnSetup, TreeNodeFlags, Ui};
+use hudhook::imgui::{TreeNodeFlags, Ui};
 
 use super::DebugDisplay;
 
