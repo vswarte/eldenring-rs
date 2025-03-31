@@ -126,7 +126,10 @@ impl DebugDisplay for WorldChrMan {
                 let distance = entry.distance;
                 let chr_ins = unsafe { entry.chr_ins.as_ref() };
 
-                if ui.collapsing_header(format!("ChrIns {} - {}", chr_ins.field_ins_handle, distance), TreeNodeFlags::empty()) {
+                if ui.collapsing_header(
+                    format!("ChrIns {} - {}", chr_ins.field_ins_handle, distance),
+                    TreeNodeFlags::empty(),
+                ) {
                     ui.indent();
                     chr_ins.render_debug(ui);
                     ui.unindent();

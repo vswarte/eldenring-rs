@@ -12,9 +12,7 @@ impl MapId {
 
     /// Constructs a MapId from seperate parts.
     pub const fn from_parts(area: i8, block: i8, region: i8, index: i8) -> Self {
-        Self(
-            (index as i32) | (region as i32) << 8 | (block as i32) << 16 | (area as i32) << 24,
-        )
+        Self((index as i32) | (region as i32) << 8 | (block as i32) << 16 | (area as i32) << 24)
     }
 
     pub const fn area(&self) -> i32 {

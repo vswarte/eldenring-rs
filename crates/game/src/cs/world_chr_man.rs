@@ -6,10 +6,10 @@ use std::ptr::NonNull;
 
 use vtable_rs::VPtr;
 
-use crate::{cs::ChrIns, Vector};
 use crate::matrix::FSVector4;
 use crate::pointer::OwnedPtr;
 use crate::Tree;
+use crate::{cs::ChrIns, Vector};
 
 use super::{ChrCam, FieldInsHandle, MapId, NetChrSync, PlayerIns};
 

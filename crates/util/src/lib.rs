@@ -6,6 +6,7 @@ pub mod ez_draw;
 pub mod ez_state;
 pub mod fade;
 pub mod geometry;
+pub mod havok;
 pub mod input;
 pub mod program;
 pub mod rtti;
@@ -16,6 +17,5 @@ pub mod task;
 pub mod team_relation;
 pub mod world_area_time;
 pub mod world_chr_man;
-pub mod havok;
 
 pub(crate) mod rva;
