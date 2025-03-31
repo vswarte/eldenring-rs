@@ -33,6 +33,8 @@ use util::system::wait_for_system_init;
 mod display;
 mod rva;
 
+/// # Safety
+/// This is exposed this way such that libraryloader can call it. Do not call this yourself.
 #[no_mangle]
 pub unsafe extern "C" fn DllMain(hmodule: HINSTANCE, reason: u32) -> bool {
     if reason == 1 {
