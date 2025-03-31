@@ -1,7 +1,7 @@
 use std::ops::Index;
 use std::ptr::NonNull;
 use std::slice::SliceIndex;
-use std::{ffi, usize};
+use std::ffi;
 use vtable_rs::VPtr;
 use windows::core::PCWSTR;
 
