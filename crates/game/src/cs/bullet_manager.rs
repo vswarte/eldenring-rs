@@ -72,9 +72,23 @@ impl CSBulletManager {
         let mut current = self.bullets.head;
 
         std::iter::from_fn(move || {
-            let ret = current.map(|ptr| unsafe { ptr.as_ref() });
-            current = ret.and_then(|curr| curr.next_bullet);
-            ret
+            current.map(|n| unsafe {
+                let n = n.as_ref();
+                current = n.next_bullet;
+                n
+            })
+        })
+    }
+
+    pub fn bullets_mut(&mut self) -> impl Iterator<Item = &mut CSBulletIns> {
+        let mut current = self.bullets.head;
+
+        std::iter::from_fn(move || {
+            current.map(|mut n| unsafe {
+                let n = n.as_mut();
+                current = n.next_bullet;
+                n
+            })
         })
     }
 }
