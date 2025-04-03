@@ -5,7 +5,7 @@ use std::time::{Duration, Instant};
 
 use pelite::pattern;
 use pelite::pattern::Atom;
-use pelite::pe64::{Pe, PeView, Rva};
+use pelite::pe64::{Pe, Rva};
 use thiserror::Error;
 
 // WinMain -> SethInstance
@@ -34,7 +34,10 @@ pub enum SystemInitError {
 
 /// Wait for the system to finish initializing by waiting a global hInstance to be populated for CSWindow.
 /// This happens after the CRT init and after duplicate instance checks.
-pub fn wait_for_system_init(module: &PeView, timeout: Duration) -> Result<(), SystemInitError> {
+pub fn wait_for_system_init<'a, T>(module: &T, timeout: Duration) -> Result<(), SystemInitError>
+where
+    T: Pe<'a>,
+{
     if GLOBAL_HINSTANCE.load(Ordering::Relaxed) == 0x0 as _ {
         let mut captures = [Rva::default(); 2];
         module
