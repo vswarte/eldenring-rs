@@ -5,7 +5,7 @@ members = [
     "crates/util",
     "crates/dlrf",
     "tools/debug",
-    "tools/binary-mapper",
+    "tools/binary-mapper", "tools/param-generator",
 ]
 
 [workspace.package]

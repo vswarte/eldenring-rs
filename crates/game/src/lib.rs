@@ -14,6 +14,7 @@ pub mod dlut;
 pub mod fd4;
 pub mod ffx;
 pub mod matrix;
+pub mod param;
 pub mod pointer;
 pub mod position;
 pub mod rotation;

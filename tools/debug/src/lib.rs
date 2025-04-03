@@ -5,7 +5,7 @@ use game::cs::CSWorldSceneDrawParamManager;
 use game::cs::FieldArea;
 use hudhook::eject;
 use hudhook::hooks::dx12::ImguiDx12Hooks;
-use hudhook::imgui;
+use hudhook::imgui::Condition;
 use hudhook::imgui::*;
 use hudhook::windows::Win32::Foundation::HINSTANCE;
 use hudhook::Hudhook;
@@ -93,8 +93,8 @@ impl ImguiRenderLoop for EldenRingDebugGui {
         let program = Program::current();
 
         ui.window("Elden Ring Rust Bindings Debug")
-            .position([0., 0.], imgui::Condition::FirstUseEver)
-            .size(self.size, imgui::Condition::FirstUseEver)
+            .position([0., 0.], Condition::FirstUseEver)
+            .size(self.size, Condition::FirstUseEver)
             .build(|| {
                 ui.set_window_font_scale(self.scale);
                 let tabs = ui.tab_bar("main-tabs").unwrap();
