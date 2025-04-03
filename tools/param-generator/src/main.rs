@@ -112,11 +112,13 @@ fn generate_code(def: &StructDef) -> String {
 
                 let mask = (1 << bits) - 1;
 
+                code.push_str("    #[allow(identity_op)]\n");
                 code.push_str(&format!(
                     "    pub fn {}(&self) -> u8 {{\n        (self.{} >> {}) & 0b{:08b}\n    }}\n\n",
                     normalized_name, group_name, used_bits, mask
                 ));
 
+                code.push_str("    #[allow(identity_op)]\n");
                 code.push_str(&format!(
                     "    pub fn set_{}(&mut self, value: u8) {{\n        self.{} = (self.{} & !(0b{:08b} << {})) | ((value & 0b{:08b}) << {});\n    }}\n\n",
                     normalized_name, group_name, group_name, mask, used_bits, mask, used_bits
