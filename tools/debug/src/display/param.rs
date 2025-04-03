@@ -26,15 +26,15 @@ impl DebugDisplay for FD4ParamRepository {
                     ui.text(res_cap.res_cap.name.to_string());
 
                     ui.table_next_column();
-                    let row_count = res_cap.data.as_ref().map(|p| p.row_count);
+                    let row_count = res_cap.data.header.row_count;
                     ui.text(format!("{:?}", row_count));
 
                     ui.table_next_column();
-                    let paramdef_version = res_cap.data.as_ref().map(|p| p.paramdef_version);
+                    let paramdef_version = res_cap.data.header.paramdef_version;
                     ui.text(format!("{:?}", paramdef_version));
 
                     ui.table_next_column();
-                    let bytes_ptr = res_cap.data.as_ref().map(|d| d.as_ptr());
+                    let bytes_ptr = res_cap.data.as_ptr();
                     ui.text(format!("{:x?}", { bytes_ptr }));
                 }
                 ui.unindent();

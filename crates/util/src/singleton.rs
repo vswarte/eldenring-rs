@@ -35,7 +35,7 @@ pub enum LookupError {
 /// User must ensure that:
 ///  - The main module (the exe) is a From Software title with DLRF reflection data.
 ///  - The DLRF reflection metadata has been populated (wait_for_system_init).
-///  - Access to the singleton is exclusive (either by hooking or utilizing the task system). 
+///  - Access to the singleton is exclusive (either by hooking or utilizing the task system).
 ///  - get_instance is not called multiple times such that it spawns multiple mutable references to the same singleton.
 pub unsafe fn get_instance<T: DLRFSingleton>() -> Result<Option<&'static mut T>, LookupError> {
     let table = SINGLETON_MAP.get_or_init(|| {
