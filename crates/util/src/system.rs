@@ -38,7 +38,7 @@ pub fn wait_for_system_init<'a, T>(module: &T, timeout: Duration) -> Result<(), 
 where
     T: Pe<'a>,
 {
-    if GLOBAL_HINSTANCE.load(Ordering::Relaxed) == 0x0 as _ {
+    if std::ptr::eq(GLOBAL_HINSTANCE.load(Ordering::Relaxed), 0x0 as _) {
         let mut captures = [Rva::default(); 2];
         module
             .scanner()
