@@ -58,9 +58,9 @@ fn generate_code(def: &StructDef) -> String {
     }
     let mut grouped_names = HashMap::new();
 
-    code.push_str(&format!("#[derive(Debug, Clone)]\n"));
-    code.push_str(&format!("#[allow(non_camel_case_types)]\n"));
-    code.push_str(&format!("#[repr(C)]\n"));
+    code.push_str("#[derive(Debug, Clone)]\n");
+    code.push_str("#[allow(non_camel_case_types)]\n");
+    code.push_str("#[repr(C)]\n");
     code.push_str(&format!("pub struct {} {{\n", def.name));
     for unit in def.layout.iter() {
         match &unit.field_type {
