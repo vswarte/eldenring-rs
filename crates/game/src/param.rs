@@ -143,34 +143,42 @@ impl ACTIONBUTTON_PARAM_ST {
         self.text_box_type = value;
     }
 
+    #[allow(identity_op)]
     pub fn is_invalid_for_ride(&self) -> u8 {
         (self.bits_33 >> 1) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_is_invalid_for_ride(&mut self, value: u8) {
         self.bits_33 = (self.bits_33 & !(0b00000001 << 1)) | ((value & 0b00000001) << 1);
     }
 
+    #[allow(identity_op)]
     pub fn is_grayout_for_ride(&self) -> u8 {
         (self.bits_33 >> 2) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_is_grayout_for_ride(&mut self, value: u8) {
         self.bits_33 = (self.bits_33 & !(0b00000001 << 2)) | ((value & 0b00000001) << 2);
     }
 
+    #[allow(identity_op)]
     pub fn is_invalid_for_crouching(&self) -> u8 {
         (self.bits_33 >> 3) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_is_invalid_for_crouching(&mut self, value: u8) {
         self.bits_33 = (self.bits_33 & !(0b00000001 << 3)) | ((value & 0b00000001) << 3);
     }
 
+    #[allow(identity_op)]
     pub fn is_grayout_for_crouching(&self) -> u8 {
         (self.bits_33 >> 4) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_is_grayout_for_crouching(&mut self, value: u8) {
         self.bits_33 = (self.bits_33 & !(0b00000001 << 4)) | ((value & 0b00000001) << 4);
     }
@@ -214,6 +222,7 @@ impl ACTIONBUTTON_PARAM_ST {
     pub fn set_exec_invalid_time(&mut self, value: f32) {
         self.exec_invalid_time = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -1049,245 +1058,306 @@ impl AI_ANIM_TBL_PARAM {
         self.atk29_max_dist = value;
     }
 
+    #[allow(identity_op)]
     pub fn atk0_atk_dist_type(&self) -> u8 {
         (self.bits_b4 >> 0) & 0b00001111
     }
 
+    #[allow(identity_op)]
     pub fn set_atk0_atk_dist_type(&mut self, value: u8) {
         self.bits_b4 = (self.bits_b4 & !(0b00001111 << 0)) | ((value & 0b00001111) << 0);
     }
 
+    #[allow(identity_op)]
     pub fn atk1_atk_dist_type(&self) -> u8 {
         (self.bits_b4 >> 1) & 0b00001111
     }
 
+    #[allow(identity_op)]
     pub fn set_atk1_atk_dist_type(&mut self, value: u8) {
         self.bits_b4 = (self.bits_b4 & !(0b00001111 << 1)) | ((value & 0b00001111) << 1);
     }
 
+    #[allow(identity_op)]
     pub fn atk2_atk_dist_type(&self) -> u8 {
         (self.bits_b5 >> 0) & 0b00001111
     }
 
+    #[allow(identity_op)]
     pub fn set_atk2_atk_dist_type(&mut self, value: u8) {
         self.bits_b5 = (self.bits_b5 & !(0b00001111 << 0)) | ((value & 0b00001111) << 0);
     }
 
+    #[allow(identity_op)]
     pub fn atk3_atk_dist_type(&self) -> u8 {
         (self.bits_b5 >> 1) & 0b00001111
     }
 
+    #[allow(identity_op)]
     pub fn set_atk3_atk_dist_type(&mut self, value: u8) {
         self.bits_b5 = (self.bits_b5 & !(0b00001111 << 1)) | ((value & 0b00001111) << 1);
     }
 
+    #[allow(identity_op)]
     pub fn atk4_atk_dist_type(&self) -> u8 {
         (self.bits_b6 >> 0) & 0b00001111
     }
 
+    #[allow(identity_op)]
     pub fn set_atk4_atk_dist_type(&mut self, value: u8) {
         self.bits_b6 = (self.bits_b6 & !(0b00001111 << 0)) | ((value & 0b00001111) << 0);
     }
 
+    #[allow(identity_op)]
     pub fn atk5_atk_dist_type(&self) -> u8 {
         (self.bits_b6 >> 1) & 0b00001111
     }
 
+    #[allow(identity_op)]
     pub fn set_atk5_atk_dist_type(&mut self, value: u8) {
         self.bits_b6 = (self.bits_b6 & !(0b00001111 << 1)) | ((value & 0b00001111) << 1);
     }
 
+    #[allow(identity_op)]
     pub fn atk6_atk_dist_type(&self) -> u8 {
         (self.bits_b7 >> 0) & 0b00001111
     }
 
+    #[allow(identity_op)]
     pub fn set_atk6_atk_dist_type(&mut self, value: u8) {
         self.bits_b7 = (self.bits_b7 & !(0b00001111 << 0)) | ((value & 0b00001111) << 0);
     }
 
+    #[allow(identity_op)]
     pub fn atk7_atk_dist_type(&self) -> u8 {
         (self.bits_b7 >> 1) & 0b00001111
     }
 
+    #[allow(identity_op)]
     pub fn set_atk7_atk_dist_type(&mut self, value: u8) {
         self.bits_b7 = (self.bits_b7 & !(0b00001111 << 1)) | ((value & 0b00001111) << 1);
     }
 
+    #[allow(identity_op)]
     pub fn atk8_atk_dist_type(&self) -> u8 {
         (self.bits_b8 >> 0) & 0b00001111
     }
 
+    #[allow(identity_op)]
     pub fn set_atk8_atk_dist_type(&mut self, value: u8) {
         self.bits_b8 = (self.bits_b8 & !(0b00001111 << 0)) | ((value & 0b00001111) << 0);
     }
 
+    #[allow(identity_op)]
     pub fn atk9_atk_dist_type(&self) -> u8 {
         (self.bits_b8 >> 1) & 0b00001111
     }
 
+    #[allow(identity_op)]
     pub fn set_atk9_atk_dist_type(&mut self, value: u8) {
         self.bits_b8 = (self.bits_b8 & !(0b00001111 << 1)) | ((value & 0b00001111) << 1);
     }
 
+    #[allow(identity_op)]
     pub fn atk10_atk_dist_type(&self) -> u8 {
         (self.bits_b9 >> 0) & 0b00001111
     }
 
+    #[allow(identity_op)]
     pub fn set_atk10_atk_dist_type(&mut self, value: u8) {
         self.bits_b9 = (self.bits_b9 & !(0b00001111 << 0)) | ((value & 0b00001111) << 0);
     }
 
+    #[allow(identity_op)]
     pub fn atk11_atk_dist_type(&self) -> u8 {
         (self.bits_b9 >> 1) & 0b00001111
     }
 
+    #[allow(identity_op)]
     pub fn set_atk11_atk_dist_type(&mut self, value: u8) {
         self.bits_b9 = (self.bits_b9 & !(0b00001111 << 1)) | ((value & 0b00001111) << 1);
     }
 
+    #[allow(identity_op)]
     pub fn atk12_atk_dist_type(&self) -> u8 {
         (self.bits_ba >> 0) & 0b00001111
     }
 
+    #[allow(identity_op)]
     pub fn set_atk12_atk_dist_type(&mut self, value: u8) {
         self.bits_ba = (self.bits_ba & !(0b00001111 << 0)) | ((value & 0b00001111) << 0);
     }
 
+    #[allow(identity_op)]
     pub fn atk13_atk_dist_type(&self) -> u8 {
         (self.bits_ba >> 1) & 0b00001111
     }
 
+    #[allow(identity_op)]
     pub fn set_atk13_atk_dist_type(&mut self, value: u8) {
         self.bits_ba = (self.bits_ba & !(0b00001111 << 1)) | ((value & 0b00001111) << 1);
     }
 
+    #[allow(identity_op)]
     pub fn atk14_atk_dist_type(&self) -> u8 {
         (self.bits_bb >> 0) & 0b00001111
     }
 
+    #[allow(identity_op)]
     pub fn set_atk14_atk_dist_type(&mut self, value: u8) {
         self.bits_bb = (self.bits_bb & !(0b00001111 << 0)) | ((value & 0b00001111) << 0);
     }
 
+    #[allow(identity_op)]
     pub fn atk15_atk_dist_type(&self) -> u8 {
         (self.bits_bb >> 1) & 0b00001111
     }
 
+    #[allow(identity_op)]
     pub fn set_atk15_atk_dist_type(&mut self, value: u8) {
         self.bits_bb = (self.bits_bb & !(0b00001111 << 1)) | ((value & 0b00001111) << 1);
     }
 
+    #[allow(identity_op)]
     pub fn atk16_atk_dist_type(&self) -> u8 {
         (self.bits_bc >> 0) & 0b00001111
     }
 
+    #[allow(identity_op)]
     pub fn set_atk16_atk_dist_type(&mut self, value: u8) {
         self.bits_bc = (self.bits_bc & !(0b00001111 << 0)) | ((value & 0b00001111) << 0);
     }
 
+    #[allow(identity_op)]
     pub fn atk17_atk_dist_type(&self) -> u8 {
         (self.bits_bc >> 1) & 0b00001111
     }
 
+    #[allow(identity_op)]
     pub fn set_atk17_atk_dist_type(&mut self, value: u8) {
         self.bits_bc = (self.bits_bc & !(0b00001111 << 1)) | ((value & 0b00001111) << 1);
     }
 
+    #[allow(identity_op)]
     pub fn atk18_atk_dist_type(&self) -> u8 {
         (self.bits_bd >> 0) & 0b00001111
     }
 
+    #[allow(identity_op)]
     pub fn set_atk18_atk_dist_type(&mut self, value: u8) {
         self.bits_bd = (self.bits_bd & !(0b00001111 << 0)) | ((value & 0b00001111) << 0);
     }
 
+    #[allow(identity_op)]
     pub fn atk19_atk_dist_type(&self) -> u8 {
         (self.bits_bd >> 1) & 0b00001111
     }
 
+    #[allow(identity_op)]
     pub fn set_atk19_atk_dist_type(&mut self, value: u8) {
         self.bits_bd = (self.bits_bd & !(0b00001111 << 1)) | ((value & 0b00001111) << 1);
     }
 
+    #[allow(identity_op)]
     pub fn atk20_atk_dist_type(&self) -> u8 {
         (self.bits_be >> 0) & 0b00001111
     }
 
+    #[allow(identity_op)]
     pub fn set_atk20_atk_dist_type(&mut self, value: u8) {
         self.bits_be = (self.bits_be & !(0b00001111 << 0)) | ((value & 0b00001111) << 0);
     }
 
+    #[allow(identity_op)]
     pub fn atk21_atk_dist_type(&self) -> u8 {
         (self.bits_be >> 1) & 0b00001111
     }
 
+    #[allow(identity_op)]
     pub fn set_atk21_atk_dist_type(&mut self, value: u8) {
         self.bits_be = (self.bits_be & !(0b00001111 << 1)) | ((value & 0b00001111) << 1);
     }
 
+    #[allow(identity_op)]
     pub fn atk22_atk_dist_type(&self) -> u8 {
         (self.bits_bf >> 0) & 0b00001111
     }
 
+    #[allow(identity_op)]
     pub fn set_atk22_atk_dist_type(&mut self, value: u8) {
         self.bits_bf = (self.bits_bf & !(0b00001111 << 0)) | ((value & 0b00001111) << 0);
     }
 
+    #[allow(identity_op)]
     pub fn atk23_atk_dist_type(&self) -> u8 {
         (self.bits_bf >> 1) & 0b00001111
     }
 
+    #[allow(identity_op)]
     pub fn set_atk23_atk_dist_type(&mut self, value: u8) {
         self.bits_bf = (self.bits_bf & !(0b00001111 << 1)) | ((value & 0b00001111) << 1);
     }
 
+    #[allow(identity_op)]
     pub fn atk24_atk_dist_type(&self) -> u8 {
         (self.bits_c0 >> 0) & 0b00001111
     }
 
+    #[allow(identity_op)]
     pub fn set_atk24_atk_dist_type(&mut self, value: u8) {
         self.bits_c0 = (self.bits_c0 & !(0b00001111 << 0)) | ((value & 0b00001111) << 0);
     }
 
+    #[allow(identity_op)]
     pub fn atk25_atk_dist_type(&self) -> u8 {
         (self.bits_c0 >> 1) & 0b00001111
     }
 
+    #[allow(identity_op)]
     pub fn set_atk25_atk_dist_type(&mut self, value: u8) {
         self.bits_c0 = (self.bits_c0 & !(0b00001111 << 1)) | ((value & 0b00001111) << 1);
     }
 
+    #[allow(identity_op)]
     pub fn atk26_atk_dist_type(&self) -> u8 {
         (self.bits_c1 >> 0) & 0b00001111
     }
 
+    #[allow(identity_op)]
     pub fn set_atk26_atk_dist_type(&mut self, value: u8) {
         self.bits_c1 = (self.bits_c1 & !(0b00001111 << 0)) | ((value & 0b00001111) << 0);
     }
 
+    #[allow(identity_op)]
     pub fn atk27_atk_dist_type(&self) -> u8 {
         (self.bits_c1 >> 1) & 0b00001111
     }
 
+    #[allow(identity_op)]
     pub fn set_atk27_atk_dist_type(&mut self, value: u8) {
         self.bits_c1 = (self.bits_c1 & !(0b00001111 << 1)) | ((value & 0b00001111) << 1);
     }
 
+    #[allow(identity_op)]
     pub fn atk28_atk_dist_type(&self) -> u8 {
         (self.bits_c2 >> 0) & 0b00001111
     }
 
+    #[allow(identity_op)]
     pub fn set_atk28_atk_dist_type(&mut self, value: u8) {
         self.bits_c2 = (self.bits_c2 & !(0b00001111 << 0)) | ((value & 0b00001111) << 0);
     }
 
+    #[allow(identity_op)]
     pub fn atk29_atk_dist_type(&self) -> u8 {
         (self.bits_c2 >> 1) & 0b00001111
     }
 
+    #[allow(identity_op)]
     pub fn set_atk29_atk_dist_type(&mut self, value: u8) {
         self.bits_c2 = (self.bits_c2 & !(0b00001111 << 1)) | ((value & 0b00001111) << 1);
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -1711,6 +1781,7 @@ impl AI_ATTACK_PARAM_ST {
     pub fn set_combo_exec_range(&mut self, value: f32) {
         self.combo_exec_range = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -2620,6 +2691,7 @@ impl AI_ODDS_PARAM {
     pub fn set_act99(&mut self, value: u8) {
         self.act99 = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -2673,34 +2745,42 @@ impl AI_SOUND_PARAM_ST {
         self.typ = value;
     }
 
+    #[allow(identity_op)]
     pub fn oppose_target(&self) -> u8 {
         (self.bits_a >> 0) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_oppose_target(&mut self, value: u8) {
         self.bits_a = (self.bits_a & !(0b00000001 << 0)) | ((value & 0b00000001) << 0);
     }
 
+    #[allow(identity_op)]
     pub fn friendly_target(&self) -> u8 {
         (self.bits_a >> 1) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_friendly_target(&mut self, value: u8) {
         self.bits_a = (self.bits_a & !(0b00000001 << 1)) | ((value & 0b00000001) << 1);
     }
 
+    #[allow(identity_op)]
     pub fn self_target(&self) -> u8 {
         (self.bits_a >> 2) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_self_target(&mut self, value: u8) {
         self.bits_a = (self.bits_a & !(0b00000001 << 2)) | ((value & 0b00000001) << 2);
     }
 
+    #[allow(identity_op)]
     pub fn disable_on_target_p_company(&self) -> u8 {
         (self.bits_a >> 3) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_disable_on_target_p_company(&mut self, value: u8) {
         self.bits_a = (self.bits_a & !(0b00000001 << 3)) | ((value & 0b00000001) << 3);
     }
@@ -2752,6 +2832,7 @@ impl AI_SOUND_PARAM_ST {
     pub fn set_replaning_state(&mut self, value: u8) {
         self.replaning_state = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -3072,6 +3153,7 @@ impl AI_STANDARD_INFO_BANK {
     pub fn set_attack4_cone_angle(&mut self, value: u8) {
         self.attack4_cone_angle = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -3358,122 +3440,152 @@ impl ASSET_GEOMETORY_PARAM_ST {
         self.break_bullet_attribute_damage_type = value;
     }
 
+    #[allow(identity_op)]
     pub fn is_break_by_player_collide(&self) -> u8 {
         (self.bits_3b >> 0) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_is_break_by_player_collide(&mut self, value: u8) {
         self.bits_3b = (self.bits_3b & !(0b00000001 << 0)) | ((value & 0b00000001) << 0);
     }
 
+    #[allow(identity_op)]
     pub fn is_break_by_enemy_collide(&self) -> u8 {
         (self.bits_3b >> 1) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_is_break_by_enemy_collide(&mut self, value: u8) {
         self.bits_3b = (self.bits_3b & !(0b00000001 << 1)) | ((value & 0b00000001) << 1);
     }
 
+    #[allow(identity_op)]
     pub fn is_break_by_chr_ride(&self) -> u8 {
         (self.bits_3b >> 2) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_is_break_by_chr_ride(&mut self, value: u8) {
         self.bits_3b = (self.bits_3b & !(0b00000001 << 2)) | ((value & 0b00000001) << 2);
     }
 
+    #[allow(identity_op)]
     pub fn is_disable_break_for_first_appear(&self) -> u8 {
         (self.bits_3b >> 3) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_is_disable_break_for_first_appear(&mut self, value: u8) {
         self.bits_3b = (self.bits_3b & !(0b00000001 << 3)) | ((value & 0b00000001) << 3);
     }
 
+    #[allow(identity_op)]
     pub fn is_anim_break(&self) -> u8 {
         (self.bits_3b >> 4) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_is_anim_break(&mut self, value: u8) {
         self.bits_3b = (self.bits_3b & !(0b00000001 << 4)) | ((value & 0b00000001) << 4);
     }
 
+    #[allow(identity_op)]
     pub fn is_damage_cover(&self) -> u8 {
         (self.bits_3b >> 5) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_is_damage_cover(&mut self, value: u8) {
         self.bits_3b = (self.bits_3b & !(0b00000001 << 5)) | ((value & 0b00000001) << 5);
     }
 
+    #[allow(identity_op)]
     pub fn is_attack_backlash(&self) -> u8 {
         (self.bits_3b >> 6) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_is_attack_backlash(&mut self, value: u8) {
         self.bits_3b = (self.bits_3b & !(0b00000001 << 6)) | ((value & 0b00000001) << 6);
     }
 
+    #[allow(identity_op)]
     pub fn is_ladder(&self) -> u8 {
         (self.bits_3c >> 0) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_is_ladder(&mut self, value: u8) {
         self.bits_3c = (self.bits_3c & !(0b00000001 << 0)) | ((value & 0b00000001) << 0);
     }
 
+    #[allow(identity_op)]
     pub fn is_move_obj(&self) -> u8 {
         (self.bits_3c >> 1) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_is_move_obj(&mut self, value: u8) {
         self.bits_3c = (self.bits_3c & !(0b00000001 << 1)) | ((value & 0b00000001) << 1);
     }
 
+    #[allow(identity_op)]
     pub fn is_skydome_flag(&self) -> u8 {
         (self.bits_3c >> 2) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_is_skydome_flag(&mut self, value: u8) {
         self.bits_3c = (self.bits_3c & !(0b00000001 << 2)) | ((value & 0b00000001) << 2);
     }
 
+    #[allow(identity_op)]
     pub fn is_anim_pause_on_remo_play(&self) -> u8 {
         (self.bits_3c >> 3) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_is_anim_pause_on_remo_play(&mut self, value: u8) {
         self.bits_3c = (self.bits_3c & !(0b00000001 << 3)) | ((value & 0b00000001) << 3);
     }
 
+    #[allow(identity_op)]
     pub fn is_burn(&self) -> u8 {
         (self.bits_3c >> 4) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_is_burn(&mut self, value: u8) {
         self.bits_3c = (self.bits_3c & !(0b00000001 << 4)) | ((value & 0b00000001) << 4);
     }
 
+    #[allow(identity_op)]
     pub fn is_enable_repick(&self) -> u8 {
         (self.bits_3c >> 5) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_is_enable_repick(&mut self, value: u8) {
         self.bits_3c = (self.bits_3c & !(0b00000001 << 5)) | ((value & 0b00000001) << 5);
     }
 
+    #[allow(identity_op)]
     pub fn is_break_on_pick_up(&self) -> u8 {
         (self.bits_3c >> 6) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_is_break_on_pick_up(&mut self, value: u8) {
         self.bits_3c = (self.bits_3c & !(0b00000001 << 6)) | ((value & 0b00000001) << 6);
     }
 
+    #[allow(identity_op)]
     pub fn is_break_by_hugeenemy_collide(&self) -> u8 {
         (self.bits_3c >> 7) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_is_break_by_hugeenemy_collide(&mut self, value: u8) {
         self.bits_3c = (self.bits_3c & !(0b00000001 << 7)) | ((value & 0b00000001) << 7);
     }
@@ -3982,50 +4094,62 @@ impl ASSET_GEOMETORY_PARAM_ST {
         self.no_hit_huge_after_break = value;
     }
 
+    #[allow(identity_op)]
     pub fn is_enabled_break_sync(&self) -> u8 {
         (self.bits_102 >> 0) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_is_enabled_break_sync(&mut self, value: u8) {
         self.bits_102 = (self.bits_102 & !(0b00000001 << 0)) | ((value & 0b00000001) << 0);
     }
 
+    #[allow(identity_op)]
     pub fn is_hidden_on_repick(&self) -> u8 {
         (self.bits_102 >> 1) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_is_hidden_on_repick(&mut self, value: u8) {
         self.bits_102 = (self.bits_102 & !(0b00000001 << 1)) | ((value & 0b00000001) << 1);
     }
 
+    #[allow(identity_op)]
     pub fn is_create_multi_play_only(&self) -> u8 {
         (self.bits_102 >> 2) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_is_create_multi_play_only(&mut self, value: u8) {
         self.bits_102 = (self.bits_102 & !(0b00000001 << 2)) | ((value & 0b00000001) << 2);
     }
 
+    #[allow(identity_op)]
     pub fn is_disable_bullet_hit_sfx(&self) -> u8 {
         (self.bits_102 >> 3) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_is_disable_bullet_hit_sfx(&mut self, value: u8) {
         self.bits_102 = (self.bits_102 & !(0b00000001 << 3)) | ((value & 0b00000001) << 3);
     }
 
+    #[allow(identity_op)]
     pub fn is_enable_sign_pre_break(&self) -> u8 {
         (self.bits_102 >> 4) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_is_enable_sign_pre_break(&mut self, value: u8) {
         self.bits_102 = (self.bits_102 & !(0b00000001 << 4)) | ((value & 0b00000001) << 4);
     }
 
+    #[allow(identity_op)]
     pub fn is_enable_sign_post_break(&self) -> u8 {
         (self.bits_102 >> 5) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_is_enable_sign_post_break(&mut self, value: u8) {
         self.bits_102 = (self.bits_102 & !(0b00000001 << 5)) | ((value & 0b00000001) << 5);
     }
@@ -4133,6 +4257,7 @@ impl ASSET_GEOMETORY_PARAM_ST {
     pub fn set_exclude_activate_ratio_ps4_legacy(&mut self, value: u8) {
         self.exclude_activate_ratio_ps4_legacy = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -4429,6 +4554,7 @@ impl ASSET_MATERIAL_SFX_PARAM_ST {
     pub fn set_sfx_id_31(&mut self, value: u32) {
         self.sfx_id_31 = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -4598,6 +4724,7 @@ impl ASSET_MODEL_SFX_PARAM_ST {
     pub fn set_is_disable_iv(&mut self, value: u8) {
         self.is_disable_iv = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -5296,66 +5423,82 @@ impl ATK_PARAM_ST {
         self.throw_flag = value;
     }
 
+    #[allow(identity_op)]
     pub fn disable_guard(&self) -> u8 {
         (self.bits_7e >> 0) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_disable_guard(&mut self, value: u8) {
         self.bits_7e = (self.bits_7e & !(0b00000001 << 0)) | ((value & 0b00000001) << 0);
     }
 
+    #[allow(identity_op)]
     pub fn disable_stamina_attack(&self) -> u8 {
         (self.bits_7e >> 1) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_disable_stamina_attack(&mut self, value: u8) {
         self.bits_7e = (self.bits_7e & !(0b00000001 << 1)) | ((value & 0b00000001) << 1);
     }
 
+    #[allow(identity_op)]
     pub fn disable_hit_sp_effect(&self) -> u8 {
         (self.bits_7e >> 2) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_disable_hit_sp_effect(&mut self, value: u8) {
         self.bits_7e = (self.bits_7e & !(0b00000001 << 2)) | ((value & 0b00000001) << 2);
     }
 
+    #[allow(identity_op)]
     pub fn ignore_notify_miss_swing_for_ai(&self) -> u8 {
         (self.bits_7e >> 3) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_ignore_notify_miss_swing_for_ai(&mut self, value: u8) {
         self.bits_7e = (self.bits_7e & !(0b00000001 << 3)) | ((value & 0b00000001) << 3);
     }
 
+    #[allow(identity_op)]
     pub fn repeat_hit_sfx(&self) -> u8 {
         (self.bits_7e >> 4) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_repeat_hit_sfx(&mut self, value: u8) {
         self.bits_7e = (self.bits_7e & !(0b00000001 << 4)) | ((value & 0b00000001) << 4);
     }
 
+    #[allow(identity_op)]
     pub fn is_arrow_atk(&self) -> u8 {
         (self.bits_7e >> 5) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_is_arrow_atk(&mut self, value: u8) {
         self.bits_7e = (self.bits_7e & !(0b00000001 << 5)) | ((value & 0b00000001) << 5);
     }
 
+    #[allow(identity_op)]
     pub fn is_ghost_atk(&self) -> u8 {
         (self.bits_7e >> 6) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_is_ghost_atk(&mut self, value: u8) {
         self.bits_7e = (self.bits_7e & !(0b00000001 << 6)) | ((value & 0b00000001) << 6);
     }
 
+    #[allow(identity_op)]
     pub fn is_disable_no_damage(&self) -> u8 {
         (self.bits_7e >> 7) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_is_disable_no_damage(&mut self, value: u8) {
         self.bits_7e = (self.bits_7e & !(0b00000001 << 7)) | ((value & 0b00000001) << 7);
     }
@@ -5376,58 +5519,72 @@ impl ATK_PARAM_ST {
         self.atk_dir_for_sfx = value;
     }
 
+    #[allow(identity_op)]
     pub fn oppose_target(&self) -> u8 {
         (self.bits_81 >> 0) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_oppose_target(&mut self, value: u8) {
         self.bits_81 = (self.bits_81 & !(0b00000001 << 0)) | ((value & 0b00000001) << 0);
     }
 
+    #[allow(identity_op)]
     pub fn friendly_target(&self) -> u8 {
         (self.bits_81 >> 1) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_friendly_target(&mut self, value: u8) {
         self.bits_81 = (self.bits_81 & !(0b00000001 << 1)) | ((value & 0b00000001) << 1);
     }
 
+    #[allow(identity_op)]
     pub fn self_target(&self) -> u8 {
         (self.bits_81 >> 2) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_self_target(&mut self, value: u8) {
         self.bits_81 = (self.bits_81 & !(0b00000001 << 2)) | ((value & 0b00000001) << 2);
     }
 
+    #[allow(identity_op)]
     pub fn is_check_door_penetration(&self) -> u8 {
         (self.bits_81 >> 3) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_is_check_door_penetration(&mut self, value: u8) {
         self.bits_81 = (self.bits_81 & !(0b00000001 << 3)) | ((value & 0b00000001) << 3);
     }
 
+    #[allow(identity_op)]
     pub fn is_vs_ride_atk(&self) -> u8 {
         (self.bits_81 >> 4) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_is_vs_ride_atk(&mut self, value: u8) {
         self.bits_81 = (self.bits_81 & !(0b00000001 << 4)) | ((value & 0b00000001) << 4);
     }
 
+    #[allow(identity_op)]
     pub fn is_add_base_atk(&self) -> u8 {
         (self.bits_81 >> 5) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_is_add_base_atk(&mut self, value: u8) {
         self.bits_81 = (self.bits_81 & !(0b00000001 << 5)) | ((value & 0b00000001) << 5);
     }
 
+    #[allow(identity_op)]
     pub fn exclude_threat_lv_notify(&self) -> u8 {
         (self.bits_81 >> 6) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_exclude_threat_lv_notify(&mut self, value: u8) {
         self.bits_81 = (self.bits_81 & !(0b00000001 << 6)) | ((value & 0b00000001) << 6);
     }
@@ -6232,26 +6389,32 @@ impl ATK_PARAM_ST {
         self.atk_dark = value;
     }
 
+    #[allow(identity_op)]
     pub fn is_disable_parry(&self) -> u8 {
         (self.bits_18a >> 1) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_is_disable_parry(&mut self, value: u8) {
         self.bits_18a = (self.bits_18a & !(0b00000001 << 1)) | ((value & 0b00000001) << 1);
     }
 
+    #[allow(identity_op)]
     pub fn is_disable_both_hands_atk_bonus(&self) -> u8 {
         (self.bits_18a >> 2) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_is_disable_both_hands_atk_bonus(&mut self, value: u8) {
         self.bits_18a = (self.bits_18a & !(0b00000001 << 2)) | ((value & 0b00000001) << 2);
     }
 
+    #[allow(identity_op)]
     pub fn is_invalidated_by_no_damage_in_air(&self) -> u8 {
         (self.bits_18a >> 3) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_is_invalidated_by_no_damage_in_air(&mut self, value: u8) {
         self.bits_18a = (self.bits_18a & !(0b00000001 << 3)) | ((value & 0b00000001) << 3);
     }
@@ -6439,6 +6602,7 @@ impl ATK_PARAM_ST {
     pub fn set_sub_category4(&mut self, value: u8) {
         self.sub_category4 = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -6503,202 +6667,252 @@ pub struct ATTACK_ELEMENT_CORRECT_PARAM_ST {
 }
 
 impl ATTACK_ELEMENT_CORRECT_PARAM_ST {
+    #[allow(identity_op)]
     pub fn is_strength_correct_by_physics(&self) -> u8 {
         (self.bits_0 >> 0) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_is_strength_correct_by_physics(&mut self, value: u8) {
         self.bits_0 = (self.bits_0 & !(0b00000001 << 0)) | ((value & 0b00000001) << 0);
     }
 
+    #[allow(identity_op)]
     pub fn is_dexterity_correct_by_physics(&self) -> u8 {
         (self.bits_0 >> 1) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_is_dexterity_correct_by_physics(&mut self, value: u8) {
         self.bits_0 = (self.bits_0 & !(0b00000001 << 1)) | ((value & 0b00000001) << 1);
     }
 
+    #[allow(identity_op)]
     pub fn is_magic_correct_by_physics(&self) -> u8 {
         (self.bits_0 >> 2) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_is_magic_correct_by_physics(&mut self, value: u8) {
         self.bits_0 = (self.bits_0 & !(0b00000001 << 2)) | ((value & 0b00000001) << 2);
     }
 
+    #[allow(identity_op)]
     pub fn is_faith_correct_by_physics(&self) -> u8 {
         (self.bits_0 >> 3) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_is_faith_correct_by_physics(&mut self, value: u8) {
         self.bits_0 = (self.bits_0 & !(0b00000001 << 3)) | ((value & 0b00000001) << 3);
     }
 
+    #[allow(identity_op)]
     pub fn is_luck_correct_by_physics(&self) -> u8 {
         (self.bits_0 >> 4) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_is_luck_correct_by_physics(&mut self, value: u8) {
         self.bits_0 = (self.bits_0 & !(0b00000001 << 4)) | ((value & 0b00000001) << 4);
     }
 
+    #[allow(identity_op)]
     pub fn is_strength_correct_by_magic(&self) -> u8 {
         (self.bits_0 >> 5) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_is_strength_correct_by_magic(&mut self, value: u8) {
         self.bits_0 = (self.bits_0 & !(0b00000001 << 5)) | ((value & 0b00000001) << 5);
     }
 
+    #[allow(identity_op)]
     pub fn is_dexterity_correct_by_magic(&self) -> u8 {
         (self.bits_0 >> 6) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_is_dexterity_correct_by_magic(&mut self, value: u8) {
         self.bits_0 = (self.bits_0 & !(0b00000001 << 6)) | ((value & 0b00000001) << 6);
     }
 
+    #[allow(identity_op)]
     pub fn is_magic_correct_by_magic(&self) -> u8 {
         (self.bits_0 >> 7) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_is_magic_correct_by_magic(&mut self, value: u8) {
         self.bits_0 = (self.bits_0 & !(0b00000001 << 7)) | ((value & 0b00000001) << 7);
     }
 
+    #[allow(identity_op)]
     pub fn is_faith_correct_by_magic(&self) -> u8 {
         (self.bits_1 >> 0) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_is_faith_correct_by_magic(&mut self, value: u8) {
         self.bits_1 = (self.bits_1 & !(0b00000001 << 0)) | ((value & 0b00000001) << 0);
     }
 
+    #[allow(identity_op)]
     pub fn is_luck_correct_by_magic(&self) -> u8 {
         (self.bits_1 >> 1) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_is_luck_correct_by_magic(&mut self, value: u8) {
         self.bits_1 = (self.bits_1 & !(0b00000001 << 1)) | ((value & 0b00000001) << 1);
     }
 
+    #[allow(identity_op)]
     pub fn is_strength_correct_by_fire(&self) -> u8 {
         (self.bits_1 >> 2) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_is_strength_correct_by_fire(&mut self, value: u8) {
         self.bits_1 = (self.bits_1 & !(0b00000001 << 2)) | ((value & 0b00000001) << 2);
     }
 
+    #[allow(identity_op)]
     pub fn is_dexterity_correct_by_fire(&self) -> u8 {
         (self.bits_1 >> 3) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_is_dexterity_correct_by_fire(&mut self, value: u8) {
         self.bits_1 = (self.bits_1 & !(0b00000001 << 3)) | ((value & 0b00000001) << 3);
     }
 
+    #[allow(identity_op)]
     pub fn is_magic_correct_by_fire(&self) -> u8 {
         (self.bits_1 >> 4) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_is_magic_correct_by_fire(&mut self, value: u8) {
         self.bits_1 = (self.bits_1 & !(0b00000001 << 4)) | ((value & 0b00000001) << 4);
     }
 
+    #[allow(identity_op)]
     pub fn is_faith_correct_by_fire(&self) -> u8 {
         (self.bits_1 >> 5) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_is_faith_correct_by_fire(&mut self, value: u8) {
         self.bits_1 = (self.bits_1 & !(0b00000001 << 5)) | ((value & 0b00000001) << 5);
     }
 
+    #[allow(identity_op)]
     pub fn is_luck_correct_by_fire(&self) -> u8 {
         (self.bits_1 >> 6) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_is_luck_correct_by_fire(&mut self, value: u8) {
         self.bits_1 = (self.bits_1 & !(0b00000001 << 6)) | ((value & 0b00000001) << 6);
     }
 
+    #[allow(identity_op)]
     pub fn is_strength_correct_by_thunder(&self) -> u8 {
         (self.bits_1 >> 7) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_is_strength_correct_by_thunder(&mut self, value: u8) {
         self.bits_1 = (self.bits_1 & !(0b00000001 << 7)) | ((value & 0b00000001) << 7);
     }
 
+    #[allow(identity_op)]
     pub fn is_dexterity_correct_by_thunder(&self) -> u8 {
         (self.bits_2 >> 0) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_is_dexterity_correct_by_thunder(&mut self, value: u8) {
         self.bits_2 = (self.bits_2 & !(0b00000001 << 0)) | ((value & 0b00000001) << 0);
     }
 
+    #[allow(identity_op)]
     pub fn is_magic_correct_by_thunder(&self) -> u8 {
         (self.bits_2 >> 1) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_is_magic_correct_by_thunder(&mut self, value: u8) {
         self.bits_2 = (self.bits_2 & !(0b00000001 << 1)) | ((value & 0b00000001) << 1);
     }
 
+    #[allow(identity_op)]
     pub fn is_faith_correct_by_thunder(&self) -> u8 {
         (self.bits_2 >> 2) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_is_faith_correct_by_thunder(&mut self, value: u8) {
         self.bits_2 = (self.bits_2 & !(0b00000001 << 2)) | ((value & 0b00000001) << 2);
     }
 
+    #[allow(identity_op)]
     pub fn is_luck_correct_by_thunder(&self) -> u8 {
         (self.bits_2 >> 3) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_is_luck_correct_by_thunder(&mut self, value: u8) {
         self.bits_2 = (self.bits_2 & !(0b00000001 << 3)) | ((value & 0b00000001) << 3);
     }
 
+    #[allow(identity_op)]
     pub fn is_strength_correct_by_dark(&self) -> u8 {
         (self.bits_2 >> 4) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_is_strength_correct_by_dark(&mut self, value: u8) {
         self.bits_2 = (self.bits_2 & !(0b00000001 << 4)) | ((value & 0b00000001) << 4);
     }
 
+    #[allow(identity_op)]
     pub fn is_dexterity_correct_by_dark(&self) -> u8 {
         (self.bits_2 >> 5) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_is_dexterity_correct_by_dark(&mut self, value: u8) {
         self.bits_2 = (self.bits_2 & !(0b00000001 << 5)) | ((value & 0b00000001) << 5);
     }
 
+    #[allow(identity_op)]
     pub fn is_magic_correct_by_dark(&self) -> u8 {
         (self.bits_2 >> 6) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_is_magic_correct_by_dark(&mut self, value: u8) {
         self.bits_2 = (self.bits_2 & !(0b00000001 << 6)) | ((value & 0b00000001) << 6);
     }
 
+    #[allow(identity_op)]
     pub fn is_faith_correct_by_dark(&self) -> u8 {
         (self.bits_2 >> 7) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_is_faith_correct_by_dark(&mut self, value: u8) {
         self.bits_2 = (self.bits_2 & !(0b00000001 << 7)) | ((value & 0b00000001) << 7);
     }
 
+    #[allow(identity_op)]
     pub fn is_luck_correct_by_dark(&self) -> u8 {
         (self.bits_3 >> 0) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_is_luck_correct_by_dark(&mut self, value: u8) {
         self.bits_3 = (self.bits_3 & !(0b00000001 << 0)) | ((value & 0b00000001) << 0);
     }
@@ -7102,6 +7316,7 @@ impl ATTACK_ELEMENT_CORRECT_PARAM_ST {
     pub fn set_influence_luck_correct_rate_by_dark(&mut self, value: i16) {
         self.influence_luck_correct_rate_by_dark = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -7182,6 +7397,7 @@ impl AUTO_CREATE_ENV_SOUND_PARAM_ST {
     pub fn set_limite_rotate_max(&mut self, value: f32) {
         self.limite_rotate_max = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -7198,10 +7414,12 @@ pub struct BASECHR_SELECT_MENU_PARAM_ST {
 }
 
 impl BASECHR_SELECT_MENU_PARAM_ST {
+    #[allow(identity_op)]
     pub fn disable_param_nt(&self) -> u8 {
         (self.bits_0 >> 0) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_disable_param_nt(&mut self, value: u8) {
         self.bits_0 = (self.bits_0 & !(0b00000001 << 0)) | ((value & 0b00000001) << 0);
     }
@@ -7237,6 +7455,7 @@ impl BASECHR_SELECT_MENU_PARAM_ST {
     pub fn set_text_id(&mut self, value: i32) {
         self.text_id = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -7337,6 +7556,7 @@ impl BEHAVIOR_PARAM_ST {
     pub fn set_hero_point(&mut self, value: u8) {
         self.hero_point = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -7421,10 +7641,12 @@ pub struct BONFIRE_WARP_PARAM_ST {
 }
 
 impl BONFIRE_WARP_PARAM_ST {
+    #[allow(identity_op)]
     pub fn disable_param_nt(&self) -> u8 {
         (self.bits_0 >> 0) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_disable_param_nt(&mut self, value: u8) {
         self.bits_0 = (self.bits_0 & !(0b00000001 << 0)) | ((value & 0b00000001) << 0);
     }
@@ -7501,26 +7723,32 @@ impl BONFIRE_WARP_PARAM_ST {
         self.icon_id = value;
     }
 
+    #[allow(identity_op)]
     pub fn disp_mask00(&self) -> u8 {
         (self.bits_1e >> 0) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_disp_mask00(&mut self, value: u8) {
         self.bits_1e = (self.bits_1e & !(0b00000001 << 0)) | ((value & 0b00000001) << 0);
     }
 
+    #[allow(identity_op)]
     pub fn disp_mask01(&self) -> u8 {
         (self.bits_1e >> 1) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_disp_mask01(&mut self, value: u8) {
         self.bits_1e = (self.bits_1e & !(0b00000001 << 1)) | ((value & 0b00000001) << 1);
     }
 
+    #[allow(identity_op)]
     pub fn disp_mask02(&self) -> u8 {
         (self.bits_1e >> 2) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_disp_mask02(&mut self, value: u8) {
         self.bits_1e = (self.bits_1e & !(0b00000001 << 2)) | ((value & 0b00000001) << 2);
     }
@@ -8004,6 +8232,7 @@ impl BONFIRE_WARP_PARAM_ST {
     pub fn set_alt_forbidden_icon_id(&mut self, value: u16) {
         self.alt_forbidden_icon_id = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -8019,10 +8248,12 @@ pub struct BONFIRE_WARP_SUB_CATEGORY_PARAM_ST {
 }
 
 impl BONFIRE_WARP_SUB_CATEGORY_PARAM_ST {
+    #[allow(identity_op)]
     pub fn disable_param_nt(&self) -> u8 {
         (self.bits_0 >> 0) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_disable_param_nt(&mut self, value: u8) {
         self.bits_0 = (self.bits_0 & !(0b00000001 << 0)) | ((value & 0b00000001) << 0);
     }
@@ -8050,6 +8281,7 @@ impl BONFIRE_WARP_SUB_CATEGORY_PARAM_ST {
     pub fn set_sort_id(&mut self, value: u16) {
         self.sort_id = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -8065,10 +8297,12 @@ pub struct BONFIRE_WARP_TAB_PARAM_ST {
 }
 
 impl BONFIRE_WARP_TAB_PARAM_ST {
+    #[allow(identity_op)]
     pub fn disable_param_nt(&self) -> u8 {
         (self.bits_0 >> 0) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_disable_param_nt(&mut self, value: u8) {
         self.bits_0 = (self.bits_0 & !(0b00000001 << 0)) | ((value & 0b00000001) << 0);
     }
@@ -8096,6 +8330,7 @@ impl BONFIRE_WARP_TAB_PARAM_ST {
     pub fn set_icon_id(&mut self, value: u16) {
         self.icon_id = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -8149,10 +8384,12 @@ pub struct BUDDY_PARAM_ST {
 }
 
 impl BUDDY_PARAM_ST {
+    #[allow(identity_op)]
     pub fn disable_param_nt(&self) -> u8 {
         (self.bits_0 >> 0) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_disable_param_nt(&mut self, value: u8) {
         self.bits_0 = (self.bits_0 & !(0b00000001 << 0)) | ((value & 0b00000001) << 0);
     }
@@ -8348,6 +8585,7 @@ impl BUDDY_PARAM_ST {
     pub fn set_generate_anim_id(&mut self, value: i32) {
         self.generate_anim_id = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -8371,10 +8609,12 @@ pub struct BUDDY_STONE_PARAM_ST {
 }
 
 impl BUDDY_STONE_PARAM_ST {
+    #[allow(identity_op)]
     pub fn disable_param_nt(&self) -> u8 {
         (self.bits_0 >> 0) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_disable_param_nt(&mut self, value: u8) {
         self.bits_0 = (self.bits_0 & !(0b00000001 << 0)) | ((value & 0b00000001) << 0);
     }
@@ -8403,10 +8643,12 @@ impl BUDDY_STONE_PARAM_ST {
         self.summoned_event_flag_id = value;
     }
 
+    #[allow(identity_op)]
     pub fn is_special(&self) -> u8 {
         (self.bits_10 >> 0) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_is_special(&mut self, value: u8) {
         self.bits_10 = (self.bits_10 & !(0b00000001 << 0)) | ((value & 0b00000001) << 0);
     }
@@ -8458,6 +8700,7 @@ impl BUDDY_STONE_PARAM_ST {
     pub fn set_warn_region_entity_id(&mut self, value: u32) {
         self.warn_region_entity_id = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -8702,6 +8945,7 @@ impl BUDGET_PARAM_ST {
     pub fn set_havok_navimesh(&mut self, value: f32) {
         self.havok_navimesh = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -8722,13 +8966,16 @@ impl BULLET_CREATE_LIMIT_PARAM_ST {
         self.limit_num_by_group = value;
     }
 
+    #[allow(identity_op)]
     pub fn is_limit_each_owner(&self) -> u8 {
         (self.bits_1 >> 0) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_is_limit_each_owner(&mut self, value: u8) {
         self.bits_1 = (self.bits_1 & !(0b00000001 << 0)) | ((value & 0b00000001) << 0);
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -9232,26 +9479,32 @@ impl BULLET_PARAM_ST {
         self.material_attack_material = value;
     }
 
+    #[allow(identity_op)]
     pub fn is_penetrate_chr(&self) -> u8 {
         (self.bits_98 >> 0) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_is_penetrate_chr(&mut self, value: u8) {
         self.bits_98 = (self.bits_98 & !(0b00000001 << 0)) | ((value & 0b00000001) << 0);
     }
 
+    #[allow(identity_op)]
     pub fn is_penetrate_obj(&self) -> u8 {
         (self.bits_98 >> 1) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_is_penetrate_obj(&mut self, value: u8) {
         self.bits_98 = (self.bits_98 & !(0b00000001 << 1)) | ((value & 0b00000001) << 1);
     }
 
+    #[allow(identity_op)]
     pub fn may_remote_detonate(&self) -> u8 {
         (self.bits_98 >> 2) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_may_remote_detonate(&mut self, value: u8) {
         self.bits_98 = (self.bits_98 & !(0b00000001 << 2)) | ((value & 0b00000001) << 2);
     }
@@ -9264,154 +9517,192 @@ impl BULLET_PARAM_ST {
         self.launch_condition_type = value;
     }
 
+    #[allow(identity_op)]
     pub fn follow_type(&self) -> u8 {
         (self.bits_9a >> 0) & 0b00000111
     }
 
+    #[allow(identity_op)]
     pub fn set_follow_type(&mut self, value: u8) {
         self.bits_9a = (self.bits_9a & !(0b00000111 << 0)) | ((value & 0b00000111) << 0);
     }
 
+    #[allow(identity_op)]
     pub fn emitte_pos_type(&self) -> u8 {
         (self.bits_9a >> 1) & 0b00000111
     }
 
+    #[allow(identity_op)]
     pub fn set_emitte_pos_type(&mut self, value: u8) {
         self.bits_9a = (self.bits_9a & !(0b00000111 << 1)) | ((value & 0b00000111) << 1);
     }
 
+    #[allow(identity_op)]
     pub fn is_attack_sfx(&self) -> u8 {
         (self.bits_9a >> 2) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_is_attack_sfx(&mut self, value: u8) {
         self.bits_9a = (self.bits_9a & !(0b00000001 << 2)) | ((value & 0b00000001) << 2);
     }
 
+    #[allow(identity_op)]
     pub fn is_endless_hit(&self) -> u8 {
         (self.bits_9a >> 3) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_is_endless_hit(&mut self, value: u8) {
         self.bits_9a = (self.bits_9a & !(0b00000001 << 3)) | ((value & 0b00000001) << 3);
     }
 
+    #[allow(identity_op)]
     pub fn is_penetrate_map(&self) -> u8 {
         (self.bits_9b >> 0) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_is_penetrate_map(&mut self, value: u8) {
         self.bits_9b = (self.bits_9b & !(0b00000001 << 0)) | ((value & 0b00000001) << 0);
     }
 
+    #[allow(identity_op)]
     pub fn is_hit_both_team(&self) -> u8 {
         (self.bits_9b >> 1) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_is_hit_both_team(&mut self, value: u8) {
         self.bits_9b = (self.bits_9b & !(0b00000001 << 1)) | ((value & 0b00000001) << 1);
     }
 
+    #[allow(identity_op)]
     pub fn is_use_shared_hit_list(&self) -> u8 {
         (self.bits_9b >> 2) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_is_use_shared_hit_list(&mut self, value: u8) {
         self.bits_9b = (self.bits_9b & !(0b00000001 << 2)) | ((value & 0b00000001) << 2);
     }
 
+    #[allow(identity_op)]
     pub fn is_use_multi_dmy_poly_if_place(&self) -> u8 {
         (self.bits_9b >> 3) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_is_use_multi_dmy_poly_if_place(&mut self, value: u8) {
         self.bits_9b = (self.bits_9b & !(0b00000001 << 3)) | ((value & 0b00000001) << 3);
     }
 
+    #[allow(identity_op)]
     pub fn is_hit_other_bullet_force_erase_a(&self) -> u8 {
         (self.bits_9b >> 4) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_is_hit_other_bullet_force_erase_a(&mut self, value: u8) {
         self.bits_9b = (self.bits_9b & !(0b00000001 << 4)) | ((value & 0b00000001) << 4);
     }
 
+    #[allow(identity_op)]
     pub fn is_hit_other_bullet_force_erase_b(&self) -> u8 {
         (self.bits_9b >> 5) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_is_hit_other_bullet_force_erase_b(&mut self, value: u8) {
         self.bits_9b = (self.bits_9b & !(0b00000001 << 5)) | ((value & 0b00000001) << 5);
     }
 
+    #[allow(identity_op)]
     pub fn is_hit_force_magic(&self) -> u8 {
         (self.bits_9b >> 6) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_is_hit_force_magic(&mut self, value: u8) {
         self.bits_9b = (self.bits_9b & !(0b00000001 << 6)) | ((value & 0b00000001) << 6);
     }
 
+    #[allow(identity_op)]
     pub fn is_ignore_sfx_if_hit_water(&self) -> u8 {
         (self.bits_9b >> 7) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_is_ignore_sfx_if_hit_water(&mut self, value: u8) {
         self.bits_9b = (self.bits_9b & !(0b00000001 << 7)) | ((value & 0b00000001) << 7);
     }
 
+    #[allow(identity_op)]
     pub fn is_ignore_move_state_if_hit_water(&self) -> u8 {
         (self.bits_9c >> 0) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_is_ignore_move_state_if_hit_water(&mut self, value: u8) {
         self.bits_9c = (self.bits_9c & !(0b00000001 << 0)) | ((value & 0b00000001) << 0);
     }
 
+    #[allow(identity_op)]
     pub fn is_hit_dark_force_magic(&self) -> u8 {
         (self.bits_9c >> 1) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_is_hit_dark_force_magic(&mut self, value: u8) {
         self.bits_9c = (self.bits_9c & !(0b00000001 << 1)) | ((value & 0b00000001) << 1);
     }
 
+    #[allow(identity_op)]
     pub fn dmg_calc_side(&self) -> u8 {
         (self.bits_9c >> 2) & 0b00000011
     }
 
+    #[allow(identity_op)]
     pub fn set_dmg_calc_side(&mut self, value: u8) {
         self.bits_9c = (self.bits_9c & !(0b00000011 << 2)) | ((value & 0b00000011) << 2);
     }
 
+    #[allow(identity_op)]
     pub fn is_enable_auto_homing(&self) -> u8 {
         (self.bits_9c >> 3) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_is_enable_auto_homing(&mut self, value: u8) {
         self.bits_9c = (self.bits_9c & !(0b00000001 << 3)) | ((value & 0b00000001) << 3);
     }
 
+    #[allow(identity_op)]
     pub fn is_sync_bullet_culc_dumypoly_pos(&self) -> u8 {
         (self.bits_9c >> 4) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_is_sync_bullet_culc_dumypoly_pos(&mut self, value: u8) {
         self.bits_9c = (self.bits_9c & !(0b00000001 << 4)) | ((value & 0b00000001) << 4);
     }
 
+    #[allow(identity_op)]
     pub fn is_owner_override_init_angle(&self) -> u8 {
         (self.bits_9c >> 5) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_is_owner_override_init_angle(&mut self, value: u8) {
         self.bits_9c = (self.bits_9c & !(0b00000001 << 5)) | ((value & 0b00000001) << 5);
     }
 
+    #[allow(identity_op)]
     pub fn is_inherit_sfx_to_child(&self) -> u8 {
         (self.bits_9c >> 6) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_is_inherit_sfx_to_child(&mut self, value: u8) {
         self.bits_9c = (self.bits_9c & !(0b00000001 << 6)) | ((value & 0b00000001) << 6);
     }
@@ -9520,66 +9811,82 @@ impl BULLET_PARAM_ST {
         self.create_limit_group_id = value;
     }
 
+    #[allow(identity_op)]
     pub fn is_inherit_speed_to_child(&self) -> u8 {
         (self.bits_c3 >> 0) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_is_inherit_speed_to_child(&mut self, value: u8) {
         self.bits_c3 = (self.bits_c3 & !(0b00000001 << 0)) | ((value & 0b00000001) << 0);
     }
 
+    #[allow(identity_op)]
     pub fn is_disable_hit_sfx_by_chr_and_obj(&self) -> u8 {
         (self.bits_c3 >> 1) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_is_disable_hit_sfx_by_chr_and_obj(&mut self, value: u8) {
         self.bits_c3 = (self.bits_c3 & !(0b00000001 << 1)) | ((value & 0b00000001) << 1);
     }
 
+    #[allow(identity_op)]
     pub fn is_check_wall_by_center_ray(&self) -> u8 {
         (self.bits_c3 >> 2) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_is_check_wall_by_center_ray(&mut self, value: u8) {
         self.bits_c3 = (self.bits_c3 & !(0b00000001 << 2)) | ((value & 0b00000001) << 2);
     }
 
+    #[allow(identity_op)]
     pub fn is_hit_flare(&self) -> u8 {
         (self.bits_c3 >> 3) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_is_hit_flare(&mut self, value: u8) {
         self.bits_c3 = (self.bits_c3 & !(0b00000001 << 3)) | ((value & 0b00000001) << 3);
     }
 
+    #[allow(identity_op)]
     pub fn is_use_bullet_wall_filter(&self) -> u8 {
         (self.bits_c3 >> 4) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_is_use_bullet_wall_filter(&mut self, value: u8) {
         self.bits_c3 = (self.bits_c3 & !(0b00000001 << 4)) | ((value & 0b00000001) << 4);
     }
 
+    #[allow(identity_op)]
     pub fn is_disable_ai_projectile_dodge(&self) -> u8 {
         (self.bits_c3 >> 5) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_is_disable_ai_projectile_dodge(&mut self, value: u8) {
         self.bits_c3 = (self.bits_c3 & !(0b00000001 << 5)) | ((value & 0b00000001) << 5);
     }
 
+    #[allow(identity_op)]
     pub fn is_non_dependence_magic_for_funnle_num(&self) -> u8 {
         (self.bits_c3 >> 6) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_is_non_dependence_magic_for_funnle_num(&mut self, value: u8) {
         self.bits_c3 = (self.bits_c3 & !(0b00000001 << 6)) | ((value & 0b00000001) << 6);
     }
 
+    #[allow(identity_op)]
     pub fn is_ai_interrupt_shoot_no_damage_bullet(&self) -> u8 {
         (self.bits_c3 >> 7) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_is_ai_interrupt_shoot_no_damage_bullet(&mut self, value: u8) {
         self.bits_c3 = (self.bits_c3 & !(0b00000001 << 7)) | ((value & 0b00000001) << 7);
     }
@@ -9751,6 +10058,7 @@ impl BULLET_PARAM_ST {
     pub fn set_nolock_target_dist(&mut self, value: f32) {
         self.nolock_target_dist = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -9931,6 +10239,7 @@ impl CACL_CORRECT_GRAPH_ST {
     pub fn set_boundry_value(&mut self, value: f32) {
         self.boundry_value = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -9985,6 +10294,7 @@ impl CAMERA_FADE_PARAM_ST {
     pub fn set_middle_alpha(&mut self, value: f32) {
         self.middle_alpha = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -10039,6 +10349,7 @@ impl CEREMONY_PARAM_ST {
     pub fn set_override_save_map_name_id(&mut self, value: i32) {
         self.override_save_map_name_id = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -10802,18 +11113,22 @@ impl CHARACTER_INIT_PARAM {
         self.npc_player_sex = value;
     }
 
+    #[allow(identity_op)]
     pub fn vow_type(&self) -> u8 {
         (self.bits_e5 >> 0) & 0b00001111
     }
 
+    #[allow(identity_op)]
     pub fn set_vow_type(&mut self, value: u8) {
         self.bits_e5 = (self.bits_e5 & !(0b00001111 << 0)) | ((value & 0b00001111) << 0);
     }
 
+    #[allow(identity_op)]
     pub fn is_sync_target(&self) -> u8 {
         (self.bits_e5 >> 1) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_is_sync_target(&mut self, value: u8) {
         self.bits_e5 = (self.bits_e5 & !(0b00000001 << 1)) | ((value & 0b00000001) << 1);
     }
@@ -11001,6 +11316,7 @@ impl CHARACTER_INIT_PARAM {
     pub fn set_voice_type(&mut self, value: u8) {
         self.voice_type = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -11037,6 +11353,7 @@ impl CHARMAKEMENU_LISTITEM_PARAM_ST {
     pub fn set_icon_id(&mut self, value: u8) {
         self.icon_id = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -11146,6 +11463,7 @@ impl CHARMAKEMENUTOP_PARAM_ST {
     pub fn set_unlock_event_flag_id(&mut self, value: u32) {
         self.unlock_event_flag_id = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -11162,114 +11480,142 @@ pub struct CHR_ACTIVATE_CONDITION_PARAM_ST {
 }
 
 impl CHR_ACTIVATE_CONDITION_PARAM_ST {
+    #[allow(identity_op)]
     pub fn weather_sunny(&self) -> u8 {
         (self.bits_0 >> 0) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_weather_sunny(&mut self, value: u8) {
         self.bits_0 = (self.bits_0 & !(0b00000001 << 0)) | ((value & 0b00000001) << 0);
     }
 
+    #[allow(identity_op)]
     pub fn weather_clear_sky(&self) -> u8 {
         (self.bits_0 >> 1) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_weather_clear_sky(&mut self, value: u8) {
         self.bits_0 = (self.bits_0 & !(0b00000001 << 1)) | ((value & 0b00000001) << 1);
     }
 
+    #[allow(identity_op)]
     pub fn weather_weak_cloudy(&self) -> u8 {
         (self.bits_0 >> 2) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_weather_weak_cloudy(&mut self, value: u8) {
         self.bits_0 = (self.bits_0 & !(0b00000001 << 2)) | ((value & 0b00000001) << 2);
     }
 
+    #[allow(identity_op)]
     pub fn weather_cloudy(&self) -> u8 {
         (self.bits_0 >> 3) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_weather_cloudy(&mut self, value: u8) {
         self.bits_0 = (self.bits_0 & !(0b00000001 << 3)) | ((value & 0b00000001) << 3);
     }
 
+    #[allow(identity_op)]
     pub fn weather_rain(&self) -> u8 {
         (self.bits_0 >> 4) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_weather_rain(&mut self, value: u8) {
         self.bits_0 = (self.bits_0 & !(0b00000001 << 4)) | ((value & 0b00000001) << 4);
     }
 
+    #[allow(identity_op)]
     pub fn weather_heavy_rain(&self) -> u8 {
         (self.bits_0 >> 5) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_weather_heavy_rain(&mut self, value: u8) {
         self.bits_0 = (self.bits_0 & !(0b00000001 << 5)) | ((value & 0b00000001) << 5);
     }
 
+    #[allow(identity_op)]
     pub fn weather_storm(&self) -> u8 {
         (self.bits_0 >> 6) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_weather_storm(&mut self, value: u8) {
         self.bits_0 = (self.bits_0 & !(0b00000001 << 6)) | ((value & 0b00000001) << 6);
     }
 
+    #[allow(identity_op)]
     pub fn weather_storm_for_battle(&self) -> u8 {
         (self.bits_0 >> 7) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_weather_storm_for_battle(&mut self, value: u8) {
         self.bits_0 = (self.bits_0 & !(0b00000001 << 7)) | ((value & 0b00000001) << 7);
     }
 
+    #[allow(identity_op)]
     pub fn weather_snow(&self) -> u8 {
         (self.bits_1 >> 0) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_weather_snow(&mut self, value: u8) {
         self.bits_1 = (self.bits_1 & !(0b00000001 << 0)) | ((value & 0b00000001) << 0);
     }
 
+    #[allow(identity_op)]
     pub fn weather_heavy_snow(&self) -> u8 {
         (self.bits_1 >> 1) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_weather_heavy_snow(&mut self, value: u8) {
         self.bits_1 = (self.bits_1 & !(0b00000001 << 1)) | ((value & 0b00000001) << 1);
     }
 
+    #[allow(identity_op)]
     pub fn weather_fog(&self) -> u8 {
         (self.bits_1 >> 2) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_weather_fog(&mut self, value: u8) {
         self.bits_1 = (self.bits_1 & !(0b00000001 << 2)) | ((value & 0b00000001) << 2);
     }
 
+    #[allow(identity_op)]
     pub fn weather_heavy_fog(&self) -> u8 {
         (self.bits_1 >> 3) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_weather_heavy_fog(&mut self, value: u8) {
         self.bits_1 = (self.bits_1 & !(0b00000001 << 3)) | ((value & 0b00000001) << 3);
     }
 
+    #[allow(identity_op)]
     pub fn weather_heavy_fog_rain(&self) -> u8 {
         (self.bits_1 >> 4) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_weather_heavy_fog_rain(&mut self, value: u8) {
         self.bits_1 = (self.bits_1 & !(0b00000001 << 4)) | ((value & 0b00000001) << 4);
     }
 
+    #[allow(identity_op)]
     pub fn weather_sand_storm(&self) -> u8 {
         (self.bits_1 >> 5) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_weather_sand_storm(&mut self, value: u8) {
         self.bits_1 = (self.bits_1 & !(0b00000001 << 5)) | ((value & 0b00000001) << 5);
     }
@@ -11305,6 +11651,7 @@ impl CHR_ACTIVATE_CONDITION_PARAM_ST {
     pub fn set_time_end_min(&mut self, value: u8) {
         self.time_end_min = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -11316,7 +11663,8 @@ pub struct CHR_EQUIP_MODEL_PARAM_ST {
     unknown_0x8: i32,
 }
 
-impl CHR_EQUIP_MODEL_PARAM_ST {}
+impl CHR_EQUIP_MODEL_PARAM_ST {
+}
 
 #[derive(Debug, Clone)]
 #[allow(non_camel_case_types)]
@@ -11332,10 +11680,12 @@ pub struct CHR_MODEL_PARAM_ST {
 }
 
 impl CHR_MODEL_PARAM_ST {
+    #[allow(identity_op)]
     pub fn disable_param_nt(&self) -> u8 {
         (self.bits_0 >> 0) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_disable_param_nt(&mut self, value: u8) {
         self.bits_0 = (self.bits_0 & !(0b00000001 << 0)) | ((value & 0b00000001) << 0);
     }
@@ -11371,6 +11721,7 @@ impl CHR_MODEL_PARAM_ST {
     pub fn set_report_anim_mem_size_mb(&mut self, value: f32) {
         self.report_anim_mem_size_mb = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -11659,6 +12010,7 @@ impl CLEAR_COUNT_CORRECT_PARAM_ST {
     pub fn set_madness_damage_rate(&mut self, value: f32) {
         self.madness_damage_rate = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -11677,6 +12029,7 @@ impl COMMON_SYSTEM_PARAM_ST {
     pub fn set_map_save_map_name_id_on_game_start(&mut self, value: u32) {
         self.map_save_map_name_id_on_game_start = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -11757,6 +12110,7 @@ impl COOL_TIME_PARAM_ST {
     pub fn set_observe_time_3(&mut self, value: f32) {
         self.observe_time_3 = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -11777,18 +12131,22 @@ pub struct CUTSCENE_GPARAM_TIME_PARAM_ST {
 }
 
 impl CUTSCENE_GPARAM_TIME_PARAM_ST {
+    #[allow(identity_op)]
     pub fn disable_param_nt(&self) -> u8 {
         (self.bits_0 >> 0) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_disable_param_nt(&mut self, value: u8) {
         self.bits_0 = (self.bits_0 & !(0b00000001 << 0)) | ((value & 0b00000001) << 0);
     }
 
+    #[allow(identity_op)]
     pub fn disable_param_debug(&self) -> u8 {
         (self.bits_0 >> 1) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_disable_param_debug(&mut self, value: u8) {
         self.bits_0 = (self.bits_0 & !(0b00000001 << 1)) | ((value & 0b00000001) << 1);
     }
@@ -11856,6 +12214,7 @@ impl CUTSCENE_GPARAM_TIME_PARAM_ST {
     pub fn set_post_play_ingame_time(&mut self, value: f32) {
         self.post_play_ingame_time = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -11918,18 +12277,22 @@ pub struct CUTSCENE_GPARAM_WEATHER_PARAM_ST {
 }
 
 impl CUTSCENE_GPARAM_WEATHER_PARAM_ST {
+    #[allow(identity_op)]
     pub fn disable_param_nt(&self) -> u8 {
         (self.bits_0 >> 0) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_disable_param_nt(&mut self, value: u8) {
         self.bits_0 = (self.bits_0 & !(0b00000001 << 0)) | ((value & 0b00000001) << 0);
     }
 
+    #[allow(identity_op)]
     pub fn disable_param_debug(&self) -> u8 {
         (self.bits_0 >> 1) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_disable_param_debug(&mut self, value: u8) {
         self.bits_0 = (self.bits_0 & !(0b00000001 << 1)) | ((value & 0b00000001) << 1);
     }
@@ -12221,6 +12584,7 @@ impl CUTSCENE_GPARAM_WEATHER_PARAM_ST {
     pub fn set_override_map_gd_region_id(&mut self, value: i16) {
         self.override_map_gd_region_id = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -12243,18 +12607,22 @@ pub struct CUTSCENE_MAP_ID_PARAM_ST {
 }
 
 impl CUTSCENE_MAP_ID_PARAM_ST {
+    #[allow(identity_op)]
     pub fn disable_param_nt(&self) -> u8 {
         (self.bits_0 >> 0) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_disable_param_nt(&mut self, value: u8) {
         self.bits_0 = (self.bits_0 & !(0b00000001 << 0)) | ((value & 0b00000001) << 0);
     }
 
+    #[allow(identity_op)]
     pub fn disable_param_debug(&self) -> u8 {
         (self.bits_0 >> 1) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_disable_param_debug(&mut self, value: u8) {
         self.bits_0 = (self.bits_0 & !(0b00000001 << 1)) | ((value & 0b00000001) << 1);
     }
@@ -12322,6 +12690,7 @@ impl CUTSCENE_MAP_ID_PARAM_ST {
     pub fn set_hit_parts_1(&mut self, value: i32) {
         self.hit_parts_1 = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -12349,18 +12718,22 @@ pub struct CUTSCENE_TEXTURE_LOAD_PARAM_ST {
 }
 
 impl CUTSCENE_TEXTURE_LOAD_PARAM_ST {
+    #[allow(identity_op)]
     pub fn disable_param_nt(&self) -> u8 {
         (self.bits_0 >> 0) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_disable_param_nt(&mut self, value: u8) {
         self.bits_0 = (self.bits_0 & !(0b00000001 << 0)) | ((value & 0b00000001) << 0);
     }
 
+    #[allow(identity_op)]
     pub fn disable_param_debug(&self) -> u8 {
         (self.bits_0 >> 1) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_disable_param_debug(&mut self, value: u8) {
         self.bits_0 = (self.bits_0 & !(0b00000001 << 1)) | ((value & 0b00000001) << 1);
     }
@@ -12492,6 +12865,7 @@ impl CUTSCENE_TEXTURE_LOAD_PARAM_ST {
     pub fn set_tex_name_15(&mut self, value: [u8; 16]) {
         self.tex_name_15 = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -12518,6 +12892,7 @@ impl CUTSCENE_TIMEZONE_CONVERT_PARAM_ST {
     pub fn set_dst_cutscen_time(&mut self, value: f32) {
         self.dst_cutscen_time = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -12535,6 +12910,7 @@ impl CUTSCENE_WEATHER_OVERRIDE_GPARAM_ID_CONVERT_PARAM_ST {
     pub fn set_weather_override_gparam_id(&mut self, value: u32) {
         self.weather_override_gparam_id = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -12692,74 +13068,92 @@ impl DECAL_PARAM_ST {
         self.mask_speffect_id = value;
     }
 
+    #[allow(identity_op)]
     pub fn replace_texture_id_by_material(&self) -> u8 {
         (self.bits_24 >> 1) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_replace_texture_id_by_material(&mut self, value: u8) {
         self.bits_24 = (self.bits_24 & !(0b00000001 << 1)) | ((value & 0b00000001) << 1);
     }
 
+    #[allow(identity_op)]
     pub fn dmypoly_category(&self) -> u8 {
         (self.bits_24 >> 2) & 0b00000011
     }
 
+    #[allow(identity_op)]
     pub fn set_dmypoly_category(&mut self, value: u8) {
         self.bits_24 = (self.bits_24 & !(0b00000011 << 2)) | ((value & 0b00000011) << 2);
     }
 
+    #[allow(identity_op)]
     pub fn use_deferred_decal(&self) -> u8 {
         (self.bits_25 >> 1) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_use_deferred_decal(&mut self, value: u8) {
         self.bits_25 = (self.bits_25 & !(0b00000001 << 1)) | ((value & 0b00000001) << 1);
     }
 
+    #[allow(identity_op)]
     pub fn use_paint_decal(&self) -> u8 {
         (self.bits_25 >> 2) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_use_paint_decal(&mut self, value: u8) {
         self.bits_25 = (self.bits_25 & !(0b00000001 << 2)) | ((value & 0b00000001) << 2);
     }
 
+    #[allow(identity_op)]
     pub fn blood_type_enable(&self) -> u8 {
         (self.bits_25 >> 3) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_blood_type_enable(&mut self, value: u8) {
         self.bits_25 = (self.bits_25 & !(0b00000001 << 3)) | ((value & 0b00000001) << 3);
     }
 
+    #[allow(identity_op)]
     pub fn b_use_normal(&self) -> u8 {
         (self.bits_25 >> 4) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_b_use_normal(&mut self, value: u8) {
         self.bits_25 = (self.bits_25 & !(0b00000001 << 4)) | ((value & 0b00000001) << 4);
     }
 
+    #[allow(identity_op)]
     pub fn use_pom(&self) -> u8 {
         (self.bits_26 >> 2) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_use_pom(&mut self, value: u8) {
         self.bits_26 = (self.bits_26 & !(0b00000001 << 2)) | ((value & 0b00000001) << 2);
     }
 
+    #[allow(identity_op)]
     pub fn use_emissive(&self) -> u8 {
         (self.bits_26 >> 3) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_use_emissive(&mut self, value: u8) {
         self.bits_26 = (self.bits_26 & !(0b00000001 << 3)) | ((value & 0b00000001) << 3);
     }
 
+    #[allow(identity_op)]
     pub fn put_vertical(&self) -> u8 {
         (self.bits_26 >> 4) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_put_vertical(&mut self, value: u8) {
         self.bits_26 = (self.bits_26 & !(0b00000001 << 4)) | ((value & 0b00000001) << 4);
     }
@@ -13140,50 +13534,62 @@ impl DECAL_PARAM_ST {
         self.delay_appear_frame = value;
     }
 
+    #[allow(identity_op)]
     pub fn rand_varia_diffuse(&self) -> u8 {
         (self.bits_b0 >> 0) & 0b00001111
     }
 
+    #[allow(identity_op)]
     pub fn set_rand_varia_diffuse(&mut self, value: u8) {
         self.bits_b0 = (self.bits_b0 & !(0b00001111 << 0)) | ((value & 0b00001111) << 0);
     }
 
+    #[allow(identity_op)]
     pub fn rand_varia_mask(&self) -> u8 {
         (self.bits_b0 >> 1) & 0b00001111
     }
 
+    #[allow(identity_op)]
     pub fn set_rand_varia_mask(&mut self, value: u8) {
         self.bits_b0 = (self.bits_b0 & !(0b00001111 << 1)) | ((value & 0b00001111) << 1);
     }
 
+    #[allow(identity_op)]
     pub fn rand_varia_reflec(&self) -> u8 {
         (self.bits_b1 >> 0) & 0b00001111
     }
 
+    #[allow(identity_op)]
     pub fn set_rand_varia_reflec(&mut self, value: u8) {
         self.bits_b1 = (self.bits_b1 & !(0b00001111 << 0)) | ((value & 0b00001111) << 0);
     }
 
+    #[allow(identity_op)]
     pub fn rand_varia_normal(&self) -> u8 {
         (self.bits_b2 >> 0) & 0b00001111
     }
 
+    #[allow(identity_op)]
     pub fn set_rand_varia_normal(&mut self, value: u8) {
         self.bits_b2 = (self.bits_b2 & !(0b00001111 << 0)) | ((value & 0b00001111) << 0);
     }
 
+    #[allow(identity_op)]
     pub fn rand_varia_height(&self) -> u8 {
         (self.bits_b2 >> 1) & 0b00001111
     }
 
+    #[allow(identity_op)]
     pub fn set_rand_varia_height(&mut self, value: u8) {
         self.bits_b2 = (self.bits_b2 & !(0b00001111 << 1)) | ((value & 0b00001111) << 1);
     }
 
+    #[allow(identity_op)]
     pub fn rand_varia_emissive(&self) -> u8 {
         (self.bits_b3 >> 0) & 0b00001111
     }
 
+    #[allow(identity_op)]
     pub fn set_rand_varia_emissive(&mut self, value: u8) {
         self.bits_b3 = (self.bits_b3 & !(0b00001111 << 0)) | ((value & 0b00001111) << 0);
     }
@@ -13267,6 +13673,7 @@ impl DECAL_PARAM_ST {
     pub fn set_max_decal_sfx_creatable_slope_angle_deg(&mut self, value: f32) {
         self.max_decal_sfx_creatable_slope_angle_deg = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -13345,258 +13752,322 @@ pub struct DEFAULT_KEY_ASSIGN {
 }
 
 impl DEFAULT_KEY_ASSIGN {
+    #[allow(identity_op)]
     pub fn priority0(&self) -> u8 {
         (self.bits_0 >> 0) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_priority0(&mut self, value: u8) {
         self.bits_0 = (self.bits_0 & !(0b00000001 << 0)) | ((value & 0b00000001) << 0);
     }
 
+    #[allow(identity_op)]
     pub fn priority1(&self) -> u8 {
         (self.bits_0 >> 1) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_priority1(&mut self, value: u8) {
         self.bits_0 = (self.bits_0 & !(0b00000001 << 1)) | ((value & 0b00000001) << 1);
     }
 
+    #[allow(identity_op)]
     pub fn priority2(&self) -> u8 {
         (self.bits_0 >> 2) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_priority2(&mut self, value: u8) {
         self.bits_0 = (self.bits_0 & !(0b00000001 << 2)) | ((value & 0b00000001) << 2);
     }
 
+    #[allow(identity_op)]
     pub fn priority3(&self) -> u8 {
         (self.bits_0 >> 3) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_priority3(&mut self, value: u8) {
         self.bits_0 = (self.bits_0 & !(0b00000001 << 3)) | ((value & 0b00000001) << 3);
     }
 
+    #[allow(identity_op)]
     pub fn priority4(&self) -> u8 {
         (self.bits_0 >> 4) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_priority4(&mut self, value: u8) {
         self.bits_0 = (self.bits_0 & !(0b00000001 << 4)) | ((value & 0b00000001) << 4);
     }
 
+    #[allow(identity_op)]
     pub fn priority5(&self) -> u8 {
         (self.bits_0 >> 5) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_priority5(&mut self, value: u8) {
         self.bits_0 = (self.bits_0 & !(0b00000001 << 5)) | ((value & 0b00000001) << 5);
     }
 
+    #[allow(identity_op)]
     pub fn priority6(&self) -> u8 {
         (self.bits_0 >> 6) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_priority6(&mut self, value: u8) {
         self.bits_0 = (self.bits_0 & !(0b00000001 << 6)) | ((value & 0b00000001) << 6);
     }
 
+    #[allow(identity_op)]
     pub fn priority7(&self) -> u8 {
         (self.bits_0 >> 7) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_priority7(&mut self, value: u8) {
         self.bits_0 = (self.bits_0 & !(0b00000001 << 7)) | ((value & 0b00000001) << 7);
     }
 
+    #[allow(identity_op)]
     pub fn priority8(&self) -> u8 {
         (self.bits_1 >> 0) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_priority8(&mut self, value: u8) {
         self.bits_1 = (self.bits_1 & !(0b00000001 << 0)) | ((value & 0b00000001) << 0);
     }
 
+    #[allow(identity_op)]
     pub fn priority9(&self) -> u8 {
         (self.bits_1 >> 1) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_priority9(&mut self, value: u8) {
         self.bits_1 = (self.bits_1 & !(0b00000001 << 1)) | ((value & 0b00000001) << 1);
     }
 
+    #[allow(identity_op)]
     pub fn priority10(&self) -> u8 {
         (self.bits_1 >> 2) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_priority10(&mut self, value: u8) {
         self.bits_1 = (self.bits_1 & !(0b00000001 << 2)) | ((value & 0b00000001) << 2);
     }
 
+    #[allow(identity_op)]
     pub fn priority11(&self) -> u8 {
         (self.bits_1 >> 3) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_priority11(&mut self, value: u8) {
         self.bits_1 = (self.bits_1 & !(0b00000001 << 3)) | ((value & 0b00000001) << 3);
     }
 
+    #[allow(identity_op)]
     pub fn priority12(&self) -> u8 {
         (self.bits_1 >> 4) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_priority12(&mut self, value: u8) {
         self.bits_1 = (self.bits_1 & !(0b00000001 << 4)) | ((value & 0b00000001) << 4);
     }
 
+    #[allow(identity_op)]
     pub fn priority13(&self) -> u8 {
         (self.bits_1 >> 5) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_priority13(&mut self, value: u8) {
         self.bits_1 = (self.bits_1 & !(0b00000001 << 5)) | ((value & 0b00000001) << 5);
     }
 
+    #[allow(identity_op)]
     pub fn priority14(&self) -> u8 {
         (self.bits_1 >> 6) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_priority14(&mut self, value: u8) {
         self.bits_1 = (self.bits_1 & !(0b00000001 << 6)) | ((value & 0b00000001) << 6);
     }
 
+    #[allow(identity_op)]
     pub fn priority15(&self) -> u8 {
         (self.bits_1 >> 7) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_priority15(&mut self, value: u8) {
         self.bits_1 = (self.bits_1 & !(0b00000001 << 7)) | ((value & 0b00000001) << 7);
     }
 
+    #[allow(identity_op)]
     pub fn priority16(&self) -> u8 {
         (self.bits_2 >> 0) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_priority16(&mut self, value: u8) {
         self.bits_2 = (self.bits_2 & !(0b00000001 << 0)) | ((value & 0b00000001) << 0);
     }
 
+    #[allow(identity_op)]
     pub fn priority17(&self) -> u8 {
         (self.bits_2 >> 1) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_priority17(&mut self, value: u8) {
         self.bits_2 = (self.bits_2 & !(0b00000001 << 1)) | ((value & 0b00000001) << 1);
     }
 
+    #[allow(identity_op)]
     pub fn priority18(&self) -> u8 {
         (self.bits_2 >> 2) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_priority18(&mut self, value: u8) {
         self.bits_2 = (self.bits_2 & !(0b00000001 << 2)) | ((value & 0b00000001) << 2);
     }
 
+    #[allow(identity_op)]
     pub fn priority19(&self) -> u8 {
         (self.bits_2 >> 3) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_priority19(&mut self, value: u8) {
         self.bits_2 = (self.bits_2 & !(0b00000001 << 3)) | ((value & 0b00000001) << 3);
     }
 
+    #[allow(identity_op)]
     pub fn priority20(&self) -> u8 {
         (self.bits_2 >> 4) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_priority20(&mut self, value: u8) {
         self.bits_2 = (self.bits_2 & !(0b00000001 << 4)) | ((value & 0b00000001) << 4);
     }
 
+    #[allow(identity_op)]
     pub fn priority21(&self) -> u8 {
         (self.bits_2 >> 5) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_priority21(&mut self, value: u8) {
         self.bits_2 = (self.bits_2 & !(0b00000001 << 5)) | ((value & 0b00000001) << 5);
     }
 
+    #[allow(identity_op)]
     pub fn priority22(&self) -> u8 {
         (self.bits_2 >> 6) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_priority22(&mut self, value: u8) {
         self.bits_2 = (self.bits_2 & !(0b00000001 << 6)) | ((value & 0b00000001) << 6);
     }
 
+    #[allow(identity_op)]
     pub fn priority23(&self) -> u8 {
         (self.bits_2 >> 7) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_priority23(&mut self, value: u8) {
         self.bits_2 = (self.bits_2 & !(0b00000001 << 7)) | ((value & 0b00000001) << 7);
     }
 
+    #[allow(identity_op)]
     pub fn priority24(&self) -> u8 {
         (self.bits_3 >> 0) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_priority24(&mut self, value: u8) {
         self.bits_3 = (self.bits_3 & !(0b00000001 << 0)) | ((value & 0b00000001) << 0);
     }
 
+    #[allow(identity_op)]
     pub fn priority25(&self) -> u8 {
         (self.bits_3 >> 1) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_priority25(&mut self, value: u8) {
         self.bits_3 = (self.bits_3 & !(0b00000001 << 1)) | ((value & 0b00000001) << 1);
     }
 
+    #[allow(identity_op)]
     pub fn priority26(&self) -> u8 {
         (self.bits_3 >> 2) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_priority26(&mut self, value: u8) {
         self.bits_3 = (self.bits_3 & !(0b00000001 << 2)) | ((value & 0b00000001) << 2);
     }
 
+    #[allow(identity_op)]
     pub fn priority27(&self) -> u8 {
         (self.bits_3 >> 3) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_priority27(&mut self, value: u8) {
         self.bits_3 = (self.bits_3 & !(0b00000001 << 3)) | ((value & 0b00000001) << 3);
     }
 
+    #[allow(identity_op)]
     pub fn priority28(&self) -> u8 {
         (self.bits_3 >> 4) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_priority28(&mut self, value: u8) {
         self.bits_3 = (self.bits_3 & !(0b00000001 << 4)) | ((value & 0b00000001) << 4);
     }
 
+    #[allow(identity_op)]
     pub fn priority29(&self) -> u8 {
         (self.bits_3 >> 5) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_priority29(&mut self, value: u8) {
         self.bits_3 = (self.bits_3 & !(0b00000001 << 5)) | ((value & 0b00000001) << 5);
     }
 
+    #[allow(identity_op)]
     pub fn priority30(&self) -> u8 {
         (self.bits_3 >> 6) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_priority30(&mut self, value: u8) {
         self.bits_3 = (self.bits_3 & !(0b00000001 << 6)) | ((value & 0b00000001) << 6);
     }
 
+    #[allow(identity_op)]
     pub fn priority31(&self) -> u8 {
         (self.bits_3 >> 7) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_priority31(&mut self, value: u8) {
         self.bits_3 = (self.bits_3 & !(0b00000001 << 7)) | ((value & 0b00000001) << 7);
     }
@@ -13633,34 +14104,42 @@ impl DEFAULT_KEY_ASSIGN {
         self.apply_target_0 = value;
     }
 
+    #[allow(identity_op)]
     pub fn is_analog_0(&self) -> u8 {
         (self.bits_17 >> 0) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_is_analog_0(&mut self, value: u8) {
         self.bits_17 = (self.bits_17 & !(0b00000001 << 0)) | ((value & 0b00000001) << 0);
     }
 
+    #[allow(identity_op)]
     pub fn enable_win64_0(&self) -> u8 {
         (self.bits_17 >> 1) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_enable_win64_0(&mut self, value: u8) {
         self.bits_17 = (self.bits_17 & !(0b00000001 << 1)) | ((value & 0b00000001) << 1);
     }
 
+    #[allow(identity_op)]
     pub fn enable_ps4_0(&self) -> u8 {
         (self.bits_17 >> 2) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_enable_ps4_0(&mut self, value: u8) {
         self.bits_17 = (self.bits_17 & !(0b00000001 << 2)) | ((value & 0b00000001) << 2);
     }
 
+    #[allow(identity_op)]
     pub fn enable_xbox_one_0(&self) -> u8 {
         (self.bits_17 >> 3) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_enable_xbox_one_0(&mut self, value: u8) {
         self.bits_17 = (self.bits_17 & !(0b00000001 << 3)) | ((value & 0b00000001) << 3);
     }
@@ -13721,34 +14200,42 @@ impl DEFAULT_KEY_ASSIGN {
         self.apply_target_1 = value;
     }
 
+    #[allow(identity_op)]
     pub fn is_analog_1(&self) -> u8 {
         (self.bits_2b >> 0) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_is_analog_1(&mut self, value: u8) {
         self.bits_2b = (self.bits_2b & !(0b00000001 << 0)) | ((value & 0b00000001) << 0);
     }
 
+    #[allow(identity_op)]
     pub fn enable_win64_1(&self) -> u8 {
         (self.bits_2b >> 1) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_enable_win64_1(&mut self, value: u8) {
         self.bits_2b = (self.bits_2b & !(0b00000001 << 1)) | ((value & 0b00000001) << 1);
     }
 
+    #[allow(identity_op)]
     pub fn enable_ps4_1(&self) -> u8 {
         (self.bits_2b >> 2) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_enable_ps4_1(&mut self, value: u8) {
         self.bits_2b = (self.bits_2b & !(0b00000001 << 2)) | ((value & 0b00000001) << 2);
     }
 
+    #[allow(identity_op)]
     pub fn enable_xbox_one_1(&self) -> u8 {
         (self.bits_2b >> 3) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_enable_xbox_one_1(&mut self, value: u8) {
         self.bits_2b = (self.bits_2b & !(0b00000001 << 3)) | ((value & 0b00000001) << 3);
     }
@@ -13809,34 +14296,42 @@ impl DEFAULT_KEY_ASSIGN {
         self.apply_target_2 = value;
     }
 
+    #[allow(identity_op)]
     pub fn is_analog_2(&self) -> u8 {
         (self.bits_3f >> 0) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_is_analog_2(&mut self, value: u8) {
         self.bits_3f = (self.bits_3f & !(0b00000001 << 0)) | ((value & 0b00000001) << 0);
     }
 
+    #[allow(identity_op)]
     pub fn enable_win64_2(&self) -> u8 {
         (self.bits_3f >> 1) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_enable_win64_2(&mut self, value: u8) {
         self.bits_3f = (self.bits_3f & !(0b00000001 << 1)) | ((value & 0b00000001) << 1);
     }
 
+    #[allow(identity_op)]
     pub fn enable_ps4_2(&self) -> u8 {
         (self.bits_3f >> 2) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_enable_ps4_2(&mut self, value: u8) {
         self.bits_3f = (self.bits_3f & !(0b00000001 << 2)) | ((value & 0b00000001) << 2);
     }
 
+    #[allow(identity_op)]
     pub fn enable_xbox_one_2(&self) -> u8 {
         (self.bits_3f >> 3) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_enable_xbox_one_2(&mut self, value: u8) {
         self.bits_3f = (self.bits_3f & !(0b00000001 << 3)) | ((value & 0b00000001) << 3);
     }
@@ -13897,34 +14392,42 @@ impl DEFAULT_KEY_ASSIGN {
         self.apply_target_3 = value;
     }
 
+    #[allow(identity_op)]
     pub fn is_analog_3(&self) -> u8 {
         (self.bits_53 >> 0) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_is_analog_3(&mut self, value: u8) {
         self.bits_53 = (self.bits_53 & !(0b00000001 << 0)) | ((value & 0b00000001) << 0);
     }
 
+    #[allow(identity_op)]
     pub fn enable_win64_3(&self) -> u8 {
         (self.bits_53 >> 1) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_enable_win64_3(&mut self, value: u8) {
         self.bits_53 = (self.bits_53 & !(0b00000001 << 1)) | ((value & 0b00000001) << 1);
     }
 
+    #[allow(identity_op)]
     pub fn enable_ps4_3(&self) -> u8 {
         (self.bits_53 >> 2) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_enable_ps4_3(&mut self, value: u8) {
         self.bits_53 = (self.bits_53 & !(0b00000001 << 2)) | ((value & 0b00000001) << 2);
     }
 
+    #[allow(identity_op)]
     pub fn enable_xbox_one_3(&self) -> u8 {
         (self.bits_53 >> 3) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_enable_xbox_one_3(&mut self, value: u8) {
         self.bits_53 = (self.bits_53 & !(0b00000001 << 3)) | ((value & 0b00000001) << 3);
     }
@@ -13985,34 +14488,42 @@ impl DEFAULT_KEY_ASSIGN {
         self.apply_target_4 = value;
     }
 
+    #[allow(identity_op)]
     pub fn is_analog_4(&self) -> u8 {
         (self.bits_67 >> 0) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_is_analog_4(&mut self, value: u8) {
         self.bits_67 = (self.bits_67 & !(0b00000001 << 0)) | ((value & 0b00000001) << 0);
     }
 
+    #[allow(identity_op)]
     pub fn enable_win64_4(&self) -> u8 {
         (self.bits_67 >> 1) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_enable_win64_4(&mut self, value: u8) {
         self.bits_67 = (self.bits_67 & !(0b00000001 << 1)) | ((value & 0b00000001) << 1);
     }
 
+    #[allow(identity_op)]
     pub fn enable_ps4_4(&self) -> u8 {
         (self.bits_67 >> 2) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_enable_ps4_4(&mut self, value: u8) {
         self.bits_67 = (self.bits_67 & !(0b00000001 << 2)) | ((value & 0b00000001) << 2);
     }
 
+    #[allow(identity_op)]
     pub fn enable_xbox_one_4(&self) -> u8 {
         (self.bits_67 >> 3) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_enable_xbox_one_4(&mut self, value: u8) {
         self.bits_67 = (self.bits_67 & !(0b00000001 << 3)) | ((value & 0b00000001) << 3);
     }
@@ -14073,34 +14584,42 @@ impl DEFAULT_KEY_ASSIGN {
         self.apply_target_5 = value;
     }
 
+    #[allow(identity_op)]
     pub fn is_analog_5(&self) -> u8 {
         (self.bits_7b >> 0) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_is_analog_5(&mut self, value: u8) {
         self.bits_7b = (self.bits_7b & !(0b00000001 << 0)) | ((value & 0b00000001) << 0);
     }
 
+    #[allow(identity_op)]
     pub fn enable_win64_5(&self) -> u8 {
         (self.bits_7b >> 1) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_enable_win64_5(&mut self, value: u8) {
         self.bits_7b = (self.bits_7b & !(0b00000001 << 1)) | ((value & 0b00000001) << 1);
     }
 
+    #[allow(identity_op)]
     pub fn enable_ps4_5(&self) -> u8 {
         (self.bits_7b >> 2) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_enable_ps4_5(&mut self, value: u8) {
         self.bits_7b = (self.bits_7b & !(0b00000001 << 2)) | ((value & 0b00000001) << 2);
     }
 
+    #[allow(identity_op)]
     pub fn enable_xbox_one_5(&self) -> u8 {
         (self.bits_7b >> 3) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_enable_xbox_one_5(&mut self, value: u8) {
         self.bits_7b = (self.bits_7b & !(0b00000001 << 3)) | ((value & 0b00000001) << 3);
     }
@@ -14161,34 +14680,42 @@ impl DEFAULT_KEY_ASSIGN {
         self.apply_target_6 = value;
     }
 
+    #[allow(identity_op)]
     pub fn is_analog_6(&self) -> u8 {
         (self.bits_8f >> 0) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_is_analog_6(&mut self, value: u8) {
         self.bits_8f = (self.bits_8f & !(0b00000001 << 0)) | ((value & 0b00000001) << 0);
     }
 
+    #[allow(identity_op)]
     pub fn enable_win64_6(&self) -> u8 {
         (self.bits_8f >> 1) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_enable_win64_6(&mut self, value: u8) {
         self.bits_8f = (self.bits_8f & !(0b00000001 << 1)) | ((value & 0b00000001) << 1);
     }
 
+    #[allow(identity_op)]
     pub fn enable_ps4_6(&self) -> u8 {
         (self.bits_8f >> 2) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_enable_ps4_6(&mut self, value: u8) {
         self.bits_8f = (self.bits_8f & !(0b00000001 << 2)) | ((value & 0b00000001) << 2);
     }
 
+    #[allow(identity_op)]
     pub fn enable_xbox_one_6(&self) -> u8 {
         (self.bits_8f >> 3) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_enable_xbox_one_6(&mut self, value: u8) {
         self.bits_8f = (self.bits_8f & !(0b00000001 << 3)) | ((value & 0b00000001) << 3);
     }
@@ -14249,34 +14776,42 @@ impl DEFAULT_KEY_ASSIGN {
         self.apply_target_7 = value;
     }
 
+    #[allow(identity_op)]
     pub fn is_analog_7(&self) -> u8 {
         (self.bits_a3 >> 0) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_is_analog_7(&mut self, value: u8) {
         self.bits_a3 = (self.bits_a3 & !(0b00000001 << 0)) | ((value & 0b00000001) << 0);
     }
 
+    #[allow(identity_op)]
     pub fn enable_win64_7(&self) -> u8 {
         (self.bits_a3 >> 1) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_enable_win64_7(&mut self, value: u8) {
         self.bits_a3 = (self.bits_a3 & !(0b00000001 << 1)) | ((value & 0b00000001) << 1);
     }
 
+    #[allow(identity_op)]
     pub fn enable_ps4_7(&self) -> u8 {
         (self.bits_a3 >> 2) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_enable_ps4_7(&mut self, value: u8) {
         self.bits_a3 = (self.bits_a3 & !(0b00000001 << 2)) | ((value & 0b00000001) << 2);
     }
 
+    #[allow(identity_op)]
     pub fn enable_xbox_one_7(&self) -> u8 {
         (self.bits_a3 >> 3) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_enable_xbox_one_7(&mut self, value: u8) {
         self.bits_a3 = (self.bits_a3 & !(0b00000001 << 3)) | ((value & 0b00000001) << 3);
     }
@@ -14304,6 +14839,7 @@ impl DEFAULT_KEY_ASSIGN {
     pub fn set_a2d_threshold_7(&mut self, value: f32) {
         self.a2d_threshold_7 = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -14315,13 +14851,16 @@ pub struct DIRECTION_CAMERA_PARAM_ST {
 }
 
 impl DIRECTION_CAMERA_PARAM_ST {
+    #[allow(identity_op)]
     pub fn is_use_option(&self) -> u8 {
         (self.bits_0 >> 0) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_is_use_option(&mut self, value: u8) {
         self.bits_0 = (self.bits_0 & !(0b00000001 << 0)) | ((value & 0b00000001) << 0);
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -14387,6 +14926,7 @@ impl ENEMY_COMMON_PARAM_ST {
     pub fn set_find_unfavorable_failed_point_height(&mut self, value: f32) {
         self.find_unfavorable_failed_point_height = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -14569,6 +15109,7 @@ impl ENEMY_STANDARD_INFO_BANK {
     pub fn set_deffenct_phys(&mut self, value: u16) {
         self.deffenct_phys = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -14722,6 +15263,7 @@ impl ENV_OBJ_LOT_PARAM_ST {
     pub fn set_create_weight_7(&mut self, value: u8) {
         self.create_weight_7 = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -14898,53 +15440,66 @@ impl EQUIP_MTRL_SET_PARAM_ST {
         self.material_cate06 = value;
     }
 
+    #[allow(identity_op)]
     pub fn is_disable_disp_num01(&self) -> u8 {
         (self.bits_30 >> 0) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_is_disable_disp_num01(&mut self, value: u8) {
         self.bits_30 = (self.bits_30 & !(0b00000001 << 0)) | ((value & 0b00000001) << 0);
     }
 
+    #[allow(identity_op)]
     pub fn is_disable_disp_num02(&self) -> u8 {
         (self.bits_30 >> 1) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_is_disable_disp_num02(&mut self, value: u8) {
         self.bits_30 = (self.bits_30 & !(0b00000001 << 1)) | ((value & 0b00000001) << 1);
     }
 
+    #[allow(identity_op)]
     pub fn is_disable_disp_num03(&self) -> u8 {
         (self.bits_30 >> 2) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_is_disable_disp_num03(&mut self, value: u8) {
         self.bits_30 = (self.bits_30 & !(0b00000001 << 2)) | ((value & 0b00000001) << 2);
     }
 
+    #[allow(identity_op)]
     pub fn is_disable_disp_num04(&self) -> u8 {
         (self.bits_30 >> 3) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_is_disable_disp_num04(&mut self, value: u8) {
         self.bits_30 = (self.bits_30 & !(0b00000001 << 3)) | ((value & 0b00000001) << 3);
     }
 
+    #[allow(identity_op)]
     pub fn is_disable_disp_num05(&self) -> u8 {
         (self.bits_30 >> 4) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_is_disable_disp_num05(&mut self, value: u8) {
         self.bits_30 = (self.bits_30 & !(0b00000001 << 4)) | ((value & 0b00000001) << 4);
     }
 
+    #[allow(identity_op)]
     pub fn is_disable_disp_num06(&self) -> u8 {
         (self.bits_30 >> 5) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_is_disable_disp_num06(&mut self, value: u8) {
         self.bits_30 = (self.bits_30 & !(0b00000001 << 5)) | ((value & 0b00000001) << 5);
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -14990,10 +15545,12 @@ pub struct EQUIP_PARAM_ACCESSORY_ST {
 }
 
 impl EQUIP_PARAM_ACCESSORY_ST {
+    #[allow(identity_op)]
     pub fn disable_param_nt(&self) -> u8 {
         (self.bits_0 >> 0) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_disable_param_nt(&mut self, value: u8) {
         self.bits_0 = (self.bits_0 & !(0b00000001 << 0)) | ((value & 0b00000001) << 0);
     }
@@ -15174,58 +15731,72 @@ impl EQUIP_PARAM_ACCESSORY_ST {
         self.vagrant_item_ene_drop_item_lot_id = value;
     }
 
+    #[allow(identity_op)]
     pub fn is_deposit(&self) -> u8 {
         (self.bits_40 >> 0) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_is_deposit(&mut self, value: u8) {
         self.bits_40 = (self.bits_40 & !(0b00000001 << 0)) | ((value & 0b00000001) << 0);
     }
 
+    #[allow(identity_op)]
     pub fn is_equip_out_brake(&self) -> u8 {
         (self.bits_40 >> 1) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_is_equip_out_brake(&mut self, value: u8) {
         self.bits_40 = (self.bits_40 & !(0b00000001 << 1)) | ((value & 0b00000001) << 1);
     }
 
+    #[allow(identity_op)]
     pub fn disable_multi_drop_share(&self) -> u8 {
         (self.bits_40 >> 2) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_disable_multi_drop_share(&mut self, value: u8) {
         self.bits_40 = (self.bits_40 & !(0b00000001 << 2)) | ((value & 0b00000001) << 2);
     }
 
+    #[allow(identity_op)]
     pub fn is_discard(&self) -> u8 {
         (self.bits_40 >> 3) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_is_discard(&mut self, value: u8) {
         self.bits_40 = (self.bits_40 & !(0b00000001 << 3)) | ((value & 0b00000001) << 3);
     }
 
+    #[allow(identity_op)]
     pub fn is_drop(&self) -> u8 {
         (self.bits_40 >> 4) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_is_drop(&mut self, value: u8) {
         self.bits_40 = (self.bits_40 & !(0b00000001 << 4)) | ((value & 0b00000001) << 4);
     }
 
+    #[allow(identity_op)]
     pub fn show_log_cond_type(&self) -> u8 {
         (self.bits_40 >> 5) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_show_log_cond_type(&mut self, value: u8) {
         self.bits_40 = (self.bits_40 & !(0b00000001 << 5)) | ((value & 0b00000001) << 5);
     }
 
+    #[allow(identity_op)]
     pub fn show_dialog_cond_type(&self) -> u8 {
         (self.bits_40 >> 6) & 0b00000011
     }
 
+    #[allow(identity_op)]
     pub fn set_show_dialog_cond_type(&mut self, value: u8) {
         self.bits_40 = (self.bits_40 & !(0b00000011 << 6)) | ((value & 0b00000011) << 6);
     }
@@ -15293,6 +15864,7 @@ impl EQUIP_PARAM_ACCESSORY_ST {
     pub fn set_resident_sp_effect_id4(&mut self, value: i32) {
         self.resident_sp_effect_id4 = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -15329,6 +15901,7 @@ impl EQUIP_PARAM_CUSTOM_WEAPON_ST {
     pub fn set_reinforce_lv(&mut self, value: u8) {
         self.reinforce_lv = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -15376,10 +15949,12 @@ pub struct EQUIP_PARAM_GEM_ST {
 }
 
 impl EQUIP_PARAM_GEM_ST {
+    #[allow(identity_op)]
     pub fn disable_param_nt(&self) -> u8 {
         (self.bits_0 >> 0) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_disable_param_nt(&mut self, value: u8) {
         self.bits_0 = (self.bits_0 & !(0b00000001 << 0)) | ((value & 0b00000001) << 0);
     }
@@ -15496,130 +16071,162 @@ impl EQUIP_PARAM_GEM_ST {
         self.trophy_seq_id = value;
     }
 
+    #[allow(identity_op)]
     pub fn configurable_wep_attr00(&self) -> u8 {
         (self.bits_30 >> 0) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_configurable_wep_attr00(&mut self, value: u8) {
         self.bits_30 = (self.bits_30 & !(0b00000001 << 0)) | ((value & 0b00000001) << 0);
     }
 
+    #[allow(identity_op)]
     pub fn configurable_wep_attr01(&self) -> u8 {
         (self.bits_30 >> 1) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_configurable_wep_attr01(&mut self, value: u8) {
         self.bits_30 = (self.bits_30 & !(0b00000001 << 1)) | ((value & 0b00000001) << 1);
     }
 
+    #[allow(identity_op)]
     pub fn configurable_wep_attr02(&self) -> u8 {
         (self.bits_30 >> 2) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_configurable_wep_attr02(&mut self, value: u8) {
         self.bits_30 = (self.bits_30 & !(0b00000001 << 2)) | ((value & 0b00000001) << 2);
     }
 
+    #[allow(identity_op)]
     pub fn configurable_wep_attr03(&self) -> u8 {
         (self.bits_30 >> 3) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_configurable_wep_attr03(&mut self, value: u8) {
         self.bits_30 = (self.bits_30 & !(0b00000001 << 3)) | ((value & 0b00000001) << 3);
     }
 
+    #[allow(identity_op)]
     pub fn configurable_wep_attr04(&self) -> u8 {
         (self.bits_30 >> 4) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_configurable_wep_attr04(&mut self, value: u8) {
         self.bits_30 = (self.bits_30 & !(0b00000001 << 4)) | ((value & 0b00000001) << 4);
     }
 
+    #[allow(identity_op)]
     pub fn configurable_wep_attr05(&self) -> u8 {
         (self.bits_30 >> 5) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_configurable_wep_attr05(&mut self, value: u8) {
         self.bits_30 = (self.bits_30 & !(0b00000001 << 5)) | ((value & 0b00000001) << 5);
     }
 
+    #[allow(identity_op)]
     pub fn configurable_wep_attr06(&self) -> u8 {
         (self.bits_30 >> 6) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_configurable_wep_attr06(&mut self, value: u8) {
         self.bits_30 = (self.bits_30 & !(0b00000001 << 6)) | ((value & 0b00000001) << 6);
     }
 
+    #[allow(identity_op)]
     pub fn configurable_wep_attr07(&self) -> u8 {
         (self.bits_30 >> 7) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_configurable_wep_attr07(&mut self, value: u8) {
         self.bits_30 = (self.bits_30 & !(0b00000001 << 7)) | ((value & 0b00000001) << 7);
     }
 
+    #[allow(identity_op)]
     pub fn configurable_wep_attr08(&self) -> u8 {
         (self.bits_31 >> 0) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_configurable_wep_attr08(&mut self, value: u8) {
         self.bits_31 = (self.bits_31 & !(0b00000001 << 0)) | ((value & 0b00000001) << 0);
     }
 
+    #[allow(identity_op)]
     pub fn configurable_wep_attr09(&self) -> u8 {
         (self.bits_31 >> 1) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_configurable_wep_attr09(&mut self, value: u8) {
         self.bits_31 = (self.bits_31 & !(0b00000001 << 1)) | ((value & 0b00000001) << 1);
     }
 
+    #[allow(identity_op)]
     pub fn configurable_wep_attr10(&self) -> u8 {
         (self.bits_31 >> 2) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_configurable_wep_attr10(&mut self, value: u8) {
         self.bits_31 = (self.bits_31 & !(0b00000001 << 2)) | ((value & 0b00000001) << 2);
     }
 
+    #[allow(identity_op)]
     pub fn configurable_wep_attr11(&self) -> u8 {
         (self.bits_31 >> 3) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_configurable_wep_attr11(&mut self, value: u8) {
         self.bits_31 = (self.bits_31 & !(0b00000001 << 3)) | ((value & 0b00000001) << 3);
     }
 
+    #[allow(identity_op)]
     pub fn configurable_wep_attr12(&self) -> u8 {
         (self.bits_31 >> 4) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_configurable_wep_attr12(&mut self, value: u8) {
         self.bits_31 = (self.bits_31 & !(0b00000001 << 4)) | ((value & 0b00000001) << 4);
     }
 
+    #[allow(identity_op)]
     pub fn configurable_wep_attr13(&self) -> u8 {
         (self.bits_31 >> 5) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_configurable_wep_attr13(&mut self, value: u8) {
         self.bits_31 = (self.bits_31 & !(0b00000001 << 5)) | ((value & 0b00000001) << 5);
     }
 
+    #[allow(identity_op)]
     pub fn configurable_wep_attr14(&self) -> u8 {
         (self.bits_31 >> 6) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_configurable_wep_attr14(&mut self, value: u8) {
         self.bits_31 = (self.bits_31 & !(0b00000001 << 6)) | ((value & 0b00000001) << 6);
     }
 
+    #[allow(identity_op)]
     pub fn configurable_wep_attr15(&self) -> u8 {
         (self.bits_31 >> 7) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_configurable_wep_attr15(&mut self, value: u8) {
         self.bits_31 = (self.bits_31 & !(0b00000001 << 7)) | ((value & 0b00000001) << 7);
     }
@@ -15632,114 +16239,142 @@ impl EQUIP_PARAM_GEM_ST {
         self.rarity = value;
     }
 
+    #[allow(identity_op)]
     pub fn configurable_wep_attr16(&self) -> u8 {
         (self.bits_33 >> 0) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_configurable_wep_attr16(&mut self, value: u8) {
         self.bits_33 = (self.bits_33 & !(0b00000001 << 0)) | ((value & 0b00000001) << 0);
     }
 
+    #[allow(identity_op)]
     pub fn configurable_wep_attr17(&self) -> u8 {
         (self.bits_33 >> 1) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_configurable_wep_attr17(&mut self, value: u8) {
         self.bits_33 = (self.bits_33 & !(0b00000001 << 1)) | ((value & 0b00000001) << 1);
     }
 
+    #[allow(identity_op)]
     pub fn configurable_wep_attr18(&self) -> u8 {
         (self.bits_33 >> 2) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_configurable_wep_attr18(&mut self, value: u8) {
         self.bits_33 = (self.bits_33 & !(0b00000001 << 2)) | ((value & 0b00000001) << 2);
     }
 
+    #[allow(identity_op)]
     pub fn configurable_wep_attr19(&self) -> u8 {
         (self.bits_33 >> 3) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_configurable_wep_attr19(&mut self, value: u8) {
         self.bits_33 = (self.bits_33 & !(0b00000001 << 3)) | ((value & 0b00000001) << 3);
     }
 
+    #[allow(identity_op)]
     pub fn configurable_wep_attr20(&self) -> u8 {
         (self.bits_33 >> 4) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_configurable_wep_attr20(&mut self, value: u8) {
         self.bits_33 = (self.bits_33 & !(0b00000001 << 4)) | ((value & 0b00000001) << 4);
     }
 
+    #[allow(identity_op)]
     pub fn configurable_wep_attr21(&self) -> u8 {
         (self.bits_33 >> 5) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_configurable_wep_attr21(&mut self, value: u8) {
         self.bits_33 = (self.bits_33 & !(0b00000001 << 5)) | ((value & 0b00000001) << 5);
     }
 
+    #[allow(identity_op)]
     pub fn configurable_wep_attr22(&self) -> u8 {
         (self.bits_33 >> 6) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_configurable_wep_attr22(&mut self, value: u8) {
         self.bits_33 = (self.bits_33 & !(0b00000001 << 6)) | ((value & 0b00000001) << 6);
     }
 
+    #[allow(identity_op)]
     pub fn configurable_wep_attr23(&self) -> u8 {
         (self.bits_33 >> 7) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_configurable_wep_attr23(&mut self, value: u8) {
         self.bits_33 = (self.bits_33 & !(0b00000001 << 7)) | ((value & 0b00000001) << 7);
     }
 
+    #[allow(identity_op)]
     pub fn is_discard(&self) -> u8 {
         (self.bits_34 >> 0) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_is_discard(&mut self, value: u8) {
         self.bits_34 = (self.bits_34 & !(0b00000001 << 0)) | ((value & 0b00000001) << 0);
     }
 
+    #[allow(identity_op)]
     pub fn is_drop(&self) -> u8 {
         (self.bits_34 >> 1) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_is_drop(&mut self, value: u8) {
         self.bits_34 = (self.bits_34 & !(0b00000001 << 1)) | ((value & 0b00000001) << 1);
     }
 
+    #[allow(identity_op)]
     pub fn is_deposit(&self) -> u8 {
         (self.bits_34 >> 2) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_is_deposit(&mut self, value: u8) {
         self.bits_34 = (self.bits_34 & !(0b00000001 << 2)) | ((value & 0b00000001) << 2);
     }
 
+    #[allow(identity_op)]
     pub fn disable_multi_drop_share(&self) -> u8 {
         (self.bits_34 >> 3) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_disable_multi_drop_share(&mut self, value: u8) {
         self.bits_34 = (self.bits_34 & !(0b00000001 << 3)) | ((value & 0b00000001) << 3);
     }
 
+    #[allow(identity_op)]
     pub fn show_dialog_cond_type(&self) -> u8 {
         (self.bits_34 >> 4) & 0b00000011
     }
 
+    #[allow(identity_op)]
     pub fn set_show_dialog_cond_type(&mut self, value: u8) {
         self.bits_34 = (self.bits_34 & !(0b00000011 << 4)) | ((value & 0b00000011) << 4);
     }
 
+    #[allow(identity_op)]
     pub fn show_log_cond_type(&self) -> u8 {
         (self.bits_34 >> 5) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_show_log_cond_type(&mut self, value: u8) {
         self.bits_34 = (self.bits_34 & !(0b00000001 << 5)) | ((value & 0b00000001) << 5);
     }
@@ -15760,354 +16395,442 @@ impl EQUIP_PARAM_GEM_ST {
         self.is_special_sword_art = value;
     }
 
+    #[allow(identity_op)]
     pub fn can_mount_wep_dagger(&self) -> u8 {
         (self.bits_38 >> 0) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_can_mount_wep_dagger(&mut self, value: u8) {
         self.bits_38 = (self.bits_38 & !(0b00000001 << 0)) | ((value & 0b00000001) << 0);
     }
 
+    #[allow(identity_op)]
     pub fn can_mount_wep_sword_normal(&self) -> u8 {
         (self.bits_38 >> 1) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_can_mount_wep_sword_normal(&mut self, value: u8) {
         self.bits_38 = (self.bits_38 & !(0b00000001 << 1)) | ((value & 0b00000001) << 1);
     }
 
+    #[allow(identity_op)]
     pub fn can_mount_wep_sword_large(&self) -> u8 {
         (self.bits_38 >> 2) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_can_mount_wep_sword_large(&mut self, value: u8) {
         self.bits_38 = (self.bits_38 & !(0b00000001 << 2)) | ((value & 0b00000001) << 2);
     }
 
+    #[allow(identity_op)]
     pub fn can_mount_wep_sword_gigantic(&self) -> u8 {
         (self.bits_38 >> 3) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_can_mount_wep_sword_gigantic(&mut self, value: u8) {
         self.bits_38 = (self.bits_38 & !(0b00000001 << 3)) | ((value & 0b00000001) << 3);
     }
 
+    #[allow(identity_op)]
     pub fn can_mount_wep_saber_normal(&self) -> u8 {
         (self.bits_38 >> 4) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_can_mount_wep_saber_normal(&mut self, value: u8) {
         self.bits_38 = (self.bits_38 & !(0b00000001 << 4)) | ((value & 0b00000001) << 4);
     }
 
+    #[allow(identity_op)]
     pub fn can_mount_wep_saber_large(&self) -> u8 {
         (self.bits_38 >> 5) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_can_mount_wep_saber_large(&mut self, value: u8) {
         self.bits_38 = (self.bits_38 & !(0b00000001 << 5)) | ((value & 0b00000001) << 5);
     }
 
+    #[allow(identity_op)]
     pub fn can_mount_wep_katana(&self) -> u8 {
         (self.bits_38 >> 6) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_can_mount_wep_katana(&mut self, value: u8) {
         self.bits_38 = (self.bits_38 & !(0b00000001 << 6)) | ((value & 0b00000001) << 6);
     }
 
+    #[allow(identity_op)]
     pub fn can_mount_wep_sword_double_edge(&self) -> u8 {
         (self.bits_38 >> 7) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_can_mount_wep_sword_double_edge(&mut self, value: u8) {
         self.bits_38 = (self.bits_38 & !(0b00000001 << 7)) | ((value & 0b00000001) << 7);
     }
 
+    #[allow(identity_op)]
     pub fn can_mount_wep_sword_pierce(&self) -> u8 {
         (self.bits_39 >> 0) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_can_mount_wep_sword_pierce(&mut self, value: u8) {
         self.bits_39 = (self.bits_39 & !(0b00000001 << 0)) | ((value & 0b00000001) << 0);
     }
 
+    #[allow(identity_op)]
     pub fn can_mount_wep_rapier_heavy(&self) -> u8 {
         (self.bits_39 >> 1) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_can_mount_wep_rapier_heavy(&mut self, value: u8) {
         self.bits_39 = (self.bits_39 & !(0b00000001 << 1)) | ((value & 0b00000001) << 1);
     }
 
+    #[allow(identity_op)]
     pub fn can_mount_wep_axe_normal(&self) -> u8 {
         (self.bits_39 >> 2) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_can_mount_wep_axe_normal(&mut self, value: u8) {
         self.bits_39 = (self.bits_39 & !(0b00000001 << 2)) | ((value & 0b00000001) << 2);
     }
 
+    #[allow(identity_op)]
     pub fn can_mount_wep_axe_large(&self) -> u8 {
         (self.bits_39 >> 3) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_can_mount_wep_axe_large(&mut self, value: u8) {
         self.bits_39 = (self.bits_39 & !(0b00000001 << 3)) | ((value & 0b00000001) << 3);
     }
 
+    #[allow(identity_op)]
     pub fn can_mount_wep_hammer_normal(&self) -> u8 {
         (self.bits_39 >> 4) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_can_mount_wep_hammer_normal(&mut self, value: u8) {
         self.bits_39 = (self.bits_39 & !(0b00000001 << 4)) | ((value & 0b00000001) << 4);
     }
 
+    #[allow(identity_op)]
     pub fn can_mount_wep_hammer_large(&self) -> u8 {
         (self.bits_39 >> 5) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_can_mount_wep_hammer_large(&mut self, value: u8) {
         self.bits_39 = (self.bits_39 & !(0b00000001 << 5)) | ((value & 0b00000001) << 5);
     }
 
+    #[allow(identity_op)]
     pub fn can_mount_wep_flail(&self) -> u8 {
         (self.bits_39 >> 6) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_can_mount_wep_flail(&mut self, value: u8) {
         self.bits_39 = (self.bits_39 & !(0b00000001 << 6)) | ((value & 0b00000001) << 6);
     }
 
+    #[allow(identity_op)]
     pub fn can_mount_wep_spear_normal(&self) -> u8 {
         (self.bits_39 >> 7) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_can_mount_wep_spear_normal(&mut self, value: u8) {
         self.bits_39 = (self.bits_39 & !(0b00000001 << 7)) | ((value & 0b00000001) << 7);
     }
 
+    #[allow(identity_op)]
     pub fn can_mount_wep_spear_large(&self) -> u8 {
         (self.bits_3a >> 0) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_can_mount_wep_spear_large(&mut self, value: u8) {
         self.bits_3a = (self.bits_3a & !(0b00000001 << 0)) | ((value & 0b00000001) << 0);
     }
 
+    #[allow(identity_op)]
     pub fn can_mount_wep_spear_heavy(&self) -> u8 {
         (self.bits_3a >> 1) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_can_mount_wep_spear_heavy(&mut self, value: u8) {
         self.bits_3a = (self.bits_3a & !(0b00000001 << 1)) | ((value & 0b00000001) << 1);
     }
 
+    #[allow(identity_op)]
     pub fn can_mount_wep_spear_axe(&self) -> u8 {
         (self.bits_3a >> 2) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_can_mount_wep_spear_axe(&mut self, value: u8) {
         self.bits_3a = (self.bits_3a & !(0b00000001 << 2)) | ((value & 0b00000001) << 2);
     }
 
+    #[allow(identity_op)]
     pub fn can_mount_wep_sickle(&self) -> u8 {
         (self.bits_3a >> 3) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_can_mount_wep_sickle(&mut self, value: u8) {
         self.bits_3a = (self.bits_3a & !(0b00000001 << 3)) | ((value & 0b00000001) << 3);
     }
 
+    #[allow(identity_op)]
     pub fn can_mount_wep_knuckle(&self) -> u8 {
         (self.bits_3a >> 4) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_can_mount_wep_knuckle(&mut self, value: u8) {
         self.bits_3a = (self.bits_3a & !(0b00000001 << 4)) | ((value & 0b00000001) << 4);
     }
 
+    #[allow(identity_op)]
     pub fn can_mount_wep_claw(&self) -> u8 {
         (self.bits_3a >> 5) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_can_mount_wep_claw(&mut self, value: u8) {
         self.bits_3a = (self.bits_3a & !(0b00000001 << 5)) | ((value & 0b00000001) << 5);
     }
 
+    #[allow(identity_op)]
     pub fn can_mount_wep_whip(&self) -> u8 {
         (self.bits_3a >> 6) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_can_mount_wep_whip(&mut self, value: u8) {
         self.bits_3a = (self.bits_3a & !(0b00000001 << 6)) | ((value & 0b00000001) << 6);
     }
 
+    #[allow(identity_op)]
     pub fn can_mount_wep_axhammer_large(&self) -> u8 {
         (self.bits_3a >> 7) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_can_mount_wep_axhammer_large(&mut self, value: u8) {
         self.bits_3a = (self.bits_3a & !(0b00000001 << 7)) | ((value & 0b00000001) << 7);
     }
 
+    #[allow(identity_op)]
     pub fn can_mount_wep_bow_small(&self) -> u8 {
         (self.bits_3b >> 0) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_can_mount_wep_bow_small(&mut self, value: u8) {
         self.bits_3b = (self.bits_3b & !(0b00000001 << 0)) | ((value & 0b00000001) << 0);
     }
 
+    #[allow(identity_op)]
     pub fn can_mount_wep_bow_normal(&self) -> u8 {
         (self.bits_3b >> 1) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_can_mount_wep_bow_normal(&mut self, value: u8) {
         self.bits_3b = (self.bits_3b & !(0b00000001 << 1)) | ((value & 0b00000001) << 1);
     }
 
+    #[allow(identity_op)]
     pub fn can_mount_wep_bow_large(&self) -> u8 {
         (self.bits_3b >> 2) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_can_mount_wep_bow_large(&mut self, value: u8) {
         self.bits_3b = (self.bits_3b & !(0b00000001 << 2)) | ((value & 0b00000001) << 2);
     }
 
+    #[allow(identity_op)]
     pub fn can_mount_wep_closs_bow(&self) -> u8 {
         (self.bits_3b >> 3) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_can_mount_wep_closs_bow(&mut self, value: u8) {
         self.bits_3b = (self.bits_3b & !(0b00000001 << 3)) | ((value & 0b00000001) << 3);
     }
 
+    #[allow(identity_op)]
     pub fn can_mount_wep_ballista(&self) -> u8 {
         (self.bits_3b >> 4) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_can_mount_wep_ballista(&mut self, value: u8) {
         self.bits_3b = (self.bits_3b & !(0b00000001 << 4)) | ((value & 0b00000001) << 4);
     }
 
+    #[allow(identity_op)]
     pub fn can_mount_wep_staff(&self) -> u8 {
         (self.bits_3b >> 5) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_can_mount_wep_staff(&mut self, value: u8) {
         self.bits_3b = (self.bits_3b & !(0b00000001 << 5)) | ((value & 0b00000001) << 5);
     }
 
+    #[allow(identity_op)]
     pub fn can_mount_wep_sorcery(&self) -> u8 {
         (self.bits_3b >> 6) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_can_mount_wep_sorcery(&mut self, value: u8) {
         self.bits_3b = (self.bits_3b & !(0b00000001 << 6)) | ((value & 0b00000001) << 6);
     }
 
+    #[allow(identity_op)]
     pub fn can_mount_wep_talisman(&self) -> u8 {
         (self.bits_3b >> 7) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_can_mount_wep_talisman(&mut self, value: u8) {
         self.bits_3b = (self.bits_3b & !(0b00000001 << 7)) | ((value & 0b00000001) << 7);
     }
 
+    #[allow(identity_op)]
     pub fn can_mount_wep_shield_small(&self) -> u8 {
         (self.bits_3c >> 0) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_can_mount_wep_shield_small(&mut self, value: u8) {
         self.bits_3c = (self.bits_3c & !(0b00000001 << 0)) | ((value & 0b00000001) << 0);
     }
 
+    #[allow(identity_op)]
     pub fn can_mount_wep_shield_normal(&self) -> u8 {
         (self.bits_3c >> 1) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_can_mount_wep_shield_normal(&mut self, value: u8) {
         self.bits_3c = (self.bits_3c & !(0b00000001 << 1)) | ((value & 0b00000001) << 1);
     }
 
+    #[allow(identity_op)]
     pub fn can_mount_wep_shield_large(&self) -> u8 {
         (self.bits_3c >> 2) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_can_mount_wep_shield_large(&mut self, value: u8) {
         self.bits_3c = (self.bits_3c & !(0b00000001 << 2)) | ((value & 0b00000001) << 2);
     }
 
+    #[allow(identity_op)]
     pub fn can_mount_wep_torch(&self) -> u8 {
         (self.bits_3c >> 3) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_can_mount_wep_torch(&mut self, value: u8) {
         self.bits_3c = (self.bits_3c & !(0b00000001 << 3)) | ((value & 0b00000001) << 3);
     }
 
+    #[allow(identity_op)]
     pub fn can_mount_wep_hand_to_hand(&self) -> u8 {
         (self.bits_3c >> 4) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_can_mount_wep_hand_to_hand(&mut self, value: u8) {
         self.bits_3c = (self.bits_3c & !(0b00000001 << 4)) | ((value & 0b00000001) << 4);
     }
 
+    #[allow(identity_op)]
     pub fn can_mount_wep_perfume_bottle(&self) -> u8 {
         (self.bits_3c >> 5) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_can_mount_wep_perfume_bottle(&mut self, value: u8) {
         self.bits_3c = (self.bits_3c & !(0b00000001 << 5)) | ((value & 0b00000001) << 5);
     }
 
+    #[allow(identity_op)]
     pub fn can_mount_wep_thrusting_shield(&self) -> u8 {
         (self.bits_3c >> 6) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_can_mount_wep_thrusting_shield(&mut self, value: u8) {
         self.bits_3c = (self.bits_3c & !(0b00000001 << 6)) | ((value & 0b00000001) << 6);
     }
 
+    #[allow(identity_op)]
     pub fn can_mount_wep_throwing_weapon(&self) -> u8 {
         (self.bits_3c >> 7) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_can_mount_wep_throwing_weapon(&mut self, value: u8) {
         self.bits_3c = (self.bits_3c & !(0b00000001 << 7)) | ((value & 0b00000001) << 7);
     }
 
+    #[allow(identity_op)]
     pub fn can_mount_wep_reverse_hand_sword(&self) -> u8 {
         (self.bits_3d >> 0) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_can_mount_wep_reverse_hand_sword(&mut self, value: u8) {
         self.bits_3d = (self.bits_3d & !(0b00000001 << 0)) | ((value & 0b00000001) << 0);
     }
 
+    #[allow(identity_op)]
     pub fn can_mount_wep_light_greatsword(&self) -> u8 {
         (self.bits_3d >> 1) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_can_mount_wep_light_greatsword(&mut self, value: u8) {
         self.bits_3d = (self.bits_3d & !(0b00000001 << 1)) | ((value & 0b00000001) << 1);
     }
 
+    #[allow(identity_op)]
     pub fn can_mount_wep_great_katana(&self) -> u8 {
         (self.bits_3d >> 2) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_can_mount_wep_great_katana(&mut self, value: u8) {
         self.bits_3d = (self.bits_3d & !(0b00000001 << 2)) | ((value & 0b00000001) << 2);
     }
 
+    #[allow(identity_op)]
     pub fn can_mount_wep_beast_claw(&self) -> u8 {
         (self.bits_3d >> 3) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_can_mount_wep_beast_claw(&mut self, value: u8) {
         self.bits_3d = (self.bits_3d & !(0b00000001 << 3)) | ((value & 0b00000001) << 3);
     }
@@ -16159,6 +16882,7 @@ impl EQUIP_PARAM_GEM_ST {
     pub fn set_mount_wep_text_id(&mut self, value: i32) {
         self.mount_wep_text_id = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -16249,10 +16973,12 @@ pub struct EQUIP_PARAM_GOODS_ST {
 }
 
 impl EQUIP_PARAM_GOODS_ST {
+    #[allow(identity_op)]
     pub fn disable_param_nt(&self) -> u8 {
         (self.bits_0 >> 0) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_disable_param_nt(&mut self, value: u8) {
         self.bits_0 = (self.bits_0 & !(0b00000001 << 0)) | ((value & 0b00000001) << 0);
     }
@@ -16473,194 +17199,242 @@ impl EQUIP_PARAM_GOODS_ST {
         self.replace_category = value;
     }
 
+    #[allow(identity_op)]
     pub fn enable_live(&self) -> u8 {
         (self.bits_48 >> 0) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_enable_live(&mut self, value: u8) {
         self.bits_48 = (self.bits_48 & !(0b00000001 << 0)) | ((value & 0b00000001) << 0);
     }
 
+    #[allow(identity_op)]
     pub fn enable_gray(&self) -> u8 {
         (self.bits_48 >> 1) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_enable_gray(&mut self, value: u8) {
         self.bits_48 = (self.bits_48 & !(0b00000001 << 1)) | ((value & 0b00000001) << 1);
     }
 
+    #[allow(identity_op)]
     pub fn enable_white(&self) -> u8 {
         (self.bits_48 >> 2) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_enable_white(&mut self, value: u8) {
         self.bits_48 = (self.bits_48 & !(0b00000001 << 2)) | ((value & 0b00000001) << 2);
     }
 
+    #[allow(identity_op)]
     pub fn enable_black(&self) -> u8 {
         (self.bits_48 >> 3) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_enable_black(&mut self, value: u8) {
         self.bits_48 = (self.bits_48 & !(0b00000001 << 3)) | ((value & 0b00000001) << 3);
     }
 
+    #[allow(identity_op)]
     pub fn enable_multi(&self) -> u8 {
         (self.bits_48 >> 4) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_enable_multi(&mut self, value: u8) {
         self.bits_48 = (self.bits_48 & !(0b00000001 << 4)) | ((value & 0b00000001) << 4);
     }
 
+    #[allow(identity_op)]
     pub fn disable_offline(&self) -> u8 {
         (self.bits_48 >> 5) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_disable_offline(&mut self, value: u8) {
         self.bits_48 = (self.bits_48 & !(0b00000001 << 5)) | ((value & 0b00000001) << 5);
     }
 
+    #[allow(identity_op)]
     pub fn is_equip(&self) -> u8 {
         (self.bits_48 >> 6) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_is_equip(&mut self, value: u8) {
         self.bits_48 = (self.bits_48 & !(0b00000001 << 6)) | ((value & 0b00000001) << 6);
     }
 
+    #[allow(identity_op)]
     pub fn is_consume(&self) -> u8 {
         (self.bits_48 >> 7) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_is_consume(&mut self, value: u8) {
         self.bits_48 = (self.bits_48 & !(0b00000001 << 7)) | ((value & 0b00000001) << 7);
     }
 
+    #[allow(identity_op)]
     pub fn is_auto_equip(&self) -> u8 {
         (self.bits_49 >> 0) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_is_auto_equip(&mut self, value: u8) {
         self.bits_49 = (self.bits_49 & !(0b00000001 << 0)) | ((value & 0b00000001) << 0);
     }
 
+    #[allow(identity_op)]
     pub fn is_establishment(&self) -> u8 {
         (self.bits_49 >> 1) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_is_establishment(&mut self, value: u8) {
         self.bits_49 = (self.bits_49 & !(0b00000001 << 1)) | ((value & 0b00000001) << 1);
     }
 
+    #[allow(identity_op)]
     pub fn is_only_one(&self) -> u8 {
         (self.bits_49 >> 2) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_is_only_one(&mut self, value: u8) {
         self.bits_49 = (self.bits_49 & !(0b00000001 << 2)) | ((value & 0b00000001) << 2);
     }
 
+    #[allow(identity_op)]
     pub fn is_discard(&self) -> u8 {
         (self.bits_49 >> 3) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_is_discard(&mut self, value: u8) {
         self.bits_49 = (self.bits_49 & !(0b00000001 << 3)) | ((value & 0b00000001) << 3);
     }
 
+    #[allow(identity_op)]
     pub fn is_deposit(&self) -> u8 {
         (self.bits_49 >> 4) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_is_deposit(&mut self, value: u8) {
         self.bits_49 = (self.bits_49 & !(0b00000001 << 4)) | ((value & 0b00000001) << 4);
     }
 
+    #[allow(identity_op)]
     pub fn is_disable_hand(&self) -> u8 {
         (self.bits_49 >> 5) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_is_disable_hand(&mut self, value: u8) {
         self.bits_49 = (self.bits_49 & !(0b00000001 << 5)) | ((value & 0b00000001) << 5);
     }
 
+    #[allow(identity_op)]
     pub fn is_remove_item_for_game_clear(&self) -> u8 {
         (self.bits_49 >> 6) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_is_remove_item_for_game_clear(&mut self, value: u8) {
         self.bits_49 = (self.bits_49 & !(0b00000001 << 6)) | ((value & 0b00000001) << 6);
     }
 
+    #[allow(identity_op)]
     pub fn is_supple_item(&self) -> u8 {
         (self.bits_49 >> 7) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_is_supple_item(&mut self, value: u8) {
         self.bits_49 = (self.bits_49 & !(0b00000001 << 7)) | ((value & 0b00000001) << 7);
     }
 
+    #[allow(identity_op)]
     pub fn is_full_supple_item(&self) -> u8 {
         (self.bits_4a >> 0) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_is_full_supple_item(&mut self, value: u8) {
         self.bits_4a = (self.bits_4a & !(0b00000001 << 0)) | ((value & 0b00000001) << 0);
     }
 
+    #[allow(identity_op)]
     pub fn is_enhance(&self) -> u8 {
         (self.bits_4a >> 1) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_is_enhance(&mut self, value: u8) {
         self.bits_4a = (self.bits_4a & !(0b00000001 << 1)) | ((value & 0b00000001) << 1);
     }
 
+    #[allow(identity_op)]
     pub fn is_fix_item(&self) -> u8 {
         (self.bits_4a >> 2) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_is_fix_item(&mut self, value: u8) {
         self.bits_4a = (self.bits_4a & !(0b00000001 << 2)) | ((value & 0b00000001) << 2);
     }
 
+    #[allow(identity_op)]
     pub fn disable_multi_drop_share(&self) -> u8 {
         (self.bits_4a >> 3) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_disable_multi_drop_share(&mut self, value: u8) {
         self.bits_4a = (self.bits_4a & !(0b00000001 << 3)) | ((value & 0b00000001) << 3);
     }
 
+    #[allow(identity_op)]
     pub fn disable_use_at_coliseum(&self) -> u8 {
         (self.bits_4a >> 4) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_disable_use_at_coliseum(&mut self, value: u8) {
         self.bits_4a = (self.bits_4a & !(0b00000001 << 4)) | ((value & 0b00000001) << 4);
     }
 
+    #[allow(identity_op)]
     pub fn disable_use_at_out_of_coliseum(&self) -> u8 {
         (self.bits_4a >> 5) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_disable_use_at_out_of_coliseum(&mut self, value: u8) {
         self.bits_4a = (self.bits_4a & !(0b00000001 << 5)) | ((value & 0b00000001) << 5);
     }
 
+    #[allow(identity_op)]
     pub fn is_enable_fast_use_item(&self) -> u8 {
         (self.bits_4a >> 6) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_is_enable_fast_use_item(&mut self, value: u8) {
         self.bits_4a = (self.bits_4a & !(0b00000001 << 6)) | ((value & 0b00000001) << 6);
     }
 
+    #[allow(identity_op)]
     pub fn is_apply_special_effect(&self) -> u8 {
         (self.bits_4a >> 7) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_is_apply_special_effect(&mut self, value: u8) {
         self.bits_4a = (self.bits_4a & !(0b00000001 << 7)) | ((value & 0b00000001) << 7);
     }
@@ -16737,66 +17511,82 @@ impl EQUIP_PARAM_GOODS_ST {
         self.effect_sfx_id = value;
     }
 
+    #[allow(identity_op)]
     pub fn enable_active_big_rune(&self) -> u8 {
         (self.bits_6c >> 0) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_enable_active_big_rune(&mut self, value: u8) {
         self.bits_6c = (self.bits_6c & !(0b00000001 << 0)) | ((value & 0b00000001) << 0);
     }
 
+    #[allow(identity_op)]
     pub fn is_bonfire_warp_item(&self) -> u8 {
         (self.bits_6c >> 1) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_is_bonfire_warp_item(&mut self, value: u8) {
         self.bits_6c = (self.bits_6c & !(0b00000001 << 1)) | ((value & 0b00000001) << 1);
     }
 
+    #[allow(identity_op)]
     pub fn enable_ladder(&self) -> u8 {
         (self.bits_6c >> 2) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_enable_ladder(&mut self, value: u8) {
         self.bits_6c = (self.bits_6c & !(0b00000001 << 2)) | ((value & 0b00000001) << 2);
     }
 
+    #[allow(identity_op)]
     pub fn is_use_multi_play_preparation(&self) -> u8 {
         (self.bits_6c >> 3) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_is_use_multi_play_preparation(&mut self, value: u8) {
         self.bits_6c = (self.bits_6c & !(0b00000001 << 3)) | ((value & 0b00000001) << 3);
     }
 
+    #[allow(identity_op)]
     pub fn can_multi_use(&self) -> u8 {
         (self.bits_6c >> 4) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_can_multi_use(&mut self, value: u8) {
         self.bits_6c = (self.bits_6c & !(0b00000001 << 4)) | ((value & 0b00000001) << 4);
     }
 
+    #[allow(identity_op)]
     pub fn is_shield_enchant(&self) -> u8 {
         (self.bits_6c >> 5) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_is_shield_enchant(&mut self, value: u8) {
         self.bits_6c = (self.bits_6c & !(0b00000001 << 5)) | ((value & 0b00000001) << 5);
     }
 
+    #[allow(identity_op)]
     pub fn is_warp_prohibited(&self) -> u8 {
         (self.bits_6c >> 6) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_is_warp_prohibited(&mut self, value: u8) {
         self.bits_6c = (self.bits_6c & !(0b00000001 << 6)) | ((value & 0b00000001) << 6);
     }
 
+    #[allow(identity_op)]
     pub fn is_use_multi_penalty_only(&self) -> u8 {
         (self.bits_6c >> 7) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_is_use_multi_penalty_only(&mut self, value: u8) {
         self.bits_6c = (self.bits_6c & !(0b00000001 << 7)) | ((value & 0b00000001) << 7);
     }
@@ -16817,58 +17607,72 @@ impl EQUIP_PARAM_GOODS_ST {
         self.auto_replenish_type = value;
     }
 
+    #[allow(identity_op)]
     pub fn is_drop(&self) -> u8 {
         (self.bits_6f >> 0) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_is_drop(&mut self, value: u8) {
         self.bits_6f = (self.bits_6f & !(0b00000001 << 0)) | ((value & 0b00000001) << 0);
     }
 
+    #[allow(identity_op)]
     pub fn show_log_cond_type(&self) -> u8 {
         (self.bits_6f >> 1) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_show_log_cond_type(&mut self, value: u8) {
         self.bits_6f = (self.bits_6f & !(0b00000001 << 1)) | ((value & 0b00000001) << 1);
     }
 
+    #[allow(identity_op)]
     pub fn is_summon_horse(&self) -> u8 {
         (self.bits_6f >> 2) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_is_summon_horse(&mut self, value: u8) {
         self.bits_6f = (self.bits_6f & !(0b00000001 << 2)) | ((value & 0b00000001) << 2);
     }
 
+    #[allow(identity_op)]
     pub fn show_dialog_cond_type(&self) -> u8 {
         (self.bits_6f >> 3) & 0b00000011
     }
 
+    #[allow(identity_op)]
     pub fn set_show_dialog_cond_type(&mut self, value: u8) {
         self.bits_6f = (self.bits_6f & !(0b00000011 << 3)) | ((value & 0b00000011) << 3);
     }
 
+    #[allow(identity_op)]
     pub fn is_sleep_collection_item(&self) -> u8 {
         (self.bits_6f >> 4) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_is_sleep_collection_item(&mut self, value: u8) {
         self.bits_6f = (self.bits_6f & !(0b00000001 << 4)) | ((value & 0b00000001) << 4);
     }
 
+    #[allow(identity_op)]
     pub fn enable_riding(&self) -> u8 {
         (self.bits_6f >> 5) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_enable_riding(&mut self, value: u8) {
         self.bits_6f = (self.bits_6f & !(0b00000001 << 5)) | ((value & 0b00000001) << 5);
     }
 
+    #[allow(identity_op)]
     pub fn disable_riding(&self) -> u8 {
         (self.bits_6f >> 6) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_disable_riding(&mut self, value: u8) {
         self.bits_6f = (self.bits_6f & !(0b00000001 << 6)) | ((value & 0b00000001) << 6);
     }
@@ -16889,18 +17693,22 @@ impl EQUIP_PARAM_GOODS_ST {
         self.sort_group_id = value;
     }
 
+    #[allow(identity_op)]
     pub fn is_use_no_attack_region(&self) -> u8 {
         (self.bits_73 >> 0) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_is_use_no_attack_region(&mut self, value: u8) {
         self.bits_73 = (self.bits_73 & !(0b00000001 << 0)) | ((value & 0b00000001) << 0);
     }
 
+    #[allow(identity_op)]
     pub fn quick_match_replanish(&self) -> u8 {
         (self.bits_73 >> 2) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_quick_match_replanish(&mut self, value: u8) {
         self.bits_73 = (self.bits_73 & !(0b00000001 << 2)) | ((value & 0b00000001) << 2);
     }
@@ -17128,6 +17936,7 @@ impl EQUIP_PARAM_GOODS_ST {
     pub fn set_item_get_tutorial_flag_id(&mut self, value: u32) {
         self.item_get_tutorial_flag_id = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -17344,10 +18153,12 @@ pub struct EQUIP_PARAM_PROTECTOR_ST {
 }
 
 impl EQUIP_PARAM_PROTECTOR_ST {
+    #[allow(identity_op)]
     pub fn disable_param_nt(&self) -> u8 {
         (self.bits_0 >> 0) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_disable_param_nt(&mut self, value: u8) {
         self.bits_0 = (self.bits_0 & !(0b00000001 << 0)) | ((value & 0b00000001) << 0);
     }
@@ -17920,58 +18731,72 @@ impl EQUIP_PARAM_PROTECTOR_ST {
         self.parts_dmg_type = value;
     }
 
+    #[allow(identity_op)]
     pub fn is_deposit(&self) -> u8 {
         (self.bits_dc >> 0) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_is_deposit(&mut self, value: u8) {
         self.bits_dc = (self.bits_dc & !(0b00000001 << 0)) | ((value & 0b00000001) << 0);
     }
 
+    #[allow(identity_op)]
     pub fn head_equip(&self) -> u8 {
         (self.bits_dc >> 1) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_head_equip(&mut self, value: u8) {
         self.bits_dc = (self.bits_dc & !(0b00000001 << 1)) | ((value & 0b00000001) << 1);
     }
 
+    #[allow(identity_op)]
     pub fn body_equip(&self) -> u8 {
         (self.bits_dc >> 2) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_body_equip(&mut self, value: u8) {
         self.bits_dc = (self.bits_dc & !(0b00000001 << 2)) | ((value & 0b00000001) << 2);
     }
 
+    #[allow(identity_op)]
     pub fn arm_equip(&self) -> u8 {
         (self.bits_dc >> 3) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_arm_equip(&mut self, value: u8) {
         self.bits_dc = (self.bits_dc & !(0b00000001 << 3)) | ((value & 0b00000001) << 3);
     }
 
+    #[allow(identity_op)]
     pub fn leg_equip(&self) -> u8 {
         (self.bits_dc >> 4) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_leg_equip(&mut self, value: u8) {
         self.bits_dc = (self.bits_dc & !(0b00000001 << 4)) | ((value & 0b00000001) << 4);
     }
 
+    #[allow(identity_op)]
     pub fn use_face_scale(&self) -> u8 {
         (self.bits_dc >> 5) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_use_face_scale(&mut self, value: u8) {
         self.bits_dc = (self.bits_dc & !(0b00000001 << 5)) | ((value & 0b00000001) << 5);
     }
 
+    #[allow(identity_op)]
     pub fn is_skip_weak_damage_anim(&self) -> u8 {
         (self.bits_dc >> 6) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_is_skip_weak_damage_anim(&mut self, value: u8) {
         self.bits_dc = (self.bits_dc & !(0b00000001 << 6)) | ((value & 0b00000001) << 6);
     }
@@ -18008,50 +18833,62 @@ impl EQUIP_PARAM_PROTECTOR_ST {
         self.defense_material_variation_value = value;
     }
 
+    #[allow(identity_op)]
     pub fn is_discard(&self) -> u8 {
         (self.bits_e3 >> 0) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_is_discard(&mut self, value: u8) {
         self.bits_e3 = (self.bits_e3 & !(0b00000001 << 0)) | ((value & 0b00000001) << 0);
     }
 
+    #[allow(identity_op)]
     pub fn is_drop(&self) -> u8 {
         (self.bits_e3 >> 1) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_is_drop(&mut self, value: u8) {
         self.bits_e3 = (self.bits_e3 & !(0b00000001 << 1)) | ((value & 0b00000001) << 1);
     }
 
+    #[allow(identity_op)]
     pub fn disable_multi_drop_share(&self) -> u8 {
         (self.bits_e3 >> 2) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_disable_multi_drop_share(&mut self, value: u8) {
         self.bits_e3 = (self.bits_e3 & !(0b00000001 << 2)) | ((value & 0b00000001) << 2);
     }
 
+    #[allow(identity_op)]
     pub fn simple_model_for_dlc(&self) -> u8 {
         (self.bits_e3 >> 3) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_simple_model_for_dlc(&mut self, value: u8) {
         self.bits_e3 = (self.bits_e3 & !(0b00000001 << 3)) | ((value & 0b00000001) << 3);
     }
 
+    #[allow(identity_op)]
     pub fn show_log_cond_type(&self) -> u8 {
         (self.bits_e3 >> 4) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_show_log_cond_type(&mut self, value: u8) {
         self.bits_e3 = (self.bits_e3 & !(0b00000001 << 4)) | ((value & 0b00000001) << 4);
     }
 
+    #[allow(identity_op)]
     pub fn show_dialog_cond_type(&self) -> u8 {
         (self.bits_e3 >> 5) & 0b00000011
     }
 
+    #[allow(identity_op)]
     pub fn set_show_dialog_cond_type(&mut self, value: u8) {
         self.bits_e3 = (self.bits_e3 & !(0b00000011 << 5)) | ((value & 0b00000011) << 5);
     }
@@ -18216,266 +19053,332 @@ impl EQUIP_PARAM_PROTECTOR_ST {
         self.defense_dark = value;
     }
 
+    #[allow(identity_op)]
     pub fn invisible_flag48(&self) -> u8 {
         (self.bits_122 >> 0) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_invisible_flag48(&mut self, value: u8) {
         self.bits_122 = (self.bits_122 & !(0b00000001 << 0)) | ((value & 0b00000001) << 0);
     }
 
+    #[allow(identity_op)]
     pub fn invisible_flag49(&self) -> u8 {
         (self.bits_122 >> 1) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_invisible_flag49(&mut self, value: u8) {
         self.bits_122 = (self.bits_122 & !(0b00000001 << 1)) | ((value & 0b00000001) << 1);
     }
 
+    #[allow(identity_op)]
     pub fn invisible_flag50(&self) -> u8 {
         (self.bits_122 >> 2) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_invisible_flag50(&mut self, value: u8) {
         self.bits_122 = (self.bits_122 & !(0b00000001 << 2)) | ((value & 0b00000001) << 2);
     }
 
+    #[allow(identity_op)]
     pub fn invisible_flag51(&self) -> u8 {
         (self.bits_122 >> 3) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_invisible_flag51(&mut self, value: u8) {
         self.bits_122 = (self.bits_122 & !(0b00000001 << 3)) | ((value & 0b00000001) << 3);
     }
 
+    #[allow(identity_op)]
     pub fn invisible_flag52(&self) -> u8 {
         (self.bits_122 >> 4) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_invisible_flag52(&mut self, value: u8) {
         self.bits_122 = (self.bits_122 & !(0b00000001 << 4)) | ((value & 0b00000001) << 4);
     }
 
+    #[allow(identity_op)]
     pub fn invisible_flag53(&self) -> u8 {
         (self.bits_122 >> 5) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_invisible_flag53(&mut self, value: u8) {
         self.bits_122 = (self.bits_122 & !(0b00000001 << 5)) | ((value & 0b00000001) << 5);
     }
 
+    #[allow(identity_op)]
     pub fn invisible_flag54(&self) -> u8 {
         (self.bits_122 >> 6) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_invisible_flag54(&mut self, value: u8) {
         self.bits_122 = (self.bits_122 & !(0b00000001 << 6)) | ((value & 0b00000001) << 6);
     }
 
+    #[allow(identity_op)]
     pub fn invisible_flag55(&self) -> u8 {
         (self.bits_122 >> 7) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_invisible_flag55(&mut self, value: u8) {
         self.bits_122 = (self.bits_122 & !(0b00000001 << 7)) | ((value & 0b00000001) << 7);
     }
 
+    #[allow(identity_op)]
     pub fn invisible_flag56(&self) -> u8 {
         (self.bits_123 >> 0) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_invisible_flag56(&mut self, value: u8) {
         self.bits_123 = (self.bits_123 & !(0b00000001 << 0)) | ((value & 0b00000001) << 0);
     }
 
+    #[allow(identity_op)]
     pub fn invisible_flag57(&self) -> u8 {
         (self.bits_123 >> 1) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_invisible_flag57(&mut self, value: u8) {
         self.bits_123 = (self.bits_123 & !(0b00000001 << 1)) | ((value & 0b00000001) << 1);
     }
 
+    #[allow(identity_op)]
     pub fn invisible_flag58(&self) -> u8 {
         (self.bits_123 >> 2) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_invisible_flag58(&mut self, value: u8) {
         self.bits_123 = (self.bits_123 & !(0b00000001 << 2)) | ((value & 0b00000001) << 2);
     }
 
+    #[allow(identity_op)]
     pub fn invisible_flag59(&self) -> u8 {
         (self.bits_123 >> 3) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_invisible_flag59(&mut self, value: u8) {
         self.bits_123 = (self.bits_123 & !(0b00000001 << 3)) | ((value & 0b00000001) << 3);
     }
 
+    #[allow(identity_op)]
     pub fn invisible_flag60(&self) -> u8 {
         (self.bits_123 >> 4) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_invisible_flag60(&mut self, value: u8) {
         self.bits_123 = (self.bits_123 & !(0b00000001 << 4)) | ((value & 0b00000001) << 4);
     }
 
+    #[allow(identity_op)]
     pub fn invisible_flag61(&self) -> u8 {
         (self.bits_123 >> 5) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_invisible_flag61(&mut self, value: u8) {
         self.bits_123 = (self.bits_123 & !(0b00000001 << 5)) | ((value & 0b00000001) << 5);
     }
 
+    #[allow(identity_op)]
     pub fn invisible_flag62(&self) -> u8 {
         (self.bits_123 >> 6) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_invisible_flag62(&mut self, value: u8) {
         self.bits_123 = (self.bits_123 & !(0b00000001 << 6)) | ((value & 0b00000001) << 6);
     }
 
+    #[allow(identity_op)]
     pub fn invisible_flag63(&self) -> u8 {
         (self.bits_123 >> 7) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_invisible_flag63(&mut self, value: u8) {
         self.bits_123 = (self.bits_123 & !(0b00000001 << 7)) | ((value & 0b00000001) << 7);
     }
 
+    #[allow(identity_op)]
     pub fn invisible_flag64(&self) -> u8 {
         (self.bits_124 >> 0) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_invisible_flag64(&mut self, value: u8) {
         self.bits_124 = (self.bits_124 & !(0b00000001 << 0)) | ((value & 0b00000001) << 0);
     }
 
+    #[allow(identity_op)]
     pub fn invisible_flag65(&self) -> u8 {
         (self.bits_124 >> 1) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_invisible_flag65(&mut self, value: u8) {
         self.bits_124 = (self.bits_124 & !(0b00000001 << 1)) | ((value & 0b00000001) << 1);
     }
 
+    #[allow(identity_op)]
     pub fn invisible_flag66(&self) -> u8 {
         (self.bits_124 >> 2) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_invisible_flag66(&mut self, value: u8) {
         self.bits_124 = (self.bits_124 & !(0b00000001 << 2)) | ((value & 0b00000001) << 2);
     }
 
+    #[allow(identity_op)]
     pub fn invisible_flag67(&self) -> u8 {
         (self.bits_124 >> 3) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_invisible_flag67(&mut self, value: u8) {
         self.bits_124 = (self.bits_124 & !(0b00000001 << 3)) | ((value & 0b00000001) << 3);
     }
 
+    #[allow(identity_op)]
     pub fn invisible_flag68(&self) -> u8 {
         (self.bits_124 >> 4) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_invisible_flag68(&mut self, value: u8) {
         self.bits_124 = (self.bits_124 & !(0b00000001 << 4)) | ((value & 0b00000001) << 4);
     }
 
+    #[allow(identity_op)]
     pub fn invisible_flag69(&self) -> u8 {
         (self.bits_124 >> 5) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_invisible_flag69(&mut self, value: u8) {
         self.bits_124 = (self.bits_124 & !(0b00000001 << 5)) | ((value & 0b00000001) << 5);
     }
 
+    #[allow(identity_op)]
     pub fn invisible_flag70(&self) -> u8 {
         (self.bits_124 >> 6) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_invisible_flag70(&mut self, value: u8) {
         self.bits_124 = (self.bits_124 & !(0b00000001 << 6)) | ((value & 0b00000001) << 6);
     }
 
+    #[allow(identity_op)]
     pub fn invisible_flag71(&self) -> u8 {
         (self.bits_124 >> 7) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_invisible_flag71(&mut self, value: u8) {
         self.bits_124 = (self.bits_124 & !(0b00000001 << 7)) | ((value & 0b00000001) << 7);
     }
 
+    #[allow(identity_op)]
     pub fn invisible_flag72(&self) -> u8 {
         (self.bits_125 >> 0) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_invisible_flag72(&mut self, value: u8) {
         self.bits_125 = (self.bits_125 & !(0b00000001 << 0)) | ((value & 0b00000001) << 0);
     }
 
+    #[allow(identity_op)]
     pub fn invisible_flag73(&self) -> u8 {
         (self.bits_125 >> 1) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_invisible_flag73(&mut self, value: u8) {
         self.bits_125 = (self.bits_125 & !(0b00000001 << 1)) | ((value & 0b00000001) << 1);
     }
 
+    #[allow(identity_op)]
     pub fn invisible_flag74(&self) -> u8 {
         (self.bits_125 >> 2) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_invisible_flag74(&mut self, value: u8) {
         self.bits_125 = (self.bits_125 & !(0b00000001 << 2)) | ((value & 0b00000001) << 2);
     }
 
+    #[allow(identity_op)]
     pub fn invisible_flag75(&self) -> u8 {
         (self.bits_125 >> 3) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_invisible_flag75(&mut self, value: u8) {
         self.bits_125 = (self.bits_125 & !(0b00000001 << 3)) | ((value & 0b00000001) << 3);
     }
 
+    #[allow(identity_op)]
     pub fn invisible_flag76(&self) -> u8 {
         (self.bits_125 >> 4) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_invisible_flag76(&mut self, value: u8) {
         self.bits_125 = (self.bits_125 & !(0b00000001 << 4)) | ((value & 0b00000001) << 4);
     }
 
+    #[allow(identity_op)]
     pub fn invisible_flag77(&self) -> u8 {
         (self.bits_125 >> 5) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_invisible_flag77(&mut self, value: u8) {
         self.bits_125 = (self.bits_125 & !(0b00000001 << 5)) | ((value & 0b00000001) << 5);
     }
 
+    #[allow(identity_op)]
     pub fn invisible_flag78(&self) -> u8 {
         (self.bits_125 >> 6) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_invisible_flag78(&mut self, value: u8) {
         self.bits_125 = (self.bits_125 & !(0b00000001 << 6)) | ((value & 0b00000001) << 6);
     }
 
+    #[allow(identity_op)]
     pub fn invisible_flag79(&self) -> u8 {
         (self.bits_125 >> 7) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_invisible_flag79(&mut self, value: u8) {
         self.bits_125 = (self.bits_125 & !(0b00000001 << 7)) | ((value & 0b00000001) << 7);
     }
 
+    #[allow(identity_op)]
     pub fn invisible_flag80(&self) -> u8 {
         (self.bits_126 >> 0) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_invisible_flag80(&mut self, value: u8) {
         self.bits_126 = (self.bits_126 & !(0b00000001 << 0)) | ((value & 0b00000001) << 0);
     }
@@ -19271,6 +20174,7 @@ impl EQUIP_PARAM_PROTECTOR_ST {
     pub fn set_invisible_flag_sex_ver95(&mut self, value: u8) {
         self.invisible_flag_sex_ver95 = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -19509,10 +20413,12 @@ pub struct EQUIP_PARAM_WEAPON_ST {
 }
 
 impl EQUIP_PARAM_WEAPON_ST {
+    #[allow(identity_op)]
     pub fn disable_param_nt(&self) -> u8 {
         (self.bits_0 >> 0) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_disable_param_nt(&mut self, value: u8) {
         self.bits_0 = (self.bits_0 & !(0b00000001 << 0)) | ((value & 0b00000001) << 0);
     }
@@ -20285,274 +21191,342 @@ impl EQUIP_PARAM_WEAPON_ST {
         self.atk_attribute = value;
     }
 
+    #[allow(identity_op)]
     pub fn right_hand_equipable(&self) -> u8 {
         (self.bits_105 >> 0) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_right_hand_equipable(&mut self, value: u8) {
         self.bits_105 = (self.bits_105 & !(0b00000001 << 0)) | ((value & 0b00000001) << 0);
     }
 
+    #[allow(identity_op)]
     pub fn left_hand_equipable(&self) -> u8 {
         (self.bits_105 >> 1) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_left_hand_equipable(&mut self, value: u8) {
         self.bits_105 = (self.bits_105 & !(0b00000001 << 1)) | ((value & 0b00000001) << 1);
     }
 
+    #[allow(identity_op)]
     pub fn both_hand_equipable(&self) -> u8 {
         (self.bits_105 >> 2) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_both_hand_equipable(&mut self, value: u8) {
         self.bits_105 = (self.bits_105 & !(0b00000001 << 2)) | ((value & 0b00000001) << 2);
     }
 
+    #[allow(identity_op)]
     pub fn arrow_slot_equipable(&self) -> u8 {
         (self.bits_105 >> 3) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_arrow_slot_equipable(&mut self, value: u8) {
         self.bits_105 = (self.bits_105 & !(0b00000001 << 3)) | ((value & 0b00000001) << 3);
     }
 
+    #[allow(identity_op)]
     pub fn bolt_slot_equipable(&self) -> u8 {
         (self.bits_105 >> 4) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_bolt_slot_equipable(&mut self, value: u8) {
         self.bits_105 = (self.bits_105 & !(0b00000001 << 4)) | ((value & 0b00000001) << 4);
     }
 
+    #[allow(identity_op)]
     pub fn enable_guard(&self) -> u8 {
         (self.bits_105 >> 5) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_enable_guard(&mut self, value: u8) {
         self.bits_105 = (self.bits_105 & !(0b00000001 << 5)) | ((value & 0b00000001) << 5);
     }
 
+    #[allow(identity_op)]
     pub fn enable_parry(&self) -> u8 {
         (self.bits_105 >> 6) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_enable_parry(&mut self, value: u8) {
         self.bits_105 = (self.bits_105 & !(0b00000001 << 6)) | ((value & 0b00000001) << 6);
     }
 
+    #[allow(identity_op)]
     pub fn enable_magic(&self) -> u8 {
         (self.bits_105 >> 7) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_enable_magic(&mut self, value: u8) {
         self.bits_105 = (self.bits_105 & !(0b00000001 << 7)) | ((value & 0b00000001) << 7);
     }
 
+    #[allow(identity_op)]
     pub fn enable_sorcery(&self) -> u8 {
         (self.bits_106 >> 0) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_enable_sorcery(&mut self, value: u8) {
         self.bits_106 = (self.bits_106 & !(0b00000001 << 0)) | ((value & 0b00000001) << 0);
     }
 
+    #[allow(identity_op)]
     pub fn enable_miracle(&self) -> u8 {
         (self.bits_106 >> 1) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_enable_miracle(&mut self, value: u8) {
         self.bits_106 = (self.bits_106 & !(0b00000001 << 1)) | ((value & 0b00000001) << 1);
     }
 
+    #[allow(identity_op)]
     pub fn enable_vow_magic(&self) -> u8 {
         (self.bits_106 >> 2) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_enable_vow_magic(&mut self, value: u8) {
         self.bits_106 = (self.bits_106 & !(0b00000001 << 2)) | ((value & 0b00000001) << 2);
     }
 
+    #[allow(identity_op)]
     pub fn is_normal_attack_type(&self) -> u8 {
         (self.bits_106 >> 3) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_is_normal_attack_type(&mut self, value: u8) {
         self.bits_106 = (self.bits_106 & !(0b00000001 << 3)) | ((value & 0b00000001) << 3);
     }
 
+    #[allow(identity_op)]
     pub fn is_blow_attack_type(&self) -> u8 {
         (self.bits_106 >> 4) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_is_blow_attack_type(&mut self, value: u8) {
         self.bits_106 = (self.bits_106 & !(0b00000001 << 4)) | ((value & 0b00000001) << 4);
     }
 
+    #[allow(identity_op)]
     pub fn is_slash_attack_type(&self) -> u8 {
         (self.bits_106 >> 5) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_is_slash_attack_type(&mut self, value: u8) {
         self.bits_106 = (self.bits_106 & !(0b00000001 << 5)) | ((value & 0b00000001) << 5);
     }
 
+    #[allow(identity_op)]
     pub fn is_thrust_attack_type(&self) -> u8 {
         (self.bits_106 >> 6) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_is_thrust_attack_type(&mut self, value: u8) {
         self.bits_106 = (self.bits_106 & !(0b00000001 << 6)) | ((value & 0b00000001) << 6);
     }
 
+    #[allow(identity_op)]
     pub fn is_enhance(&self) -> u8 {
         (self.bits_106 >> 7) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_is_enhance(&mut self, value: u8) {
         self.bits_106 = (self.bits_106 & !(0b00000001 << 7)) | ((value & 0b00000001) << 7);
     }
 
+    #[allow(identity_op)]
     pub fn is_hero_point_correct(&self) -> u8 {
         (self.bits_107 >> 0) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_is_hero_point_correct(&mut self, value: u8) {
         self.bits_107 = (self.bits_107 & !(0b00000001 << 0)) | ((value & 0b00000001) << 0);
     }
 
+    #[allow(identity_op)]
     pub fn is_custom(&self) -> u8 {
         (self.bits_107 >> 1) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_is_custom(&mut self, value: u8) {
         self.bits_107 = (self.bits_107 & !(0b00000001 << 1)) | ((value & 0b00000001) << 1);
     }
 
+    #[allow(identity_op)]
     pub fn disable_base_change_reset(&self) -> u8 {
         (self.bits_107 >> 2) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_disable_base_change_reset(&mut self, value: u8) {
         self.bits_107 = (self.bits_107 & !(0b00000001 << 2)) | ((value & 0b00000001) << 2);
     }
 
+    #[allow(identity_op)]
     pub fn disable_repair(&self) -> u8 {
         (self.bits_107 >> 3) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_disable_repair(&mut self, value: u8) {
         self.bits_107 = (self.bits_107 & !(0b00000001 << 3)) | ((value & 0b00000001) << 3);
     }
 
+    #[allow(identity_op)]
     pub fn is_dark_hand(&self) -> u8 {
         (self.bits_107 >> 4) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_is_dark_hand(&mut self, value: u8) {
         self.bits_107 = (self.bits_107 & !(0b00000001 << 4)) | ((value & 0b00000001) << 4);
     }
 
+    #[allow(identity_op)]
     pub fn simple_model_for_dlc(&self) -> u8 {
         (self.bits_107 >> 5) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_simple_model_for_dlc(&mut self, value: u8) {
         self.bits_107 = (self.bits_107 & !(0b00000001 << 5)) | ((value & 0b00000001) << 5);
     }
 
+    #[allow(identity_op)]
     pub fn lantern_wep(&self) -> u8 {
         (self.bits_107 >> 6) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_lantern_wep(&mut self, value: u8) {
         self.bits_107 = (self.bits_107 & !(0b00000001 << 6)) | ((value & 0b00000001) << 6);
     }
 
+    #[allow(identity_op)]
     pub fn is_versus_ghost_wep(&self) -> u8 {
         (self.bits_107 >> 7) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_is_versus_ghost_wep(&mut self, value: u8) {
         self.bits_107 = (self.bits_107 & !(0b00000001 << 7)) | ((value & 0b00000001) << 7);
     }
 
+    #[allow(identity_op)]
     pub fn base_change_category(&self) -> u8 {
         (self.bits_108 >> 0) & 0b00111111
     }
 
+    #[allow(identity_op)]
     pub fn set_base_change_category(&mut self, value: u8) {
         self.bits_108 = (self.bits_108 & !(0b00111111 << 0)) | ((value & 0b00111111) << 0);
     }
 
+    #[allow(identity_op)]
     pub fn is_dragon_slayer(&self) -> u8 {
         (self.bits_108 >> 1) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_is_dragon_slayer(&mut self, value: u8) {
         self.bits_108 = (self.bits_108 & !(0b00000001 << 1)) | ((value & 0b00000001) << 1);
     }
 
+    #[allow(identity_op)]
     pub fn is_deposit(&self) -> u8 {
         (self.bits_108 >> 2) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_is_deposit(&mut self, value: u8) {
         self.bits_108 = (self.bits_108 & !(0b00000001 << 2)) | ((value & 0b00000001) << 2);
     }
 
+    #[allow(identity_op)]
     pub fn disable_multi_drop_share(&self) -> u8 {
         (self.bits_109 >> 0) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_disable_multi_drop_share(&mut self, value: u8) {
         self.bits_109 = (self.bits_109 & !(0b00000001 << 0)) | ((value & 0b00000001) << 0);
     }
 
+    #[allow(identity_op)]
     pub fn is_discard(&self) -> u8 {
         (self.bits_109 >> 1) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_is_discard(&mut self, value: u8) {
         self.bits_109 = (self.bits_109 & !(0b00000001 << 1)) | ((value & 0b00000001) << 1);
     }
 
+    #[allow(identity_op)]
     pub fn is_drop(&self) -> u8 {
         (self.bits_109 >> 2) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_is_drop(&mut self, value: u8) {
         self.bits_109 = (self.bits_109 & !(0b00000001 << 2)) | ((value & 0b00000001) << 2);
     }
 
+    #[allow(identity_op)]
     pub fn show_log_cond_type(&self) -> u8 {
         (self.bits_109 >> 3) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_show_log_cond_type(&mut self, value: u8) {
         self.bits_109 = (self.bits_109 & !(0b00000001 << 3)) | ((value & 0b00000001) << 3);
     }
 
+    #[allow(identity_op)]
     pub fn enable_throw(&self) -> u8 {
         (self.bits_109 >> 4) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_enable_throw(&mut self, value: u8) {
         self.bits_109 = (self.bits_109 & !(0b00000001 << 4)) | ((value & 0b00000001) << 4);
     }
 
+    #[allow(identity_op)]
     pub fn show_dialog_cond_type(&self) -> u8 {
         (self.bits_109 >> 5) & 0b00000011
     }
 
+    #[allow(identity_op)]
     pub fn set_show_dialog_cond_type(&mut self, value: u8) {
         self.bits_109 = (self.bits_109 & !(0b00000011 << 5)) | ((value & 0b00000011) << 5);
     }
 
+    #[allow(identity_op)]
     pub fn disable_gem_attr(&self) -> u8 {
         (self.bits_109 >> 6) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_disable_gem_attr(&mut self, value: u8) {
         self.bits_109 = (self.bits_109 & !(0b00000001 << 6)) | ((value & 0b00000001) << 6);
     }
@@ -20821,58 +21795,72 @@ impl EQUIP_PARAM_WEAPON_ST {
         self.toughness_correct_rate = value;
     }
 
+    #[allow(identity_op)]
     pub fn is_valid_tough_prot_sa_dmg(&self) -> u8 {
         (self.bits_17c >> 0) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_is_valid_tough_prot_sa_dmg(&mut self, value: u8) {
         self.bits_17c = (self.bits_17c & !(0b00000001 << 0)) | ((value & 0b00000001) << 0);
     }
 
+    #[allow(identity_op)]
     pub fn is_dual_blade(&self) -> u8 {
         (self.bits_17c >> 1) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_is_dual_blade(&mut self, value: u8) {
         self.bits_17c = (self.bits_17c & !(0b00000001 << 1)) | ((value & 0b00000001) << 1);
     }
 
+    #[allow(identity_op)]
     pub fn is_auto_equip(&self) -> u8 {
         (self.bits_17c >> 2) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_is_auto_equip(&mut self, value: u8) {
         self.bits_17c = (self.bits_17c & !(0b00000001 << 2)) | ((value & 0b00000001) << 2);
     }
 
+    #[allow(identity_op)]
     pub fn is_enable_emergency_step(&self) -> u8 {
         (self.bits_17c >> 3) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_is_enable_emergency_step(&mut self, value: u8) {
         self.bits_17c = (self.bits_17c & !(0b00000001 << 3)) | ((value & 0b00000001) << 3);
     }
 
+    #[allow(identity_op)]
     pub fn invisible_on_remo(&self) -> u8 {
         (self.bits_17c >> 4) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_invisible_on_remo(&mut self, value: u8) {
         self.bits_17c = (self.bits_17c & !(0b00000001 << 4)) | ((value & 0b00000001) << 4);
     }
 
+    #[allow(identity_op)]
     pub fn quick_match_replanish(&self) -> u8 {
         (self.bits_17c >> 6) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_quick_match_replanish(&mut self, value: u8) {
         self.bits_17c = (self.bits_17c & !(0b00000001 << 6)) | ((value & 0b00000001) << 6);
     }
 
+    #[allow(identity_op)]
     pub fn is_weapon_catalyst(&self) -> u8 {
         (self.bits_17c >> 7) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_is_weapon_catalyst(&mut self, value: u8) {
         self.bits_17c = (self.bits_17c & !(0b00000001 << 7)) | ((value & 0b00000001) << 7);
     }
@@ -21357,66 +22345,82 @@ impl EQUIP_PARAM_WEAPON_ST {
         self.max_arrow_quantity = value;
     }
 
+    #[allow(identity_op)]
     pub fn resident_sfx_1_is_visible_for_hang(&self) -> u8 {
         (self.bits_236 >> 0) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_resident_sfx_1_is_visible_for_hang(&mut self, value: u8) {
         self.bits_236 = (self.bits_236 & !(0b00000001 << 0)) | ((value & 0b00000001) << 0);
     }
 
+    #[allow(identity_op)]
     pub fn resident_sfx_2_is_visible_for_hang(&self) -> u8 {
         (self.bits_236 >> 1) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_resident_sfx_2_is_visible_for_hang(&mut self, value: u8) {
         self.bits_236 = (self.bits_236 & !(0b00000001 << 1)) | ((value & 0b00000001) << 1);
     }
 
+    #[allow(identity_op)]
     pub fn resident_sfx_3_is_visible_for_hang(&self) -> u8 {
         (self.bits_236 >> 2) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_resident_sfx_3_is_visible_for_hang(&mut self, value: u8) {
         self.bits_236 = (self.bits_236 & !(0b00000001 << 2)) | ((value & 0b00000001) << 2);
     }
 
+    #[allow(identity_op)]
     pub fn resident_sfx_4_is_visible_for_hang(&self) -> u8 {
         (self.bits_236 >> 3) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_resident_sfx_4_is_visible_for_hang(&mut self, value: u8) {
         self.bits_236 = (self.bits_236 & !(0b00000001 << 3)) | ((value & 0b00000001) << 3);
     }
 
+    #[allow(identity_op)]
     pub fn is_soul_param_id_change_model0(&self) -> u8 {
         (self.bits_236 >> 4) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_is_soul_param_id_change_model0(&mut self, value: u8) {
         self.bits_236 = (self.bits_236 & !(0b00000001 << 4)) | ((value & 0b00000001) << 4);
     }
 
+    #[allow(identity_op)]
     pub fn is_soul_param_id_change_model1(&self) -> u8 {
         (self.bits_236 >> 5) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_is_soul_param_id_change_model1(&mut self, value: u8) {
         self.bits_236 = (self.bits_236 & !(0b00000001 << 5)) | ((value & 0b00000001) << 5);
     }
 
+    #[allow(identity_op)]
     pub fn is_soul_param_id_change_model2(&self) -> u8 {
         (self.bits_236 >> 6) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_is_soul_param_id_change_model2(&mut self, value: u8) {
         self.bits_236 = (self.bits_236 & !(0b00000001 << 6)) | ((value & 0b00000001) << 6);
     }
 
+    #[allow(identity_op)]
     pub fn is_soul_param_id_change_model3(&self) -> u8 {
         (self.bits_236 >> 7) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_is_soul_param_id_change_model3(&mut self, value: u8) {
         self.bits_236 = (self.bits_236 & !(0b00000001 << 7)) | ((value & 0b00000001) << 7);
     }
@@ -21660,6 +22664,7 @@ impl EQUIP_PARAM_WEAPON_ST {
     pub fn set_restrict_special_sword_art(&mut self, value: u8) {
         self.restrict_special_sword_art = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -21849,6 +22854,7 @@ impl ESTUS_FLASK_RECOVERY_PARAM_ST {
     pub fn set_param_replace_id(&mut self, value: i32) {
         self.param_replace_id = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -21886,6 +22892,7 @@ impl EVENT_FLAG_USAGE_PARAM_ST {
     pub fn set_flag_num(&mut self, value: i32) {
         self.flag_num = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -22987,50 +23994,62 @@ impl FACE_PARAM_ST {
         self.burn_scar = value;
     }
 
+    #[allow(identity_op)]
     pub fn override_eye_parts_id(&self) -> u8 {
         (self.bits_6b >> 0) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_override_eye_parts_id(&mut self, value: u8) {
         self.bits_6b = (self.bits_6b & !(0b00000001 << 0)) | ((value & 0b00000001) << 0);
     }
 
+    #[allow(identity_op)]
     pub fn override_eye_iris_color(&self) -> u8 {
         (self.bits_6b >> 1) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_override_eye_iris_color(&mut self, value: u8) {
         self.bits_6b = (self.bits_6b & !(0b00000001 << 1)) | ((value & 0b00000001) << 1);
     }
 
+    #[allow(identity_op)]
     pub fn override_eye_cataract(&self) -> u8 {
         (self.bits_6b >> 2) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_override_eye_cataract(&mut self, value: u8) {
         self.bits_6b = (self.bits_6b & !(0b00000001 << 2)) | ((value & 0b00000001) << 2);
     }
 
+    #[allow(identity_op)]
     pub fn override_eye_cataract_color(&self) -> u8 {
         (self.bits_6b >> 3) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_override_eye_cataract_color(&mut self, value: u8) {
         self.bits_6b = (self.bits_6b & !(0b00000001 << 3)) | ((value & 0b00000001) << 3);
     }
 
+    #[allow(identity_op)]
     pub fn override_eye_sclera_color(&self) -> u8 {
         (self.bits_6b >> 4) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_override_eye_sclera_color(&mut self, value: u8) {
         self.bits_6b = (self.bits_6b & !(0b00000001 << 4)) | ((value & 0b00000001) << 4);
     }
 
+    #[allow(identity_op)]
     pub fn override_burn_scar(&self) -> u8 {
         (self.bits_6b >> 5) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_override_burn_scar(&mut self, value: u8) {
         self.bits_6b = (self.bits_6b & !(0b00000001 << 5)) | ((value & 0b00000001) << 5);
     }
@@ -24050,6 +25069,7 @@ impl FACE_PARAM_ST {
     pub fn set_face_geo_asym_data25(&mut self, value: u8) {
         self.face_geo_asym_data25 = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -25912,6 +26932,7 @@ impl FACE_RANGE_PARAM_ST {
     pub fn set_burn_scar(&mut self, value: f32) {
         self.burn_scar = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -25951,13 +26972,16 @@ impl FE_TEXT_EFFECT_PARAM_ST {
         self.se_id = value;
     }
 
+    #[allow(identity_op)]
     pub fn can_mix_map_name(&self) -> u8 {
         (self.bits_c >> 0) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_can_mix_map_name(&mut self, value: u8) {
         self.bits_c = (self.bits_c & !(0b00000001 << 0)) | ((value & 0b00000001) << 0);
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -26029,6 +27053,7 @@ impl FINAL_DAMAGE_RATE_PARAM_ST {
     pub fn set_sa_rate(&mut self, value: f32) {
         self.sa_rate = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -27837,6 +28862,7 @@ impl FOOT_SFX_PARAM_ST {
     pub fn set_sfx_id_199(&mut self, value: u32) {
         self.sfx_id_199 = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -27877,10 +28903,12 @@ pub struct GAME_AREA_PARAM_ST {
 }
 
 impl GAME_AREA_PARAM_ST {
+    #[allow(identity_op)]
     pub fn disable_param_nt(&self) -> u8 {
         (self.bits_0 >> 0) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_disable_param_nt(&mut self, value: u8) {
         self.bits_0 = (self.bits_0 & !(0b00000001 << 0)) | ((value & 0b00000001) << 0);
     }
@@ -28108,6 +29136,7 @@ impl GAME_AREA_PARAM_ST {
     pub fn set_boss_map_map_no(&mut self, value: u8) {
         self.boss_map_map_no = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -28162,6 +29191,7 @@ impl GAME_INFO_PARAM {
     pub fn set_event_id(&mut self, value: i32) {
         self.event_id = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -29749,29 +30779,19 @@ impl GAME_SYSTEM_COMMON_PARAM_ST {
         self.a_i_jump_anim_y_move_correct_rate_on_jump_off = value;
     }
 
-    pub fn stealth_system_sight_rate_not_in_stealth_rigid_not_sight_hide_stealth_mode(
-        &self,
-    ) -> f32 {
+    pub fn stealth_system_sight_rate_not_in_stealth_rigid_not_sight_hide_stealth_mode(&self) -> f32 {
         self.stealth_system_sight_rate_not_in_stealth_rigid_not_sight_hide_stealth_mode
     }
 
-    pub fn set_stealth_system_sight_rate_not_in_stealth_rigid_not_sight_hide_stealth_mode(
-        &mut self,
-        value: f32,
-    ) {
+    pub fn set_stealth_system_sight_rate_not_in_stealth_rigid_not_sight_hide_stealth_mode(&mut self, value: f32) {
         self.stealth_system_sight_rate_not_in_stealth_rigid_not_sight_hide_stealth_mode = value;
     }
 
-    pub fn stealth_system_sight_rate_not_in_stealth_rigid_sight_hide_not_stealth_mode(
-        &self,
-    ) -> f32 {
+    pub fn stealth_system_sight_rate_not_in_stealth_rigid_sight_hide_not_stealth_mode(&self) -> f32 {
         self.stealth_system_sight_rate_not_in_stealth_rigid_sight_hide_not_stealth_mode
     }
 
-    pub fn set_stealth_system_sight_rate_not_in_stealth_rigid_sight_hide_not_stealth_mode(
-        &mut self,
-        value: f32,
-    ) {
+    pub fn set_stealth_system_sight_rate_not_in_stealth_rigid_sight_hide_not_stealth_mode(&mut self, value: f32) {
         self.stealth_system_sight_rate_not_in_stealth_rigid_sight_hide_not_stealth_mode = value;
     }
 
@@ -29779,23 +30799,15 @@ impl GAME_SYSTEM_COMMON_PARAM_ST {
         self.stealth_system_sight_rate_not_in_stealth_rigid_sight_hide_stealth_mode
     }
 
-    pub fn set_stealth_system_sight_rate_not_in_stealth_rigid_sight_hide_stealth_mode(
-        &mut self,
-        value: f32,
-    ) {
+    pub fn set_stealth_system_sight_rate_not_in_stealth_rigid_sight_hide_stealth_mode(&mut self, value: f32) {
         self.stealth_system_sight_rate_not_in_stealth_rigid_sight_hide_stealth_mode = value;
     }
 
-    pub fn stealth_system_sight_rate_in_stealth_rigid_not_sight_hide_not_stealth_mode(
-        &self,
-    ) -> f32 {
+    pub fn stealth_system_sight_rate_in_stealth_rigid_not_sight_hide_not_stealth_mode(&self) -> f32 {
         self.stealth_system_sight_rate_in_stealth_rigid_not_sight_hide_not_stealth_mode
     }
 
-    pub fn set_stealth_system_sight_rate_in_stealth_rigid_not_sight_hide_not_stealth_mode(
-        &mut self,
-        value: f32,
-    ) {
+    pub fn set_stealth_system_sight_rate_in_stealth_rigid_not_sight_hide_not_stealth_mode(&mut self, value: f32) {
         self.stealth_system_sight_rate_in_stealth_rigid_not_sight_hide_not_stealth_mode = value;
     }
 
@@ -29803,10 +30815,7 @@ impl GAME_SYSTEM_COMMON_PARAM_ST {
         self.stealth_system_sight_rate_in_stealth_rigid_not_sight_hide_stealth_mode
     }
 
-    pub fn set_stealth_system_sight_rate_in_stealth_rigid_not_sight_hide_stealth_mode(
-        &mut self,
-        value: f32,
-    ) {
+    pub fn set_stealth_system_sight_rate_in_stealth_rigid_not_sight_hide_stealth_mode(&mut self, value: f32) {
         self.stealth_system_sight_rate_in_stealth_rigid_not_sight_hide_stealth_mode = value;
     }
 
@@ -29814,10 +30823,7 @@ impl GAME_SYSTEM_COMMON_PARAM_ST {
         self.stealth_system_sight_rate_in_stealth_rigid_sight_hide_not_stealth_mode
     }
 
-    pub fn set_stealth_system_sight_rate_in_stealth_rigid_sight_hide_not_stealth_mode(
-        &mut self,
-        value: f32,
-    ) {
+    pub fn set_stealth_system_sight_rate_in_stealth_rigid_sight_hide_not_stealth_mode(&mut self, value: f32) {
         self.stealth_system_sight_rate_in_stealth_rigid_sight_hide_not_stealth_mode = value;
     }
 
@@ -29825,10 +30831,7 @@ impl GAME_SYSTEM_COMMON_PARAM_ST {
         self.stealth_system_sight_rate_in_stealth_rigid_sight_hide_stealth_mode
     }
 
-    pub fn set_stealth_system_sight_rate_in_stealth_rigid_sight_hide_stealth_mode(
-        &mut self,
-        value: f32,
-    ) {
+    pub fn set_stealth_system_sight_rate_in_stealth_rigid_sight_hide_stealth_mode(&mut self, value: f32) {
         self.stealth_system_sight_rate_in_stealth_rigid_sight_hide_stealth_mode = value;
     }
 
@@ -30088,99 +31091,60 @@ impl GAME_SYSTEM_COMMON_PARAM_ST {
         self.ai_sight_rate_sunloss_very_dark = value;
     }
 
-    pub fn stealth_system_sight_angle_reduce_rate_not_in_stealth_rigid_not_sight_hide_stealth_mode(
-        &self,
-    ) -> f32 {
+    pub fn stealth_system_sight_angle_reduce_rate_not_in_stealth_rigid_not_sight_hide_stealth_mode(&self) -> f32 {
         self.stealth_system_sight_angle_reduce_rate_not_in_stealth_rigid_not_sight_hide_stealth_mode
     }
 
-    pub fn set_stealth_system_sight_angle_reduce_rate_not_in_stealth_rigid_not_sight_hide_stealth_mode(
-        &mut self,
-        value: f32,
-    ) {
+    pub fn set_stealth_system_sight_angle_reduce_rate_not_in_stealth_rigid_not_sight_hide_stealth_mode(&mut self, value: f32) {
         self.stealth_system_sight_angle_reduce_rate_not_in_stealth_rigid_not_sight_hide_stealth_mode = value;
     }
 
-    pub fn stealth_system_sight_angle_reduce_rate_not_in_stealth_rigid_sight_hide_not_stealth_mode(
-        &self,
-    ) -> f32 {
+    pub fn stealth_system_sight_angle_reduce_rate_not_in_stealth_rigid_sight_hide_not_stealth_mode(&self) -> f32 {
         self.stealth_system_sight_angle_reduce_rate_not_in_stealth_rigid_sight_hide_not_stealth_mode
     }
 
-    pub fn set_stealth_system_sight_angle_reduce_rate_not_in_stealth_rigid_sight_hide_not_stealth_mode(
-        &mut self,
-        value: f32,
-    ) {
+    pub fn set_stealth_system_sight_angle_reduce_rate_not_in_stealth_rigid_sight_hide_not_stealth_mode(&mut self, value: f32) {
         self.stealth_system_sight_angle_reduce_rate_not_in_stealth_rigid_sight_hide_not_stealth_mode = value;
     }
 
-    pub fn stealth_system_sight_angle_reduce_rate_not_in_stealth_rigid_sight_hide_stealth_mode(
-        &self,
-    ) -> f32 {
+    pub fn stealth_system_sight_angle_reduce_rate_not_in_stealth_rigid_sight_hide_stealth_mode(&self) -> f32 {
         self.stealth_system_sight_angle_reduce_rate_not_in_stealth_rigid_sight_hide_stealth_mode
     }
 
-    pub fn set_stealth_system_sight_angle_reduce_rate_not_in_stealth_rigid_sight_hide_stealth_mode(
-        &mut self,
-        value: f32,
-    ) {
-        self.stealth_system_sight_angle_reduce_rate_not_in_stealth_rigid_sight_hide_stealth_mode =
-            value;
+    pub fn set_stealth_system_sight_angle_reduce_rate_not_in_stealth_rigid_sight_hide_stealth_mode(&mut self, value: f32) {
+        self.stealth_system_sight_angle_reduce_rate_not_in_stealth_rigid_sight_hide_stealth_mode = value;
     }
 
-    pub fn stealth_system_sight_angle_reduce_rate_in_stealth_rigid_not_sight_hide_not_stealth_mode(
-        &self,
-    ) -> f32 {
+    pub fn stealth_system_sight_angle_reduce_rate_in_stealth_rigid_not_sight_hide_not_stealth_mode(&self) -> f32 {
         self.stealth_system_sight_angle_reduce_rate_in_stealth_rigid_not_sight_hide_not_stealth_mode
     }
 
-    pub fn set_stealth_system_sight_angle_reduce_rate_in_stealth_rigid_not_sight_hide_not_stealth_mode(
-        &mut self,
-        value: f32,
-    ) {
+    pub fn set_stealth_system_sight_angle_reduce_rate_in_stealth_rigid_not_sight_hide_not_stealth_mode(&mut self, value: f32) {
         self.stealth_system_sight_angle_reduce_rate_in_stealth_rigid_not_sight_hide_not_stealth_mode = value;
     }
 
-    pub fn stealth_system_sight_angle_reduce_rate_in_stealth_rigid_not_sight_hide_stealth_mode(
-        &self,
-    ) -> f32 {
+    pub fn stealth_system_sight_angle_reduce_rate_in_stealth_rigid_not_sight_hide_stealth_mode(&self) -> f32 {
         self.stealth_system_sight_angle_reduce_rate_in_stealth_rigid_not_sight_hide_stealth_mode
     }
 
-    pub fn set_stealth_system_sight_angle_reduce_rate_in_stealth_rigid_not_sight_hide_stealth_mode(
-        &mut self,
-        value: f32,
-    ) {
-        self.stealth_system_sight_angle_reduce_rate_in_stealth_rigid_not_sight_hide_stealth_mode =
-            value;
+    pub fn set_stealth_system_sight_angle_reduce_rate_in_stealth_rigid_not_sight_hide_stealth_mode(&mut self, value: f32) {
+        self.stealth_system_sight_angle_reduce_rate_in_stealth_rigid_not_sight_hide_stealth_mode = value;
     }
 
-    pub fn stealth_system_sight_angle_reduce_rate_in_stealth_rigid_sight_hide_not_stealth_mode(
-        &self,
-    ) -> f32 {
+    pub fn stealth_system_sight_angle_reduce_rate_in_stealth_rigid_sight_hide_not_stealth_mode(&self) -> f32 {
         self.stealth_system_sight_angle_reduce_rate_in_stealth_rigid_sight_hide_not_stealth_mode
     }
 
-    pub fn set_stealth_system_sight_angle_reduce_rate_in_stealth_rigid_sight_hide_not_stealth_mode(
-        &mut self,
-        value: f32,
-    ) {
-        self.stealth_system_sight_angle_reduce_rate_in_stealth_rigid_sight_hide_not_stealth_mode =
-            value;
+    pub fn set_stealth_system_sight_angle_reduce_rate_in_stealth_rigid_sight_hide_not_stealth_mode(&mut self, value: f32) {
+        self.stealth_system_sight_angle_reduce_rate_in_stealth_rigid_sight_hide_not_stealth_mode = value;
     }
 
-    pub fn stealth_system_sight_angle_reduce_rate_in_stealth_rigid_sight_hide_stealth_mode(
-        &self,
-    ) -> f32 {
+    pub fn stealth_system_sight_angle_reduce_rate_in_stealth_rigid_sight_hide_stealth_mode(&self) -> f32 {
         self.stealth_system_sight_angle_reduce_rate_in_stealth_rigid_sight_hide_stealth_mode
     }
 
-    pub fn set_stealth_system_sight_angle_reduce_rate_in_stealth_rigid_sight_hide_stealth_mode(
-        &mut self,
-        value: f32,
-    ) {
-        self.stealth_system_sight_angle_reduce_rate_in_stealth_rigid_sight_hide_stealth_mode =
-            value;
+    pub fn set_stealth_system_sight_angle_reduce_rate_in_stealth_rigid_sight_hide_stealth_mode(&mut self, value: f32) {
+        self.stealth_system_sight_angle_reduce_rate_in_stealth_rigid_sight_hide_stealth_mode = value;
     }
 
     pub fn weather_lot_condition_start_morning_hour(&self) -> u8 {
@@ -31102,6 +32066,7 @@ impl GAME_SYSTEM_COMMON_PARAM_ST {
     pub fn set_base_revered_spirit_torrent_blessing_sp_effect_id(&mut self, value: i32) {
         self.base_revered_spirit_torrent_blessing_sp_effect_id = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -31129,6 +32094,7 @@ impl CS_AA_QUALITY_DETAIL {
     pub fn set_force_fxaa2(&mut self, value: u8) {
         self.force_fxaa2 = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -31147,6 +32113,7 @@ impl CS_DECAL_QUALITY_DETAIL {
     pub fn set_enabled(&mut self, value: u8) {
         self.enabled = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -31183,6 +32150,7 @@ impl CS_DOF_QUALITY_DETAIL {
     pub fn set_max_blur_level(&mut self, value: i32) {
         self.max_blur_level = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -31291,6 +32259,7 @@ impl CS_EFFECT_QUALITY_DETAIL {
     pub fn set_f_scale_render_distance_scale(&mut self, value: f32) {
         self.f_scale_render_distance_scale = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -31336,6 +32305,7 @@ impl CS_LIGHTING_QUALITY_DETAIL {
     pub fn set_local_light_shadow_spec_level_max(&mut self, value: u8) {
         self.local_light_shadow_spec_level_max = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -31407,6 +32377,7 @@ impl CS_MOTION_BLUR_QUALITY_DETAIL {
     pub fn set_blur_max_length_scale(&mut self, value: f32) {
         self.blur_max_length_scale = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -31457,6 +32428,7 @@ impl CS_RAYTRACING_QUALITY_DETAIL {
     pub fn set_render_distance(&mut self, value: f32) {
         self.render_distance = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -31557,6 +32529,7 @@ impl CS_REFLECTION_QUALITY_DETAIL {
     pub fn set_ssr_fresnel_reject_bias(&mut self, value: f32) {
         self.ssr_fresnel_reject_bias = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -31601,6 +32574,7 @@ impl CS_SHADER_QUALITY_DETAIL {
     pub fn set_dmy(&mut self, value: [u8; 1]) {
         self.dmy = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -31673,6 +32647,7 @@ impl CS_SHADOW_QUALITY_DETAIL {
     pub fn set_blur_count_bias(&mut self, value: i32) {
         self.blur_count_bias = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -31718,6 +32693,7 @@ impl CS_SSAO_QUALITY_DETAIL {
     pub fn set_cs_use_normal_enabled_type(&mut self, value: u8) {
         self.cs_use_normal_enabled_type = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -31745,6 +32721,7 @@ impl CS_TEXTURE_FILTER_QUALITY_DETAIL {
     pub fn set_max_aniso_level(&mut self, value: u32) {
         self.max_aniso_level = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -31890,6 +32867,7 @@ impl CS_VOLUMETRIC_EFFECT_QUALITY_DETAIL {
     pub fn set_fog_volume_resolution(&mut self, value: u8) {
         self.fog_volume_resolution = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -31908,6 +32886,7 @@ impl CS_WATER_QUALITY_DETAIL {
     pub fn set_interaction_enabled(&mut self, value: u8) {
         self.interaction_enabled = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -31923,10 +32902,12 @@ pub struct GESTURE_PARAM_ST {
 }
 
 impl GESTURE_PARAM_ST {
+    #[allow(identity_op)]
     pub fn disable_param_nt(&self) -> u8 {
         (self.bits_0 >> 0) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_disable_param_nt(&mut self, value: u8) {
         self.bits_0 = (self.bits_0 & !(0b00000001 << 0)) | ((value & 0b00000001) << 0);
     }
@@ -31947,13 +32928,16 @@ impl GESTURE_PARAM_ST {
         self.msg_anim_id = value;
     }
 
+    #[allow(identity_op)]
     pub fn cannot_use_riding(&self) -> u8 {
         (self.bits_c >> 0) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_cannot_use_riding(&mut self, value: u8) {
         self.bits_c = (self.bits_c & !(0b00000001 << 0)) | ((value & 0b00000001) << 0);
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -31972,6 +32956,7 @@ impl GPARAM_GRID_REGION_INFO_PARAM_ST {
     pub fn set_gparam_grid_region_id(&mut self, value: u32) {
         self.gparam_grid_region_id = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -31985,10 +32970,12 @@ pub struct GPARAM_REF_SETTINGS_PARAM_ST {
 }
 
 impl GPARAM_REF_SETTINGS_PARAM_ST {
+    #[allow(identity_op)]
     pub fn disable_param_nt(&self) -> u8 {
         (self.bits_0 >> 0) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_disable_param_nt(&mut self, value: u8) {
         self.bits_0 = (self.bits_0 & !(0b00000001 << 0)) | ((value & 0b00000001) << 0);
     }
@@ -32000,6 +32987,7 @@ impl GPARAM_REF_SETTINGS_PARAM_ST {
     pub fn set_ref_target_map_id(&mut self, value: i32) {
         self.ref_target_map_id = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -32028,6 +33016,7 @@ impl GRAPHICS_COMMON_PARAM_ST {
     pub fn set_chara_wet_decal_fade_range(&mut self, value: f32) {
         self.chara_wet_decal_fade_range = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -32163,6 +33152,7 @@ impl CS_GRAPHICS_CONFIG_PARAM_ST {
     pub fn set_m_ray_tracing_quality(&mut self, value: u8) {
         self.m_ray_tracing_quality = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -32225,6 +33215,7 @@ impl GRASS_LOD_RANGE_PARAM_ST {
     pub fn set_lod2_play(&mut self, value: f32) {
         self.lod2_play = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -32260,6 +33251,7 @@ impl GRASS_MAP_SETTINGS_PARAM_ST {
     pub fn set_grass_type2(&mut self, value: u32) {
         self.grass_type2 = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -32586,6 +33578,7 @@ impl GRASS_TYPE_PARAM_ST {
     pub fn set_model1_name(&mut self, value: [u16; 16]) {
         self.model1_name = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -33810,6 +34803,7 @@ impl HIT_EFFECT_SE_PARAM_ST {
     pub fn set_energy_strong_blow_ll(&mut self, value: i32) {
         self.energy_strong_blow_ll = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -33928,6 +34922,7 @@ impl HIT_EFFECT_SFX_CONCEPT_PARAM_ST {
     pub fn set_atk_none_2(&mut self, value: i16) {
         self.atk_none_2 = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -34116,6 +35111,7 @@ impl HIT_EFFECT_SFX_PARAM_ST {
     pub fn set_neutral_specific2(&mut self, value: i32) {
         self.neutral_specific2 = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -34176,42 +35172,52 @@ impl HIT_MTRL_PARAM_ST {
         self.sp_effect_id_on_hit1 = value;
     }
 
+    #[allow(identity_op)]
     pub fn foot_effect_height_type(&self) -> u8 {
         (self.bits_c >> 0) & 0b00000011
     }
 
+    #[allow(identity_op)]
     pub fn set_foot_effect_height_type(&mut self, value: u8) {
         self.bits_c = (self.bits_c & !(0b00000011 << 0)) | ((value & 0b00000011) << 0);
     }
 
+    #[allow(identity_op)]
     pub fn foot_effect_dir_type(&self) -> u8 {
         (self.bits_c >> 1) & 0b00000011
     }
 
+    #[allow(identity_op)]
     pub fn set_foot_effect_dir_type(&mut self, value: u8) {
         self.bits_c = (self.bits_c & !(0b00000011 << 1)) | ((value & 0b00000011) << 1);
     }
 
+    #[allow(identity_op)]
     pub fn floor_height_type(&self) -> u8 {
         (self.bits_c >> 2) & 0b00000011
     }
 
+    #[allow(identity_op)]
     pub fn set_floor_height_type(&mut self, value: u8) {
         self.bits_c = (self.bits_c & !(0b00000011 << 2)) | ((value & 0b00000011) << 2);
     }
 
+    #[allow(identity_op)]
     pub fn disable_fall_damage(&self) -> u8 {
         (self.bits_c >> 3) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_disable_fall_damage(&mut self, value: u8) {
         self.bits_c = (self.bits_c & !(0b00000001 << 3)) | ((value & 0b00000001) << 3);
     }
 
+    #[allow(identity_op)]
     pub fn is_hardness_for_sound_reverb(&self) -> u8 {
         (self.bits_c >> 4) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_is_hardness_for_sound_reverb(&mut self, value: u8) {
         self.bits_c = (self.bits_c & !(0b00000001 << 4)) | ((value & 0b00000001) << 4);
     }
@@ -34383,6 +35389,7 @@ impl HIT_MTRL_PARAM_ST {
     pub fn set_sp_effect_id_for_wet04(&mut self, value: i32) {
         self.sp_effect_id_for_wet04 = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -34865,130 +35872,162 @@ impl ITEMLOT_PARAM_ST {
         self.lot_item_num08 = value;
     }
 
+    #[allow(identity_op)]
     pub fn enable_luck01(&self) -> u8 {
         (self.bits_92 >> 0) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_enable_luck01(&mut self, value: u8) {
         self.bits_92 = (self.bits_92 & !(0b00000001 << 0)) | ((value & 0b00000001) << 0);
     }
 
+    #[allow(identity_op)]
     pub fn enable_luck02(&self) -> u8 {
         (self.bits_92 >> 1) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_enable_luck02(&mut self, value: u8) {
         self.bits_92 = (self.bits_92 & !(0b00000001 << 1)) | ((value & 0b00000001) << 1);
     }
 
+    #[allow(identity_op)]
     pub fn enable_luck03(&self) -> u8 {
         (self.bits_92 >> 2) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_enable_luck03(&mut self, value: u8) {
         self.bits_92 = (self.bits_92 & !(0b00000001 << 2)) | ((value & 0b00000001) << 2);
     }
 
+    #[allow(identity_op)]
     pub fn enable_luck04(&self) -> u8 {
         (self.bits_92 >> 3) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_enable_luck04(&mut self, value: u8) {
         self.bits_92 = (self.bits_92 & !(0b00000001 << 3)) | ((value & 0b00000001) << 3);
     }
 
+    #[allow(identity_op)]
     pub fn enable_luck05(&self) -> u8 {
         (self.bits_92 >> 4) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_enable_luck05(&mut self, value: u8) {
         self.bits_92 = (self.bits_92 & !(0b00000001 << 4)) | ((value & 0b00000001) << 4);
     }
 
+    #[allow(identity_op)]
     pub fn enable_luck06(&self) -> u8 {
         (self.bits_92 >> 5) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_enable_luck06(&mut self, value: u8) {
         self.bits_92 = (self.bits_92 & !(0b00000001 << 5)) | ((value & 0b00000001) << 5);
     }
 
+    #[allow(identity_op)]
     pub fn enable_luck07(&self) -> u8 {
         (self.bits_92 >> 6) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_enable_luck07(&mut self, value: u8) {
         self.bits_92 = (self.bits_92 & !(0b00000001 << 6)) | ((value & 0b00000001) << 6);
     }
 
+    #[allow(identity_op)]
     pub fn enable_luck08(&self) -> u8 {
         (self.bits_92 >> 7) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_enable_luck08(&mut self, value: u8) {
         self.bits_92 = (self.bits_92 & !(0b00000001 << 7)) | ((value & 0b00000001) << 7);
     }
 
+    #[allow(identity_op)]
     pub fn cumulate_reset01(&self) -> u8 {
         (self.bits_93 >> 0) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_cumulate_reset01(&mut self, value: u8) {
         self.bits_93 = (self.bits_93 & !(0b00000001 << 0)) | ((value & 0b00000001) << 0);
     }
 
+    #[allow(identity_op)]
     pub fn cumulate_reset02(&self) -> u8 {
         (self.bits_93 >> 1) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_cumulate_reset02(&mut self, value: u8) {
         self.bits_93 = (self.bits_93 & !(0b00000001 << 1)) | ((value & 0b00000001) << 1);
     }
 
+    #[allow(identity_op)]
     pub fn cumulate_reset03(&self) -> u8 {
         (self.bits_93 >> 2) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_cumulate_reset03(&mut self, value: u8) {
         self.bits_93 = (self.bits_93 & !(0b00000001 << 2)) | ((value & 0b00000001) << 2);
     }
 
+    #[allow(identity_op)]
     pub fn cumulate_reset04(&self) -> u8 {
         (self.bits_93 >> 3) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_cumulate_reset04(&mut self, value: u8) {
         self.bits_93 = (self.bits_93 & !(0b00000001 << 3)) | ((value & 0b00000001) << 3);
     }
 
+    #[allow(identity_op)]
     pub fn cumulate_reset05(&self) -> u8 {
         (self.bits_93 >> 4) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_cumulate_reset05(&mut self, value: u8) {
         self.bits_93 = (self.bits_93 & !(0b00000001 << 4)) | ((value & 0b00000001) << 4);
     }
 
+    #[allow(identity_op)]
     pub fn cumulate_reset06(&self) -> u8 {
         (self.bits_93 >> 5) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_cumulate_reset06(&mut self, value: u8) {
         self.bits_93 = (self.bits_93 & !(0b00000001 << 5)) | ((value & 0b00000001) << 5);
     }
 
+    #[allow(identity_op)]
     pub fn cumulate_reset07(&self) -> u8 {
         (self.bits_93 >> 6) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_cumulate_reset07(&mut self, value: u8) {
         self.bits_93 = (self.bits_93 & !(0b00000001 << 6)) | ((value & 0b00000001) << 6);
     }
 
+    #[allow(identity_op)]
     pub fn cumulate_reset08(&self) -> u8 {
         (self.bits_93 >> 7) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_cumulate_reset08(&mut self, value: u8) {
         self.bits_93 = (self.bits_93 & !(0b00000001 << 7)) | ((value & 0b00000001) << 7);
     }
@@ -35001,21 +36040,26 @@ impl ITEMLOT_PARAM_ST {
         self.game_clear_offset = value;
     }
 
+    #[allow(identity_op)]
     pub fn can_exec_by_friendly_ghost(&self) -> u8 {
         (self.bits_95 >> 0) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_can_exec_by_friendly_ghost(&mut self, value: u8) {
         self.bits_95 = (self.bits_95 & !(0b00000001 << 0)) | ((value & 0b00000001) << 0);
     }
 
+    #[allow(identity_op)]
     pub fn can_exec_by_hostile_ghost(&self) -> u8 {
         (self.bits_95 >> 1) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_can_exec_by_hostile_ghost(&mut self, value: u8) {
         self.bits_95 = (self.bits_95 & !(0b00000001 << 1)) | ((value & 0b00000001) << 1);
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -35106,6 +36150,7 @@ impl CS_KEY_ASSIGN_MENUITEM_PARAM {
     pub fn set_view_keyboard_mouse(&mut self, value: u8) {
         self.view_keyboard_mouse = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -35152,6 +36197,7 @@ impl KEY_ASSIGN_PARAM_ST {
     pub fn set_mouse_key_id(&mut self, value: i32) {
         self.mouse_key_id = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -35431,6 +36477,7 @@ impl KNOCKBACK_PARAM_ST {
     pub fn set_guard_brake_dec_time(&mut self, value: f32) {
         self.guard_brake_dec_time = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -35445,10 +36492,12 @@ pub struct KNOWLEDGE_LOADSCREEN_ITEM_PARAM_ST {
 }
 
 impl KNOWLEDGE_LOADSCREEN_ITEM_PARAM_ST {
+    #[allow(identity_op)]
     pub fn disable_param_nt(&self) -> u8 {
         (self.bits_0 >> 0) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_disable_param_nt(&mut self, value: u8) {
         self.bits_0 = (self.bits_0 & !(0b00000001 << 0)) | ((value & 0b00000001) << 0);
     }
@@ -35476,6 +36525,7 @@ impl KNOWLEDGE_LOADSCREEN_ITEM_PARAM_ST {
     pub fn set_msg_id(&mut self, value: i32) {
         self.msg_id = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -35647,6 +36697,7 @@ impl LEGACY_DISTANT_VIEW_PARTS_REPLACE_PARAM {
     pub fn set_limited_map_regio_asset_id_range_max(&mut self, value: i32) {
         self.limited_map_regio_asset_id_range_max = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -35845,6 +36896,7 @@ impl LOAD_BALANCER_DRAW_DIST_SCALE_PARAM_ST {
     pub fn set_lv20(&mut self, value: f32) {
         self.lv20 = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -35928,6 +36980,7 @@ impl LOAD_BALANCER_NEW_DRAW_DIST_SCALE_PARAM_ST {
     pub fn set_shadw_draw_dist_scale_end(&mut self, value: f32) {
         self.shadw_draw_dist_scale_end = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -36217,6 +37270,7 @@ impl LOAD_BALANCER_PARAM_ST {
     pub fn set_dynamic_resolution_percentage_max(&mut self, value: u8) {
         self.dynamic_resolution_percentage_max = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -36406,6 +37460,7 @@ impl LOCK_CAM_PARAM_ST {
     pub fn set_chr_trans_chase_rate_for_normal(&mut self, value: f32) {
         self.chr_trans_chase_rate_for_normal = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -36498,10 +37553,12 @@ pub struct MAGIC_PARAM_ST {
 }
 
 impl MAGIC_PARAM_ST {
+    #[allow(identity_op)]
     pub fn disable_param_nt(&self) -> u8 {
         (self.bits_0 >> 0) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_disable_param_nt(&mut self, value: u8) {
         self.bits_0 = (self.bits_0 & !(0b00000001 << 0)) | ((value & 0b00000001) << 0);
     }
@@ -36738,250 +37795,312 @@ impl MAGIC_PARAM_ST {
         self.use_limit_category = value;
     }
 
+    #[allow(identity_op)]
     pub fn vow_type0(&self) -> u8 {
         (self.bits_30 >> 0) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_vow_type0(&mut self, value: u8) {
         self.bits_30 = (self.bits_30 & !(0b00000001 << 0)) | ((value & 0b00000001) << 0);
     }
 
+    #[allow(identity_op)]
     pub fn vow_type1(&self) -> u8 {
         (self.bits_30 >> 1) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_vow_type1(&mut self, value: u8) {
         self.bits_30 = (self.bits_30 & !(0b00000001 << 1)) | ((value & 0b00000001) << 1);
     }
 
+    #[allow(identity_op)]
     pub fn vow_type2(&self) -> u8 {
         (self.bits_30 >> 2) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_vow_type2(&mut self, value: u8) {
         self.bits_30 = (self.bits_30 & !(0b00000001 << 2)) | ((value & 0b00000001) << 2);
     }
 
+    #[allow(identity_op)]
     pub fn vow_type3(&self) -> u8 {
         (self.bits_30 >> 3) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_vow_type3(&mut self, value: u8) {
         self.bits_30 = (self.bits_30 & !(0b00000001 << 3)) | ((value & 0b00000001) << 3);
     }
 
+    #[allow(identity_op)]
     pub fn vow_type4(&self) -> u8 {
         (self.bits_30 >> 4) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_vow_type4(&mut self, value: u8) {
         self.bits_30 = (self.bits_30 & !(0b00000001 << 4)) | ((value & 0b00000001) << 4);
     }
 
+    #[allow(identity_op)]
     pub fn vow_type5(&self) -> u8 {
         (self.bits_30 >> 5) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_vow_type5(&mut self, value: u8) {
         self.bits_30 = (self.bits_30 & !(0b00000001 << 5)) | ((value & 0b00000001) << 5);
     }
 
+    #[allow(identity_op)]
     pub fn vow_type6(&self) -> u8 {
         (self.bits_30 >> 6) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_vow_type6(&mut self, value: u8) {
         self.bits_30 = (self.bits_30 & !(0b00000001 << 6)) | ((value & 0b00000001) << 6);
     }
 
+    #[allow(identity_op)]
     pub fn vow_type7(&self) -> u8 {
         (self.bits_30 >> 7) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_vow_type7(&mut self, value: u8) {
         self.bits_30 = (self.bits_30 & !(0b00000001 << 7)) | ((value & 0b00000001) << 7);
     }
 
+    #[allow(identity_op)]
     pub fn enable_multi(&self) -> u8 {
         (self.bits_31 >> 0) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_enable_multi(&mut self, value: u8) {
         self.bits_31 = (self.bits_31 & !(0b00000001 << 0)) | ((value & 0b00000001) << 0);
     }
 
+    #[allow(identity_op)]
     pub fn enable_multi_only(&self) -> u8 {
         (self.bits_31 >> 1) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_enable_multi_only(&mut self, value: u8) {
         self.bits_31 = (self.bits_31 & !(0b00000001 << 1)) | ((value & 0b00000001) << 1);
     }
 
+    #[allow(identity_op)]
     pub fn is_enchant(&self) -> u8 {
         (self.bits_31 >> 2) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_is_enchant(&mut self, value: u8) {
         self.bits_31 = (self.bits_31 & !(0b00000001 << 2)) | ((value & 0b00000001) << 2);
     }
 
+    #[allow(identity_op)]
     pub fn is_shield_enchant(&self) -> u8 {
         (self.bits_31 >> 3) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_is_shield_enchant(&mut self, value: u8) {
         self.bits_31 = (self.bits_31 & !(0b00000001 << 3)) | ((value & 0b00000001) << 3);
     }
 
+    #[allow(identity_op)]
     pub fn enable_live(&self) -> u8 {
         (self.bits_31 >> 4) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_enable_live(&mut self, value: u8) {
         self.bits_31 = (self.bits_31 & !(0b00000001 << 4)) | ((value & 0b00000001) << 4);
     }
 
+    #[allow(identity_op)]
     pub fn enable_gray(&self) -> u8 {
         (self.bits_31 >> 5) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_enable_gray(&mut self, value: u8) {
         self.bits_31 = (self.bits_31 & !(0b00000001 << 5)) | ((value & 0b00000001) << 5);
     }
 
+    #[allow(identity_op)]
     pub fn enable_white(&self) -> u8 {
         (self.bits_31 >> 6) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_enable_white(&mut self, value: u8) {
         self.bits_31 = (self.bits_31 & !(0b00000001 << 6)) | ((value & 0b00000001) << 6);
     }
 
+    #[allow(identity_op)]
     pub fn enable_black(&self) -> u8 {
         (self.bits_31 >> 7) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_enable_black(&mut self, value: u8) {
         self.bits_31 = (self.bits_31 & !(0b00000001 << 7)) | ((value & 0b00000001) << 7);
     }
 
+    #[allow(identity_op)]
     pub fn disable_offline(&self) -> u8 {
         (self.bits_32 >> 0) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_disable_offline(&mut self, value: u8) {
         self.bits_32 = (self.bits_32 & !(0b00000001 << 0)) | ((value & 0b00000001) << 0);
     }
 
+    #[allow(identity_op)]
     pub fn cast_resonance_magic(&self) -> u8 {
         (self.bits_32 >> 1) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_cast_resonance_magic(&mut self, value: u8) {
         self.bits_32 = (self.bits_32 & !(0b00000001 << 1)) | ((value & 0b00000001) << 1);
     }
 
+    #[allow(identity_op)]
     pub fn is_valid_tough_prot_sa_dmg(&self) -> u8 {
         (self.bits_32 >> 2) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_is_valid_tough_prot_sa_dmg(&mut self, value: u8) {
         self.bits_32 = (self.bits_32 & !(0b00000001 << 2)) | ((value & 0b00000001) << 2);
     }
 
+    #[allow(identity_op)]
     pub fn is_warp_magic(&self) -> u8 {
         (self.bits_32 >> 3) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_is_warp_magic(&mut self, value: u8) {
         self.bits_32 = (self.bits_32 & !(0b00000001 << 3)) | ((value & 0b00000001) << 3);
     }
 
+    #[allow(identity_op)]
     pub fn enable_riding(&self) -> u8 {
         (self.bits_32 >> 4) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_enable_riding(&mut self, value: u8) {
         self.bits_32 = (self.bits_32 & !(0b00000001 << 4)) | ((value & 0b00000001) << 4);
     }
 
+    #[allow(identity_op)]
     pub fn disable_riding(&self) -> u8 {
         (self.bits_32 >> 5) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_disable_riding(&mut self, value: u8) {
         self.bits_32 = (self.bits_32 & !(0b00000001 << 5)) | ((value & 0b00000001) << 5);
     }
 
+    #[allow(identity_op)]
     pub fn is_use_no_attack_region(&self) -> u8 {
         (self.bits_32 >> 6) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_is_use_no_attack_region(&mut self, value: u8) {
         self.bits_32 = (self.bits_32 & !(0b00000001 << 6)) | ((value & 0b00000001) << 6);
     }
 
+    #[allow(identity_op)]
     pub fn vow_type8(&self) -> u8 {
         (self.bits_33 >> 0) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_vow_type8(&mut self, value: u8) {
         self.bits_33 = (self.bits_33 & !(0b00000001 << 0)) | ((value & 0b00000001) << 0);
     }
 
+    #[allow(identity_op)]
     pub fn vow_type9(&self) -> u8 {
         (self.bits_33 >> 1) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_vow_type9(&mut self, value: u8) {
         self.bits_33 = (self.bits_33 & !(0b00000001 << 1)) | ((value & 0b00000001) << 1);
     }
 
+    #[allow(identity_op)]
     pub fn vow_type10(&self) -> u8 {
         (self.bits_33 >> 2) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_vow_type10(&mut self, value: u8) {
         self.bits_33 = (self.bits_33 & !(0b00000001 << 2)) | ((value & 0b00000001) << 2);
     }
 
+    #[allow(identity_op)]
     pub fn vow_type11(&self) -> u8 {
         (self.bits_33 >> 3) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_vow_type11(&mut self, value: u8) {
         self.bits_33 = (self.bits_33 & !(0b00000001 << 3)) | ((value & 0b00000001) << 3);
     }
 
+    #[allow(identity_op)]
     pub fn vow_type12(&self) -> u8 {
         (self.bits_33 >> 4) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_vow_type12(&mut self, value: u8) {
         self.bits_33 = (self.bits_33 & !(0b00000001 << 4)) | ((value & 0b00000001) << 4);
     }
 
+    #[allow(identity_op)]
     pub fn vow_type13(&self) -> u8 {
         (self.bits_33 >> 5) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_vow_type13(&mut self, value: u8) {
         self.bits_33 = (self.bits_33 & !(0b00000001 << 5)) | ((value & 0b00000001) << 5);
     }
 
+    #[allow(identity_op)]
     pub fn vow_type14(&self) -> u8 {
         (self.bits_33 >> 6) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_vow_type14(&mut self, value: u8) {
         self.bits_33 = (self.bits_33 & !(0b00000001 << 6)) | ((value & 0b00000001) << 6);
     }
 
+    #[allow(identity_op)]
     pub fn vow_type15(&self) -> u8 {
         (self.bits_33 >> 7) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_vow_type15(&mut self, value: u8) {
         self.bits_33 = (self.bits_33 & !(0b00000001 << 7)) | ((value & 0b00000001) << 7);
     }
@@ -37361,6 +38480,7 @@ impl MAGIC_PARAM_ST {
     pub fn set_consume_loop_mp_for_menu(&mut self, value: i16) {
         self.consume_loop_mp_for_menu = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -37395,10 +38515,12 @@ pub struct MAP_DEFAULT_INFO_PARAM_ST {
 }
 
 impl MAP_DEFAULT_INFO_PARAM_ST {
+    #[allow(identity_op)]
     pub fn disable_param_nt(&self) -> u8 {
         (self.bits_0 >> 0) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_disable_param_nt(&mut self, value: u8) {
         self.bits_0 = (self.bits_0 & !(0b00000001 << 0)) | ((value & 0b00000001) << 0);
     }
@@ -37578,6 +38700,7 @@ impl MAP_DEFAULT_INFO_PARAM_ST {
     pub fn set_override_gi_resolution_xsx(&mut self, value: i8) {
         self.override_gi_resolution_xsx = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -37590,10 +38713,12 @@ pub struct MAP_GD_REGION_DRAW_PARAM {
 }
 
 impl MAP_GD_REGION_DRAW_PARAM {
+    #[allow(identity_op)]
     pub fn disable_param_nt(&self) -> u8 {
         (self.bits_0 >> 0) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_disable_param_nt(&mut self, value: u8) {
         self.bits_0 = (self.bits_0 & !(0b00000001 << 0)) | ((value & 0b00000001) << 0);
     }
@@ -37605,6 +38730,7 @@ impl MAP_GD_REGION_DRAW_PARAM {
     pub fn set_override_iv_local_light_scale(&mut self, value: f32) {
         self.override_iv_local_light_scale = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -37618,10 +38744,12 @@ pub struct MAP_GD_REGION_ID_PARAM_ST {
 }
 
 impl MAP_GD_REGION_ID_PARAM_ST {
+    #[allow(identity_op)]
     pub fn disable_param_nt(&self) -> u8 {
         (self.bits_0 >> 0) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_disable_param_nt(&mut self, value: u8) {
         self.bits_0 = (self.bits_0 & !(0b00000001 << 0)) | ((value & 0b00000001) << 0);
     }
@@ -37633,6 +38761,7 @@ impl MAP_GD_REGION_ID_PARAM_ST {
     pub fn set_map_region_id(&mut self, value: u32) {
         self.map_region_id = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -37670,6 +38799,7 @@ impl MAP_GRID_CREATE_HEIGHT_LIMIT_DETAIL_INFO_PARAM_ST {
     pub fn set_map_id(&mut self, value: i32) {
         self.map_id = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -37697,6 +38827,7 @@ impl MAP_GRID_CREATE_HEIGHT_LIMIT_INFO_PARAM_ST {
     pub fn set_grid_enable_create_height_max(&mut self, value: f32) {
         self.grid_enable_create_height_max = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -37814,6 +38945,7 @@ impl MAP_MIMICRY_ESTABLISHMENT_PARAM_ST {
     pub fn set_mimicry_end_sfx_id2(&mut self, value: i32) {
         self.mimicry_end_sfx_id2 = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -37831,10 +38963,12 @@ pub struct MAP_NAME_TEX_PARAM_ST {
 }
 
 impl MAP_NAME_TEX_PARAM_ST {
+    #[allow(identity_op)]
     pub fn disable_param_nt(&self) -> u8 {
         (self.bits_0 >> 0) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_disable_param_nt(&mut self, value: u8) {
         self.bits_0 = (self.bits_0 & !(0b00000001 << 0)) | ((value & 0b00000001) << 0);
     }
@@ -37870,6 +39004,7 @@ impl MAP_NAME_TEX_PARAM_ST {
     pub fn set_map_name_id(&mut self, value: i32) {
         self.map_name_id = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -37896,10 +39031,12 @@ pub struct MAP_NAME_TEX_PARAM_ST_DLC02 {
 }
 
 impl MAP_NAME_TEX_PARAM_ST_DLC02 {
+    #[allow(identity_op)]
     pub fn disable_param_nt(&self) -> u8 {
         (self.bits_0 >> 0) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_disable_param_nt(&mut self, value: u8) {
         self.bits_0 = (self.bits_0 & !(0b00000001 << 0)) | ((value & 0b00000001) << 0);
     }
@@ -37935,6 +39072,7 @@ impl MAP_NAME_TEX_PARAM_ST_DLC02 {
     pub fn set_map_name_id(&mut self, value: i32) {
         self.map_name_id = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -37952,10 +39090,12 @@ pub struct MAP_PIECE_TEX_PARAM_ST {
 }
 
 impl MAP_PIECE_TEX_PARAM_ST {
+    #[allow(identity_op)]
     pub fn disable_param_nt(&self) -> u8 {
         (self.bits_0 >> 0) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_disable_param_nt(&mut self, value: u8) {
         self.bits_0 = (self.bits_0 & !(0b00000001 << 0)) | ((value & 0b00000001) << 0);
     }
@@ -37999,6 +39139,7 @@ impl MAP_PIECE_TEX_PARAM_ST {
     pub fn set_multi_play_area_id(&mut self, value: i32) {
         self.multi_play_area_id = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -38022,10 +39163,12 @@ pub struct MAP_PIECE_TEX_PARAM_ST_DLC02 {
 }
 
 impl MAP_PIECE_TEX_PARAM_ST_DLC02 {
+    #[allow(identity_op)]
     pub fn disable_param_nt(&self) -> u8 {
         (self.bits_0 >> 0) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_disable_param_nt(&mut self, value: u8) {
         self.bits_0 = (self.bits_0 & !(0b00000001 << 0)) | ((value & 0b00000001) << 0);
     }
@@ -38069,6 +39212,7 @@ impl MAP_PIECE_TEX_PARAM_ST_DLC02 {
     pub fn set_multi_play_area_id(&mut self, value: i32) {
         self.multi_play_area_id = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -38141,6 +39285,7 @@ impl MATERIAL_EX_PARAM_ST {
     pub fn set_material_param_value4(&mut self, value: f32) {
         self.material_param_value4 = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -38680,6 +39825,7 @@ impl MENU_COMMON_PARAM_ST {
     pub fn set_pc_horse_hp_recover_disp_threshold(&mut self, value: u32) {
         self.pc_horse_hp_recover_disp_threshold = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -38824,6 +39970,7 @@ impl MENU_OFFSCR_REND_PARAM_ST {
     pub fn set_grapm_id_for_xb1(&mut self, value: u32) {
         self.grapm_id_for_xb1 = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -38906,6 +40053,7 @@ impl MENU_PARAM_COLOR_TABLE_ST {
     pub fn set_v3(&mut self, value: f32) {
         self.v3 = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -38951,6 +40099,7 @@ impl MENUPROPERTY_LAYOUT {
     pub fn set_help_text_id(&mut self, value: i32) {
         self.help_text_id = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -39006,6 +40155,7 @@ impl MENUPROPERTY_SPEC {
     pub fn set_format_type(&mut self, value: u16) {
         self.format_type = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -39042,6 +40192,7 @@ impl MENU_VALUE_TABLE_SPEC {
     pub fn set_compare_type(&mut self, value: i8) {
         self.compare_type = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -39059,10 +40210,12 @@ pub struct MIMICRY_ESTABLISHMENT_TEX_PARAM_ST {
 }
 
 impl MIMICRY_ESTABLISHMENT_TEX_PARAM_ST {
+    #[allow(identity_op)]
     pub fn disable_param_nt(&self) -> u8 {
         (self.bits_0 >> 0) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_disable_param_nt(&mut self, value: u8) {
         self.bits_0 = (self.bits_0 & !(0b00000001 << 0)) | ((value & 0b00000001) << 0);
     }
@@ -39098,6 +40251,7 @@ impl MIMICRY_ESTABLISHMENT_TEX_PARAM_ST {
     pub fn set_mimicry_establishment_param_id(&mut self, value: i32) {
         self.mimicry_establishment_param_id = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -39119,10 +40273,12 @@ pub struct MIMICRY_ESTABLISHMENT_TEX_PARAM_ST_DLC02 {
 }
 
 impl MIMICRY_ESTABLISHMENT_TEX_PARAM_ST_DLC02 {
+    #[allow(identity_op)]
     pub fn disable_param_nt(&self) -> u8 {
         (self.bits_0 >> 0) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_disable_param_nt(&mut self, value: u8) {
         self.bits_0 = (self.bits_0 & !(0b00000001 << 0)) | ((value & 0b00000001) << 0);
     }
@@ -39158,6 +40314,7 @@ impl MIMICRY_ESTABLISHMENT_TEX_PARAM_ST_DLC02 {
     pub fn set_mimicry_establishment_param_id(&mut self, value: i32) {
         self.mimicry_establishment_param_id = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -39304,6 +40461,7 @@ impl MISSILE_PARAM_ST {
     pub fn set_behavior_id(&mut self, value: i32) {
         self.behavior_id = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -39464,6 +40622,7 @@ impl MODEL_SFX_PARAM_ST {
     pub fn set_dmypoly_id_7(&mut self, value: i32) {
         self.dmypoly_id_7 = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -39823,6 +40982,7 @@ impl MOVE_PARAM_ST {
     pub fn set_turn_wait_no_anim_angle(&mut self, value: u8) {
         self.turn_wait_no_anim_angle = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -39976,6 +41136,7 @@ impl MULTI_ESTUS_FLASK_BONUS_PARAM_ST {
     pub fn set_yellow_monk(&mut self, value: u8) {
         self.yellow_monk = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -39992,10 +41153,12 @@ pub struct MULTI_PLAY_CORRECTION_PARAM_ST {
 }
 
 impl MULTI_PLAY_CORRECTION_PARAM_ST {
+    #[allow(identity_op)]
     pub fn disable_param_nt(&self) -> u8 {
         (self.bits_0 >> 0) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_disable_param_nt(&mut self, value: u8) {
         self.bits_0 = (self.bits_0 & !(0b00000001 << 0)) | ((value & 0b00000001) << 0);
     }
@@ -40031,6 +41194,7 @@ impl MULTI_PLAY_CORRECTION_PARAM_ST {
     pub fn set_b_override_sp_effect(&mut self, value: u8) {
         self.b_override_sp_effect = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -40184,6 +41348,7 @@ impl MULTI_SOUL_BONUS_RATE_PARAM_ST {
     pub fn set_yellow_monk(&mut self, value: f32) {
         self.yellow_monk = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -40249,53 +41414,66 @@ impl NETWORK_AREA_PARAM_ST {
         self.cell_offset_z = value;
     }
 
+    #[allow(identity_op)]
     pub fn enable_bloodstain(&self) -> u8 {
         (self.bits_18 >> 0) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_enable_bloodstain(&mut self, value: u8) {
         self.bits_18 = (self.bits_18 & !(0b00000001 << 0)) | ((value & 0b00000001) << 0);
     }
 
+    #[allow(identity_op)]
     pub fn enable_blood_message(&self) -> u8 {
         (self.bits_18 >> 1) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_enable_blood_message(&mut self, value: u8) {
         self.bits_18 = (self.bits_18 & !(0b00000001 << 1)) | ((value & 0b00000001) << 1);
     }
 
+    #[allow(identity_op)]
     pub fn enable_ghost(&self) -> u8 {
         (self.bits_18 >> 2) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_enable_ghost(&mut self, value: u8) {
         self.bits_18 = (self.bits_18 & !(0b00000001 << 2)) | ((value & 0b00000001) << 2);
     }
 
+    #[allow(identity_op)]
     pub fn enable_multi_play(&self) -> u8 {
         (self.bits_18 >> 3) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_enable_multi_play(&mut self, value: u8) {
         self.bits_18 = (self.bits_18 & !(0b00000001 << 3)) | ((value & 0b00000001) << 3);
     }
 
+    #[allow(identity_op)]
     pub fn enable_ring_search(&self) -> u8 {
         (self.bits_18 >> 4) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_enable_ring_search(&mut self, value: u8) {
         self.bits_18 = (self.bits_18 & !(0b00000001 << 4)) | ((value & 0b00000001) << 4);
     }
 
+    #[allow(identity_op)]
     pub fn enable_break_in_search(&self) -> u8 {
         (self.bits_18 >> 5) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_enable_break_in_search(&mut self, value: u8) {
         self.bits_18 = (self.bits_18 & !(0b00000001 << 5)) | ((value & 0b00000001) << 5);
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -40689,6 +41867,7 @@ impl NETWORK_MSG_PARAM_ST {
     pub fn set_force_join_black_c_npc(&mut self, value: i32) {
         self.force_join_black_c_npc = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -42005,6 +43184,7 @@ impl NETWORK_PARAM_ST {
     pub fn set_yellow_monk_overall_flow_time_out_time(&mut self, value: f32) {
         self.yellow_monk_overall_flow_time_out_time = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -42104,6 +43284,7 @@ impl NPC_AI_ACTION_PARAM_ST {
     pub fn set_b_life_end_success(&mut self, value: u8) {
         self.b_life_end_success = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -43912,6 +45093,7 @@ impl NPC_AI_BEHAVIOR_PROBABILITY_PARAM_ST {
     pub fn set_param199(&mut self, value: i16) {
         self.param199 = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -44176,10 +45358,12 @@ pub struct NPC_PARAM_ST {
 }
 
 impl NPC_PARAM_ST {
+    #[allow(identity_op)]
     pub fn disable_param_nt(&self) -> u8 {
         (self.bits_0 >> 0) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_disable_param_nt(&mut self, value: u8) {
         self.bits_0 = (self.bits_0 & !(0b00000001 << 0)) | ((value & 0b00000001) << 0);
     }
@@ -45160,450 +46344,562 @@ impl NPC_PARAM_ST {
         self.ladder_end_chk_offset_low = value;
     }
 
+    #[allow(identity_op)]
     pub fn use_ragdoll_cam_hit(&self) -> u8 {
         (self.bits_149 >> 0) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_use_ragdoll_cam_hit(&mut self, value: u8) {
         self.bits_149 = (self.bits_149 & !(0b00000001 << 0)) | ((value & 0b00000001) << 0);
     }
 
+    #[allow(identity_op)]
     pub fn disable_cloth_rigid_hit(&self) -> u8 {
         (self.bits_149 >> 1) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_disable_cloth_rigid_hit(&mut self, value: u8) {
         self.bits_149 = (self.bits_149 & !(0b00000001 << 1)) | ((value & 0b00000001) << 1);
     }
 
+    #[allow(identity_op)]
     pub fn use_undulation_add_anim_fb(&self) -> u8 {
         (self.bits_149 >> 2) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_use_undulation_add_anim_fb(&mut self, value: u8) {
         self.bits_149 = (self.bits_149 & !(0b00000001 << 2)) | ((value & 0b00000001) << 2);
     }
 
+    #[allow(identity_op)]
     pub fn is_weak_a(&self) -> u8 {
         (self.bits_149 >> 3) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_is_weak_a(&mut self, value: u8) {
         self.bits_149 = (self.bits_149 & !(0b00000001 << 3)) | ((value & 0b00000001) << 3);
     }
 
+    #[allow(identity_op)]
     pub fn is_ghost(&self) -> u8 {
         (self.bits_149 >> 4) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_is_ghost(&mut self, value: u8) {
         self.bits_149 = (self.bits_149 & !(0b00000001 << 4)) | ((value & 0b00000001) << 4);
     }
 
+    #[allow(identity_op)]
     pub fn is_no_damage_motion(&self) -> u8 {
         (self.bits_149 >> 5) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_is_no_damage_motion(&mut self, value: u8) {
         self.bits_149 = (self.bits_149 & !(0b00000001 << 5)) | ((value & 0b00000001) << 5);
     }
 
+    #[allow(identity_op)]
     pub fn is_unduration(&self) -> u8 {
         (self.bits_149 >> 6) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_is_unduration(&mut self, value: u8) {
         self.bits_149 = (self.bits_149 & !(0b00000001 << 6)) | ((value & 0b00000001) << 6);
     }
 
+    #[allow(identity_op)]
     pub fn is_change_wander_ghost(&self) -> u8 {
         (self.bits_149 >> 7) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_is_change_wander_ghost(&mut self, value: u8) {
         self.bits_149 = (self.bits_149 & !(0b00000001 << 7)) | ((value & 0b00000001) << 7);
     }
 
+    #[allow(identity_op)]
     pub fn model_disp_mask0(&self) -> u8 {
         (self.bits_14a >> 0) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_model_disp_mask0(&mut self, value: u8) {
         self.bits_14a = (self.bits_14a & !(0b00000001 << 0)) | ((value & 0b00000001) << 0);
     }
 
+    #[allow(identity_op)]
     pub fn model_disp_mask1(&self) -> u8 {
         (self.bits_14a >> 1) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_model_disp_mask1(&mut self, value: u8) {
         self.bits_14a = (self.bits_14a & !(0b00000001 << 1)) | ((value & 0b00000001) << 1);
     }
 
+    #[allow(identity_op)]
     pub fn model_disp_mask2(&self) -> u8 {
         (self.bits_14a >> 2) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_model_disp_mask2(&mut self, value: u8) {
         self.bits_14a = (self.bits_14a & !(0b00000001 << 2)) | ((value & 0b00000001) << 2);
     }
 
+    #[allow(identity_op)]
     pub fn model_disp_mask3(&self) -> u8 {
         (self.bits_14a >> 3) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_model_disp_mask3(&mut self, value: u8) {
         self.bits_14a = (self.bits_14a & !(0b00000001 << 3)) | ((value & 0b00000001) << 3);
     }
 
+    #[allow(identity_op)]
     pub fn model_disp_mask4(&self) -> u8 {
         (self.bits_14a >> 4) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_model_disp_mask4(&mut self, value: u8) {
         self.bits_14a = (self.bits_14a & !(0b00000001 << 4)) | ((value & 0b00000001) << 4);
     }
 
+    #[allow(identity_op)]
     pub fn model_disp_mask5(&self) -> u8 {
         (self.bits_14a >> 5) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_model_disp_mask5(&mut self, value: u8) {
         self.bits_14a = (self.bits_14a & !(0b00000001 << 5)) | ((value & 0b00000001) << 5);
     }
 
+    #[allow(identity_op)]
     pub fn model_disp_mask6(&self) -> u8 {
         (self.bits_14a >> 6) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_model_disp_mask6(&mut self, value: u8) {
         self.bits_14a = (self.bits_14a & !(0b00000001 << 6)) | ((value & 0b00000001) << 6);
     }
 
+    #[allow(identity_op)]
     pub fn model_disp_mask7(&self) -> u8 {
         (self.bits_14a >> 7) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_model_disp_mask7(&mut self, value: u8) {
         self.bits_14a = (self.bits_14a & !(0b00000001 << 7)) | ((value & 0b00000001) << 7);
     }
 
+    #[allow(identity_op)]
     pub fn model_disp_mask8(&self) -> u8 {
         (self.bits_14b >> 0) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_model_disp_mask8(&mut self, value: u8) {
         self.bits_14b = (self.bits_14b & !(0b00000001 << 0)) | ((value & 0b00000001) << 0);
     }
 
+    #[allow(identity_op)]
     pub fn model_disp_mask9(&self) -> u8 {
         (self.bits_14b >> 1) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_model_disp_mask9(&mut self, value: u8) {
         self.bits_14b = (self.bits_14b & !(0b00000001 << 1)) | ((value & 0b00000001) << 1);
     }
 
+    #[allow(identity_op)]
     pub fn model_disp_mask10(&self) -> u8 {
         (self.bits_14b >> 2) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_model_disp_mask10(&mut self, value: u8) {
         self.bits_14b = (self.bits_14b & !(0b00000001 << 2)) | ((value & 0b00000001) << 2);
     }
 
+    #[allow(identity_op)]
     pub fn model_disp_mask11(&self) -> u8 {
         (self.bits_14b >> 3) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_model_disp_mask11(&mut self, value: u8) {
         self.bits_14b = (self.bits_14b & !(0b00000001 << 3)) | ((value & 0b00000001) << 3);
     }
 
+    #[allow(identity_op)]
     pub fn model_disp_mask12(&self) -> u8 {
         (self.bits_14b >> 4) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_model_disp_mask12(&mut self, value: u8) {
         self.bits_14b = (self.bits_14b & !(0b00000001 << 4)) | ((value & 0b00000001) << 4);
     }
 
+    #[allow(identity_op)]
     pub fn model_disp_mask13(&self) -> u8 {
         (self.bits_14b >> 5) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_model_disp_mask13(&mut self, value: u8) {
         self.bits_14b = (self.bits_14b & !(0b00000001 << 5)) | ((value & 0b00000001) << 5);
     }
 
+    #[allow(identity_op)]
     pub fn model_disp_mask14(&self) -> u8 {
         (self.bits_14b >> 6) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_model_disp_mask14(&mut self, value: u8) {
         self.bits_14b = (self.bits_14b & !(0b00000001 << 6)) | ((value & 0b00000001) << 6);
     }
 
+    #[allow(identity_op)]
     pub fn model_disp_mask15(&self) -> u8 {
         (self.bits_14b >> 7) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_model_disp_mask15(&mut self, value: u8) {
         self.bits_14b = (self.bits_14b & !(0b00000001 << 7)) | ((value & 0b00000001) << 7);
     }
 
+    #[allow(identity_op)]
     pub fn is_enable_neck_turn(&self) -> u8 {
         (self.bits_14c >> 0) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_is_enable_neck_turn(&mut self, value: u8) {
         self.bits_14c = (self.bits_14c & !(0b00000001 << 0)) | ((value & 0b00000001) << 0);
     }
 
+    #[allow(identity_op)]
     pub fn disable_respawn(&self) -> u8 {
         (self.bits_14c >> 1) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_disable_respawn(&mut self, value: u8) {
         self.bits_14c = (self.bits_14c & !(0b00000001 << 1)) | ((value & 0b00000001) << 1);
     }
 
+    #[allow(identity_op)]
     pub fn is_move_anim_wait(&self) -> u8 {
         (self.bits_14c >> 2) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_is_move_anim_wait(&mut self, value: u8) {
         self.bits_14c = (self.bits_14c & !(0b00000001 << 2)) | ((value & 0b00000001) << 2);
     }
 
+    #[allow(identity_op)]
     pub fn is_crowd(&self) -> u8 {
         (self.bits_14c >> 3) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_is_crowd(&mut self, value: u8) {
         self.bits_14c = (self.bits_14c & !(0b00000001 << 3)) | ((value & 0b00000001) << 3);
     }
 
+    #[allow(identity_op)]
     pub fn is_weak_b(&self) -> u8 {
         (self.bits_14c >> 4) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_is_weak_b(&mut self, value: u8) {
         self.bits_14c = (self.bits_14c & !(0b00000001 << 4)) | ((value & 0b00000001) << 4);
     }
 
+    #[allow(identity_op)]
     pub fn is_weak_c(&self) -> u8 {
         (self.bits_14c >> 5) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_is_weak_c(&mut self, value: u8) {
         self.bits_14c = (self.bits_14c & !(0b00000001 << 5)) | ((value & 0b00000001) << 5);
     }
 
+    #[allow(identity_op)]
     pub fn is_weak_d(&self) -> u8 {
         (self.bits_14c >> 6) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_is_weak_d(&mut self, value: u8) {
         self.bits_14c = (self.bits_14c & !(0b00000001 << 6)) | ((value & 0b00000001) << 6);
     }
 
+    #[allow(identity_op)]
     pub fn does_always_use_special_turn(&self) -> u8 {
         (self.bits_14c >> 7) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_does_always_use_special_turn(&mut self, value: u8) {
         self.bits_14c = (self.bits_14c & !(0b00000001 << 7)) | ((value & 0b00000001) << 7);
     }
 
+    #[allow(identity_op)]
     pub fn is_ride_atk_target(&self) -> u8 {
         (self.bits_14d >> 0) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_is_ride_atk_target(&mut self, value: u8) {
         self.bits_14d = (self.bits_14d & !(0b00000001 << 0)) | ((value & 0b00000001) << 0);
     }
 
+    #[allow(identity_op)]
     pub fn is_enable_step_disp_interpolate(&self) -> u8 {
         (self.bits_14d >> 1) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_is_enable_step_disp_interpolate(&mut self, value: u8) {
         self.bits_14d = (self.bits_14d & !(0b00000001 << 1)) | ((value & 0b00000001) << 1);
     }
 
+    #[allow(identity_op)]
     pub fn is_stealth_target(&self) -> u8 {
         (self.bits_14d >> 2) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_is_stealth_target(&mut self, value: u8) {
         self.bits_14d = (self.bits_14d & !(0b00000001 << 2)) | ((value & 0b00000001) << 2);
     }
 
+    #[allow(identity_op)]
     pub fn disable_initialize_dead(&self) -> u8 {
         (self.bits_14d >> 3) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_disable_initialize_dead(&mut self, value: u8) {
         self.bits_14d = (self.bits_14d & !(0b00000001 << 3)) | ((value & 0b00000001) << 3);
     }
 
+    #[allow(identity_op)]
     pub fn is_hit_rumble(&self) -> u8 {
         (self.bits_14d >> 4) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_is_hit_rumble(&mut self, value: u8) {
         self.bits_14d = (self.bits_14d & !(0b00000001 << 4)) | ((value & 0b00000001) << 4);
     }
 
+    #[allow(identity_op)]
     pub fn is_smooth_turn(&self) -> u8 {
         (self.bits_14d >> 5) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_is_smooth_turn(&mut self, value: u8) {
         self.bits_14d = (self.bits_14d & !(0b00000001 << 5)) | ((value & 0b00000001) << 5);
     }
 
+    #[allow(identity_op)]
     pub fn is_weak_e(&self) -> u8 {
         (self.bits_14d >> 6) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_is_weak_e(&mut self, value: u8) {
         self.bits_14d = (self.bits_14d & !(0b00000001 << 6)) | ((value & 0b00000001) << 6);
     }
 
+    #[allow(identity_op)]
     pub fn is_weak_f(&self) -> u8 {
         (self.bits_14d >> 7) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_is_weak_f(&mut self, value: u8) {
         self.bits_14d = (self.bits_14d & !(0b00000001 << 7)) | ((value & 0b00000001) << 7);
     }
 
+    #[allow(identity_op)]
     pub fn model_disp_mask16(&self) -> u8 {
         (self.bits_14e >> 0) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_model_disp_mask16(&mut self, value: u8) {
         self.bits_14e = (self.bits_14e & !(0b00000001 << 0)) | ((value & 0b00000001) << 0);
     }
 
+    #[allow(identity_op)]
     pub fn model_disp_mask17(&self) -> u8 {
         (self.bits_14e >> 1) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_model_disp_mask17(&mut self, value: u8) {
         self.bits_14e = (self.bits_14e & !(0b00000001 << 1)) | ((value & 0b00000001) << 1);
     }
 
+    #[allow(identity_op)]
     pub fn model_disp_mask18(&self) -> u8 {
         (self.bits_14e >> 2) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_model_disp_mask18(&mut self, value: u8) {
         self.bits_14e = (self.bits_14e & !(0b00000001 << 2)) | ((value & 0b00000001) << 2);
     }
 
+    #[allow(identity_op)]
     pub fn model_disp_mask19(&self) -> u8 {
         (self.bits_14e >> 3) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_model_disp_mask19(&mut self, value: u8) {
         self.bits_14e = (self.bits_14e & !(0b00000001 << 3)) | ((value & 0b00000001) << 3);
     }
 
+    #[allow(identity_op)]
     pub fn model_disp_mask20(&self) -> u8 {
         (self.bits_14e >> 4) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_model_disp_mask20(&mut self, value: u8) {
         self.bits_14e = (self.bits_14e & !(0b00000001 << 4)) | ((value & 0b00000001) << 4);
     }
 
+    #[allow(identity_op)]
     pub fn model_disp_mask21(&self) -> u8 {
         (self.bits_14e >> 5) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_model_disp_mask21(&mut self, value: u8) {
         self.bits_14e = (self.bits_14e & !(0b00000001 << 5)) | ((value & 0b00000001) << 5);
     }
 
+    #[allow(identity_op)]
     pub fn model_disp_mask22(&self) -> u8 {
         (self.bits_14e >> 6) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_model_disp_mask22(&mut self, value: u8) {
         self.bits_14e = (self.bits_14e & !(0b00000001 << 6)) | ((value & 0b00000001) << 6);
     }
 
+    #[allow(identity_op)]
     pub fn model_disp_mask23(&self) -> u8 {
         (self.bits_14e >> 7) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_model_disp_mask23(&mut self, value: u8) {
         self.bits_14e = (self.bits_14e & !(0b00000001 << 7)) | ((value & 0b00000001) << 7);
     }
 
+    #[allow(identity_op)]
     pub fn model_disp_mask24(&self) -> u8 {
         (self.bits_14f >> 0) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_model_disp_mask24(&mut self, value: u8) {
         self.bits_14f = (self.bits_14f & !(0b00000001 << 0)) | ((value & 0b00000001) << 0);
     }
 
+    #[allow(identity_op)]
     pub fn model_disp_mask25(&self) -> u8 {
         (self.bits_14f >> 1) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_model_disp_mask25(&mut self, value: u8) {
         self.bits_14f = (self.bits_14f & !(0b00000001 << 1)) | ((value & 0b00000001) << 1);
     }
 
+    #[allow(identity_op)]
     pub fn model_disp_mask26(&self) -> u8 {
         (self.bits_14f >> 2) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_model_disp_mask26(&mut self, value: u8) {
         self.bits_14f = (self.bits_14f & !(0b00000001 << 2)) | ((value & 0b00000001) << 2);
     }
 
+    #[allow(identity_op)]
     pub fn model_disp_mask27(&self) -> u8 {
         (self.bits_14f >> 3) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_model_disp_mask27(&mut self, value: u8) {
         self.bits_14f = (self.bits_14f & !(0b00000001 << 3)) | ((value & 0b00000001) << 3);
     }
 
+    #[allow(identity_op)]
     pub fn model_disp_mask28(&self) -> u8 {
         (self.bits_14f >> 4) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_model_disp_mask28(&mut self, value: u8) {
         self.bits_14f = (self.bits_14f & !(0b00000001 << 4)) | ((value & 0b00000001) << 4);
     }
 
+    #[allow(identity_op)]
     pub fn model_disp_mask29(&self) -> u8 {
         (self.bits_14f >> 5) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_model_disp_mask29(&mut self, value: u8) {
         self.bits_14f = (self.bits_14f & !(0b00000001 << 5)) | ((value & 0b00000001) << 5);
     }
 
+    #[allow(identity_op)]
     pub fn model_disp_mask30(&self) -> u8 {
         (self.bits_14f >> 6) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_model_disp_mask30(&mut self, value: u8) {
         self.bits_14f = (self.bits_14f & !(0b00000001 << 6)) | ((value & 0b00000001) << 6);
     }
 
+    #[allow(identity_op)]
     pub fn model_disp_mask31(&self) -> u8 {
         (self.bits_14f >> 7) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_model_disp_mask31(&mut self, value: u8) {
         self.bits_14f = (self.bits_14f & !(0b00000001 << 7)) | ((value & 0b00000001) << 7);
     }
@@ -45640,66 +46936,82 @@ impl NPC_PARAM_ST {
         self.special_turn_type = value;
     }
 
+    #[allow(identity_op)]
     pub fn is_soul_get_by_boss(&self) -> u8 {
         (self.bits_15d >> 0) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_is_soul_get_by_boss(&mut self, value: u8) {
         self.bits_15d = (self.bits_15d & !(0b00000001 << 0)) | ((value & 0b00000001) << 0);
     }
 
+    #[allow(identity_op)]
     pub fn is_bullet_owner_by_object(&self) -> u8 {
         (self.bits_15d >> 1) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_is_bullet_owner_by_object(&mut self, value: u8) {
         self.bits_15d = (self.bits_15d & !(0b00000001 << 1)) | ((value & 0b00000001) << 1);
     }
 
+    #[allow(identity_op)]
     pub fn is_use_low_hit_foot_ik(&self) -> u8 {
         (self.bits_15d >> 2) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_is_use_low_hit_foot_ik(&mut self, value: u8) {
         self.bits_15d = (self.bits_15d & !(0b00000001 << 2)) | ((value & 0b00000001) << 2);
     }
 
+    #[allow(identity_op)]
     pub fn is_calculate_pv_p_damage(&self) -> u8 {
         (self.bits_15d >> 3) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_is_calculate_pv_p_damage(&mut self, value: u8) {
         self.bits_15d = (self.bits_15d & !(0b00000001 << 3)) | ((value & 0b00000001) << 3);
     }
 
+    #[allow(identity_op)]
     pub fn is_host_sync_chr(&self) -> u8 {
         (self.bits_15d >> 4) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_is_host_sync_chr(&mut self, value: u8) {
         self.bits_15d = (self.bits_15d & !(0b00000001 << 4)) | ((value & 0b00000001) << 4);
     }
 
+    #[allow(identity_op)]
     pub fn is_skip_weak_damage_anim(&self) -> u8 {
         (self.bits_15d >> 5) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_is_skip_weak_damage_anim(&mut self, value: u8) {
         self.bits_15d = (self.bits_15d & !(0b00000001 << 5)) | ((value & 0b00000001) << 5);
     }
 
+    #[allow(identity_op)]
     pub fn is_keep_hit_on_ride(&self) -> u8 {
         (self.bits_15d >> 6) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_is_keep_hit_on_ride(&mut self, value: u8) {
         self.bits_15d = (self.bits_15d & !(0b00000001 << 6)) | ((value & 0b00000001) << 6);
     }
 
+    #[allow(identity_op)]
     pub fn is_sp_collide(&self) -> u8 {
         (self.bits_15d >> 7) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_is_sp_collide(&mut self, value: u8) {
         self.bits_15d = (self.bits_15d & !(0b00000001 << 7)) | ((value & 0b00000001) << 7);
     }
@@ -46192,66 +47504,82 @@ impl NPC_PARAM_ST {
         self.cloth_off_lod_level = value;
     }
 
+    #[allow(identity_op)]
     pub fn is_use_foot_ik_normal_by_unduration(&self) -> u8 {
         (self.bits_22d >> 0) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_is_use_foot_ik_normal_by_unduration(&mut self, value: u8) {
         self.bits_22d = (self.bits_22d & !(0b00000001 << 0)) | ((value & 0b00000001) << 0);
     }
 
+    #[allow(identity_op)]
     pub fn attach_hit_initialize_dead(&self) -> u8 {
         (self.bits_22d >> 1) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_attach_hit_initialize_dead(&mut self, value: u8) {
         self.bits_22d = (self.bits_22d & !(0b00000001 << 1)) | ((value & 0b00000001) << 1);
     }
 
+    #[allow(identity_op)]
     pub fn exclude_group_reward_check(&self) -> u8 {
         (self.bits_22d >> 2) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_exclude_group_reward_check(&mut self, value: u8) {
         self.bits_22d = (self.bits_22d & !(0b00000001 << 2)) | ((value & 0b00000001) << 2);
     }
 
+    #[allow(identity_op)]
     pub fn enable_ai_lock_dmy_poly_212(&self) -> u8 {
         (self.bits_22d >> 3) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_enable_ai_lock_dmy_poly_212(&mut self, value: u8) {
         self.bits_22d = (self.bits_22d & !(0b00000001 << 3)) | ((value & 0b00000001) << 3);
     }
 
+    #[allow(identity_op)]
     pub fn enable_ai_lock_dmy_poly_213(&self) -> u8 {
         (self.bits_22d >> 4) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_enable_ai_lock_dmy_poly_213(&mut self, value: u8) {
         self.bits_22d = (self.bits_22d & !(0b00000001 << 4)) | ((value & 0b00000001) << 4);
     }
 
+    #[allow(identity_op)]
     pub fn enable_ai_lock_dmy_poly_214(&self) -> u8 {
         (self.bits_22d >> 5) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_enable_ai_lock_dmy_poly_214(&mut self, value: u8) {
         self.bits_22d = (self.bits_22d & !(0b00000001 << 5)) | ((value & 0b00000001) << 5);
     }
 
+    #[allow(identity_op)]
     pub fn disable_activate_open_xb1(&self) -> u8 {
         (self.bits_22d >> 6) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_disable_activate_open_xb1(&mut self, value: u8) {
         self.bits_22d = (self.bits_22d & !(0b00000001 << 6)) | ((value & 0b00000001) << 6);
     }
 
+    #[allow(identity_op)]
     pub fn disable_activate_legacy_xb1(&self) -> u8 {
         (self.bits_22d >> 7) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_disable_activate_legacy_xb1(&mut self, value: u8) {
         self.bits_22d = (self.bits_22d & !(0b00000001 << 7)) | ((value & 0b00000001) << 7);
     }
@@ -46703,6 +48031,7 @@ impl NPC_PARAM_ST {
     pub fn set_dlc_game_clear_sp_effect_id(&mut self, value: i32) {
         self.dlc_game_clear_sp_effect_id = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -46805,10 +48134,12 @@ pub struct NPC_THINK_PARAM_ST {
 }
 
 impl NPC_THINK_PARAM_ST {
+    #[allow(identity_op)]
     pub fn disable_param_nt(&self) -> u8 {
         (self.bits_0 >> 0) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_disable_param_nt(&mut self, value: u8) {
         self.bits_0 = (self.bits_0 & !(0b00000001 << 0)) | ((value & 0b00000001) << 0);
     }
@@ -46845,26 +48176,32 @@ impl NPC_THINK_PARAM_ST {
         self.search_eye_ang_y = value;
     }
 
+    #[allow(identity_op)]
     pub fn is_no_avoid_huge_enemy(&self) -> u8 {
         (self.bits_f >> 0) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_is_no_avoid_huge_enemy(&mut self, value: u8) {
         self.bits_f = (self.bits_f & !(0b00000001 << 0)) | ((value & 0b00000001) << 0);
     }
 
+    #[allow(identity_op)]
     pub fn enable_weapon_on_off(&self) -> u8 {
         (self.bits_f >> 1) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_enable_weapon_on_off(&mut self, value: u8) {
         self.bits_f = (self.bits_f & !(0b00000001 << 1)) | ((value & 0b00000001) << 1);
     }
 
+    #[allow(identity_op)]
     pub fn target_ai_lock_dmy_poly(&self) -> u8 {
         (self.bits_f >> 2) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_target_ai_lock_dmy_poly(&mut self, value: u8) {
         self.bits_f = (self.bits_f & !(0b00000001 << 2)) | ((value & 0b00000001) << 2);
     }
@@ -47189,66 +48526,82 @@ impl NPC_THINK_PARAM_ST {
         self.think_attr_do_admirer = value;
     }
 
+    #[allow(identity_op)]
     pub fn enable_navi_flg_edge(&self) -> u8 {
         (self.bits_64 >> 0) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_enable_navi_flg_edge(&mut self, value: u8) {
         self.bits_64 = (self.bits_64 & !(0b00000001 << 0)) | ((value & 0b00000001) << 0);
     }
 
+    #[allow(identity_op)]
     pub fn enable_navi_flg_large_space(&self) -> u8 {
         (self.bits_64 >> 1) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_enable_navi_flg_large_space(&mut self, value: u8) {
         self.bits_64 = (self.bits_64 & !(0b00000001 << 1)) | ((value & 0b00000001) << 1);
     }
 
+    #[allow(identity_op)]
     pub fn enable_navi_flg_ladder(&self) -> u8 {
         (self.bits_64 >> 2) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_enable_navi_flg_ladder(&mut self, value: u8) {
         self.bits_64 = (self.bits_64 & !(0b00000001 << 2)) | ((value & 0b00000001) << 2);
     }
 
+    #[allow(identity_op)]
     pub fn enable_navi_flg_hole(&self) -> u8 {
         (self.bits_64 >> 3) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_enable_navi_flg_hole(&mut self, value: u8) {
         self.bits_64 = (self.bits_64 & !(0b00000001 << 3)) | ((value & 0b00000001) << 3);
     }
 
+    #[allow(identity_op)]
     pub fn enable_navi_flg_door(&self) -> u8 {
         (self.bits_64 >> 4) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_enable_navi_flg_door(&mut self, value: u8) {
         self.bits_64 = (self.bits_64 & !(0b00000001 << 4)) | ((value & 0b00000001) << 4);
     }
 
+    #[allow(identity_op)]
     pub fn enable_navi_flg_in_side_wall(&self) -> u8 {
         (self.bits_64 >> 5) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_enable_navi_flg_in_side_wall(&mut self, value: u8) {
         self.bits_64 = (self.bits_64 & !(0b00000001 << 5)) | ((value & 0b00000001) << 5);
     }
 
+    #[allow(identity_op)]
     pub fn enable_navi_flg_lava(&self) -> u8 {
         (self.bits_64 >> 6) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_enable_navi_flg_lava(&mut self, value: u8) {
         self.bits_64 = (self.bits_64 & !(0b00000001 << 6)) | ((value & 0b00000001) << 6);
     }
 
+    #[allow(identity_op)]
     pub fn enable_navi_flg_edge_ordinary(&self) -> u8 {
         (self.bits_64 >> 7) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_enable_navi_flg_edge_ordinary(&mut self, value: u8) {
         self.bits_64 = (self.bits_64 & !(0b00000001 << 7)) | ((value & 0b00000001) << 7);
     }
@@ -47580,6 +48933,7 @@ impl NPC_THINK_PARAM_ST {
     pub fn set_surprise_anim_id(&mut self, value: i32) {
         self.surprise_anim_id = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -47797,6 +49151,7 @@ impl OBJ_ACT_PARAM_ST {
     pub fn set_sp_qualified_id2_new(&mut self, value: i32) {
         self.sp_qualified_id2_new = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -48093,6 +49448,7 @@ impl OBJECT_MATERIAL_SFX_PARAM_ST {
     pub fn set_sfx_id_31(&mut self, value: u32) {
         self.sfx_id_31 = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -48206,130 +49562,162 @@ impl OBJECT_PARAM_ST {
         self.anim_break_id_max = value;
     }
 
+    #[allow(identity_op)]
     pub fn is_cam_hit(&self) -> u8 {
         (self.bits_9 >> 0) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_is_cam_hit(&mut self, value: u8) {
         self.bits_9 = (self.bits_9 & !(0b00000001 << 0)) | ((value & 0b00000001) << 0);
     }
 
+    #[allow(identity_op)]
     pub fn is_break_by_player_collide(&self) -> u8 {
         (self.bits_9 >> 1) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_is_break_by_player_collide(&mut self, value: u8) {
         self.bits_9 = (self.bits_9 & !(0b00000001 << 1)) | ((value & 0b00000001) << 1);
     }
 
+    #[allow(identity_op)]
     pub fn is_anim_break(&self) -> u8 {
         (self.bits_9 >> 2) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_is_anim_break(&mut self, value: u8) {
         self.bits_9 = (self.bits_9 & !(0b00000001 << 2)) | ((value & 0b00000001) << 2);
     }
 
+    #[allow(identity_op)]
     pub fn is_penetration_bullet_hit(&self) -> u8 {
         (self.bits_9 >> 3) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_is_penetration_bullet_hit(&mut self, value: u8) {
         self.bits_9 = (self.bits_9 & !(0b00000001 << 3)) | ((value & 0b00000001) << 3);
     }
 
+    #[allow(identity_op)]
     pub fn is_chr_hit(&self) -> u8 {
         (self.bits_9 >> 4) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_is_chr_hit(&mut self, value: u8) {
         self.bits_9 = (self.bits_9 & !(0b00000001 << 4)) | ((value & 0b00000001) << 4);
     }
 
+    #[allow(identity_op)]
     pub fn is_attack_backlash(&self) -> u8 {
         (self.bits_9 >> 5) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_is_attack_backlash(&mut self, value: u8) {
         self.bits_9 = (self.bits_9 & !(0b00000001 << 5)) | ((value & 0b00000001) << 5);
     }
 
+    #[allow(identity_op)]
     pub fn is_disable_break_for_first_appear(&self) -> u8 {
         (self.bits_9 >> 6) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_is_disable_break_for_first_appear(&mut self, value: u8) {
         self.bits_9 = (self.bits_9 & !(0b00000001 << 6)) | ((value & 0b00000001) << 6);
     }
 
+    #[allow(identity_op)]
     pub fn is_ladder(&self) -> u8 {
         (self.bits_9 >> 7) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_is_ladder(&mut self, value: u8) {
         self.bits_9 = (self.bits_9 & !(0b00000001 << 7)) | ((value & 0b00000001) << 7);
     }
 
+    #[allow(identity_op)]
     pub fn is_anim_pause_on_remo_play(&self) -> u8 {
         (self.bits_a >> 0) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_is_anim_pause_on_remo_play(&mut self, value: u8) {
         self.bits_a = (self.bits_a & !(0b00000001 << 0)) | ((value & 0b00000001) << 0);
     }
 
+    #[allow(identity_op)]
     pub fn is_damage_no_hit(&self) -> u8 {
         (self.bits_a >> 1) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_is_damage_no_hit(&mut self, value: u8) {
         self.bits_a = (self.bits_a & !(0b00000001 << 1)) | ((value & 0b00000001) << 1);
     }
 
+    #[allow(identity_op)]
     pub fn is_move_obj(&self) -> u8 {
         (self.bits_a >> 2) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_is_move_obj(&mut self, value: u8) {
         self.bits_a = (self.bits_a & !(0b00000001 << 2)) | ((value & 0b00000001) << 2);
     }
 
+    #[allow(identity_op)]
     pub fn is_rope_bridge(&self) -> u8 {
         (self.bits_a >> 3) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_is_rope_bridge(&mut self, value: u8) {
         self.bits_a = (self.bits_a & !(0b00000001 << 3)) | ((value & 0b00000001) << 3);
     }
 
+    #[allow(identity_op)]
     pub fn is_add_rigid_impulse_by_damage(&self) -> u8 {
         (self.bits_a >> 4) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_is_add_rigid_impulse_by_damage(&mut self, value: u8) {
         self.bits_a = (self.bits_a & !(0b00000001 << 4)) | ((value & 0b00000001) << 4);
     }
 
+    #[allow(identity_op)]
     pub fn is_break_by_chr_ride(&self) -> u8 {
         (self.bits_a >> 5) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_is_break_by_chr_ride(&mut self, value: u8) {
         self.bits_a = (self.bits_a & !(0b00000001 << 5)) | ((value & 0b00000001) << 5);
     }
 
+    #[allow(identity_op)]
     pub fn is_burn(&self) -> u8 {
         (self.bits_a >> 6) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_is_burn(&mut self, value: u8) {
         self.bits_a = (self.bits_a & !(0b00000001 << 6)) | ((value & 0b00000001) << 6);
     }
 
+    #[allow(identity_op)]
     pub fn is_break_by_enemy_collide(&self) -> u8 {
         (self.bits_a >> 7) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_is_break_by_enemy_collide(&mut self, value: u8) {
         self.bits_a = (self.bits_a & !(0b00000001 << 7)) | ((value & 0b00000001) << 7);
     }
@@ -48662,10 +50050,12 @@ impl OBJECT_PARAM_ST {
         self.land_touch_sfx_id = value;
     }
 
+    #[allow(identity_op)]
     pub fn is_damage_cover(&self) -> u8 {
         (self.bits_a8 >> 0) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_is_damage_cover(&mut self, value: u8) {
         self.bits_a8 = (self.bits_a8 & !(0b00000001 << 0)) | ((value & 0b00000001) << 0);
     }
@@ -48757,6 +50147,7 @@ impl OBJECT_PARAM_ST {
     pub fn set_sound_break_se_id(&mut self, value: i32) {
         self.sound_break_se_id = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -48901,10 +50292,12 @@ impl PARTS_DRAW_PARAM_ST {
         self.tex_lv01_play_dist = value;
     }
 
+    #[allow(identity_op)]
     pub fn enable_cross_fade(&self) -> u8 {
         (self.bits_30 >> 0) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_enable_cross_fade(&mut self, value: u8) {
         self.bits_30 = (self.bits_30 & !(0b00000001 << 0)) | ((value & 0b00000001) << 0);
     }
@@ -49108,6 +50501,7 @@ impl PARTS_DRAW_PARAM_ST {
     pub fn set_lb_draw_dist_scale_param_id(&mut self, value: u8) {
         self.lb_draw_dist_scale_param_id = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -49163,6 +50557,7 @@ impl PERFORMANCE_CHECK_PARAM {
     pub fn set_user_tag(&mut self, value: [u16; 16]) {
         self.user_tag = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -49424,6 +50819,7 @@ impl PHANTOM_PARAM_ST {
     pub fn set_glow_scale(&mut self, value: f32) {
         self.glow_scale = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -49967,6 +51363,7 @@ impl PLAYER_COMMON_PARAM_ST {
     pub fn set_resist_curse_item_lot_param_id_map(&mut self, value: i32) {
         self.resist_curse_item_lot_param_id_map = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -50045,10 +51442,12 @@ pub struct PLAY_REGION_PARAM_ST {
 }
 
 impl PLAY_REGION_PARAM_ST {
+    #[allow(identity_op)]
     pub fn disable_param_nt(&self) -> u8 {
         (self.bits_0 >> 0) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_disable_param_nt(&mut self, value: u8) {
         self.bits_0 = (self.bits_0 & !(0b00000001 << 0)) | ((value & 0b00000001) << 0);
     }
@@ -50109,66 +51508,82 @@ impl PLAY_REGION_PARAM_ST {
         self.b_map_guradian_region = value;
     }
 
+    #[allow(identity_op)]
     pub fn b_yellow_costume_region(&self) -> u8 {
         (self.bits_1b >> 0) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_b_yellow_costume_region(&mut self, value: u8) {
         self.bits_1b = (self.bits_1b & !(0b00000001 << 0)) | ((value & 0b00000001) << 0);
     }
 
+    #[allow(identity_op)]
     pub fn multi_play_start_limit_event_flag_id_target_flag_state(&self) -> u8 {
         (self.bits_1b >> 1) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_multi_play_start_limit_event_flag_id_target_flag_state(&mut self, value: u8) {
         self.bits_1b = (self.bits_1b & !(0b00000001 << 1)) | ((value & 0b00000001) << 1);
     }
 
+    #[allow(identity_op)]
     pub fn break_in_limit_event_flag_id_1_target_flag_state(&self) -> u8 {
         (self.bits_1b >> 2) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_break_in_limit_event_flag_id_1_target_flag_state(&mut self, value: u8) {
         self.bits_1b = (self.bits_1b & !(0b00000001 << 2)) | ((value & 0b00000001) << 2);
     }
 
+    #[allow(identity_op)]
     pub fn white_sign_limit_event_flag_id_1_target_flag_state(&self) -> u8 {
         (self.bits_1b >> 3) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_white_sign_limit_event_flag_id_1_target_flag_state(&mut self, value: u8) {
         self.bits_1b = (self.bits_1b & !(0b00000001 << 3)) | ((value & 0b00000001) << 3);
     }
 
+    #[allow(identity_op)]
     pub fn red_sign_limit_event_flag_id_1_target_flag_state(&self) -> u8 {
         (self.bits_1b >> 4) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_red_sign_limit_event_flag_id_1_target_flag_state(&mut self, value: u8) {
         self.bits_1b = (self.bits_1b & !(0b00000001 << 4)) | ((value & 0b00000001) << 4);
     }
 
+    #[allow(identity_op)]
     pub fn break_in_limit_event_flag_id_2_target_flag_state(&self) -> u8 {
         (self.bits_1b >> 5) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_break_in_limit_event_flag_id_2_target_flag_state(&mut self, value: u8) {
         self.bits_1b = (self.bits_1b & !(0b00000001 << 5)) | ((value & 0b00000001) << 5);
     }
 
+    #[allow(identity_op)]
     pub fn break_in_limit_event_flag_id_3_target_flag_state(&self) -> u8 {
         (self.bits_1b >> 6) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_break_in_limit_event_flag_id_3_target_flag_state(&mut self, value: u8) {
         self.bits_1b = (self.bits_1b & !(0b00000001 << 6)) | ((value & 0b00000001) << 6);
     }
 
+    #[allow(identity_op)]
     pub fn white_sign_limit_event_flag_id_2_target_flag_state(&self) -> u8 {
         (self.bits_1b >> 7) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_white_sign_limit_event_flag_id_2_target_flag_state(&mut self, value: u8) {
         self.bits_1b = (self.bits_1b & !(0b00000001 << 7)) | ((value & 0b00000001) << 7);
     }
@@ -50253,74 +51668,92 @@ impl PLAY_REGION_PARAM_ST {
         self.warp_item_prohibition_event_flag_id_5 = value;
     }
 
+    #[allow(identity_op)]
     pub fn enable_bloodstain(&self) -> u8 {
         (self.bits_44 >> 0) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_enable_bloodstain(&mut self, value: u8) {
         self.bits_44 = (self.bits_44 & !(0b00000001 << 0)) | ((value & 0b00000001) << 0);
     }
 
+    #[allow(identity_op)]
     pub fn enable_blood_message(&self) -> u8 {
         (self.bits_44 >> 1) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_enable_blood_message(&mut self, value: u8) {
         self.bits_44 = (self.bits_44 & !(0b00000001 << 1)) | ((value & 0b00000001) << 1);
     }
 
+    #[allow(identity_op)]
     pub fn enable_ghost(&self) -> u8 {
         (self.bits_44 >> 2) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_enable_ghost(&mut self, value: u8) {
         self.bits_44 = (self.bits_44 & !(0b00000001 << 2)) | ((value & 0b00000001) << 2);
     }
 
+    #[allow(identity_op)]
     pub fn disp_mask00(&self) -> u8 {
         (self.bits_44 >> 3) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_disp_mask00(&mut self, value: u8) {
         self.bits_44 = (self.bits_44 & !(0b00000001 << 3)) | ((value & 0b00000001) << 3);
     }
 
+    #[allow(identity_op)]
     pub fn disp_mask01(&self) -> u8 {
         (self.bits_44 >> 4) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_disp_mask01(&mut self, value: u8) {
         self.bits_44 = (self.bits_44 & !(0b00000001 << 4)) | ((value & 0b00000001) << 4);
     }
 
+    #[allow(identity_op)]
     pub fn white_sign_limit_event_flag_id_3_target_flag_state(&self) -> u8 {
         (self.bits_44 >> 5) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_white_sign_limit_event_flag_id_3_target_flag_state(&mut self, value: u8) {
         self.bits_44 = (self.bits_44 & !(0b00000001 << 5)) | ((value & 0b00000001) << 5);
     }
 
+    #[allow(identity_op)]
     pub fn red_sign_limit_event_flag_id_2_target_flag_state(&self) -> u8 {
         (self.bits_44 >> 6) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_red_sign_limit_event_flag_id_2_target_flag_state(&mut self, value: u8) {
         self.bits_44 = (self.bits_44 & !(0b00000001 << 6)) | ((value & 0b00000001) << 6);
     }
 
+    #[allow(identity_op)]
     pub fn red_sign_limit_event_flag_id_3_target_flag_state(&self) -> u8 {
         (self.bits_44 >> 7) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_red_sign_limit_event_flag_id_3_target_flag_state(&mut self, value: u8) {
         self.bits_44 = (self.bits_44 & !(0b00000001 << 7)) | ((value & 0b00000001) << 7);
     }
 
+    #[allow(identity_op)]
     pub fn is_auto_intrude_point(&self) -> u8 {
         (self.bits_45 >> 0) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_is_auto_intrude_point(&mut self, value: u8) {
         self.bits_45 = (self.bits_45 & !(0b00000001 << 0)) | ((value & 0b00000001) << 0);
     }
@@ -50676,6 +52109,7 @@ impl PLAY_REGION_PARAM_ST {
     pub fn set_map_menu_unlock_event_id(&mut self, value: u32) {
         self.map_menu_unlock_event_id = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -50928,6 +52362,7 @@ impl POSTURE_CONTROL_PARAM_GENDER_ST {
     pub fn set_a016_both_legs_io(&mut self, value: i16) {
         self.a016_both_legs_io = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -51261,6 +52696,7 @@ impl POSTURE_CONTROL_PARAM_PRO_ST {
     pub fn set_a016_left_arm_fb(&mut self, value: i16) {
         self.a016_left_arm_fb = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -51378,6 +52814,7 @@ impl POSTURE_CONTROL_PARAM_WEP_LEFT_ST {
     pub fn set_a003_left_weapon_rotation(&mut self, value: i16) {
         self.a003_left_weapon_rotation = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -52034,6 +53471,7 @@ impl POSTURE_CONTROL_PARAM_WEP_RIGHT_ST {
     pub fn set_a016_leftt_weapon_rotation(&mut self, value: i16) {
         self.a016_leftt_weapon_rotation = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -52483,6 +53921,7 @@ impl RANDOM_APPEAR_EDIT_PARAM_ST {
     pub fn set_rate24(&mut self, value: u32) {
         self.rate24 = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -52505,805 +53944,1006 @@ pub struct RANDOM_APPEAR_PARAM_ST {
 }
 
 impl RANDOM_APPEAR_PARAM_ST {
+    #[allow(identity_op)]
     pub fn slot0(&self) -> u8 {
         (self.bits_0 >> 0) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_slot0(&mut self, value: u8) {
         self.bits_0 = (self.bits_0 & !(0b00000001 << 0)) | ((value & 0b00000001) << 0);
     }
 
+    #[allow(identity_op)]
     pub fn slot1(&self) -> u8 {
         (self.bits_0 >> 1) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_slot1(&mut self, value: u8) {
         self.bits_0 = (self.bits_0 & !(0b00000001 << 1)) | ((value & 0b00000001) << 1);
     }
 
+    #[allow(identity_op)]
     pub fn slot2(&self) -> u8 {
         (self.bits_0 >> 2) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_slot2(&mut self, value: u8) {
         self.bits_0 = (self.bits_0 & !(0b00000001 << 2)) | ((value & 0b00000001) << 2);
     }
 
+    #[allow(identity_op)]
     pub fn slot3(&self) -> u8 {
         (self.bits_0 >> 3) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_slot3(&mut self, value: u8) {
         self.bits_0 = (self.bits_0 & !(0b00000001 << 3)) | ((value & 0b00000001) << 3);
     }
 
+    #[allow(identity_op)]
     pub fn slot4(&self) -> u8 {
         (self.bits_0 >> 4) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_slot4(&mut self, value: u8) {
         self.bits_0 = (self.bits_0 & !(0b00000001 << 4)) | ((value & 0b00000001) << 4);
     }
 
+    #[allow(identity_op)]
     pub fn slot5(&self) -> u8 {
         (self.bits_0 >> 5) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_slot5(&mut self, value: u8) {
         self.bits_0 = (self.bits_0 & !(0b00000001 << 5)) | ((value & 0b00000001) << 5);
     }
 
+    #[allow(identity_op)]
     pub fn slot6(&self) -> u8 {
         (self.bits_0 >> 6) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_slot6(&mut self, value: u8) {
         self.bits_0 = (self.bits_0 & !(0b00000001 << 6)) | ((value & 0b00000001) << 6);
     }
 
+    #[allow(identity_op)]
     pub fn slot7(&self) -> u8 {
         (self.bits_0 >> 7) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_slot7(&mut self, value: u8) {
         self.bits_0 = (self.bits_0 & !(0b00000001 << 7)) | ((value & 0b00000001) << 7);
     }
 
+    #[allow(identity_op)]
     pub fn slot8(&self) -> u8 {
         (self.bits_1 >> 0) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_slot8(&mut self, value: u8) {
         self.bits_1 = (self.bits_1 & !(0b00000001 << 0)) | ((value & 0b00000001) << 0);
     }
 
+    #[allow(identity_op)]
     pub fn slot9(&self) -> u8 {
         (self.bits_1 >> 1) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_slot9(&mut self, value: u8) {
         self.bits_1 = (self.bits_1 & !(0b00000001 << 1)) | ((value & 0b00000001) << 1);
     }
 
+    #[allow(identity_op)]
     pub fn slot10(&self) -> u8 {
         (self.bits_1 >> 2) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_slot10(&mut self, value: u8) {
         self.bits_1 = (self.bits_1 & !(0b00000001 << 2)) | ((value & 0b00000001) << 2);
     }
 
+    #[allow(identity_op)]
     pub fn slot11(&self) -> u8 {
         (self.bits_1 >> 3) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_slot11(&mut self, value: u8) {
         self.bits_1 = (self.bits_1 & !(0b00000001 << 3)) | ((value & 0b00000001) << 3);
     }
 
+    #[allow(identity_op)]
     pub fn slot12(&self) -> u8 {
         (self.bits_1 >> 4) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_slot12(&mut self, value: u8) {
         self.bits_1 = (self.bits_1 & !(0b00000001 << 4)) | ((value & 0b00000001) << 4);
     }
 
+    #[allow(identity_op)]
     pub fn slot13(&self) -> u8 {
         (self.bits_1 >> 5) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_slot13(&mut self, value: u8) {
         self.bits_1 = (self.bits_1 & !(0b00000001 << 5)) | ((value & 0b00000001) << 5);
     }
 
+    #[allow(identity_op)]
     pub fn slot14(&self) -> u8 {
         (self.bits_1 >> 6) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_slot14(&mut self, value: u8) {
         self.bits_1 = (self.bits_1 & !(0b00000001 << 6)) | ((value & 0b00000001) << 6);
     }
 
+    #[allow(identity_op)]
     pub fn slot15(&self) -> u8 {
         (self.bits_1 >> 7) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_slot15(&mut self, value: u8) {
         self.bits_1 = (self.bits_1 & !(0b00000001 << 7)) | ((value & 0b00000001) << 7);
     }
 
+    #[allow(identity_op)]
     pub fn slot16(&self) -> u8 {
         (self.bits_2 >> 0) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_slot16(&mut self, value: u8) {
         self.bits_2 = (self.bits_2 & !(0b00000001 << 0)) | ((value & 0b00000001) << 0);
     }
 
+    #[allow(identity_op)]
     pub fn slot17(&self) -> u8 {
         (self.bits_2 >> 1) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_slot17(&mut self, value: u8) {
         self.bits_2 = (self.bits_2 & !(0b00000001 << 1)) | ((value & 0b00000001) << 1);
     }
 
+    #[allow(identity_op)]
     pub fn slot18(&self) -> u8 {
         (self.bits_2 >> 2) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_slot18(&mut self, value: u8) {
         self.bits_2 = (self.bits_2 & !(0b00000001 << 2)) | ((value & 0b00000001) << 2);
     }
 
+    #[allow(identity_op)]
     pub fn slot19(&self) -> u8 {
         (self.bits_2 >> 3) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_slot19(&mut self, value: u8) {
         self.bits_2 = (self.bits_2 & !(0b00000001 << 3)) | ((value & 0b00000001) << 3);
     }
 
+    #[allow(identity_op)]
     pub fn slot20(&self) -> u8 {
         (self.bits_2 >> 4) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_slot20(&mut self, value: u8) {
         self.bits_2 = (self.bits_2 & !(0b00000001 << 4)) | ((value & 0b00000001) << 4);
     }
 
+    #[allow(identity_op)]
     pub fn slot21(&self) -> u8 {
         (self.bits_2 >> 5) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_slot21(&mut self, value: u8) {
         self.bits_2 = (self.bits_2 & !(0b00000001 << 5)) | ((value & 0b00000001) << 5);
     }
 
+    #[allow(identity_op)]
     pub fn slot22(&self) -> u8 {
         (self.bits_2 >> 6) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_slot22(&mut self, value: u8) {
         self.bits_2 = (self.bits_2 & !(0b00000001 << 6)) | ((value & 0b00000001) << 6);
     }
 
+    #[allow(identity_op)]
     pub fn slot23(&self) -> u8 {
         (self.bits_2 >> 7) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_slot23(&mut self, value: u8) {
         self.bits_2 = (self.bits_2 & !(0b00000001 << 7)) | ((value & 0b00000001) << 7);
     }
 
+    #[allow(identity_op)]
     pub fn slot24(&self) -> u8 {
         (self.bits_3 >> 0) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_slot24(&mut self, value: u8) {
         self.bits_3 = (self.bits_3 & !(0b00000001 << 0)) | ((value & 0b00000001) << 0);
     }
 
+    #[allow(identity_op)]
     pub fn slot25(&self) -> u8 {
         (self.bits_3 >> 1) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_slot25(&mut self, value: u8) {
         self.bits_3 = (self.bits_3 & !(0b00000001 << 1)) | ((value & 0b00000001) << 1);
     }
 
+    #[allow(identity_op)]
     pub fn slot26(&self) -> u8 {
         (self.bits_3 >> 2) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_slot26(&mut self, value: u8) {
         self.bits_3 = (self.bits_3 & !(0b00000001 << 2)) | ((value & 0b00000001) << 2);
     }
 
+    #[allow(identity_op)]
     pub fn slot27(&self) -> u8 {
         (self.bits_3 >> 3) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_slot27(&mut self, value: u8) {
         self.bits_3 = (self.bits_3 & !(0b00000001 << 3)) | ((value & 0b00000001) << 3);
     }
 
+    #[allow(identity_op)]
     pub fn slot28(&self) -> u8 {
         (self.bits_3 >> 4) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_slot28(&mut self, value: u8) {
         self.bits_3 = (self.bits_3 & !(0b00000001 << 4)) | ((value & 0b00000001) << 4);
     }
 
+    #[allow(identity_op)]
     pub fn slot29(&self) -> u8 {
         (self.bits_3 >> 5) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_slot29(&mut self, value: u8) {
         self.bits_3 = (self.bits_3 & !(0b00000001 << 5)) | ((value & 0b00000001) << 5);
     }
 
+    #[allow(identity_op)]
     pub fn slot30(&self) -> u8 {
         (self.bits_3 >> 6) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_slot30(&mut self, value: u8) {
         self.bits_3 = (self.bits_3 & !(0b00000001 << 6)) | ((value & 0b00000001) << 6);
     }
 
+    #[allow(identity_op)]
     pub fn slot31(&self) -> u8 {
         (self.bits_3 >> 7) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_slot31(&mut self, value: u8) {
         self.bits_3 = (self.bits_3 & !(0b00000001 << 7)) | ((value & 0b00000001) << 7);
     }
 
+    #[allow(identity_op)]
     pub fn slot32(&self) -> u8 {
         (self.bits_4 >> 0) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_slot32(&mut self, value: u8) {
         self.bits_4 = (self.bits_4 & !(0b00000001 << 0)) | ((value & 0b00000001) << 0);
     }
 
+    #[allow(identity_op)]
     pub fn slot33(&self) -> u8 {
         (self.bits_4 >> 1) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_slot33(&mut self, value: u8) {
         self.bits_4 = (self.bits_4 & !(0b00000001 << 1)) | ((value & 0b00000001) << 1);
     }
 
+    #[allow(identity_op)]
     pub fn slot34(&self) -> u8 {
         (self.bits_4 >> 2) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_slot34(&mut self, value: u8) {
         self.bits_4 = (self.bits_4 & !(0b00000001 << 2)) | ((value & 0b00000001) << 2);
     }
 
+    #[allow(identity_op)]
     pub fn slot35(&self) -> u8 {
         (self.bits_4 >> 3) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_slot35(&mut self, value: u8) {
         self.bits_4 = (self.bits_4 & !(0b00000001 << 3)) | ((value & 0b00000001) << 3);
     }
 
+    #[allow(identity_op)]
     pub fn slot36(&self) -> u8 {
         (self.bits_4 >> 4) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_slot36(&mut self, value: u8) {
         self.bits_4 = (self.bits_4 & !(0b00000001 << 4)) | ((value & 0b00000001) << 4);
     }
 
+    #[allow(identity_op)]
     pub fn slot37(&self) -> u8 {
         (self.bits_4 >> 5) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_slot37(&mut self, value: u8) {
         self.bits_4 = (self.bits_4 & !(0b00000001 << 5)) | ((value & 0b00000001) << 5);
     }
 
+    #[allow(identity_op)]
     pub fn slot38(&self) -> u8 {
         (self.bits_4 >> 6) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_slot38(&mut self, value: u8) {
         self.bits_4 = (self.bits_4 & !(0b00000001 << 6)) | ((value & 0b00000001) << 6);
     }
 
+    #[allow(identity_op)]
     pub fn slot39(&self) -> u8 {
         (self.bits_4 >> 7) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_slot39(&mut self, value: u8) {
         self.bits_4 = (self.bits_4 & !(0b00000001 << 7)) | ((value & 0b00000001) << 7);
     }
 
+    #[allow(identity_op)]
     pub fn slot40(&self) -> u8 {
         (self.bits_5 >> 0) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_slot40(&mut self, value: u8) {
         self.bits_5 = (self.bits_5 & !(0b00000001 << 0)) | ((value & 0b00000001) << 0);
     }
 
+    #[allow(identity_op)]
     pub fn slot41(&self) -> u8 {
         (self.bits_5 >> 1) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_slot41(&mut self, value: u8) {
         self.bits_5 = (self.bits_5 & !(0b00000001 << 1)) | ((value & 0b00000001) << 1);
     }
 
+    #[allow(identity_op)]
     pub fn slot42(&self) -> u8 {
         (self.bits_5 >> 2) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_slot42(&mut self, value: u8) {
         self.bits_5 = (self.bits_5 & !(0b00000001 << 2)) | ((value & 0b00000001) << 2);
     }
 
+    #[allow(identity_op)]
     pub fn slot43(&self) -> u8 {
         (self.bits_5 >> 3) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_slot43(&mut self, value: u8) {
         self.bits_5 = (self.bits_5 & !(0b00000001 << 3)) | ((value & 0b00000001) << 3);
     }
 
+    #[allow(identity_op)]
     pub fn slot44(&self) -> u8 {
         (self.bits_5 >> 4) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_slot44(&mut self, value: u8) {
         self.bits_5 = (self.bits_5 & !(0b00000001 << 4)) | ((value & 0b00000001) << 4);
     }
 
+    #[allow(identity_op)]
     pub fn slot45(&self) -> u8 {
         (self.bits_5 >> 5) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_slot45(&mut self, value: u8) {
         self.bits_5 = (self.bits_5 & !(0b00000001 << 5)) | ((value & 0b00000001) << 5);
     }
 
+    #[allow(identity_op)]
     pub fn slot46(&self) -> u8 {
         (self.bits_5 >> 6) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_slot46(&mut self, value: u8) {
         self.bits_5 = (self.bits_5 & !(0b00000001 << 6)) | ((value & 0b00000001) << 6);
     }
 
+    #[allow(identity_op)]
     pub fn slot47(&self) -> u8 {
         (self.bits_5 >> 7) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_slot47(&mut self, value: u8) {
         self.bits_5 = (self.bits_5 & !(0b00000001 << 7)) | ((value & 0b00000001) << 7);
     }
 
+    #[allow(identity_op)]
     pub fn slot48(&self) -> u8 {
         (self.bits_6 >> 0) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_slot48(&mut self, value: u8) {
         self.bits_6 = (self.bits_6 & !(0b00000001 << 0)) | ((value & 0b00000001) << 0);
     }
 
+    #[allow(identity_op)]
     pub fn slot49(&self) -> u8 {
         (self.bits_6 >> 1) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_slot49(&mut self, value: u8) {
         self.bits_6 = (self.bits_6 & !(0b00000001 << 1)) | ((value & 0b00000001) << 1);
     }
 
+    #[allow(identity_op)]
     pub fn slot50(&self) -> u8 {
         (self.bits_6 >> 2) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_slot50(&mut self, value: u8) {
         self.bits_6 = (self.bits_6 & !(0b00000001 << 2)) | ((value & 0b00000001) << 2);
     }
 
+    #[allow(identity_op)]
     pub fn slot51(&self) -> u8 {
         (self.bits_6 >> 3) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_slot51(&mut self, value: u8) {
         self.bits_6 = (self.bits_6 & !(0b00000001 << 3)) | ((value & 0b00000001) << 3);
     }
 
+    #[allow(identity_op)]
     pub fn slot52(&self) -> u8 {
         (self.bits_6 >> 4) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_slot52(&mut self, value: u8) {
         self.bits_6 = (self.bits_6 & !(0b00000001 << 4)) | ((value & 0b00000001) << 4);
     }
 
+    #[allow(identity_op)]
     pub fn slot53(&self) -> u8 {
         (self.bits_6 >> 5) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_slot53(&mut self, value: u8) {
         self.bits_6 = (self.bits_6 & !(0b00000001 << 5)) | ((value & 0b00000001) << 5);
     }
 
+    #[allow(identity_op)]
     pub fn slot54(&self) -> u8 {
         (self.bits_6 >> 6) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_slot54(&mut self, value: u8) {
         self.bits_6 = (self.bits_6 & !(0b00000001 << 6)) | ((value & 0b00000001) << 6);
     }
 
+    #[allow(identity_op)]
     pub fn slot55(&self) -> u8 {
         (self.bits_6 >> 7) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_slot55(&mut self, value: u8) {
         self.bits_6 = (self.bits_6 & !(0b00000001 << 7)) | ((value & 0b00000001) << 7);
     }
 
+    #[allow(identity_op)]
     pub fn slot56(&self) -> u8 {
         (self.bits_7 >> 0) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_slot56(&mut self, value: u8) {
         self.bits_7 = (self.bits_7 & !(0b00000001 << 0)) | ((value & 0b00000001) << 0);
     }
 
+    #[allow(identity_op)]
     pub fn slot57(&self) -> u8 {
         (self.bits_7 >> 1) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_slot57(&mut self, value: u8) {
         self.bits_7 = (self.bits_7 & !(0b00000001 << 1)) | ((value & 0b00000001) << 1);
     }
 
+    #[allow(identity_op)]
     pub fn slot58(&self) -> u8 {
         (self.bits_7 >> 2) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_slot58(&mut self, value: u8) {
         self.bits_7 = (self.bits_7 & !(0b00000001 << 2)) | ((value & 0b00000001) << 2);
     }
 
+    #[allow(identity_op)]
     pub fn slot59(&self) -> u8 {
         (self.bits_7 >> 3) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_slot59(&mut self, value: u8) {
         self.bits_7 = (self.bits_7 & !(0b00000001 << 3)) | ((value & 0b00000001) << 3);
     }
 
+    #[allow(identity_op)]
     pub fn slot60(&self) -> u8 {
         (self.bits_7 >> 4) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_slot60(&mut self, value: u8) {
         self.bits_7 = (self.bits_7 & !(0b00000001 << 4)) | ((value & 0b00000001) << 4);
     }
 
+    #[allow(identity_op)]
     pub fn slot61(&self) -> u8 {
         (self.bits_7 >> 5) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_slot61(&mut self, value: u8) {
         self.bits_7 = (self.bits_7 & !(0b00000001 << 5)) | ((value & 0b00000001) << 5);
     }
 
+    #[allow(identity_op)]
     pub fn slot62(&self) -> u8 {
         (self.bits_7 >> 6) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_slot62(&mut self, value: u8) {
         self.bits_7 = (self.bits_7 & !(0b00000001 << 6)) | ((value & 0b00000001) << 6);
     }
 
+    #[allow(identity_op)]
     pub fn slot63(&self) -> u8 {
         (self.bits_7 >> 7) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_slot63(&mut self, value: u8) {
         self.bits_7 = (self.bits_7 & !(0b00000001 << 7)) | ((value & 0b00000001) << 7);
     }
 
+    #[allow(identity_op)]
     pub fn slot64(&self) -> u8 {
         (self.bits_8 >> 0) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_slot64(&mut self, value: u8) {
         self.bits_8 = (self.bits_8 & !(0b00000001 << 0)) | ((value & 0b00000001) << 0);
     }
 
+    #[allow(identity_op)]
     pub fn slot65(&self) -> u8 {
         (self.bits_8 >> 1) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_slot65(&mut self, value: u8) {
         self.bits_8 = (self.bits_8 & !(0b00000001 << 1)) | ((value & 0b00000001) << 1);
     }
 
+    #[allow(identity_op)]
     pub fn slot66(&self) -> u8 {
         (self.bits_8 >> 2) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_slot66(&mut self, value: u8) {
         self.bits_8 = (self.bits_8 & !(0b00000001 << 2)) | ((value & 0b00000001) << 2);
     }
 
+    #[allow(identity_op)]
     pub fn slot67(&self) -> u8 {
         (self.bits_8 >> 3) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_slot67(&mut self, value: u8) {
         self.bits_8 = (self.bits_8 & !(0b00000001 << 3)) | ((value & 0b00000001) << 3);
     }
 
+    #[allow(identity_op)]
     pub fn slot68(&self) -> u8 {
         (self.bits_8 >> 4) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_slot68(&mut self, value: u8) {
         self.bits_8 = (self.bits_8 & !(0b00000001 << 4)) | ((value & 0b00000001) << 4);
     }
 
+    #[allow(identity_op)]
     pub fn slot69(&self) -> u8 {
         (self.bits_8 >> 5) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_slot69(&mut self, value: u8) {
         self.bits_8 = (self.bits_8 & !(0b00000001 << 5)) | ((value & 0b00000001) << 5);
     }
 
+    #[allow(identity_op)]
     pub fn slot70(&self) -> u8 {
         (self.bits_8 >> 6) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_slot70(&mut self, value: u8) {
         self.bits_8 = (self.bits_8 & !(0b00000001 << 6)) | ((value & 0b00000001) << 6);
     }
 
+    #[allow(identity_op)]
     pub fn slot71(&self) -> u8 {
         (self.bits_8 >> 7) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_slot71(&mut self, value: u8) {
         self.bits_8 = (self.bits_8 & !(0b00000001 << 7)) | ((value & 0b00000001) << 7);
     }
 
+    #[allow(identity_op)]
     pub fn slot72(&self) -> u8 {
         (self.bits_9 >> 0) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_slot72(&mut self, value: u8) {
         self.bits_9 = (self.bits_9 & !(0b00000001 << 0)) | ((value & 0b00000001) << 0);
     }
 
+    #[allow(identity_op)]
     pub fn slot73(&self) -> u8 {
         (self.bits_9 >> 1) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_slot73(&mut self, value: u8) {
         self.bits_9 = (self.bits_9 & !(0b00000001 << 1)) | ((value & 0b00000001) << 1);
     }
 
+    #[allow(identity_op)]
     pub fn slot74(&self) -> u8 {
         (self.bits_9 >> 2) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_slot74(&mut self, value: u8) {
         self.bits_9 = (self.bits_9 & !(0b00000001 << 2)) | ((value & 0b00000001) << 2);
     }
 
+    #[allow(identity_op)]
     pub fn slot75(&self) -> u8 {
         (self.bits_9 >> 3) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_slot75(&mut self, value: u8) {
         self.bits_9 = (self.bits_9 & !(0b00000001 << 3)) | ((value & 0b00000001) << 3);
     }
 
+    #[allow(identity_op)]
     pub fn slot76(&self) -> u8 {
         (self.bits_9 >> 4) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_slot76(&mut self, value: u8) {
         self.bits_9 = (self.bits_9 & !(0b00000001 << 4)) | ((value & 0b00000001) << 4);
     }
 
+    #[allow(identity_op)]
     pub fn slot77(&self) -> u8 {
         (self.bits_9 >> 5) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_slot77(&mut self, value: u8) {
         self.bits_9 = (self.bits_9 & !(0b00000001 << 5)) | ((value & 0b00000001) << 5);
     }
 
+    #[allow(identity_op)]
     pub fn slot78(&self) -> u8 {
         (self.bits_9 >> 6) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_slot78(&mut self, value: u8) {
         self.bits_9 = (self.bits_9 & !(0b00000001 << 6)) | ((value & 0b00000001) << 6);
     }
 
+    #[allow(identity_op)]
     pub fn slot79(&self) -> u8 {
         (self.bits_9 >> 7) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_slot79(&mut self, value: u8) {
         self.bits_9 = (self.bits_9 & !(0b00000001 << 7)) | ((value & 0b00000001) << 7);
     }
 
+    #[allow(identity_op)]
     pub fn slot80(&self) -> u8 {
         (self.bits_a >> 0) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_slot80(&mut self, value: u8) {
         self.bits_a = (self.bits_a & !(0b00000001 << 0)) | ((value & 0b00000001) << 0);
     }
 
+    #[allow(identity_op)]
     pub fn slot81(&self) -> u8 {
         (self.bits_a >> 1) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_slot81(&mut self, value: u8) {
         self.bits_a = (self.bits_a & !(0b00000001 << 1)) | ((value & 0b00000001) << 1);
     }
 
+    #[allow(identity_op)]
     pub fn slot82(&self) -> u8 {
         (self.bits_a >> 2) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_slot82(&mut self, value: u8) {
         self.bits_a = (self.bits_a & !(0b00000001 << 2)) | ((value & 0b00000001) << 2);
     }
 
+    #[allow(identity_op)]
     pub fn slot83(&self) -> u8 {
         (self.bits_a >> 3) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_slot83(&mut self, value: u8) {
         self.bits_a = (self.bits_a & !(0b00000001 << 3)) | ((value & 0b00000001) << 3);
     }
 
+    #[allow(identity_op)]
     pub fn slot84(&self) -> u8 {
         (self.bits_a >> 4) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_slot84(&mut self, value: u8) {
         self.bits_a = (self.bits_a & !(0b00000001 << 4)) | ((value & 0b00000001) << 4);
     }
 
+    #[allow(identity_op)]
     pub fn slot85(&self) -> u8 {
         (self.bits_a >> 5) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_slot85(&mut self, value: u8) {
         self.bits_a = (self.bits_a & !(0b00000001 << 5)) | ((value & 0b00000001) << 5);
     }
 
+    #[allow(identity_op)]
     pub fn slot86(&self) -> u8 {
         (self.bits_a >> 6) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_slot86(&mut self, value: u8) {
         self.bits_a = (self.bits_a & !(0b00000001 << 6)) | ((value & 0b00000001) << 6);
     }
 
+    #[allow(identity_op)]
     pub fn slot87(&self) -> u8 {
         (self.bits_a >> 7) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_slot87(&mut self, value: u8) {
         self.bits_a = (self.bits_a & !(0b00000001 << 7)) | ((value & 0b00000001) << 7);
     }
 
+    #[allow(identity_op)]
     pub fn slot88(&self) -> u8 {
         (self.bits_b >> 0) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_slot88(&mut self, value: u8) {
         self.bits_b = (self.bits_b & !(0b00000001 << 0)) | ((value & 0b00000001) << 0);
     }
 
+    #[allow(identity_op)]
     pub fn slot89(&self) -> u8 {
         (self.bits_b >> 1) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_slot89(&mut self, value: u8) {
         self.bits_b = (self.bits_b & !(0b00000001 << 1)) | ((value & 0b00000001) << 1);
     }
 
+    #[allow(identity_op)]
     pub fn slot90(&self) -> u8 {
         (self.bits_b >> 2) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_slot90(&mut self, value: u8) {
         self.bits_b = (self.bits_b & !(0b00000001 << 2)) | ((value & 0b00000001) << 2);
     }
 
+    #[allow(identity_op)]
     pub fn slot91(&self) -> u8 {
         (self.bits_b >> 3) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_slot91(&mut self, value: u8) {
         self.bits_b = (self.bits_b & !(0b00000001 << 3)) | ((value & 0b00000001) << 3);
     }
 
+    #[allow(identity_op)]
     pub fn slot92(&self) -> u8 {
         (self.bits_b >> 4) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_slot92(&mut self, value: u8) {
         self.bits_b = (self.bits_b & !(0b00000001 << 4)) | ((value & 0b00000001) << 4);
     }
 
+    #[allow(identity_op)]
     pub fn slot93(&self) -> u8 {
         (self.bits_b >> 5) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_slot93(&mut self, value: u8) {
         self.bits_b = (self.bits_b & !(0b00000001 << 5)) | ((value & 0b00000001) << 5);
     }
 
+    #[allow(identity_op)]
     pub fn slot94(&self) -> u8 {
         (self.bits_b >> 6) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_slot94(&mut self, value: u8) {
         self.bits_b = (self.bits_b & !(0b00000001 << 6)) | ((value & 0b00000001) << 6);
     }
 
+    #[allow(identity_op)]
     pub fn slot95(&self) -> u8 {
         (self.bits_b >> 7) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_slot95(&mut self, value: u8) {
         self.bits_b = (self.bits_b & !(0b00000001 << 7)) | ((value & 0b00000001) << 7);
     }
 
+    #[allow(identity_op)]
     pub fn slot96(&self) -> u8 {
         (self.bits_c >> 0) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_slot96(&mut self, value: u8) {
         self.bits_c = (self.bits_c & !(0b00000001 << 0)) | ((value & 0b00000001) << 0);
     }
 
+    #[allow(identity_op)]
     pub fn slot97(&self) -> u8 {
         (self.bits_c >> 1) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_slot97(&mut self, value: u8) {
         self.bits_c = (self.bits_c & !(0b00000001 << 1)) | ((value & 0b00000001) << 1);
     }
 
+    #[allow(identity_op)]
     pub fn slot98(&self) -> u8 {
         (self.bits_c >> 2) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_slot98(&mut self, value: u8) {
         self.bits_c = (self.bits_c & !(0b00000001 << 2)) | ((value & 0b00000001) << 2);
     }
 
+    #[allow(identity_op)]
     pub fn slot99(&self) -> u8 {
         (self.bits_c >> 3) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_slot99(&mut self, value: u8) {
         self.bits_c = (self.bits_c & !(0b00000001 << 3)) | ((value & 0b00000001) << 3);
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -53483,6 +55123,7 @@ impl REINFORCE_PARAM_PROTECTOR_ST {
     pub fn set_resist_madness_rate(&mut self, value: f32) {
         self.resist_madness_rate = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -53834,6 +55475,7 @@ impl REINFORCE_PARAM_WEAPON_ST {
     pub fn set_base_atk_rate(&mut self, value: f32) {
         self.base_atk_rate = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -53932,6 +55574,7 @@ impl RESIST_CORRECT_PARAM_ST {
     pub fn set_add_rate5(&mut self, value: f32) {
         self.add_rate5 = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -53949,6 +55592,7 @@ impl REVERB_AUX_SEND_BUS_PARAM_ST {
     pub fn set_reverb_aux_send_bus_name(&mut self, value: [u8; 32]) {
         self.reverb_aux_send_bus_name = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -54075,6 +55719,7 @@ impl RIDE_PARAM_ST {
     pub fn set_diff_ang_max(&mut self, value: f32) {
         self.diff_ang_max = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -54347,6 +55992,7 @@ impl ROLE_PARAM_ST {
     pub fn set_non_player_summon_start_anim_id(&mut self, value: i32) {
         self.non_player_summon_start_anim_id = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -54375,10 +56021,12 @@ pub struct ROLLING_OBJ_LOT_PARAM_ST {
 }
 
 impl ROLLING_OBJ_LOT_PARAM_ST {
+    #[allow(identity_op)]
     pub fn disable_param_nt(&self) -> u8 {
         (self.bits_0 >> 0) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_disable_param_nt(&mut self, value: u8) {
         self.bits_0 = (self.bits_0 & !(0b00000001 << 0)) | ((value & 0b00000001) << 0);
     }
@@ -54510,6 +56158,7 @@ impl ROLLING_OBJ_LOT_PARAM_ST {
     pub fn set_create_weight_7(&mut self, value: u8) {
         self.create_weight_7 = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -54564,6 +56213,7 @@ impl RUNTIME_BONE_CONTROL_PARAM_ST {
     pub fn set_target_bone2(&mut self, value: [u8; 32]) {
         self.target_bone2 = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -54581,6 +56231,7 @@ impl SE_ACTIVATION_RANGE_PARAM_ST {
     pub fn set_activate_range(&mut self, value: f32) {
         self.activate_range = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -54599,6 +56250,7 @@ impl SE_MATERIAL_CONVERT_PARAM_ST {
     pub fn set_se_material_id(&mut self, value: u8) {
         self.se_material_id = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -54616,6 +56268,7 @@ impl SFX_BLOCK_RES_SHARE_PARAM {
     pub fn set_share_block_rs_map_uid_val(&mut self, value: u32) {
         self.share_block_rs_map_uid_val = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -54762,6 +56415,7 @@ impl SHOP_LINEUP_PARAM {
     pub fn set_menu_icon_id(&mut self, value: i16) {
         self.menu_icon_id = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -54787,10 +56441,12 @@ pub struct SIGN_PUDDLE_PARAM_ST {
 }
 
 impl SIGN_PUDDLE_PARAM_ST {
+    #[allow(identity_op)]
     pub fn disable_param_nt(&self) -> u8 {
         (self.bits_0 >> 0) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_disable_param_nt(&mut self, value: u8) {
         self.bits_0 = (self.bits_0 & !(0b00000001 << 0)) | ((value & 0b00000001) << 0);
     }
@@ -54874,6 +56530,7 @@ impl SIGN_PUDDLE_PARAM_ST {
     pub fn set_sort_id(&mut self, value: i32) {
         self.sort_id = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -54903,6 +56560,7 @@ impl SIGN_PUDDLE_SUB_CATEGORY_PARAM_ST {
     pub fn set_sign_puddle_tab_id(&mut self, value: u16) {
         self.sign_puddle_tab_id = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -54931,6 +56589,7 @@ impl SIGN_PUDDLE_TAB_PARAM_ST {
     pub fn set_tab_text_id(&mut self, value: i32) {
         self.tab_text_id = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -54948,6 +56607,7 @@ impl SOUND_ASSET_SOUND_OBJ_ENABLE_DIST_PARAM_ST {
     pub fn set_sound_obj_enable_dist(&mut self, value: f32) {
         self.sound_obj_enable_dist = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -54992,6 +56652,7 @@ impl SOUND_AUTO_ENV_SOUND_GROUP_PARAM_ST {
     pub fn set_follow_rate(&mut self, value: f32) {
         self.follow_rate = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -55072,6 +56733,7 @@ impl SOUND_AUTO_REVERB_EVALUATION_DIST_PARAM_ST {
     pub fn set_ignore_dist_num_for_max(&mut self, value: u32) {
         self.ignore_dist_num_for_max = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -55171,6 +56833,7 @@ impl SOUND_AUTO_REVERB_SELECT_PARAM_ST {
     pub fn set_no_hit_num_min(&mut self, value: i32) {
         self.no_hit_num_min = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -55208,10 +56871,12 @@ pub struct SOUND_CHR_PHYSICS_SE_PARAM_ST {
 }
 
 impl SOUND_CHR_PHYSICS_SE_PARAM_ST {
+    #[allow(identity_op)]
     pub fn disable_param_nt(&self) -> u8 {
         (self.bits_0 >> 0) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_disable_param_nt(&mut self, value: u8) {
         self.bits_0 = (self.bits_0 & !(0b00000001 << 0)) | ((value & 0b00000001) << 0);
     }
@@ -55415,6 +57080,7 @@ impl SOUND_CHR_PHYSICS_SE_PARAM_ST {
     pub fn set_contact_check_rigid_idx15(&mut self, value: i8) {
         self.contact_check_rigid_idx15 = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -55441,6 +57107,7 @@ impl SOUND_COMMON_INGAME_PARAM_ST {
     pub fn set_param_value_str(&mut self, value: [u8; 32]) {
         self.param_value_str = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -55467,6 +57134,7 @@ impl SOUND_COMMON_SYSTEM_PARAM_ST {
     pub fn set_param_value_str(&mut self, value: [u8; 32]) {
         self.param_value_str = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -55491,10 +57159,12 @@ pub struct SOUND_CUTSCENE_PARAM_ST {
 }
 
 impl SOUND_CUTSCENE_PARAM_ST {
+    #[allow(identity_op)]
     pub fn disable_param_nt(&self) -> u8 {
         (self.bits_0 >> 0) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_disable_param_nt(&mut self, value: u8) {
         self.bits_0 = (self.bits_0 & !(0b00000001 << 0)) | ((value & 0b00000001) << 0);
     }
@@ -55546,6 +57216,7 @@ impl SOUND_CUTSCENE_PARAM_ST {
     pub fn set_enter_map_mute_stop_time_on_draw_cutscene(&mut self, value: f32) {
         self.enter_map_mute_stop_time_on_draw_cutscene = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -55644,6 +57315,7 @@ impl SPEEDTREE_MODEL_PARAM_ST {
     pub fn set_billboard_back_specular_weaken_param(&mut self, value: f32) {
         self.billboard_back_specular_weaken_param = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -56837,514 +58509,642 @@ impl SP_EFFECT_PARAM_ST {
         self.freeze_damage_rate = value;
     }
 
+    #[allow(identity_op)]
     pub fn effect_target_self(&self) -> u8 {
         (self.bits_15f >> 0) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_effect_target_self(&mut self, value: u8) {
         self.bits_15f = (self.bits_15f & !(0b00000001 << 0)) | ((value & 0b00000001) << 0);
     }
 
+    #[allow(identity_op)]
     pub fn effect_target_friend(&self) -> u8 {
         (self.bits_15f >> 1) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_effect_target_friend(&mut self, value: u8) {
         self.bits_15f = (self.bits_15f & !(0b00000001 << 1)) | ((value & 0b00000001) << 1);
     }
 
+    #[allow(identity_op)]
     pub fn effect_target_enemy(&self) -> u8 {
         (self.bits_15f >> 2) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_effect_target_enemy(&mut self, value: u8) {
         self.bits_15f = (self.bits_15f & !(0b00000001 << 2)) | ((value & 0b00000001) << 2);
     }
 
+    #[allow(identity_op)]
     pub fn effect_target_player(&self) -> u8 {
         (self.bits_15f >> 3) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_effect_target_player(&mut self, value: u8) {
         self.bits_15f = (self.bits_15f & !(0b00000001 << 3)) | ((value & 0b00000001) << 3);
     }
 
+    #[allow(identity_op)]
     pub fn effect_target_ai(&self) -> u8 {
         (self.bits_15f >> 4) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_effect_target_ai(&mut self, value: u8) {
         self.bits_15f = (self.bits_15f & !(0b00000001 << 4)) | ((value & 0b00000001) << 4);
     }
 
+    #[allow(identity_op)]
     pub fn effect_target_live(&self) -> u8 {
         (self.bits_15f >> 5) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_effect_target_live(&mut self, value: u8) {
         self.bits_15f = (self.bits_15f & !(0b00000001 << 5)) | ((value & 0b00000001) << 5);
     }
 
+    #[allow(identity_op)]
     pub fn effect_target_ghost(&self) -> u8 {
         (self.bits_15f >> 6) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_effect_target_ghost(&mut self, value: u8) {
         self.bits_15f = (self.bits_15f & !(0b00000001 << 6)) | ((value & 0b00000001) << 6);
     }
 
+    #[allow(identity_op)]
     pub fn disable_sleep(&self) -> u8 {
         (self.bits_15f >> 7) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_disable_sleep(&mut self, value: u8) {
         self.bits_15f = (self.bits_15f & !(0b00000001 << 7)) | ((value & 0b00000001) << 7);
     }
 
+    #[allow(identity_op)]
     pub fn disable_madness(&self) -> u8 {
         (self.bits_160 >> 0) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_disable_madness(&mut self, value: u8) {
         self.bits_160 = (self.bits_160 & !(0b00000001 << 0)) | ((value & 0b00000001) << 0);
     }
 
+    #[allow(identity_op)]
     pub fn effect_target_attacker(&self) -> u8 {
         (self.bits_160 >> 1) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_effect_target_attacker(&mut self, value: u8) {
         self.bits_160 = (self.bits_160 & !(0b00000001 << 1)) | ((value & 0b00000001) << 1);
     }
 
+    #[allow(identity_op)]
     pub fn disp_icon_nonactive(&self) -> u8 {
         (self.bits_160 >> 2) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_disp_icon_nonactive(&mut self, value: u8) {
         self.bits_160 = (self.bits_160 & !(0b00000001 << 2)) | ((value & 0b00000001) << 2);
     }
 
+    #[allow(identity_op)]
     pub fn regain_gauge_damage(&self) -> u8 {
         (self.bits_160 >> 3) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_regain_gauge_damage(&mut self, value: u8) {
         self.bits_160 = (self.bits_160 & !(0b00000001 << 3)) | ((value & 0b00000001) << 3);
     }
 
+    #[allow(identity_op)]
     pub fn b_adjust_magic_ablity(&self) -> u8 {
         (self.bits_160 >> 4) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_b_adjust_magic_ablity(&mut self, value: u8) {
         self.bits_160 = (self.bits_160 & !(0b00000001 << 4)) | ((value & 0b00000001) << 4);
     }
 
+    #[allow(identity_op)]
     pub fn b_adjust_faith_ablity(&self) -> u8 {
         (self.bits_160 >> 5) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_b_adjust_faith_ablity(&mut self, value: u8) {
         self.bits_160 = (self.bits_160 & !(0b00000001 << 5)) | ((value & 0b00000001) << 5);
     }
 
+    #[allow(identity_op)]
     pub fn b_game_clear_bonus(&self) -> u8 {
         (self.bits_160 >> 6) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_b_game_clear_bonus(&mut self, value: u8) {
         self.bits_160 = (self.bits_160 & !(0b00000001 << 6)) | ((value & 0b00000001) << 6);
     }
 
+    #[allow(identity_op)]
     pub fn mag_param_change(&self) -> u8 {
         (self.bits_160 >> 7) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_mag_param_change(&mut self, value: u8) {
         self.bits_160 = (self.bits_160 & !(0b00000001 << 7)) | ((value & 0b00000001) << 7);
     }
 
+    #[allow(identity_op)]
     pub fn miracle_param_change(&self) -> u8 {
         (self.bits_161 >> 0) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_miracle_param_change(&mut self, value: u8) {
         self.bits_161 = (self.bits_161 & !(0b00000001 << 0)) | ((value & 0b00000001) << 0);
     }
 
+    #[allow(identity_op)]
     pub fn clear_soul(&self) -> u8 {
         (self.bits_161 >> 1) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_clear_soul(&mut self, value: u8) {
         self.bits_161 = (self.bits_161 & !(0b00000001 << 1)) | ((value & 0b00000001) << 1);
     }
 
+    #[allow(identity_op)]
     pub fn request_sos(&self) -> u8 {
         (self.bits_161 >> 2) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_request_sos(&mut self, value: u8) {
         self.bits_161 = (self.bits_161 & !(0b00000001 << 2)) | ((value & 0b00000001) << 2);
     }
 
+    #[allow(identity_op)]
     pub fn request_black_sos(&self) -> u8 {
         (self.bits_161 >> 3) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_request_black_sos(&mut self, value: u8) {
         self.bits_161 = (self.bits_161 & !(0b00000001 << 3)) | ((value & 0b00000001) << 3);
     }
 
+    #[allow(identity_op)]
     pub fn request_force_join_black_sos(&self) -> u8 {
         (self.bits_161 >> 4) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_request_force_join_black_sos(&mut self, value: u8) {
         self.bits_161 = (self.bits_161 & !(0b00000001 << 4)) | ((value & 0b00000001) << 4);
     }
 
+    #[allow(identity_op)]
     pub fn request_kick_session(&self) -> u8 {
         (self.bits_161 >> 5) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_request_kick_session(&mut self, value: u8) {
         self.bits_161 = (self.bits_161 & !(0b00000001 << 5)) | ((value & 0b00000001) << 5);
     }
 
+    #[allow(identity_op)]
     pub fn request_leave_session(&self) -> u8 {
         (self.bits_161 >> 6) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_request_leave_session(&mut self, value: u8) {
         self.bits_161 = (self.bits_161 & !(0b00000001 << 6)) | ((value & 0b00000001) << 6);
     }
 
+    #[allow(identity_op)]
     pub fn request_npc_inveda(&self) -> u8 {
         (self.bits_161 >> 7) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_request_npc_inveda(&mut self, value: u8) {
         self.bits_161 = (self.bits_161 & !(0b00000001 << 7)) | ((value & 0b00000001) << 7);
     }
 
+    #[allow(identity_op)]
     pub fn no_dead(&self) -> u8 {
         (self.bits_162 >> 0) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_no_dead(&mut self, value: u8) {
         self.bits_162 = (self.bits_162 & !(0b00000001 << 0)) | ((value & 0b00000001) << 0);
     }
 
+    #[allow(identity_op)]
     pub fn b_curr_hp_independe_max_hp(&self) -> u8 {
         (self.bits_162 >> 1) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_b_curr_hp_independe_max_hp(&mut self, value: u8) {
         self.bits_162 = (self.bits_162 & !(0b00000001 << 1)) | ((value & 0b00000001) << 1);
     }
 
+    #[allow(identity_op)]
     pub fn corrosion_ignore(&self) -> u8 {
         (self.bits_162 >> 2) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_corrosion_ignore(&mut self, value: u8) {
         self.bits_162 = (self.bits_162 & !(0b00000001 << 2)) | ((value & 0b00000001) << 2);
     }
 
+    #[allow(identity_op)]
     pub fn sight_search_cut_ignore(&self) -> u8 {
         (self.bits_162 >> 3) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_sight_search_cut_ignore(&mut self, value: u8) {
         self.bits_162 = (self.bits_162 & !(0b00000001 << 3)) | ((value & 0b00000001) << 3);
     }
 
+    #[allow(identity_op)]
     pub fn hearing_search_cut_ignore(&self) -> u8 {
         (self.bits_162 >> 4) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_hearing_search_cut_ignore(&mut self, value: u8) {
         self.bits_162 = (self.bits_162 & !(0b00000001 << 4)) | ((value & 0b00000001) << 4);
     }
 
+    #[allow(identity_op)]
     pub fn anti_magic_ignore(&self) -> u8 {
         (self.bits_162 >> 5) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_anti_magic_ignore(&mut self, value: u8) {
         self.bits_162 = (self.bits_162 & !(0b00000001 << 5)) | ((value & 0b00000001) << 5);
     }
 
+    #[allow(identity_op)]
     pub fn fake_target_ignore(&self) -> u8 {
         (self.bits_162 >> 6) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_fake_target_ignore(&mut self, value: u8) {
         self.bits_162 = (self.bits_162 & !(0b00000001 << 6)) | ((value & 0b00000001) << 6);
     }
 
+    #[allow(identity_op)]
     pub fn fake_target_ignore_undead(&self) -> u8 {
         (self.bits_162 >> 7) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_fake_target_ignore_undead(&mut self, value: u8) {
         self.bits_162 = (self.bits_162 & !(0b00000001 << 7)) | ((value & 0b00000001) << 7);
     }
 
+    #[allow(identity_op)]
     pub fn fake_target_ignore_animal(&self) -> u8 {
         (self.bits_163 >> 0) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_fake_target_ignore_animal(&mut self, value: u8) {
         self.bits_163 = (self.bits_163 & !(0b00000001 << 0)) | ((value & 0b00000001) << 0);
     }
 
+    #[allow(identity_op)]
     pub fn grabity_ignore(&self) -> u8 {
         (self.bits_163 >> 1) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_grabity_ignore(&mut self, value: u8) {
         self.bits_163 = (self.bits_163 & !(0b00000001 << 1)) | ((value & 0b00000001) << 1);
     }
 
+    #[allow(identity_op)]
     pub fn disable_poison(&self) -> u8 {
         (self.bits_163 >> 2) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_disable_poison(&mut self, value: u8) {
         self.bits_163 = (self.bits_163 & !(0b00000001 << 2)) | ((value & 0b00000001) << 2);
     }
 
+    #[allow(identity_op)]
     pub fn disable_disease(&self) -> u8 {
         (self.bits_163 >> 3) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_disable_disease(&mut self, value: u8) {
         self.bits_163 = (self.bits_163 & !(0b00000001 << 3)) | ((value & 0b00000001) << 3);
     }
 
+    #[allow(identity_op)]
     pub fn disable_blood(&self) -> u8 {
         (self.bits_163 >> 4) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_disable_blood(&mut self, value: u8) {
         self.bits_163 = (self.bits_163 & !(0b00000001 << 4)) | ((value & 0b00000001) << 4);
     }
 
+    #[allow(identity_op)]
     pub fn disable_curse(&self) -> u8 {
         (self.bits_163 >> 5) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_disable_curse(&mut self, value: u8) {
         self.bits_163 = (self.bits_163 & !(0b00000001 << 5)) | ((value & 0b00000001) << 5);
     }
 
+    #[allow(identity_op)]
     pub fn enable_charm(&self) -> u8 {
         (self.bits_163 >> 6) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_enable_charm(&mut self, value: u8) {
         self.bits_163 = (self.bits_163 & !(0b00000001 << 6)) | ((value & 0b00000001) << 6);
     }
 
+    #[allow(identity_op)]
     pub fn enable_life_time(&self) -> u8 {
         (self.bits_163 >> 7) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_enable_life_time(&mut self, value: u8) {
         self.bits_163 = (self.bits_163 & !(0b00000001 << 7)) | ((value & 0b00000001) << 7);
     }
 
+    #[allow(identity_op)]
     pub fn b_adjust_strength_ablity(&self) -> u8 {
         (self.bits_164 >> 0) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_b_adjust_strength_ablity(&mut self, value: u8) {
         self.bits_164 = (self.bits_164 & !(0b00000001 << 0)) | ((value & 0b00000001) << 0);
     }
 
+    #[allow(identity_op)]
     pub fn b_adjust_agility_ablity(&self) -> u8 {
         (self.bits_164 >> 1) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_b_adjust_agility_ablity(&mut self, value: u8) {
         self.bits_164 = (self.bits_164 & !(0b00000001 << 1)) | ((value & 0b00000001) << 1);
     }
 
+    #[allow(identity_op)]
     pub fn erase_on_bonfire_recover(&self) -> u8 {
         (self.bits_164 >> 2) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_erase_on_bonfire_recover(&mut self, value: u8) {
         self.bits_164 = (self.bits_164 & !(0b00000001 << 2)) | ((value & 0b00000001) << 2);
     }
 
+    #[allow(identity_op)]
     pub fn throw_attack_param_change(&self) -> u8 {
         (self.bits_164 >> 3) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_throw_attack_param_change(&mut self, value: u8) {
         self.bits_164 = (self.bits_164 & !(0b00000001 << 3)) | ((value & 0b00000001) << 3);
     }
 
+    #[allow(identity_op)]
     pub fn request_leave_coliseum_session(&self) -> u8 {
         (self.bits_164 >> 4) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_request_leave_coliseum_session(&mut self, value: u8) {
         self.bits_164 = (self.bits_164 & !(0b00000001 << 4)) | ((value & 0b00000001) << 4);
     }
 
+    #[allow(identity_op)]
     pub fn is_extend_sp_effect_life(&self) -> u8 {
         (self.bits_164 >> 5) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_is_extend_sp_effect_life(&mut self, value: u8) {
         self.bits_164 = (self.bits_164 & !(0b00000001 << 5)) | ((value & 0b00000001) << 5);
     }
 
+    #[allow(identity_op)]
     pub fn has_target(&self) -> u8 {
         (self.bits_164 >> 6) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_has_target(&mut self, value: u8) {
         self.bits_164 = (self.bits_164 & !(0b00000001 << 6)) | ((value & 0b00000001) << 6);
     }
 
+    #[allow(identity_op)]
     pub fn replanning_on_fire(&self) -> u8 {
         (self.bits_164 >> 7) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_replanning_on_fire(&mut self, value: u8) {
         self.bits_164 = (self.bits_164 & !(0b00000001 << 7)) | ((value & 0b00000001) << 7);
     }
 
+    #[allow(identity_op)]
     pub fn vow_type0(&self) -> u8 {
         (self.bits_165 >> 0) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_vow_type0(&mut self, value: u8) {
         self.bits_165 = (self.bits_165 & !(0b00000001 << 0)) | ((value & 0b00000001) << 0);
     }
 
+    #[allow(identity_op)]
     pub fn vow_type1(&self) -> u8 {
         (self.bits_165 >> 1) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_vow_type1(&mut self, value: u8) {
         self.bits_165 = (self.bits_165 & !(0b00000001 << 1)) | ((value & 0b00000001) << 1);
     }
 
+    #[allow(identity_op)]
     pub fn vow_type2(&self) -> u8 {
         (self.bits_165 >> 2) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_vow_type2(&mut self, value: u8) {
         self.bits_165 = (self.bits_165 & !(0b00000001 << 2)) | ((value & 0b00000001) << 2);
     }
 
+    #[allow(identity_op)]
     pub fn vow_type3(&self) -> u8 {
         (self.bits_165 >> 3) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_vow_type3(&mut self, value: u8) {
         self.bits_165 = (self.bits_165 & !(0b00000001 << 3)) | ((value & 0b00000001) << 3);
     }
 
+    #[allow(identity_op)]
     pub fn vow_type4(&self) -> u8 {
         (self.bits_165 >> 4) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_vow_type4(&mut self, value: u8) {
         self.bits_165 = (self.bits_165 & !(0b00000001 << 4)) | ((value & 0b00000001) << 4);
     }
 
+    #[allow(identity_op)]
     pub fn vow_type5(&self) -> u8 {
         (self.bits_165 >> 5) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_vow_type5(&mut self, value: u8) {
         self.bits_165 = (self.bits_165 & !(0b00000001 << 5)) | ((value & 0b00000001) << 5);
     }
 
+    #[allow(identity_op)]
     pub fn vow_type6(&self) -> u8 {
         (self.bits_165 >> 6) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_vow_type6(&mut self, value: u8) {
         self.bits_165 = (self.bits_165 & !(0b00000001 << 6)) | ((value & 0b00000001) << 6);
     }
 
+    #[allow(identity_op)]
     pub fn vow_type7(&self) -> u8 {
         (self.bits_165 >> 7) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_vow_type7(&mut self, value: u8) {
         self.bits_165 = (self.bits_165 & !(0b00000001 << 7)) | ((value & 0b00000001) << 7);
     }
 
+    #[allow(identity_op)]
     pub fn vow_type8(&self) -> u8 {
         (self.bits_166 >> 0) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_vow_type8(&mut self, value: u8) {
         self.bits_166 = (self.bits_166 & !(0b00000001 << 0)) | ((value & 0b00000001) << 0);
     }
 
+    #[allow(identity_op)]
     pub fn vow_type9(&self) -> u8 {
         (self.bits_166 >> 1) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_vow_type9(&mut self, value: u8) {
         self.bits_166 = (self.bits_166 & !(0b00000001 << 1)) | ((value & 0b00000001) << 1);
     }
 
+    #[allow(identity_op)]
     pub fn vow_type10(&self) -> u8 {
         (self.bits_166 >> 2) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_vow_type10(&mut self, value: u8) {
         self.bits_166 = (self.bits_166 & !(0b00000001 << 2)) | ((value & 0b00000001) << 2);
     }
 
+    #[allow(identity_op)]
     pub fn vow_type11(&self) -> u8 {
         (self.bits_166 >> 3) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_vow_type11(&mut self, value: u8) {
         self.bits_166 = (self.bits_166 & !(0b00000001 << 3)) | ((value & 0b00000001) << 3);
     }
 
+    #[allow(identity_op)]
     pub fn vow_type12(&self) -> u8 {
         (self.bits_166 >> 4) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_vow_type12(&mut self, value: u8) {
         self.bits_166 = (self.bits_166 & !(0b00000001 << 4)) | ((value & 0b00000001) << 4);
     }
 
+    #[allow(identity_op)]
     pub fn vow_type13(&self) -> u8 {
         (self.bits_166 >> 5) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_vow_type13(&mut self, value: u8) {
         self.bits_166 = (self.bits_166 & !(0b00000001 << 5)) | ((value & 0b00000001) << 5);
     }
 
+    #[allow(identity_op)]
     pub fn vow_type14(&self) -> u8 {
         (self.bits_166 >> 6) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_vow_type14(&mut self, value: u8) {
         self.bits_166 = (self.bits_166 & !(0b00000001 << 6)) | ((value & 0b00000001) << 6);
     }
 
+    #[allow(identity_op)]
     pub fn vow_type15(&self) -> u8 {
         (self.bits_166 >> 7) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_vow_type15(&mut self, value: u8) {
         self.bits_166 = (self.bits_166 & !(0b00000001 << 7)) | ((value & 0b00000001) << 7);
     }
@@ -57365,66 +59165,82 @@ impl SP_EFFECT_PARAM_ST {
         self.sight_search_rate = value;
     }
 
+    #[allow(identity_op)]
     pub fn effect_target_oppose_target(&self) -> u8 {
         (self.bits_16c >> 0) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_effect_target_oppose_target(&mut self, value: u8) {
         self.bits_16c = (self.bits_16c & !(0b00000001 << 0)) | ((value & 0b00000001) << 0);
     }
 
+    #[allow(identity_op)]
     pub fn effect_target_friendly_target(&self) -> u8 {
         (self.bits_16c >> 1) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_effect_target_friendly_target(&mut self, value: u8) {
         self.bits_16c = (self.bits_16c & !(0b00000001 << 1)) | ((value & 0b00000001) << 1);
     }
 
+    #[allow(identity_op)]
     pub fn effect_target_self_target(&self) -> u8 {
         (self.bits_16c >> 2) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_effect_target_self_target(&mut self, value: u8) {
         self.bits_16c = (self.bits_16c & !(0b00000001 << 2)) | ((value & 0b00000001) << 2);
     }
 
+    #[allow(identity_op)]
     pub fn effect_target_pc_horse(&self) -> u8 {
         (self.bits_16c >> 3) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_effect_target_pc_horse(&mut self, value: u8) {
         self.bits_16c = (self.bits_16c & !(0b00000001 << 3)) | ((value & 0b00000001) << 3);
     }
 
+    #[allow(identity_op)]
     pub fn effect_target_pc_deceased(&self) -> u8 {
         (self.bits_16c >> 4) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_effect_target_pc_deceased(&mut self, value: u8) {
         self.bits_16c = (self.bits_16c & !(0b00000001 << 4)) | ((value & 0b00000001) << 4);
     }
 
+    #[allow(identity_op)]
     pub fn is_contract_sp_effect_life(&self) -> u8 {
         (self.bits_16c >> 5) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_is_contract_sp_effect_life(&mut self, value: u8) {
         self.bits_16c = (self.bits_16c & !(0b00000001 << 5)) | ((value & 0b00000001) << 5);
     }
 
+    #[allow(identity_op)]
     pub fn is_wait_mode_delete(&self) -> u8 {
         (self.bits_16c >> 6) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_is_wait_mode_delete(&mut self, value: u8) {
         self.bits_16c = (self.bits_16c & !(0b00000001 << 6)) | ((value & 0b00000001) << 6);
     }
 
+    #[allow(identity_op)]
     pub fn is_ignore_no_damage(&self) -> u8 {
         (self.bits_16c >> 7) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_is_ignore_no_damage(&mut self, value: u8) {
         self.bits_16c = (self.bits_16c & !(0b00000001 << 7)) | ((value & 0b00000001) << 7);
     }
@@ -57973,66 +59789,82 @@ impl SP_EFFECT_PARAM_ST {
         self.madness_damage_rate = value;
     }
 
+    #[allow(identity_op)]
     pub fn is_use_status_ailment_atk_power_correct(&self) -> u8 {
         (self.bits_259 >> 0) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_is_use_status_ailment_atk_power_correct(&mut self, value: u8) {
         self.bits_259 = (self.bits_259 & !(0b00000001 << 0)) | ((value & 0b00000001) << 0);
     }
 
+    #[allow(identity_op)]
     pub fn is_use_atk_param_atk_power_correct(&self) -> u8 {
         (self.bits_259 >> 1) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_is_use_atk_param_atk_power_correct(&mut self, value: u8) {
         self.bits_259 = (self.bits_259 & !(0b00000001 << 1)) | ((value & 0b00000001) << 1);
     }
 
+    #[allow(identity_op)]
     pub fn dont_delete_on_dead(&self) -> u8 {
         (self.bits_259 >> 2) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_dont_delete_on_dead(&mut self, value: u8) {
         self.bits_259 = (self.bits_259 & !(0b00000001 << 2)) | ((value & 0b00000001) << 2);
     }
 
+    #[allow(identity_op)]
     pub fn disable_freeze(&self) -> u8 {
         (self.bits_259 >> 3) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_disable_freeze(&mut self, value: u8) {
         self.bits_259 = (self.bits_259 & !(0b00000001 << 3)) | ((value & 0b00000001) << 3);
     }
 
+    #[allow(identity_op)]
     pub fn is_disable_net_sync(&self) -> u8 {
         (self.bits_259 >> 4) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_is_disable_net_sync(&mut self, value: u8) {
         self.bits_259 = (self.bits_259 & !(0b00000001 << 4)) | ((value & 0b00000001) << 4);
     }
 
+    #[allow(identity_op)]
     pub fn shaman_param_change(&self) -> u8 {
         (self.bits_259 >> 5) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_shaman_param_change(&mut self, value: u8) {
         self.bits_259 = (self.bits_259 & !(0b00000001 << 5)) | ((value & 0b00000001) << 5);
     }
 
+    #[allow(identity_op)]
     pub fn is_stop_searched_notify(&self) -> u8 {
         (self.bits_259 >> 6) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_is_stop_searched_notify(&mut self, value: u8) {
         self.bits_259 = (self.bits_259 & !(0b00000001 << 6)) | ((value & 0b00000001) << 6);
     }
 
+    #[allow(identity_op)]
     pub fn is_check_above_shadow_test(&self) -> u8 {
         (self.bits_259 >> 7) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_is_check_above_shadow_test(&mut self, value: u8) {
         self.bits_259 = (self.bits_259 & !(0b00000001 << 7)) | ((value & 0b00000001) << 7);
     }
@@ -58653,50 +60485,62 @@ impl SP_EFFECT_PARAM_ST {
         self.apply_parts_group = value;
     }
 
+    #[allow(identity_op)]
     pub fn clear_target(&self) -> u8 {
         (self.bits_352 >> 0) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_clear_target(&mut self, value: u8) {
         self.bits_352 = (self.bits_352 & !(0b00000001 << 0)) | ((value & 0b00000001) << 0);
     }
 
+    #[allow(identity_op)]
     pub fn fake_target_ignore_ajin(&self) -> u8 {
         (self.bits_352 >> 1) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_fake_target_ignore_ajin(&mut self, value: u8) {
         self.bits_352 = (self.bits_352 & !(0b00000001 << 1)) | ((value & 0b00000001) << 1);
     }
 
+    #[allow(identity_op)]
     pub fn fake_target_ignore_mirage_arts(&self) -> u8 {
         (self.bits_352 >> 2) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_fake_target_ignore_mirage_arts(&mut self, value: u8) {
         self.bits_352 = (self.bits_352 & !(0b00000001 << 2)) | ((value & 0b00000001) << 2);
     }
 
+    #[allow(identity_op)]
     pub fn request_force_join_black_sos_b(&self) -> u8 {
         (self.bits_352 >> 3) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_request_force_join_black_sos_b(&mut self, value: u8) {
         self.bits_352 = (self.bits_352 & !(0b00000001 << 3)) | ((value & 0b00000001) << 3);
     }
 
+    #[allow(identity_op)]
     pub fn is_destined_death_hp_mult(&self) -> u8 {
         (self.bits_352 >> 4) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_is_destined_death_hp_mult(&mut self, value: u8) {
         self.bits_352 = (self.bits_352 & !(0b00000001 << 4)) | ((value & 0b00000001) << 4);
     }
 
+    #[allow(identity_op)]
     pub fn is_hp_burn_effect(&self) -> u8 {
         (self.bits_352 >> 5) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_is_hp_burn_effect(&mut self, value: u8) {
         self.bits_352 = (self.bits_352 & !(0b00000001 << 5)) | ((value & 0b00000001) << 5);
     }
@@ -58836,6 +60680,7 @@ impl SP_EFFECT_PARAM_ST {
     pub fn set_spirit_death_sp_effect_id(&mut self, value: i32) {
         self.spirit_death_sp_effect_id = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -58880,6 +60725,7 @@ impl SP_EFFECT_SET_PARAM_ST {
     pub fn set_sp_effect_id4(&mut self, value: i32) {
         self.sp_effect_id4 = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -59073,122 +60919,152 @@ impl SP_EFFECT_VFX_PARAM_ST {
         self.play_priority = value;
     }
 
+    #[allow(identity_op)]
     pub fn exist_effect_for_large(&self) -> u8 {
         (self.bits_2e >> 0) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_exist_effect_for_large(&mut self, value: u8) {
         self.bits_2e = (self.bits_2e & !(0b00000001 << 0)) | ((value & 0b00000001) << 0);
     }
 
+    #[allow(identity_op)]
     pub fn exist_effect_for_soul(&self) -> u8 {
         (self.bits_2e >> 1) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_exist_effect_for_soul(&mut self, value: u8) {
         self.bits_2e = (self.bits_2e & !(0b00000001 << 1)) | ((value & 0b00000001) << 1);
     }
 
+    #[allow(identity_op)]
     pub fn effect_invisible_at_camouflage(&self) -> u8 {
         (self.bits_2e >> 2) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_effect_invisible_at_camouflage(&mut self, value: u8) {
         self.bits_2e = (self.bits_2e & !(0b00000001 << 2)) | ((value & 0b00000001) << 2);
     }
 
+    #[allow(identity_op)]
     pub fn use_camouflage(&self) -> u8 {
         (self.bits_2e >> 3) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_use_camouflage(&mut self, value: u8) {
         self.bits_2e = (self.bits_2e & !(0b00000001 << 3)) | ((value & 0b00000001) << 3);
     }
 
+    #[allow(identity_op)]
     pub fn invisible_at_friend_camouflage(&self) -> u8 {
         (self.bits_2e >> 4) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_invisible_at_friend_camouflage(&mut self, value: u8) {
         self.bits_2e = (self.bits_2e & !(0b00000001 << 4)) | ((value & 0b00000001) << 4);
     }
 
+    #[allow(identity_op)]
     pub fn is_hide_foot_effect_for_camouflage(&self) -> u8 {
         (self.bits_2e >> 5) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_is_hide_foot_effect_for_camouflage(&mut self, value: u8) {
         self.bits_2e = (self.bits_2e & !(0b00000001 << 5)) | ((value & 0b00000001) << 5);
     }
 
+    #[allow(identity_op)]
     pub fn half_camouflage(&self) -> u8 {
         (self.bits_2e >> 6) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_half_camouflage(&mut self, value: u8) {
         self.bits_2e = (self.bits_2e & !(0b00000001 << 6)) | ((value & 0b00000001) << 6);
     }
 
+    #[allow(identity_op)]
     pub fn is_full_body_transform_protector_id(&self) -> u8 {
         (self.bits_2e >> 7) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_is_full_body_transform_protector_id(&mut self, value: u8) {
         self.bits_2e = (self.bits_2e & !(0b00000001 << 7)) | ((value & 0b00000001) << 7);
     }
 
+    #[allow(identity_op)]
     pub fn is_invisible_weapon(&self) -> u8 {
         (self.bits_2f >> 0) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_is_invisible_weapon(&mut self, value: u8) {
         self.bits_2f = (self.bits_2f & !(0b00000001 << 0)) | ((value & 0b00000001) << 0);
     }
 
+    #[allow(identity_op)]
     pub fn is_silence(&self) -> u8 {
         (self.bits_2f >> 1) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_is_silence(&mut self, value: u8) {
         self.bits_2f = (self.bits_2f & !(0b00000001 << 1)) | ((value & 0b00000001) << 1);
     }
 
+    #[allow(identity_op)]
     pub fn is_midst_fullbody(&self) -> u8 {
         (self.bits_2f >> 2) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_is_midst_fullbody(&mut self, value: u8) {
         self.bits_2f = (self.bits_2f & !(0b00000001 << 2)) | ((value & 0b00000001) << 2);
     }
 
+    #[allow(identity_op)]
     pub fn is_init_fullbody(&self) -> u8 {
         (self.bits_2f >> 3) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_is_init_fullbody(&mut self, value: u8) {
         self.bits_2f = (self.bits_2f & !(0b00000001 << 3)) | ((value & 0b00000001) << 3);
     }
 
+    #[allow(identity_op)]
     pub fn is_finish_fullbody(&self) -> u8 {
         (self.bits_2f >> 4) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_is_finish_fullbody(&mut self, value: u8) {
         self.bits_2f = (self.bits_2f & !(0b00000001 << 4)) | ((value & 0b00000001) << 4);
     }
 
+    #[allow(identity_op)]
     pub fn is_visible_dead_chr(&self) -> u8 {
         (self.bits_2f >> 5) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_is_visible_dead_chr(&mut self, value: u8) {
         self.bits_2f = (self.bits_2f & !(0b00000001 << 5)) | ((value & 0b00000001) << 5);
     }
 
+    #[allow(identity_op)]
     pub fn is_use_offset_enchant_sfx_size(&self) -> u8 {
         (self.bits_2f >> 6) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_is_use_offset_enchant_sfx_size(&mut self, value: u8) {
         self.bits_2f = (self.bits_2f & !(0b00000001 << 6)) | ((value & 0b00000001) << 6);
     }
@@ -59448,6 +61324,7 @@ impl SP_EFFECT_VFX_PARAM_ST {
     pub fn set_foot_decal_material_offset_overwrite_id(&mut self, value: i16) {
         self.foot_decal_material_offset_overwrite_id = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -59475,10 +61352,12 @@ pub struct SWORD_ARTS_PARAM_ST {
 }
 
 impl SWORD_ARTS_PARAM_ST {
+    #[allow(identity_op)]
     pub fn disable_param_nt(&self) -> u8 {
         (self.bits_0 >> 0) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_disable_param_nt(&mut self, value: u8) {
         self.bits_0 = (self.bits_0 & !(0b00000001 << 0)) | ((value & 0b00000001) << 0);
     }
@@ -59507,34 +61386,42 @@ impl SWORD_ARTS_PARAM_ST {
         self.ref_status = value;
     }
 
+    #[allow(identity_op)]
     pub fn is_ref_right_arts(&self) -> u8 {
         (self.bits_7 >> 0) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_is_ref_right_arts(&mut self, value: u8) {
         self.bits_7 = (self.bits_7 & !(0b00000001 << 0)) | ((value & 0b00000001) << 0);
     }
 
+    #[allow(identity_op)]
     pub fn is_grayout_left_hand(&self) -> u8 {
         (self.bits_7 >> 1) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_is_grayout_left_hand(&mut self, value: u8) {
         self.bits_7 = (self.bits_7 & !(0b00000001 << 1)) | ((value & 0b00000001) << 1);
     }
 
+    #[allow(identity_op)]
     pub fn is_grayout_right_hand(&self) -> u8 {
         (self.bits_7 >> 2) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_is_grayout_right_hand(&mut self, value: u8) {
         self.bits_7 = (self.bits_7 & !(0b00000001 << 2)) | ((value & 0b00000001) << 2);
     }
 
+    #[allow(identity_op)]
     pub fn is_grayout_both_hand(&self) -> u8 {
         (self.bits_7 >> 3) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_is_grayout_both_hand(&mut self, value: u8) {
         self.bits_7 = (self.bits_7 & !(0b00000001 << 3)) | ((value & 0b00000001) << 3);
     }
@@ -59634,6 +61521,7 @@ impl SWORD_ARTS_PARAM_ST {
     pub fn set_ai_usage_id(&mut self, value: i32) {
         self.ai_usage_id = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -59663,10 +61551,12 @@ pub struct TALK_PARAM_ST {
 }
 
 impl TALK_PARAM_ST {
+    #[allow(identity_op)]
     pub fn disable_param_nt(&self) -> u8 {
         (self.bits_0 >> 0) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_disable_param_nt(&mut self, value: u8) {
         self.bits_0 = (self.bits_0 & !(0b00000001 << 0)) | ((value & 0b00000001) << 0);
     }
@@ -59791,13 +61681,16 @@ impl TALK_PARAM_ST {
         self.talk_animation_id = value;
     }
 
+    #[allow(identity_op)]
     pub fn is_force_disp(&self) -> u8 {
         (self.bits_40 >> 0) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_is_force_disp(&mut self, value: u8) {
         self.bits_40 = (self.bits_40 & !(0b00000001 << 0)) | ((value & 0b00000001) << 0);
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -60086,6 +61979,7 @@ impl THROW_DIRECTION_SFX_PARAM_ST {
     pub fn set_sfx_id_30(&mut self, value: i32) {
         self.sfx_id_30 = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -60291,50 +62185,62 @@ impl THROW_PARAM_ST {
         self.dmy_has_chr_dir_type = value;
     }
 
+    #[allow(identity_op)]
     pub fn is_turn_atker(&self) -> u8 {
         (self.bits_3b >> 0) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_is_turn_atker(&mut self, value: u8) {
         self.bits_3b = (self.bits_3b & !(0b00000001 << 0)) | ((value & 0b00000001) << 0);
     }
 
+    #[allow(identity_op)]
     pub fn is_skip_wep_cate(&self) -> u8 {
         (self.bits_3b >> 1) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_is_skip_wep_cate(&mut self, value: u8) {
         self.bits_3b = (self.bits_3b & !(0b00000001 << 1)) | ((value & 0b00000001) << 1);
     }
 
+    #[allow(identity_op)]
     pub fn is_skip_sphere_cast(&self) -> u8 {
         (self.bits_3b >> 2) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_is_skip_sphere_cast(&mut self, value: u8) {
         self.bits_3b = (self.bits_3b & !(0b00000001 << 2)) | ((value & 0b00000001) << 2);
     }
 
+    #[allow(identity_op)]
     pub fn is_enable_correct_pos_for_throw_adjust(&self) -> u8 {
         (self.bits_3b >> 3) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_is_enable_correct_pos_for_throw_adjust(&mut self, value: u8) {
         self.bits_3b = (self.bits_3b & !(0b00000001 << 3)) | ((value & 0b00000001) << 3);
     }
 
+    #[allow(identity_op)]
     pub fn is_enable_throw_following_fall_assist(&self) -> u8 {
         (self.bits_3b >> 4) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_is_enable_throw_following_fall_assist(&mut self, value: u8) {
         self.bits_3b = (self.bits_3b & !(0b00000001 << 4)) | ((value & 0b00000001) << 4);
     }
 
+    #[allow(identity_op)]
     pub fn is_enable_throw_following_feedback(&self) -> u8 {
         (self.bits_3b >> 5) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_is_enable_throw_following_feedback(&mut self, value: u8) {
         self.bits_3b = (self.bits_3b & !(0b00000001 << 5)) | ((value & 0b00000001) << 5);
     }
@@ -60434,6 +62340,7 @@ impl THROW_PARAM_ST {
     pub fn set_throw_following_end_easing_time(&mut self, value: f32) {
         self.throw_following_end_easing_time = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -60491,6 +62398,7 @@ impl TOUGHNESS_PARAM_ST {
     pub fn set_pro_correction_rate(&mut self, value: f32) {
         self.pro_correction_rate = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -60513,10 +62421,12 @@ pub struct TUTORIAL_PARAM_ST {
 }
 
 impl TUTORIAL_PARAM_ST {
+    #[allow(identity_op)]
     pub fn disable_param_nt(&self) -> u8 {
         (self.bits_0 >> 0) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_disable_param_nt(&mut self, value: u8) {
         self.bits_0 = (self.bits_0 & !(0b00000001 << 0)) | ((value & 0b00000001) << 0);
     }
@@ -60584,6 +62494,7 @@ impl TUTORIAL_PARAM_ST {
     pub fn set_display_time(&mut self, value: f32) {
         self.display_time = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -60629,6 +62540,7 @@ impl WAYPOINT_PARAM_ST {
     pub fn set_attribute4(&mut self, value: i16) {
         self.attribute4 = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -60829,6 +62741,7 @@ impl WEATHER_ASSET_CREATE_PARAM_ST {
     pub fn set_create_asset_limit_id3(&mut self, value: i8) {
         self.create_asset_limit_id3 = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -60977,6 +62890,7 @@ impl WEATHER_ASSET_REPLACE_PARAM_ST {
     pub fn set_create_asset_limit_id3(&mut self, value: i8) {
         self.create_asset_limit_id3 = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -61026,10 +62940,12 @@ pub struct WEATHER_LOT_PARAM_ST {
 }
 
 impl WEATHER_LOT_PARAM_ST {
+    #[allow(identity_op)]
     pub fn disable_param_nt(&self) -> u8 {
         (self.bits_0 >> 0) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_disable_param_nt(&mut self, value: u8) {
         self.bits_0 = (self.bits_0 & !(0b00000001 << 0)) | ((value & 0b00000001) << 0);
     }
@@ -61329,6 +63245,7 @@ impl WEATHER_LOT_PARAM_ST {
     pub fn set_timezone_end_minute(&mut self, value: u8) {
         self.timezone_end_minute = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -61346,10 +63263,12 @@ pub struct WEATHER_LOT_TEX_PARAM_ST {
 }
 
 impl WEATHER_LOT_TEX_PARAM_ST {
+    #[allow(identity_op)]
     pub fn disable_param_nt(&self) -> u8 {
         (self.bits_0 >> 0) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_disable_param_nt(&mut self, value: u8) {
         self.bits_0 = (self.bits_0 & !(0b00000001 << 0)) | ((value & 0b00000001) << 0);
     }
@@ -61385,6 +63304,7 @@ impl WEATHER_LOT_TEX_PARAM_ST {
     pub fn set_weather_log_id(&mut self, value: i32) {
         self.weather_log_id = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -61405,10 +63325,12 @@ pub struct WEATHER_LOT_TEX_PARAM_ST_DLC02 {
 }
 
 impl WEATHER_LOT_TEX_PARAM_ST_DLC02 {
+    #[allow(identity_op)]
     pub fn disable_param_nt(&self) -> u8 {
         (self.bits_0 >> 0) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_disable_param_nt(&mut self, value: u8) {
         self.bits_0 = (self.bits_0 & !(0b00000001 << 0)) | ((value & 0b00000001) << 0);
     }
@@ -61444,6 +63366,7 @@ impl WEATHER_LOT_TEX_PARAM_ST_DLC02 {
     pub fn set_weather_log_id(&mut self, value: i32) {
         self.weather_log_id = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -61605,6 +63528,7 @@ impl WEATHER_PARAM_ST {
     pub fn set_dist_view_weather_gparam_override_weight(&mut self, value: f32) {
         self.dist_view_weather_gparam_override_weight = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -61676,10 +63600,12 @@ pub struct WEP_ABSORP_POS_PARAM_ST {
 }
 
 impl WEP_ABSORP_POS_PARAM_ST {
+    #[allow(identity_op)]
     pub fn disable_param_nt(&self) -> u8 {
         (self.bits_0 >> 0) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_disable_param_nt(&mut self, value: u8) {
         self.bits_0 = (self.bits_0 & !(0b00000001 << 0)) | ((value & 0b00000001) << 0);
     }
@@ -62115,6 +64041,7 @@ impl WEP_ABSORP_POS_PARAM_ST {
     pub fn set_disp_pos_type_left_hang_3(&mut self, value: u8) {
         self.disp_pos_type_left_hang_3 = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -62200,6 +64127,7 @@ impl WET_ASPECT_PARAM_ST {
     pub fn set_shininess(&mut self, value: u8) {
         self.shininess = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -62244,6 +64172,7 @@ impl WHITE_SIGN_COOL_TIME_PARAM_ST {
     pub fn set_limitation_time_guardian_dried_finger(&mut self, value: f32) {
         self.limitation_time_guardian_dried_finger = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -62271,10 +64200,12 @@ pub struct WORLD_MAP_LEGACY_CONV_PARAM_ST {
 }
 
 impl WORLD_MAP_LEGACY_CONV_PARAM_ST {
+    #[allow(identity_op)]
     pub fn disable_param_nt(&self) -> u8 {
         (self.bits_0 >> 0) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_disable_param_nt(&mut self, value: u8) {
         self.bits_0 = (self.bits_0 & !(0b00000001 << 0)) | ((value & 0b00000001) << 0);
     }
@@ -62375,13 +64306,16 @@ impl WORLD_MAP_LEGACY_CONV_PARAM_ST {
         self.dst_pos_z = value;
     }
 
+    #[allow(identity_op)]
     pub fn is_base_point(&self) -> u8 {
         (self.bits_24 >> 0) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_is_base_point(&mut self, value: u8) {
         self.bits_24 = (self.bits_24 & !(0b00000001 << 0)) | ((value & 0b00000001) << 0);
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -62406,10 +64340,12 @@ pub struct WORLD_MAP_PIECE_PARAM_ST {
 }
 
 impl WORLD_MAP_PIECE_PARAM_ST {
+    #[allow(identity_op)]
     pub fn disable_param_nt(&self) -> u8 {
         (self.bits_0 >> 0) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_disable_param_nt(&mut self, value: u8) {
         self.bits_0 = (self.bits_0 & !(0b00000001 << 0)) | ((value & 0b00000001) << 0);
     }
@@ -62509,6 +64445,7 @@ impl WORLD_MAP_PIECE_PARAM_ST {
     pub fn set_acquisition_event_res_offset_y(&mut self, value: f32) {
         self.acquisition_event_res_offset_y = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -62530,10 +64467,12 @@ pub struct WORLD_MAP_PLACE_NAME_PARAM_ST {
 }
 
 impl WORLD_MAP_PLACE_NAME_PARAM_ST {
+    #[allow(identity_op)]
     pub fn disable_param_nt(&self) -> u8 {
         (self.bits_0 >> 0) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_disable_param_nt(&mut self, value: u8) {
         self.bits_0 = (self.bits_0 & !(0b00000001 << 0)) | ((value & 0b00000001) << 0);
     }
@@ -62601,6 +64540,7 @@ impl WORLD_MAP_PLACE_NAME_PARAM_ST {
     pub fn set_pos_z(&mut self, value: f32) {
         self.pos_z = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -62693,10 +64633,12 @@ pub struct WORLD_MAP_POINT_PARAM_ST {
 }
 
 impl WORLD_MAP_POINT_PARAM_ST {
+    #[allow(identity_op)]
     pub fn disable_param_nt(&self) -> u8 {
         (self.bits_0 >> 0) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_disable_param_nt(&mut self, value: u8) {
         self.bits_0 = (self.bits_0 & !(0b00000001 << 0)) | ((value & 0b00000001) << 0);
     }
@@ -62733,26 +64675,32 @@ impl WORLD_MAP_POINT_PARAM_ST {
         self.bgm_place_type = value;
     }
 
+    #[allow(identity_op)]
     pub fn is_area_icon(&self) -> u8 {
         (self.bits_10 >> 0) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_is_area_icon(&mut self, value: u8) {
         self.bits_10 = (self.bits_10 & !(0b00000001 << 0)) | ((value & 0b00000001) << 0);
     }
 
+    #[allow(identity_op)]
     pub fn is_override_dist_view_mark_pos(&self) -> u8 {
         (self.bits_10 >> 1) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_is_override_dist_view_mark_pos(&mut self, value: u8) {
         self.bits_10 = (self.bits_10 & !(0b00000001 << 1)) | ((value & 0b00000001) << 1);
     }
 
+    #[allow(identity_op)]
     pub fn is_enable_no_text(&self) -> u8 {
         (self.bits_10 >> 2) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_is_enable_no_text(&mut self, value: u8) {
         self.bits_10 = (self.bits_10 & !(0b00000001 << 2)) | ((value & 0b00000001) << 2);
     }
@@ -62789,26 +64737,32 @@ impl WORLD_MAP_POINT_PARAM_ST {
         self.cleared_event_flag_id = value;
     }
 
+    #[allow(identity_op)]
     pub fn disp_mask00(&self) -> u8 {
         (self.bits_18 >> 0) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_disp_mask00(&mut self, value: u8) {
         self.bits_18 = (self.bits_18 & !(0b00000001 << 0)) | ((value & 0b00000001) << 0);
     }
 
+    #[allow(identity_op)]
     pub fn disp_mask01(&self) -> u8 {
         (self.bits_18 >> 1) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_disp_mask01(&mut self, value: u8) {
         self.bits_18 = (self.bits_18 & !(0b00000001 << 1)) | ((value & 0b00000001) << 1);
     }
 
+    #[allow(identity_op)]
     pub fn disp_mask02(&self) -> u8 {
         (self.bits_18 >> 2) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_disp_mask02(&mut self, value: u8) {
         self.bits_18 = (self.bits_18 & !(0b00000001 << 2)) | ((value & 0b00000001) << 2);
     }
@@ -63348,6 +65302,7 @@ impl WORLD_MAP_POINT_PARAM_ST {
     pub fn set_text_disable_flag2_id8(&mut self, value: i32) {
         self.text_disable_flag2_id8 = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -63360,10 +65315,12 @@ pub struct WWISE_VALUE_TO_STR_CONVERT_PARAM_ST {
 }
 
 impl WWISE_VALUE_TO_STR_CONVERT_PARAM_ST {
+    #[allow(identity_op)]
     pub fn disable_param_nt(&self) -> u8 {
         (self.bits_0 >> 0) & 0b00000001
     }
 
+    #[allow(identity_op)]
     pub fn set_disable_param_nt(&mut self, value: u8) {
         self.bits_0 = (self.bits_0 & !(0b00000001 << 0)) | ((value & 0b00000001) << 0);
     }
@@ -63375,4 +65332,6 @@ impl WWISE_VALUE_TO_STR_CONVERT_PARAM_ST {
     pub fn set_param_str(&mut self, value: [u8; 32]) {
         self.param_str = value;
     }
+
 }
+
