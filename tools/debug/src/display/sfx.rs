@@ -22,10 +22,10 @@ impl DebugDisplay for GXFfxSceneCtrl {
         if ui.collapsing_header("Scene Ctrl", TreeNodeFlags::empty()) {
             ui.text(format!(
                 "graphics_resource_manager: {:#01x}",
-                self.graphics_resource_manager as *const _ as usize
+                self.graphics_resource_manager.as_ptr() as *const _ as usize
             ));
             ui.indent();
-            self.graphics_resource_manager.render_debug(ui);
+            unsafe { self.graphics_resource_manager.as_ref().render_debug(ui); }
             ui.unindent();
         }
     }

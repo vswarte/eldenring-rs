@@ -1,3 +1,5 @@
+use std::ptr::NonNull;
+
 use crate::{pointer::OwnedPtr, DoublyLinkedList};
 
 #[repr(C)]
@@ -35,5 +37,5 @@ pub struct GXFfxSceneCtrl {
     pub allocator: u64,
     pub ffx_manager: u64,
     unk: u64,
-    pub graphics_resource_manager: &'static mut GXFfxGraphicsResourceManager,
+    pub graphics_resource_manager: NonNull<GXFfxGraphicsResourceManager>,
 }
