@@ -84,7 +84,7 @@ checksum = "ace50bade8e6234aa140d9a2f552bbee1db4d353f69b8217bc503490fc1a9f26"
 
 [[package]]
 name = "binary-mapper"
-version = "0.5.0"
+version = "0.5.1"
 dependencies = [
  "clap",
  "memmap",
@@ -254,7 +254,7 @@ dependencies = [
 
 [[package]]
 name = "debug"
-version = "0.5.0"
+version = "0.5.1"
 dependencies = [
  "crash-handler",
  "eldenring",
@@ -292,7 +292,7 @@ checksum = "48c757948c5ede0e46177b7add2e67155f70e33c07fea8284df6576da70b3719"
 
 [[package]]
 name = "eldenring"
-version = "0.5.0"
+version = "0.5.1"
 dependencies = [
  "eldenring-dlrf",
  "nalgebra",
@@ -309,14 +309,14 @@ dependencies = [
 
 [[package]]
 name = "eldenring-dlrf"
-version = "0.5.0"
+version = "0.5.1"
 dependencies = [
  "eldenring-dlrf-derive",
 ]
 
 [[package]]
 name = "eldenring-dlrf-derive"
-version = "0.5.0"
+version = "0.5.1"
 dependencies = [
  "quote",
  "syn",
@@ -324,7 +324,7 @@ dependencies = [
 
 [[package]]
 name = "eldenring-util"
-version = "0.5.0"
+version = "0.5.1"
 dependencies = [
  "eldenring",
  "eldenring-dlrf",
@@ -631,6 +631,15 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "b15813163c1d831bf4a13c3610c05c0d03b39feb07f7e09fa234dac9b15aaf39"
 
 [[package]]
+name = "param-generator"
+version = "0.5.1"
+dependencies = [
+ "clap",
+ "quick-xml",
+ "serde",
+]
+
+[[package]]
 name = "parking_lot"
 version = "0.12.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -697,6 +706,16 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "a31971752e70b8b2686d7e46ec17fb38dad4051d94024c88df49b667caea9c84"
 dependencies = [
  "unicode-ident",
+]
+
+[[package]]
+name = "quick-xml"
+version = "0.37.3"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "bf763ab1c7a3aa408be466efc86efe35ed1bd3dd74173ed39d6b0d0a6f0ba148"
+dependencies = [
+ "memchr",
+ "serde",
 ]
 
 [[package]]

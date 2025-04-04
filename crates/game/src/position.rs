@@ -3,9 +3,7 @@
 /// The most notable ones probably are:
 /// - block position (which is how assets, regions, etc are placed)
 /// - "global" world position (which seems used primarily used by map cleanup and LOD code).
-/// - havok position (seems to be AABB broadphase space, often used where a lot of collision
-///       checking happens like the effective player position, the camera position,
-///       anything that needs raycasting, etc).
+/// - havok position (seems to be AABB broadphase space, often used where a lot of collision checking happens like the effective player position, the camera position, anything that needs raycasting, etc).
 /// - map position (positions on the in-game map, used for pins and the like).
 ///
 /// Converting from one space to another space usually requires some additional data about the new
@@ -112,6 +110,11 @@ impl Display for HavokPosition {
 #[repr(C)]
 #[derive(Debug, Clone, Copy, PartialEq)]
 pub struct PositionDelta(pub f32, pub f32, pub f32);
+
+/// A (potentially non-normal) directional vector.
+#[repr(C)]
+#[derive(Debug, Clone, Copy, PartialEq)]
+pub struct DirectionalVector(pub f32, pub f32, pub f32, pub f32);
 
 #[cfg(test)]
 mod test {

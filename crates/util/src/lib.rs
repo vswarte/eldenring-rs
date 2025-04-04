@@ -1,4 +1,5 @@
 pub mod arxan;
+pub mod bullet_manager;
 pub mod camera;
 pub mod character_debug_flags;
 pub mod character_type_properties;

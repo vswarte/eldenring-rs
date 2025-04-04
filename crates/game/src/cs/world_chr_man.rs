@@ -6,10 +6,10 @@ use std::ptr::NonNull;
 
 use vtable_rs::VPtr;
 
-use crate::cs::ChrIns;
 use crate::matrix::FSVector4;
 use crate::pointer::OwnedPtr;
 use crate::Tree;
+use crate::{cs::ChrIns, Vector};
 
 use super::{ChrCam, FieldInsHandle, MapId, NetChrSync, PlayerIns};
 
@@ -97,7 +97,17 @@ pub struct WorldChrMan {
     // tasks and other stuff
     // list of players by distance may be useful
     // see ghidra structure for reference
-    unk1ece8: [u8; 0x6f8],
+    unk1ece8: [u8; 0x4e8],
+    /// A list of ChrIns references sorted by distance to the main player.
+    pub chr_inses_by_distance: Vector<ChrInsDistanceEntry>,
+    unk1f1f0: [u8; 0x1f0],
+}
+
+#[repr(C)]
+pub struct ChrInsDistanceEntry {
+    pub chr_ins: NonNull<ChrIns>,
+    pub distance: f32,
+    _unkc: u32,
 }
 
 #[repr(C)]

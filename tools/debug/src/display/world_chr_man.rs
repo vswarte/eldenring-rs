@@ -119,6 +119,24 @@ impl DebugDisplay for WorldChrMan {
             .read_only(true)
             .build();
         }
+
+        if ui.collapsing_header("ChrInses by distance", TreeNodeFlags::empty()) {
+            ui.indent();
+            for entry in self.chr_inses_by_distance.items().iter() {
+                let distance = entry.distance;
+                let chr_ins = unsafe { entry.chr_ins.as_ref() };
+
+                if ui.collapsing_header(
+                    format!("ChrIns {} - {}", chr_ins.field_ins_handle, distance),
+                    TreeNodeFlags::empty(),
+                ) {
+                    ui.indent();
+                    chr_ins.render_debug(ui);
+                    ui.unindent();
+                }
+            }
+            ui.unindent();
+        }
     }
 }
 

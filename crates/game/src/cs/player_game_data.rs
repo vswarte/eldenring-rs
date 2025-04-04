@@ -308,7 +308,16 @@ impl ItemIdMapping {
 }
 
 impl InventoryItemsData {
-    pub fn normal_items(&self) -> &mut [EquipInventoryDataListEntry] {
+    pub fn normal_items(&self) -> &[EquipInventoryDataListEntry] {
+        unsafe {
+            std::slice::from_raw_parts(
+                self.normal_item_head.as_ptr(),
+                self.normal_item_count as usize,
+            )
+        }
+    }
+
+    pub fn normal_items_mut(&mut self) -> &mut [EquipInventoryDataListEntry] {
         unsafe {
             std::slice::from_raw_parts_mut(
                 self.normal_item_head.as_ptr(),
@@ -317,7 +326,13 @@ impl InventoryItemsData {
         }
     }
 
-    pub fn key_items(&self) -> &mut [EquipInventoryDataListEntry] {
+    pub fn key_items(&self) -> &[EquipInventoryDataListEntry] {
+        unsafe {
+            std::slice::from_raw_parts(self.key_item_head.as_ptr(), self.key_item_count as usize)
+        }
+    }
+
+    pub fn key_items_mut(&mut self) -> &mut [EquipInventoryDataListEntry] {
         unsafe {
             std::slice::from_raw_parts_mut(
                 self.key_item_head.as_ptr(),
@@ -326,7 +341,16 @@ impl InventoryItemsData {
         }
     }
 
-    pub fn secondary_key_items(&self) -> &mut [EquipInventoryDataListEntry] {
+    pub fn secondary_key_items(&self) -> &[EquipInventoryDataListEntry] {
+        unsafe {
+            std::slice::from_raw_parts(
+                self.secondary_key_item_head.as_ptr(),
+                self.secondary_key_item_count as usize,
+            )
+        }
+    }
+
+    pub fn secondary_key_items_mut(&mut self) -> &mut [EquipInventoryDataListEntry] {
         unsafe {
             std::slice::from_raw_parts_mut(
                 self.secondary_key_item_head.as_ptr(),

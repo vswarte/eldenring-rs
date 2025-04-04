@@ -27,7 +27,7 @@ impl AsRef<DLBasicString> for FD4BasicHashString {
 
 impl Display for FD4BasicHashString {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "{}", self)
+        write!(f, "{}", self.inner)
     }
 }
 
