@@ -230,7 +230,10 @@ pub trait DLFileOperatorVmt {
 
     fn cursor_position(&self) -> usize;
 
-    fn read_file(&mut self, output: *mut u8, length: usize) -> usize;
+    /// # Safety
+    ///
+    /// Caller must ensure that `output` is a pointer to valid memory.
+    unsafe fn read_file(&mut self, output: *mut u8, length: usize) -> usize;
 
     fn write_file(&mut self, input: *const u8, length: usize) -> usize;
 
@@ -527,7 +530,7 @@ where
         unimplemented!()
     }
 
-    extern "C" fn read_file(&mut self, output: *mut u8, length: usize) -> usize {
+    unsafe extern "C" fn read_file(&mut self, output: *mut u8, length: usize) -> usize {
         tracing::debug!("AdapterFileOperator::read_file({:x?}, {})", output, length);
         let mut buffer = vec![0x0u8; length];
         self.buffer.read_exact(&mut buffer).unwrap();

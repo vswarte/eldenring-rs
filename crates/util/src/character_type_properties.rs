@@ -42,7 +42,11 @@ pub static CHARACTER_TYPE_PROPERTIES: LazyLock<RwLock<CharacterPropertiesHolder>
 
         tracing::debug!("Found character properties pattern");
         RwLock::new(CharacterPropertiesHolder {
-            table: unsafe { transmute::<_, _>(program.rva_to_va(matches[1]).unwrap()) },
+            table: unsafe {
+                transmute::<u64, &mut CharacterTypePropertiesTable>(
+                    program.rva_to_va(matches[1]).unwrap(),
+                )
+            },
         })
     });
 

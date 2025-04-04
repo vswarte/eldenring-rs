@@ -48,7 +48,7 @@ impl DebugDisplay for ChrAsm {
         }
 
         for (i, e) in self.gaitem_handles.iter().enumerate() {
-            ui.text(format!("Gaitem handle {}: {}", i, e.to_string()));
+            ui.text(format!("Gaitem handle {}: {}", i, e));
         }
 
         for (i, e) in self.equipment_param_ids.iter().enumerate() {

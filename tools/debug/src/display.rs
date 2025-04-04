@@ -2,6 +2,7 @@ use dlrf::DLRFSingleton;
 use hudhook::imgui::{TreeNodeFlags, Ui};
 
 pub(crate) mod area_time;
+pub(crate) mod bullet_manager;
 pub(crate) mod camera;
 pub(crate) mod chr;
 pub(crate) mod dlio;

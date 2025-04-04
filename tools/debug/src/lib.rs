@@ -1,12 +1,13 @@
 use crash_handler::{make_crash_event, CrashContext, CrashEventResult, CrashHandler};
 use display::DebugDisplay;
 use game::cs::CSSfxImp;
+use game::cs::CSBulletManager;
 use game::cs::CSWindowImp;
 use game::cs::CSWorldSceneDrawParamManager;
 use game::cs::FieldArea;
 use hudhook::eject;
 use hudhook::hooks::dx12::ImguiDx12Hooks;
-use hudhook::imgui;
+use hudhook::imgui::Condition;
 use hudhook::imgui::*;
 use hudhook::windows::Win32::Foundation::HINSTANCE;
 use hudhook::Hudhook;
@@ -35,6 +36,8 @@ use util::system::wait_for_system_init;
 mod display;
 mod rva;
 
+/// # Safety
+/// This is exposed this way such that libraryloader can call it. Do not call this yourself.
 #[no_mangle]
 pub unsafe extern "C" fn DllMain(hmodule: HINSTANCE, reason: u32) -> bool {
     if reason == 1 {
@@ -103,11 +106,11 @@ impl ImguiRenderLoop for EldenRingDebugGui {
     }
 
     fn render(&mut self, ui: &mut Ui) {
-        let program = unsafe { Program::current() };
+        let program = Program::current();
 
         ui.window("Elden Ring Rust Bindings Debug")
-            .position([0., 0.], imgui::Condition::FirstUseEver)
-            .size(self.size, imgui::Condition::FirstUseEver)
+            .position([0., 0.], Condition::FirstUseEver)
+            .size(self.size, Condition::FirstUseEver)
             .build(|| {
                 ui.set_window_font_scale(self.scale);
                 let tabs = ui.tab_bar("main-tabs").unwrap();
@@ -131,6 +134,7 @@ impl ImguiRenderLoop for EldenRingDebugGui {
                     render_debug_singleton::<WorldChrMan>(&ui);
                     render_debug_singleton::<CSWorldGeomMan>(&ui);
                     render_debug_singleton::<WorldAreaTime>(&ui);
+                    render_debug_singleton::<CSBulletManager>(&ui);
                     item.end();
                 }
 

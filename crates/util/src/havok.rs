@@ -43,7 +43,7 @@ impl CSPhysWorldExt for CSPhysWorld {
         };
 
         let mut result = HavokPosition(0.0, 0.0, 0.0, 0.0);
-        let mut extent = HavokPosition(delta.0, delta.1, delta.2, 0.0);
+        let extent = HavokPosition(delta.0, delta.1, delta.2, 0.0);
         if target(self, filter, origin, &extent, &mut result, owner) {
             Some(result)
         } else {

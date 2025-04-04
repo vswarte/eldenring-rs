@@ -55,6 +55,7 @@ impl CSTaskImpExt for CSTaskImp {
         let register_task: extern "C" fn(&CSTaskImp, CSTaskGroupIndex, &RecurringTask) =
             unsafe { std::mem::transmute(*REGISTER_TASK_VA) };
 
+        #[allow(clippy::arc_with_non_send_sync)]
         let task: Arc<RecurringTask> = Arc::new(task.into());
         // SAFETY: we hold a unique reference to the contents of `arc`
         unsafe {

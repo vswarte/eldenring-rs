@@ -20,7 +20,7 @@ pub struct FD4ParamResCap {
     /// Size of data at pointer.
     pub size: u64,
     /// Raw row data for this param file.
-    pub data: Option<OwnedPtr<ParamFileHeader>>,
+    pub data: OwnedPtr<ParamData>,
 }
 
 impl AsRef<FD4ResCap<Self>> for FD4ParamResCap {
@@ -29,10 +29,70 @@ impl AsRef<FD4ResCap<Self>> for FD4ParamResCap {
     }
 }
 
+#[repr(C)]
+pub struct ParamData {
+    pub header: ParamFileHeader,
+}
+
+impl ParamData {
+    pub fn row_descriptors(&self) -> &[ParamRowDescriptor] {
+        unsafe {
+            // The row descriptors are right after the header.
+            std::slice::from_raw_parts(
+                (self as *const _ as usize + size_of::<ParamFileHeader>()) as *const _,
+                self.header.row_count as usize,
+            )
+        }
+    }
+
+    /// Retrieve a param entry by its ID and type.
+    ///
+    /// # Safety
+    /// Caller has to ensure that the param type passed to T is valid for the param file.
+    pub unsafe fn get<T: Sized>(&self, id: u32) -> Option<&T> {
+        let offset = self
+            .row_descriptors()
+            .iter()
+            .find(|r| r.id == id)?
+            .data_offset;
+
+        unsafe { Some(&*((self as *const _ as usize + offset) as *const T)) }
+    }
+
+    /// Retrieve a param entry mutable by its ID and type.
+    ///
+    /// # Safety
+    /// Caller has to ensure that the param type passed to T is valid for the param file.
+    pub unsafe fn get_mut<T: Sized>(&mut self, id: u32) -> Option<&mut T> {
+        let offset = self
+            .row_descriptors()
+            .iter()
+            .find(|r| r.id == id)?
+            .data_offset;
+
+        unsafe { Some(&mut *((self as *const _ as usize + offset) as *mut T)) }
+    }
+}
+
+#[repr(C)]
 pub struct ParamFileHeader {
     name_offset: u32,
-    data_offset: u16,
-    unk6: u16,
+    unk4: u32,
     pub paramdef_version: u16,
     pub row_count: u16,
+    unkc: u32,
+    unk10: u64,
+    unk18: u64,
+    unk20: u64,
+    unk28: u64,
+    data_offset: u64,
+    unk38: u64,
+}
+
+#[repr(C)]
+pub struct ParamRowDescriptor {
+    pub id: u32,
+    _pad4: u32,
+    pub data_offset: usize,
+    pub name_offset: usize,
 }

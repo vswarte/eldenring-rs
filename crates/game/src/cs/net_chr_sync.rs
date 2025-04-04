@@ -38,11 +38,19 @@ pub struct NetChrSetSync {
 }
 
 impl NetChrSetSync {
-    pub fn update_flags(&self) -> &mut [ChrSyncUpdateFlags] {
+    pub fn update_flags(&self) -> &[ChrSyncUpdateFlags] {
+        unsafe { std::slice::from_raw_parts(self.update_flags, self.capacity as usize) }
+    }
+
+    pub fn health_updates(&self) -> &[ChrSyncHealthUpdate] {
+        unsafe { std::slice::from_raw_parts(self.health_readback_values, self.capacity as usize) }
+    }
+
+    pub fn update_flags_mut(&mut self) -> &mut [ChrSyncUpdateFlags] {
         unsafe { std::slice::from_raw_parts_mut(self.update_flags, self.capacity as usize) }
     }
 
-    pub fn health_updates(&self) -> &mut [ChrSyncHealthUpdate] {
+    pub fn health_updates_mut(&mut self) -> &mut [ChrSyncHealthUpdate] {
         unsafe {
             std::slice::from_raw_parts_mut(self.health_readback_values, self.capacity as usize)
         }
