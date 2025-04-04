@@ -819,6 +819,8 @@ pub struct PlayerSessionHolder {
 
 #[repr(i32)]
 #[derive(Clone, Debug, PartialEq, Eq, Hash)]
+/// All known character types listed here.
+/// Some of them are only used in previous games, but are still present in the code.
 pub enum ChrType {
     None = -1,
     Local = 0,
@@ -834,27 +836,4 @@ pub enum ChrType {
     Invader2 = 16,
     BluePhantom = 17,
     Invader3 = 18,
-    Unknown(i32),
-}
-
-impl From<ChrType> for i32 {
-    fn from(val: ChrType) -> Self {
-        match val {
-            ChrType::None => -1,
-            ChrType::Local => 0,
-            ChrType::WhitePhantom => 1,
-            ChrType::BlackPhantom => 2,
-            ChrType::Ghost => 3,
-            ChrType::Ghost1 => 4,
-            ChrType::Npc => 5,
-            ChrType::GrayPhantom => 8,
-            ChrType::Arena => 13,
-            ChrType::Quickmatch => 14,
-            ChrType::Invader => 15,
-            ChrType::Invader2 => 16,
-            ChrType::BluePhantom => 17,
-            ChrType::Invader3 => 18,
-            ChrType::Unknown(i) => i,
-        }
-    }
 }
