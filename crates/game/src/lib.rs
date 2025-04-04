@@ -13,6 +13,7 @@ pub mod dltx;
 pub mod dlut;
 pub mod fd4;
 pub mod ffx;
+pub mod gxffx;
 pub mod matrix;
 pub mod param;
 pub mod pointer;

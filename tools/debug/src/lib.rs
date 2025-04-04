@@ -1,4 +1,6 @@
+use crash_handler::{make_crash_event, CrashContext, CrashEventResult, CrashHandler};
 use display::DebugDisplay;
+use game::cs::CSSfxImp;
 use game::cs::CSBulletManager;
 use game::cs::CSWindowImp;
 use game::cs::CSWorldSceneDrawParamManager;
@@ -43,6 +45,20 @@ pub unsafe extern "C" fn DllMain(hmodule: HINSTANCE, reason: u32) -> bool {
 
         let appender = tracing_appender::rolling::never("./", "chains-debug.log");
         tracing_subscriber::fmt().with_writer(appender).init();
+
+        let handler = CrashHandler::attach(unsafe {
+            make_crash_event(move |context: &CrashContext| {
+                tracing::error!(
+                    "Exception: {:x} at {:x}",
+                    context.exception_code,
+                    (*(*context.exception_pointers).ExceptionRecord).ExceptionAddress as usize
+                );
+
+                CrashEventResult::Handled(false)
+            })
+        })
+        .unwrap();
+        std::mem::forget(handler);
 
         std::thread::spawn(move || {
             wait_for_system_init(5000).expect("Timeout waiting for system init");
@@ -139,6 +155,11 @@ impl ImguiRenderLoop for EldenRingDebugGui {
                     render_debug_singleton::<CSCamera>(&ui);
                     render_debug_singleton::<CSFade>(&ui);
                     render_debug_singleton::<CSWorldSceneDrawParamManager>(&ui);
+                    item.end();
+                }
+
+                if let Some(item) = ui.tab_item("SFX") {
+                    render_debug_singleton::<CSSfxImp>(&ui);
                     item.end();
                 }
                 tabs.end();

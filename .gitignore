@@ -1,2 +1,4 @@
 /target
-rates/game/target
+desktop.ini
+.vscode/
+crates/game/target

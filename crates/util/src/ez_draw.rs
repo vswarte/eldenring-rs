@@ -2,6 +2,7 @@ use game::{
     cs::CSEzDraw,
     matrix::FSVector4,
     position::{HavokPosition, PositionDelta},
+    rotation::EulerAngles,
 };
 use pelite::pe64::Pe;
 
