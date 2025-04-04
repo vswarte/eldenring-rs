@@ -18,7 +18,7 @@ pub struct FxrListNode {
 #[repr(C)]
 pub struct FxrResourceContainer {
     pub allocator1: u64,
-    pub scene_ctrl: u64,
+    pub scene_ctrl: OwnedPtr<GXFfxSceneCtrl>,
     unk10: u64,
     pub fxr_definitions: DoublyLinkedList<FxrListNode>,
 }

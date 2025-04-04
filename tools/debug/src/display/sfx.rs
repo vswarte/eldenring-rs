@@ -36,6 +36,7 @@ impl DebugDisplay for GXFfxGraphicsResourceManager {
         if ui.collapsing_header("Graphics Resource Manager", TreeNodeFlags::empty()) {
             ui.indent();
             render_graphics_resource_manager(
+                &self.resource_container.scene_ctrl,
                 self.resource_container.fxr_definitions.iter().map(|f| f),
                 ui,
             );
@@ -46,9 +47,12 @@ impl DebugDisplay for GXFfxGraphicsResourceManager {
 
 // TODO: Address crashing
 fn render_graphics_resource_manager<'a>(
+    fx_resource_container_scene_ctrl: &'a GXFfxSceneCtrl,
     fxr_nodes: impl Iterator<Item = &'a FxrListNode>,
     ui: &&mut Ui,
 ) {
+    ui.text(format!("fx_resource_container_scene_ctrl {:#x}", fx_resource_container_scene_ctrl as *const _ as usize));
+
     if let Some(_t) = ui.begin_table_header(
         "gx-ffx-graphics-resource-manager",
         [
