@@ -57,7 +57,7 @@ pub enum CSWindowType {
     Borderless = 2,
 }
 
-#[repr(C)]
+#[repr(u32)]
 pub enum QualityLevelSetting {
     Low = 0,
     Medium = 1,
@@ -65,7 +65,7 @@ pub enum QualityLevelSetting {
     Maximum = 3,
 }
 
-#[repr(C)]
+#[repr(u32)]
 pub enum ToggleableGraphicsQuality {
     Off = 0,
     Low = 1,
@@ -74,13 +74,13 @@ pub enum ToggleableGraphicsQuality {
     Maximum = 4,
 }
 
-#[repr(C)]
+#[repr(u32)]
 pub enum OnOffSetting {
     Off = 0,
     On = 1,
 }
 
-#[repr(C)]
+#[repr(u32)]
 pub enum FpsTarget {
     FPS30 = 0,
     FPS60 = 1,
@@ -88,7 +88,7 @@ pub enum FpsTarget {
     FPS120 = 3,
 }
 
-#[repr(C)]
+#[repr(u32)]
 pub enum QualitySetting {
     Low = 1,
     Medium = 2,
