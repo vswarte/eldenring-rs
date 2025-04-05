@@ -1,21 +1,20 @@
-use windows::{
-    core::PCWSTR,
-    Win32::Foundation::{HINSTANCE, HWND},
-};
+use windows::core::PCWSTR;
 
 #[repr(C)]
 /// Source of name: RTTI
 #[dlrf::singleton("CSWindow")]
 pub struct CSWindowImp {
     vftable: usize,
-    pub window_handle: HWND,
+    pub window_handle: isize,
     pub lp_window_name: PCWSTR,
     pub lp_class_name: PCWSTR,
     pub screen_pos_x: i32,
     pub screen_pos_y: i32,
     pub screen_width: i32,
     pub screen_height: i32,
-    pub h_instance: HINSTANCE,
+    /// hInstance from WinMain, used to interact with windows api
+    /// E.g. CreateWindowExW
+    pub window_module_handle: isize,
     screen_mode_ctrl: usize,
     unk40: [u8; 0x2c],
     pub runtime_window_config: CSWindowScreenConfig,
