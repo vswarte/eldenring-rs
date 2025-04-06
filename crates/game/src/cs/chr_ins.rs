@@ -819,8 +819,8 @@ pub struct PlayerSessionHolder {
 
 #[repr(i32)]
 #[derive(Clone, Debug, PartialEq, Eq, Hash)]
-/// All known character types listed here.
-/// Some of them are only used in previous games, but are still present in the code.
+/// Role of character in PvP/PvE.
+/// Changes a lot of things, like appearance, what items you can use, etc.
 pub enum ChrType {
     None = -1,
     Local = 0,
