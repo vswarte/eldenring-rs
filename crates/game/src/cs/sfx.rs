@@ -15,7 +15,7 @@ pub struct CSSfxImp {
     unk48: usize,
     unk50: usize,
     unk58: usize,
-    unk60: usize,
+    pub scene_ctrl: OwnedPtr<GXFfxSceneCtrl>,
     unk68: usize,
     unk70: usize,
     unk78: usize,
@@ -51,5 +51,15 @@ pub struct CSSfxImp {
     unk12f: bool,
     pub debug_spawn_ffx_id: u32,
     pub debug_spawn_distance_from_camera: f32,
-    unk137: [u8; 0x178]
+    unk138: [u8; 0x178],
+}
+
+#[cfg(test)]
+mod test {
+    use crate::cs::CSSfxImp;
+
+    #[test]
+    fn proper_sizes() {
+        assert_eq!(0x2b0, size_of::<CSSfxImp>());
+    }
 }
