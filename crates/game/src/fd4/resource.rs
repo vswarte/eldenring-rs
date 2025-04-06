@@ -85,7 +85,6 @@ where
 /// |                  |                  |                 |
 /// +------------------+------------------+-----------------+--------------....
 ///
-/// Source of name: DLRF reflection data
 #[repr(C)]
 pub struct FD4ResCapHolder<T>
 where
@@ -103,31 +102,116 @@ impl<T> FD4ResCapHolder<T>
 where
     T: AsRef<FD4ResCap<T>>,
 {
-    pub fn entries<'a>(&'a self) -> impl Iterator<Item = &'a T>
-    where
-        T: 'a,
-    {
-        let bucket_base = self.buckets;
-        let mut current_element = unsafe { bucket_base.as_ref() };
+    /// Immutable iterator over entries.
+    pub fn entries<'a>(&'a self) -> impl Iterator<Item = &'a T> + 'a {
+        // For immutable iteration we can store the current chain pointer (if any)
+        // and an index into the bucket array.
+        struct Iter<'a, T: AsRef<FD4ResCap<T>>> {
+            buckets_ptr: *const Option<NonNull<T>>,
+            bucket_count: usize,
+            current_bucket: usize,
+            current_ptr: Option<NonNull<T>>,
+            _marker: std::marker::PhantomData<&'a T>,
+        }
 
-        let bucket_count = self.bucket_count as isize;
-        let mut current_bucket = 0isize;
-
-        std::iter::from_fn(move || unsafe {
-            // Find first non-empty bucket
-            while current_element.is_none() && current_bucket < bucket_count - 1 {
-                current_bucket += 1;
-                current_element = bucket_base.offset(current_bucket).as_ref();
+        impl<'a, T> Iterator for Iter<'a, T>
+        where
+            T: AsRef<FD4ResCap<T>>,
+        {
+            type Item = &'a T;
+            fn next(&mut self) -> Option<Self::Item> {
+                unsafe {
+                    // If there is no current pointer, try to advance to the next bucket.
+                    while self.current_ptr.is_none() && self.current_bucket < self.bucket_count {
+                        let bucket = *self.buckets_ptr.add(self.current_bucket);
+                        self.current_bucket += 1;
+                        if bucket.is_some() {
+                            self.current_ptr = bucket;
+                            break;
+                        }
+                    }
+                    // If we have an element, yield it and update current_ptr from its chain.
+                    if let Some(ptr) = self.current_ptr {
+                        let item = ptr.as_ref();
+                        // Copy the next pointer (avoiding borrowing the field)
+                        let next = item.as_ref().next_item;
+                        self.current_ptr = next;
+                        Some(item)
+                    } else {
+                        None
+                    }
+                }
             }
+        }
 
-            if let Some(element) = current_element {
-                let cap: &FD4ResCap<T> = element.as_ref().as_ref();
-                current_element = &cap.next_item;
-                Some(element.as_ref())
-            } else {
-                None
+        let buckets_ptr = self.buckets.as_ptr() as *const Option<NonNull<T>>;
+        let bucket_count = self.bucket_count as usize;
+        Iter {
+            buckets_ptr,
+            bucket_count,
+            current_bucket: 0,
+            current_ptr: None,
+            _marker: std::marker::PhantomData,
+        }
+    }
+}
+
+impl<T> FD4ResCapHolder<T>
+where
+    T: AsRef<FD4ResCap<T>> + AsMut<FD4ResCap<T>>,
+{
+    pub fn entries_mut<'a>(&'a mut self) -> impl Iterator<Item = &'a mut T> + 'a {
+        struct IterMut<'a, T: AsMut<FD4ResCap<T>> + AsRef<FD4ResCap<T>>> {
+            buckets_ptr: *const Option<NonNull<T>>,
+            bucket_count: usize,
+            current_bucket: usize,
+            current_ptr: Option<NonNull<T>>,
+            _marker: std::marker::PhantomData<&'a mut T>,
+        }
+
+        impl<'a, T> Iterator for IterMut<'a, T>
+        where
+            T: AsRef<FD4ResCap<T>> + AsMut<FD4ResCap<T>>,
+        {
+            type Item = &'a mut T;
+            fn next(&mut self) -> Option<Self::Item> {
+                unsafe {
+                    // If there's no current chain element, advance to the next bucket.
+                    while self.current_ptr.is_none() && self.current_bucket < self.bucket_count {
+                        let bucket = *self.buckets_ptr.add(self.current_bucket);
+                        self.current_bucket += 1;
+                        if bucket.is_some() {
+                            self.current_ptr = bucket;
+                            break;
+                        }
+                    }
+                    // If we have an element, yield it and update from its chain.
+                    if let Some(mut ptr) = self.current_ptr {
+                        // Obtain a mutable reference from the pointer.
+                        // This is safe because our iterator holds unique access.
+                        let item = ptr.as_mut();
+                        // Copy out the next pointer.
+                        let next = item.as_mut().next_item;
+                        self.current_ptr = next;
+                        Some(item)
+                    } else {
+                        None
+                    }
+                }
             }
-        })
+        }
+
+        // Note: Although self.buckets is stored as NonNull<Option<NonNull<T>>>,
+        // we only need its pointer for bucket iteration.
+        let buckets_ptr = self.buckets.as_ptr() as *const Option<NonNull<T>>;
+        let bucket_count = self.bucket_count as usize;
+        IterMut {
+            buckets_ptr,
+            bucket_count,
+            current_bucket: 0,
+            current_ptr: None,
+            _marker: std::marker::PhantomData,
+        }
     }
 }
 

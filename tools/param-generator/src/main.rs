@@ -23,7 +23,12 @@ fn main() -> io::Result<()> {
     let input_path = Path::new(&args.input);
     let mut output = String::new();
 
-    output.push_str("/// THIS FILE IS GENERATED FROM THE PARAM DEFS, DO NOT EDIT IT DIRECTLY\n\n");
+    output.push_str("//! THIS FILE IS GENERATED FROM THE PARAM DEFS, DO NOT EDIT IT DIRECTLY\n\n");
+
+    output.push_str("/// Trait to perform safe param lookups.\n");
+    output.push_str("pub trait ParamDef {\n");
+    output.push_str("    const NAME: &str;\n");
+    output.push_str("}\n\n");
 
     for entry in fs::read_dir(input_path)? {
         let entry = entry?;
@@ -61,6 +66,7 @@ fn generate_code(def: &StructDef) -> String {
     code.push_str("#[derive(Debug, Clone)]\n");
     code.push_str("#[allow(non_camel_case_types)]\n");
     code.push_str("#[repr(C)]\n");
+
     code.push_str(&format!("pub struct {} {{\n", def.name));
     for unit in def.layout.iter() {
         match &unit.field_type {
@@ -92,6 +98,10 @@ fn generate_code(def: &StructDef) -> String {
             }
         }
     }
+    code.push_str("}\n\n");
+
+    code.push_str(&format!("impl ParamDef for {} {{\n", def.name));
+    code.push_str(&format!("    const NAME: &str = \"{}\";\n", def.name));
     code.push_str("}\n\n");
 
     code.push_str(&format!("impl {} {{\n", def.name));
