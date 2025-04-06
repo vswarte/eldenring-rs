@@ -1,5 +1,8 @@
-use game::cs::{CSSessionManager, CSSessionManagerPlayerEntry};
-use hudhook::imgui::{TreeNodeFlags, Ui};
+use game::cs::{
+    CSSessionManager, CSSessionManagerPlayerEntry, CSSessionManagerPlayerEntryBase,
+    CSStayInMultiplayAreaWarpData,
+};
+use hudhook::imgui::{TableColumnSetup, TreeNodeFlags, Ui};
 
 use super::DebugDisplay;
 
@@ -22,10 +25,21 @@ impl DebugDisplay for CSSessionManager {
             self.host_player.render_debug(ui);
             ui.unindent();
         }
+
+        if self.stay_in_multiplay_area_warp_data.is_some()
+            && ui.collapsing_header("Stay in Multiplay Area Warp Data", TreeNodeFlags::empty())
+        {
+            ui.indent();
+            self.stay_in_multiplay_area_warp_data
+                .as_ref()
+                .unwrap()
+                .render_debug(ui);
+            ui.unindent();
+        }
     }
 }
 
-impl DebugDisplay for CSSessionManagerPlayerEntry {
+impl DebugDisplay for CSSessionManagerPlayerEntryBase {
     fn render_debug(&self, ui: &&mut Ui) {
         ui.input_text("Steam Name", &mut self.steam_name.to_string())
             .read_only(true)
@@ -33,5 +47,59 @@ impl DebugDisplay for CSSessionManagerPlayerEntry {
         ui.input_text("Steam ID", &mut self.steam_id.to_string())
             .read_only(true)
             .build();
+    }
+}
+
+impl DebugDisplay for CSSessionManagerPlayerEntry {
+    fn render_debug(&self, ui: &&mut Ui) {
+        self.base.render_debug(ui);
+        ui.text(format!("Game data index: {}", self.game_data_index));
+        ui.text(format!("Is host: {}", self.is_host));
+    }
+}
+
+impl DebugDisplay for CSStayInMultiplayAreaWarpData {
+    fn render_debug(&self, ui: &&mut Ui) {
+        ui.text(format!(
+            "Multiplay Start Area ID: {}",
+            self.multiplay_start_area_id
+        ));
+        ui.text(format!("Saved Map ID: {}", self.saved_map_id));
+        ui.text(format!(
+            "Saved Position: ({}, {}, {})",
+            self.saved_position.0, self.saved_position.1, self.saved_position.2
+        ));
+        if ui.collapsing_header("Fade out tracker", TreeNodeFlags::empty()) {
+            ui.indent();
+            if let Some(_t) = ui.begin_table_header(
+                "session-manager-fade-out-tracker",
+                [
+                    TableColumnSetup::new("Index"),
+                    TableColumnSetup::new("Steam ID"),
+                    TableColumnSetup::new("Fade time"),
+                ],
+            ) {
+                self.player_fade_tracker
+                    .items()
+                    .iter()
+                    .enumerate()
+                    .for_each(|(index, item)| {
+                        ui.table_next_column();
+                        ui.text(index.to_string());
+                        ui.table_next_column();
+                        ui.text(item.steam_id.to_string());
+                        ui.table_next_column();
+                        ui.text(item.fade_time.to_string());
+                    });
+            }
+            ui.unindent();
+        }
+
+        ui.text(format!("Warp Request Delay: {}", self.warp_request_delay));
+        ui.text(format!(
+            "Disable Multiplay Restriction: {}",
+            self.disable_multiplay_restriction
+        ));
+        ui.text(format!("Is Warp Possible: {}", self.is_warp_possible));
     }
 }

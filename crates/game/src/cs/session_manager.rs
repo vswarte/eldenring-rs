@@ -101,6 +101,7 @@ pub struct CSSessionManager {
     unk17b: u8,
     unk17c: u32,
     player_data_man: usize,
+    /// Object, used to warp players back to the latest valid multiplay area in case they step out of it.
     pub stay_in_multiplay_area_warp_data: Option<OwnedPtr<CSStayInMultiplayAreaWarpData>>,
     protocol_state_1_timeout: FD4Time,
     protocol_state_2_timeout: FD4Time,
@@ -205,6 +206,7 @@ pub struct StayInMultiplayFadeTrackerEntry {
 }
 
 #[repr(C)]
+/// Object used to warp players back to the latest valid multiplay area in case they step out of it.
 pub struct CSStayInMultiplayAreaWarpData {
     /// Vector of remote player warp trackers.
     /// Used to check when player rendering should be disabled using bitflag on ChrIns at 0x1c5.
