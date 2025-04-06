@@ -15,7 +15,6 @@ tracing.workspace = true
 tracing-subscriber = "0.3"
 tracing-appender = "0.2.3"
 tracing-panic = "0.1"
-crash-handler = "0.6"
 
 
 [dependencies.hudhook]

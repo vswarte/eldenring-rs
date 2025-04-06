@@ -1,8 +1,7 @@
 use game::{
     cs::CSEzDraw,
     matrix::FSVector4,
-    position::{HavokPosition, PositionDelta},
-    rotation::EulerAngles,
+    position::{HavokPosition, PositionDelta}
 };
 use pelite::pe64::Pe;
 
