@@ -1,6 +1,6 @@
 use display::DebugDisplay;
-use game::cs::CSSfxImp;
 use game::cs::CSBulletManager;
+use game::cs::CSSfxImp;
 use game::cs::CSWindowImp;
 use game::cs::CSWorldSceneDrawParamManager;
 use game::cs::FieldArea;

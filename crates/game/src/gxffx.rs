@@ -42,7 +42,9 @@ pub struct GXFfxSceneCtrl {
 
 #[cfg(test)]
 mod test {
-    use crate::gxffx::{FxrWrapper, FxrListNode, FxrResourceContainer, GXFfxGraphicsResourceManager, GXFfxSceneCtrl};
+    use crate::gxffx::{
+        FxrListNode, FxrResourceContainer, FxrWrapper, GXFfxGraphicsResourceManager, GXFfxSceneCtrl,
+    };
     use std::mem::size_of;
 
     #[test]

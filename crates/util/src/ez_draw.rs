@@ -1,7 +1,7 @@
 use game::{
     cs::CSEzDraw,
     matrix::FSVector4,
-    position::{HavokPosition, PositionDelta}
+    position::{HavokPosition, PositionDelta},
 };
 use pelite::pe64::Pe;
 

@@ -25,7 +25,9 @@ impl DebugDisplay for GXFfxSceneCtrl {
                 self.graphics_resource_manager.as_ptr() as *const _ as usize
             ));
             ui.indent();
-            unsafe { self.graphics_resource_manager.as_ref().render_debug(ui); }
+            unsafe {
+                self.graphics_resource_manager.as_ref().render_debug(ui);
+            }
             ui.unindent();
         }
     }
@@ -36,7 +38,7 @@ impl DebugDisplay for GXFfxGraphicsResourceManager {
         if ui.collapsing_header("Graphics Resource Manager", TreeNodeFlags::empty()) {
             ui.indent();
             render_graphics_resource_manager(
-                unsafe {&self.resource_container.scene_ctrl.as_ref()},
+                unsafe { &self.resource_container.scene_ctrl.as_ref() },
                 self.resource_container.fxr_definitions.iter().map(|f| f),
                 ui,
             );
@@ -51,7 +53,10 @@ fn render_graphics_resource_manager<'a>(
     fxr_nodes: impl Iterator<Item = &'a FxrListNode>,
     ui: &&mut Ui,
 ) {
-    ui.text(format!("fx_resource_container_scene_ctrl {:#x}", fx_resource_container_scene_ctrl as *const _ as usize));
+    ui.text(format!(
+        "fx_resource_container_scene_ctrl {:#x}",
+        fx_resource_container_scene_ctrl as *const _ as usize
+    ));
 
     if let Some(_t) = ui.begin_table_header(
         "gx-ffx-graphics-resource-manager",
