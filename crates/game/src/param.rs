@@ -1,5 +1,10 @@
 /// THIS FILE IS GENERATED FROM THE PARAM DEFS, DO NOT EDIT IT DIRECTLY
 
+/// Trait to perform safe param lookups.
+pub trait ParamDef {
+    const NAME: &str;
+}
+
 #[derive(Debug, Clone)]
 #[allow(non_camel_case_types)]
 #[repr(C)]
@@ -28,6 +33,10 @@ pub struct ACTIONBUTTON_PARAM_ST {
     override_action_button_id_for_ride: i32,
     exec_invalid_time: f32,
     padding6: [u8; 28],
+}
+
+impl ParamDef for ACTIONBUTTON_PARAM_ST {
+    const NAME: &str = "ACTIONBUTTON_PARAM_ST";
 }
 
 impl ACTIONBUTTON_PARAM_ST {
@@ -222,6 +231,7 @@ impl ACTIONBUTTON_PARAM_ST {
     pub fn set_exec_invalid_time(&mut self, value: f32) {
         self.exec_invalid_time = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -334,6 +344,10 @@ pub struct AI_ANIM_TBL_PARAM {
     bits_c1: u8,
     bits_c2: u8,
     pad0: [u8; 13],
+}
+
+impl ParamDef for AI_ANIM_TBL_PARAM {
+    const NAME: &str = "AI_ANIM_TBL_PARAM";
 }
 
 impl AI_ANIM_TBL_PARAM {
@@ -1356,6 +1370,7 @@ impl AI_ANIM_TBL_PARAM {
     pub fn set_atk29_atk_dist_type(&mut self, value: u8) {
         self.bits_c2 = (self.bits_c2 & !(0b00001111 << 1)) | ((value & 0b00001111) << 1);
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -1409,6 +1424,10 @@ pub struct AI_ATTACK_PARAM_ST {
     max_arrive_distance: f32,
     combo_exec_distance: f32,
     combo_exec_range: f32,
+}
+
+impl ParamDef for AI_ATTACK_PARAM_ST {
+    const NAME: &str = "AI_ATTACK_PARAM_ST";
 }
 
 impl AI_ATTACK_PARAM_ST {
@@ -1779,6 +1798,7 @@ impl AI_ATTACK_PARAM_ST {
     pub fn set_combo_exec_range(&mut self, value: f32) {
         self.combo_exec_range = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -1886,6 +1906,10 @@ pub struct AI_ODDS_PARAM {
     act98: u8,
     act99: u8,
     pad0: [u8; 12],
+}
+
+impl ParamDef for AI_ODDS_PARAM {
+    const NAME: &str = "AI_ODDS_PARAM";
 }
 
 impl AI_ODDS_PARAM {
@@ -2688,6 +2712,7 @@ impl AI_ODDS_PARAM {
     pub fn set_act99(&mut self, value: u8) {
         self.act99 = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -2706,6 +2731,10 @@ pub struct AI_SOUND_PARAM_ST {
     ai_sound_level: u8,
     replaning_state: u8,
     pad1: [u8; 6],
+}
+
+impl ParamDef for AI_SOUND_PARAM_ST {
+    const NAME: &str = "AI_SOUND_PARAM_ST";
 }
 
 impl AI_SOUND_PARAM_ST {
@@ -2828,6 +2857,7 @@ impl AI_SOUND_PARAM_ST {
     pub fn set_replaning_state(&mut self, value: u8) {
         self.replaning_state = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -2874,6 +2904,10 @@ pub struct AI_STANDARD_INFO_BANK {
     attack4_cone_angle: u8,
     reserve13: [u8; 7],
     reserve_last: [u8; 32],
+}
+
+impl ParamDef for AI_STANDARD_INFO_BANK {
+    const NAME: &str = "AI_STANDARD_INFO_BANK";
 }
 
 impl AI_STANDARD_INFO_BANK {
@@ -3148,6 +3182,7 @@ impl AI_STANDARD_INFO_BANK {
     pub fn set_attack4_cone_angle(&mut self, value: u8) {
         self.attack4_cone_angle = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -3263,6 +3298,10 @@ pub struct ASSET_GEOMETORY_PARAM_ST {
     unknown_0x124: u8,
     unknown_0x125: u8,
     reserve_0: [u8; 26],
+}
+
+impl ParamDef for ASSET_GEOMETORY_PARAM_ST {
+    const NAME: &str = "ASSET_GEOMETORY_PARAM_ST";
 }
 
 impl ASSET_GEOMETORY_PARAM_ST {
@@ -4251,6 +4290,7 @@ impl ASSET_GEOMETORY_PARAM_ST {
     pub fn set_exclude_activate_ratio_ps4_legacy(&mut self, value: u8) {
         self.exclude_activate_ratio_ps4_legacy = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -4289,6 +4329,10 @@ pub struct ASSET_MATERIAL_SFX_PARAM_ST {
     sfx_id_29: u32,
     sfx_id_30: u32,
     sfx_id_31: u32,
+}
+
+impl ParamDef for ASSET_MATERIAL_SFX_PARAM_ST {
+    const NAME: &str = "ASSET_MATERIAL_SFX_PARAM_ST";
 }
 
 impl ASSET_MATERIAL_SFX_PARAM_ST {
@@ -4547,6 +4591,7 @@ impl ASSET_MATERIAL_SFX_PARAM_ST {
     pub fn set_sfx_id_31(&mut self, value: u32) {
         self.sfx_id_31 = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -4578,6 +4623,10 @@ pub struct ASSET_MODEL_SFX_PARAM_ST {
     dmypoly_id_7: i32,
     is_disable_iv: u8,
     reserve_7: [u8; 7],
+}
+
+impl ParamDef for ASSET_MODEL_SFX_PARAM_ST {
+    const NAME: &str = "ASSET_MODEL_SFX_PARAM_ST";
 }
 
 impl ASSET_MODEL_SFX_PARAM_ST {
@@ -4716,6 +4765,7 @@ impl ASSET_MODEL_SFX_PARAM_ST {
     pub fn set_is_disable_iv(&mut self, value: u8) {
         self.is_disable_iv = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -4915,6 +4965,10 @@ pub struct ATK_PARAM_ST {
     sub_category3: u8,
     sub_category4: u8,
     pad7: [u8; 10],
+}
+
+impl ParamDef for ATK_PARAM_ST {
+    const NAME: &str = "ATK_PARAM_ST";
 }
 
 impl ATK_PARAM_ST {
@@ -6593,6 +6647,7 @@ impl ATK_PARAM_ST {
     pub fn set_sub_category4(&mut self, value: u8) {
         self.sub_category4 = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -6654,6 +6709,10 @@ pub struct ATTACK_ELEMENT_CORRECT_PARAM_ST {
     influence_faith_correct_rate_by_dark: i16,
     influence_luck_correct_rate_by_dark: i16,
     pad2: [u8; 24],
+}
+
+impl ParamDef for ATTACK_ELEMENT_CORRECT_PARAM_ST {
+    const NAME: &str = "ATTACK_ELEMENT_CORRECT_PARAM_ST";
 }
 
 impl ATTACK_ELEMENT_CORRECT_PARAM_ST {
@@ -7306,6 +7365,7 @@ impl ATTACK_ELEMENT_CORRECT_PARAM_ST {
     pub fn set_influence_luck_correct_rate_by_dark(&mut self, value: i16) {
         self.influence_luck_correct_rate_by_dark = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -7320,6 +7380,10 @@ pub struct AUTO_CREATE_ENV_SOUND_PARAM_ST {
     near_dist: f32,
     limite_rotate_min: f32,
     limite_rotate_max: f32,
+}
+
+impl ParamDef for AUTO_CREATE_ENV_SOUND_PARAM_ST {
+    const NAME: &str = "AUTO_CREATE_ENV_SOUND_PARAM_ST";
 }
 
 impl AUTO_CREATE_ENV_SOUND_PARAM_ST {
@@ -7386,6 +7450,7 @@ impl AUTO_CREATE_ENV_SOUND_PARAM_ST {
     pub fn set_limite_rotate_max(&mut self, value: f32) {
         self.limite_rotate_max = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -7399,6 +7464,10 @@ pub struct BASECHR_SELECT_MENU_PARAM_ST {
     image_id: i32,
     text_id: i32,
     reserve: [u8; 12],
+}
+
+impl ParamDef for BASECHR_SELECT_MENU_PARAM_ST {
+    const NAME: &str = "BASECHR_SELECT_MENU_PARAM_ST";
 }
 
 impl BASECHR_SELECT_MENU_PARAM_ST {
@@ -7443,6 +7512,7 @@ impl BASECHR_SELECT_MENU_PARAM_ST {
     pub fn set_text_id(&mut self, value: i32) {
         self.text_id = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -7461,6 +7531,10 @@ pub struct BEHAVIOR_PARAM_ST {
     category: u8,
     hero_point: u8,
     pad1: [u8; 2],
+}
+
+impl ParamDef for BEHAVIOR_PARAM_ST {
+    const NAME: &str = "BEHAVIOR_PARAM_ST";
 }
 
 impl BEHAVIOR_PARAM_ST {
@@ -7543,6 +7617,7 @@ impl BEHAVIOR_PARAM_ST {
     pub fn set_hero_point(&mut self, value: u8) {
         self.hero_point = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -7624,6 +7699,10 @@ pub struct BONFIRE_WARP_PARAM_ST {
     text_disable_flag2_id8: i32,
     alt_icon_id: u16,
     alt_forbidden_icon_id: u16,
+}
+
+impl ParamDef for BONFIRE_WARP_PARAM_ST {
+    const NAME: &str = "BONFIRE_WARP_PARAM_ST";
 }
 
 impl BONFIRE_WARP_PARAM_ST {
@@ -8218,6 +8297,7 @@ impl BONFIRE_WARP_PARAM_ST {
     pub fn set_alt_forbidden_icon_id(&mut self, value: u16) {
         self.alt_forbidden_icon_id = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -8230,6 +8310,10 @@ pub struct BONFIRE_WARP_SUB_CATEGORY_PARAM_ST {
     tab_id: u16,
     sort_id: u16,
     pad: [u8; 4],
+}
+
+impl ParamDef for BONFIRE_WARP_SUB_CATEGORY_PARAM_ST {
+    const NAME: &str = "BONFIRE_WARP_SUB_CATEGORY_PARAM_ST";
 }
 
 impl BONFIRE_WARP_SUB_CATEGORY_PARAM_ST {
@@ -8266,6 +8350,7 @@ impl BONFIRE_WARP_SUB_CATEGORY_PARAM_ST {
     pub fn set_sort_id(&mut self, value: u16) {
         self.sort_id = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -8278,6 +8363,10 @@ pub struct BONFIRE_WARP_TAB_PARAM_ST {
     sort_id: i32,
     icon_id: u16,
     pad: [u8; 2],
+}
+
+impl ParamDef for BONFIRE_WARP_TAB_PARAM_ST {
+    const NAME: &str = "BONFIRE_WARP_TAB_PARAM_ST";
 }
 
 impl BONFIRE_WARP_TAB_PARAM_ST {
@@ -8314,6 +8403,7 @@ impl BONFIRE_WARP_TAB_PARAM_ST {
     pub fn set_icon_id(&mut self, value: u16) {
         self.icon_id = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -8364,6 +8454,10 @@ pub struct BUDDY_PARAM_ST {
     unknown_0x94: i32,
     unknown_0x98: i32,
     unknown_0x9c: u32,
+}
+
+impl ParamDef for BUDDY_PARAM_ST {
+    const NAME: &str = "BUDDY_PARAM_ST";
 }
 
 impl BUDDY_PARAM_ST {
@@ -8568,6 +8662,7 @@ impl BUDDY_PARAM_ST {
     pub fn set_generate_anim_id(&mut self, value: i32) {
         self.generate_anim_id = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -8588,6 +8683,10 @@ pub struct BUDDY_STONE_PARAM_ST {
     overwrite_activate_region_entity_id: u32,
     warn_region_entity_id: u32,
     pad3: [u8; 24],
+}
+
+impl ParamDef for BUDDY_STONE_PARAM_ST {
+    const NAME: &str = "BUDDY_STONE_PARAM_ST";
 }
 
 impl BUDDY_STONE_PARAM_ST {
@@ -8682,6 +8781,7 @@ impl BUDDY_STONE_PARAM_ST {
     pub fn set_warn_region_entity_id(&mut self, value: u32) {
         self.warn_region_entity_id = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -8716,6 +8816,10 @@ pub struct BUDGET_PARAM_ST {
     vram_chr_and_parts: f32,
     havok_navimesh: f32,
     reserve_1: [u8; 24],
+}
+
+impl ParamDef for BUDGET_PARAM_ST {
+    const NAME: &str = "BUDGET_PARAM_ST";
 }
 
 impl BUDGET_PARAM_ST {
@@ -8926,6 +9030,7 @@ impl BUDGET_PARAM_ST {
     pub fn set_havok_navimesh(&mut self, value: f32) {
         self.havok_navimesh = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -8935,6 +9040,10 @@ pub struct BULLET_CREATE_LIMIT_PARAM_ST {
     limit_num_by_group: u8,
     bits_1: u8,
     pad: [u8; 30],
+}
+
+impl ParamDef for BULLET_CREATE_LIMIT_PARAM_ST {
+    const NAME: &str = "BULLET_CREATE_LIMIT_PARAM_ST";
 }
 
 impl BULLET_CREATE_LIMIT_PARAM_ST {
@@ -8955,6 +9064,7 @@ impl BULLET_CREATE_LIMIT_PARAM_ST {
     pub fn set_is_limit_each_owner(&mut self, value: u8) {
         self.bits_1 = (self.bits_1 & !(0b00000001 << 0)) | ((value & 0b00000001) << 0);
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -9055,6 +9165,10 @@ pub struct BULLET_PARAM_ST {
     sp_bullet_dist_up_rate: f32,
     nolock_target_dist: f32,
     pad4: [u8; 8],
+}
+
+impl ParamDef for BULLET_PARAM_ST {
+    const NAME: &str = "BULLET_PARAM_ST";
 }
 
 impl BULLET_PARAM_ST {
@@ -10037,6 +10151,7 @@ impl BULLET_PARAM_ST {
     pub fn set_nolock_target_dist(&mut self, value: f32) {
         self.nolock_target_dist = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -10063,6 +10178,10 @@ pub struct CACL_CORRECT_GRAPH_ST {
     boundry_inclination_soul: f32,
     boundry_value: f32,
     pad: [u8; 4],
+}
+
+impl ParamDef for CACL_CORRECT_GRAPH_ST {
+    const NAME: &str = "CACL_CORRECT_GRAPH_ST";
 }
 
 impl CACL_CORRECT_GRAPH_ST {
@@ -10217,6 +10336,7 @@ impl CACL_CORRECT_GRAPH_ST {
     pub fn set_boundry_value(&mut self, value: f32) {
         self.boundry_value = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -10229,6 +10349,10 @@ pub struct CAMERA_FADE_PARAM_ST {
     far_max_dist: f32,
     middle_alpha: f32,
     dummy: [u8; 12],
+}
+
+impl ParamDef for CAMERA_FADE_PARAM_ST {
+    const NAME: &str = "CAMERA_FADE_PARAM_ST";
 }
 
 impl CAMERA_FADE_PARAM_ST {
@@ -10271,6 +10395,7 @@ impl CAMERA_FADE_PARAM_ST {
     pub fn set_middle_alpha(&mut self, value: f32) {
         self.middle_alpha = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -10283,6 +10408,10 @@ pub struct CEREMONY_PARAM_ST {
     override_map_place_name_id: i32,
     override_save_map_name_id: i32,
     pad2: [u8; 16],
+}
+
+impl ParamDef for CEREMONY_PARAM_ST {
+    const NAME: &str = "CEREMONY_PARAM_ST";
 }
 
 impl CEREMONY_PARAM_ST {
@@ -10325,6 +10454,7 @@ impl CEREMONY_PARAM_ST {
     pub fn set_override_save_map_name_id(&mut self, value: i32) {
         self.override_save_map_name_id = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -10445,6 +10575,10 @@ pub struct CHARACTER_INIT_PARAM {
     pad7: [u8; 5],
     voice_type: u8,
     reserve: [u8; 6],
+}
+
+impl ParamDef for CHARACTER_INIT_PARAM {
+    const NAME: &str = "CHARACTER_INIT_PARAM";
 }
 
 impl CHARACTER_INIT_PARAM {
@@ -11291,6 +11425,7 @@ impl CHARACTER_INIT_PARAM {
     pub fn set_voice_type(&mut self, value: u8) {
         self.voice_type = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -11301,6 +11436,10 @@ pub struct CHARMAKEMENU_LISTITEM_PARAM_ST {
     caption_id: i32,
     icon_id: u8,
     reserved: [u8; 7],
+}
+
+impl ParamDef for CHARMAKEMENU_LISTITEM_PARAM_ST {
+    const NAME: &str = "CHARMAKEMENU_LISTITEM_PARAM_ST";
 }
 
 impl CHARMAKEMENU_LISTITEM_PARAM_ST {
@@ -11327,6 +11466,7 @@ impl CHARMAKEMENU_LISTITEM_PARAM_ST {
     pub fn set_icon_id(&mut self, value: u8) {
         self.icon_id = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -11346,6 +11486,10 @@ pub struct CHARMAKEMENUTOP_PARAM_ST {
     help_text_id: i32,
     unlock_event_flag_id: u32,
     reserved: [u8; 4],
+}
+
+impl ParamDef for CHARMAKEMENUTOP_PARAM_ST {
+    const NAME: &str = "CHARMAKEMENUTOP_PARAM_ST";
 }
 
 impl CHARMAKEMENUTOP_PARAM_ST {
@@ -11436,6 +11580,7 @@ impl CHARMAKEMENUTOP_PARAM_ST {
     pub fn set_unlock_event_flag_id(&mut self, value: u32) {
         self.unlock_event_flag_id = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -11449,6 +11594,10 @@ pub struct CHR_ACTIVATE_CONDITION_PARAM_ST {
     time_end_hour: u8,
     time_end_min: u8,
     pad2: [u8; 2],
+}
+
+impl ParamDef for CHR_ACTIVATE_CONDITION_PARAM_ST {
+    const NAME: &str = "CHR_ACTIVATE_CONDITION_PARAM_ST";
 }
 
 impl CHR_ACTIVATE_CONDITION_PARAM_ST {
@@ -11623,6 +11772,7 @@ impl CHR_ACTIVATE_CONDITION_PARAM_ST {
     pub fn set_time_end_min(&mut self, value: u8) {
         self.time_end_min = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -11634,7 +11784,12 @@ pub struct CHR_EQUIP_MODEL_PARAM_ST {
     unknown_0x8: i32,
 }
 
-impl CHR_EQUIP_MODEL_PARAM_ST {}
+impl ParamDef for CHR_EQUIP_MODEL_PARAM_ST {
+    const NAME: &str = "CHR_EQUIP_MODEL_PARAM_ST";
+}
+
+impl CHR_EQUIP_MODEL_PARAM_ST {
+}
 
 #[derive(Debug, Clone)]
 #[allow(non_camel_case_types)]
@@ -11647,6 +11802,10 @@ pub struct CHR_MODEL_PARAM_ST {
     camera_dither_fade_id: i16,
     report_anim_mem_size_mb: f32,
     unk: u32,
+}
+
+impl ParamDef for CHR_MODEL_PARAM_ST {
+    const NAME: &str = "CHR_MODEL_PARAM_ST";
 }
 
 impl CHR_MODEL_PARAM_ST {
@@ -11691,6 +11850,7 @@ impl CHR_MODEL_PARAM_ST {
     pub fn set_report_anim_mem_size_mb(&mut self, value: f32) {
         self.report_anim_mem_size_mb = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -11729,6 +11889,10 @@ pub struct CLEAR_COUNT_CORRECT_PARAM_ST {
     sleep_damage_rate: f32,
     madness_damage_rate: f32,
     pad1: [u8; 4],
+}
+
+impl ParamDef for CLEAR_COUNT_CORRECT_PARAM_ST {
+    const NAME: &str = "CLEAR_COUNT_CORRECT_PARAM_ST";
 }
 
 impl CLEAR_COUNT_CORRECT_PARAM_ST {
@@ -11979,6 +12143,7 @@ impl CLEAR_COUNT_CORRECT_PARAM_ST {
     pub fn set_madness_damage_rate(&mut self, value: f32) {
         self.madness_damage_rate = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -11989,6 +12154,10 @@ pub struct COMMON_SYSTEM_PARAM_ST {
     reserve0: [u8; 60],
 }
 
+impl ParamDef for COMMON_SYSTEM_PARAM_ST {
+    const NAME: &str = "COMMON_SYSTEM_PARAM_ST";
+}
+
 impl COMMON_SYSTEM_PARAM_ST {
     pub fn map_save_map_name_id_on_game_start(&self) -> u32 {
         self.map_save_map_name_id_on_game_start
@@ -11997,6 +12166,7 @@ impl COMMON_SYSTEM_PARAM_ST {
     pub fn set_map_save_map_name_id_on_game_start(&mut self, value: u32) {
         self.map_save_map_name_id_on_game_start = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -12011,6 +12181,10 @@ pub struct COOL_TIME_PARAM_ST {
     observe_time_2: f32,
     limitation_time_3: f32,
     observe_time_3: f32,
+}
+
+impl ParamDef for COOL_TIME_PARAM_ST {
+    const NAME: &str = "COOL_TIME_PARAM_ST";
 }
 
 impl COOL_TIME_PARAM_ST {
@@ -12077,6 +12251,7 @@ impl COOL_TIME_PARAM_ST {
     pub fn set_observe_time_3(&mut self, value: f32) {
         self.observe_time_3 = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -12094,6 +12269,10 @@ pub struct CUTSCENE_GPARAM_TIME_PARAM_ST {
     dst_timezone_deep_night_b: u8,
     reserved: [u8; 1],
     post_play_ingame_time: f32,
+}
+
+impl ParamDef for CUTSCENE_GPARAM_TIME_PARAM_ST {
+    const NAME: &str = "CUTSCENE_GPARAM_TIME_PARAM_ST";
 }
 
 impl CUTSCENE_GPARAM_TIME_PARAM_ST {
@@ -12180,6 +12359,7 @@ impl CUTSCENE_GPARAM_TIME_PARAM_ST {
     pub fn set_post_play_ingame_time(&mut self, value: f32) {
         self.post_play_ingame_time = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -12239,6 +12419,10 @@ pub struct CUTSCENE_GPARAM_WEATHER_PARAM_ST {
     reserved2: [u8; 1],
     override_map_gd_region_id: i16,
     reserved1: [u8; 12],
+}
+
+impl ParamDef for CUTSCENE_GPARAM_WEATHER_PARAM_ST {
+    const NAME: &str = "CUTSCENE_GPARAM_WEATHER_PARAM_ST";
 }
 
 impl CUTSCENE_GPARAM_WEATHER_PARAM_ST {
@@ -12549,6 +12733,7 @@ impl CUTSCENE_GPARAM_WEATHER_PARAM_ST {
     pub fn set_override_map_gd_region_id(&mut self, value: i16) {
         self.override_map_gd_region_id = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -12568,6 +12753,10 @@ pub struct CUTSCENE_MAP_ID_PARAM_ST {
     reserved: [u8; 2],
     hit_parts_0: i32,
     hit_parts_1: i32,
+}
+
+impl ParamDef for CUTSCENE_MAP_ID_PARAM_ST {
+    const NAME: &str = "CUTSCENE_MAP_ID_PARAM_ST";
 }
 
 impl CUTSCENE_MAP_ID_PARAM_ST {
@@ -12654,6 +12843,7 @@ impl CUTSCENE_MAP_ID_PARAM_ST {
     pub fn set_hit_parts_1(&mut self, value: i32) {
         self.hit_parts_1 = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -12678,6 +12868,10 @@ pub struct CUTSCENE_TEXTURE_LOAD_PARAM_ST {
     tex_name_13: [u8; 16],
     tex_name_14: [u8; 16],
     tex_name_15: [u8; 16],
+}
+
+impl ParamDef for CUTSCENE_TEXTURE_LOAD_PARAM_ST {
+    const NAME: &str = "CUTSCENE_TEXTURE_LOAD_PARAM_ST";
 }
 
 impl CUTSCENE_TEXTURE_LOAD_PARAM_ST {
@@ -12828,6 +13022,7 @@ impl CUTSCENE_TEXTURE_LOAD_PARAM_ST {
     pub fn set_tex_name_15(&mut self, value: [u8; 16]) {
         self.tex_name_15 = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -12836,6 +13031,10 @@ impl CUTSCENE_TEXTURE_LOAD_PARAM_ST {
 pub struct CUTSCENE_TIMEZONE_CONVERT_PARAM_ST {
     src_timezone_start: f32,
     dst_cutscen_time: f32,
+}
+
+impl ParamDef for CUTSCENE_TIMEZONE_CONVERT_PARAM_ST {
+    const NAME: &str = "CUTSCENE_TIMEZONE_CONVERT_PARAM_ST";
 }
 
 impl CUTSCENE_TIMEZONE_CONVERT_PARAM_ST {
@@ -12854,6 +13053,7 @@ impl CUTSCENE_TIMEZONE_CONVERT_PARAM_ST {
     pub fn set_dst_cutscen_time(&mut self, value: f32) {
         self.dst_cutscen_time = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -12861,6 +13061,10 @@ impl CUTSCENE_TIMEZONE_CONVERT_PARAM_ST {
 #[repr(C)]
 pub struct CUTSCENE_WEATHER_OVERRIDE_GPARAM_ID_CONVERT_PARAM_ST {
     weather_override_gparam_id: u32,
+}
+
+impl ParamDef for CUTSCENE_WEATHER_OVERRIDE_GPARAM_ID_CONVERT_PARAM_ST {
+    const NAME: &str = "CUTSCENE_WEATHER_OVERRIDE_GPARAM_ID_CONVERT_PARAM_ST";
 }
 
 impl CUTSCENE_WEATHER_OVERRIDE_GPARAM_ID_CONVERT_PARAM_ST {
@@ -12871,6 +13075,7 @@ impl CUTSCENE_WEATHER_OVERRIDE_GPARAM_ID_CONVERT_PARAM_ST {
     pub fn set_weather_override_gparam_id(&mut self, value: u32) {
         self.weather_override_gparam_id = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -12953,6 +13158,10 @@ pub struct DECAL_PARAM_ST {
     emissive_color_b: u8,
     max_decal_sfx_creatable_slope_angle_deg: f32,
     pad_02: [u8; 40],
+}
+
+impl ParamDef for DECAL_PARAM_ST {
+    const NAME: &str = "DECAL_PARAM_ST";
 }
 
 impl DECAL_PARAM_ST {
@@ -13633,6 +13842,7 @@ impl DECAL_PARAM_ST {
     pub fn set_max_decal_sfx_creatable_slope_angle_deg(&mut self, value: f32) {
         self.max_decal_sfx_creatable_slope_angle_deg = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -13708,6 +13918,10 @@ pub struct DEFAULT_KEY_ASSIGN {
     time1_7: f32,
     time2_7: f32,
     a2d_threshold_7: f32,
+}
+
+impl ParamDef for DEFAULT_KEY_ASSIGN {
+    const NAME: &str = "DEFAULT_KEY_ASSIGN";
 }
 
 impl DEFAULT_KEY_ASSIGN {
@@ -14798,6 +15012,7 @@ impl DEFAULT_KEY_ASSIGN {
     pub fn set_a2d_threshold_7(&mut self, value: f32) {
         self.a2d_threshold_7 = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -14806,6 +15021,10 @@ impl DEFAULT_KEY_ASSIGN {
 pub struct DIRECTION_CAMERA_PARAM_ST {
     bits_0: u8,
     pad1: [u8; 15],
+}
+
+impl ParamDef for DIRECTION_CAMERA_PARAM_ST {
+    const NAME: &str = "DIRECTION_CAMERA_PARAM_ST";
 }
 
 impl DIRECTION_CAMERA_PARAM_ST {
@@ -14818,6 +15037,7 @@ impl DIRECTION_CAMERA_PARAM_ST {
     pub fn set_is_use_option(&mut self, value: u8) {
         self.bits_0 = (self.bits_0 & !(0b00000001 << 0)) | ((value & 0b00000001) << 0);
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -14833,6 +15053,10 @@ pub struct ENEMY_COMMON_PARAM_ST {
     find_unfavorable_failed_point_dist: f32,
     find_unfavorable_failed_point_height: f32,
     reserved18: [u8; 184],
+}
+
+impl ParamDef for ENEMY_COMMON_PARAM_ST {
+    const NAME: &str = "ENEMY_COMMON_PARAM_ST";
 }
 
 impl ENEMY_COMMON_PARAM_ST {
@@ -14883,6 +15107,7 @@ impl ENEMY_COMMON_PARAM_ST {
     pub fn set_find_unfavorable_failed_point_height(&mut self, value: f32) {
         self.find_unfavorable_failed_point_height = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -14911,6 +15136,10 @@ pub struct ENEMY_STANDARD_INFO_BANK {
     stamina_consumption: u16,
     deffenct_phys: u16,
     reserve_last2: [u8; 48],
+}
+
+impl ParamDef for ENEMY_STANDARD_INFO_BANK {
+    const NAME: &str = "ENEMY_STANDARD_INFO_BANK";
 }
 
 impl ENEMY_STANDARD_INFO_BANK {
@@ -15065,6 +15294,7 @@ impl ENEMY_STANDARD_INFO_BANK {
     pub fn set_deffenct_phys(&mut self, value: u16) {
         self.deffenct_phys = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -15088,6 +15318,10 @@ pub struct ENV_OBJ_LOT_PARAM_ST {
     create_weight_6: u8,
     create_weight_7: u8,
     reserve_0: [u8; 24],
+}
+
+impl ParamDef for ENV_OBJ_LOT_PARAM_ST {
+    const NAME: &str = "ENV_OBJ_LOT_PARAM_ST";
 }
 
 impl ENV_OBJ_LOT_PARAM_ST {
@@ -15218,6 +15452,7 @@ impl ENV_OBJ_LOT_PARAM_ST {
     pub fn set_create_weight_7(&mut self, value: u8) {
         self.create_weight_7 = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -15247,6 +15482,10 @@ pub struct EQUIP_MTRL_SET_PARAM_ST {
     pad_cate: [u8; 2],
     bits_30: u8,
     pad: [u8; 3],
+}
+
+impl ParamDef for EQUIP_MTRL_SET_PARAM_ST {
+    const NAME: &str = "EQUIP_MTRL_SET_PARAM_ST";
 }
 
 impl EQUIP_MTRL_SET_PARAM_ST {
@@ -15453,6 +15692,7 @@ impl EQUIP_MTRL_SET_PARAM_ST {
     pub fn set_is_disable_disp_num06(&mut self, value: u8) {
         self.bits_30 = (self.bits_30 & !(0b00000001 << 5)) | ((value & 0b00000001) << 5);
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -15495,6 +15735,10 @@ pub struct EQUIP_PARAM_ACCESSORY_ST {
     resident_sp_effect_id3: i32,
     resident_sp_effect_id4: i32,
     pad1: [u8; 4],
+}
+
+impl ParamDef for EQUIP_PARAM_ACCESSORY_ST {
+    const NAME: &str = "EQUIP_PARAM_ACCESSORY_ST";
 }
 
 impl EQUIP_PARAM_ACCESSORY_ST {
@@ -15817,6 +16061,7 @@ impl EQUIP_PARAM_ACCESSORY_ST {
     pub fn set_resident_sp_effect_id4(&mut self, value: i32) {
         self.resident_sp_effect_id4 = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -15827,6 +16072,10 @@ pub struct EQUIP_PARAM_CUSTOM_WEAPON_ST {
     gem_id: i32,
     reinforce_lv: u8,
     pad: [u8; 7],
+}
+
+impl ParamDef for EQUIP_PARAM_CUSTOM_WEAPON_ST {
+    const NAME: &str = "EQUIP_PARAM_CUSTOM_WEAPON_ST";
 }
 
 impl EQUIP_PARAM_CUSTOM_WEAPON_ST {
@@ -15853,6 +16102,7 @@ impl EQUIP_PARAM_CUSTOM_WEAPON_ST {
     pub fn set_reinforce_lv(&mut self, value: u8) {
         self.reinforce_lv = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -15897,6 +16147,10 @@ pub struct EQUIP_PARAM_GEM_ST {
     sp_effect_id_for_atk2: i32,
     mount_wep_text_id: i32,
     pad6: [u8; 8],
+}
+
+impl ParamDef for EQUIP_PARAM_GEM_ST {
+    const NAME: &str = "EQUIP_PARAM_GEM_ST";
 }
 
 impl EQUIP_PARAM_GEM_ST {
@@ -16833,6 +17087,7 @@ impl EQUIP_PARAM_GEM_ST {
     pub fn set_mount_wep_text_id(&mut self, value: i32) {
         self.mount_wep_text_id = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -16920,6 +17175,10 @@ pub struct EQUIP_PARAM_GOODS_ST {
     reserve5: [u8; 2],
     item_get_tutorial_flag_id: u32,
     reserve3: [u8; 8],
+}
+
+impl ParamDef for EQUIP_PARAM_GOODS_ST {
+    const NAME: &str = "EQUIP_PARAM_GOODS_ST";
 }
 
 impl EQUIP_PARAM_GOODS_ST {
@@ -17886,6 +18145,7 @@ impl EQUIP_PARAM_GOODS_ST {
     pub fn set_item_get_tutorial_flag_id(&mut self, value: u32) {
         self.item_get_tutorial_flag_id = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -18099,6 +18359,10 @@ pub struct EQUIP_PARAM_PROTECTOR_ST {
     invisible_flag_sex_ver94: u8,
     invisible_flag_sex_ver95: u8,
     pad404: [u8; 14],
+}
+
+impl ParamDef for EQUIP_PARAM_PROTECTOR_ST {
+    const NAME: &str = "EQUIP_PARAM_PROTECTOR_ST";
 }
 
 impl EQUIP_PARAM_PROTECTOR_ST {
@@ -20123,6 +20387,7 @@ impl EQUIP_PARAM_PROTECTOR_ST {
     pub fn set_invisible_flag_sex_ver95(&mut self, value: u8) {
         self.invisible_flag_sex_ver95 = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -20358,6 +20623,10 @@ pub struct EQUIP_PARAM_WEAPON_ST {
     vs_player_dmg_correct_rate_curse: f32,
     restrict_special_sword_art: u8,
     pad: [u8; 7],
+}
+
+impl ParamDef for EQUIP_PARAM_WEAPON_ST {
+    const NAME: &str = "EQUIP_PARAM_WEAPON_ST";
 }
 
 impl EQUIP_PARAM_WEAPON_ST {
@@ -22612,6 +22881,7 @@ impl EQUIP_PARAM_WEAPON_ST {
     pub fn set_restrict_special_sword_art(&mut self, value: u8) {
         self.restrict_special_sword_art = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -22639,6 +22909,10 @@ pub struct ESTUS_FLASK_RECOVERY_PARAM_ST {
     param_replace_rate: u16,
     param_replace_id: i32,
     pad: [u8; 8],
+}
+
+impl ParamDef for ESTUS_FLASK_RECOVERY_PARAM_ST {
+    const NAME: &str = "ESTUS_FLASK_RECOVERY_PARAM_ST";
 }
 
 impl ESTUS_FLASK_RECOVERY_PARAM_ST {
@@ -22801,6 +23075,7 @@ impl ESTUS_FLASK_RECOVERY_PARAM_ST {
     pub fn set_param_replace_id(&mut self, value: i32) {
         self.param_replace_id = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -22812,6 +23087,10 @@ pub struct EVENT_FLAG_USAGE_PARAM_ST {
     padding1: [u8; 2],
     flag_num: i32,
     padding2: [u8; 24],
+}
+
+impl ParamDef for EVENT_FLAG_USAGE_PARAM_ST {
+    const NAME: &str = "EVENT_FLAG_USAGE_PARAM_ST";
 }
 
 impl EVENT_FLAG_USAGE_PARAM_ST {
@@ -22838,6 +23117,7 @@ impl EVENT_FLAG_USAGE_PARAM_ST {
     pub fn set_flag_num(&mut self, value: i32) {
         self.flag_num = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -23080,6 +23360,10 @@ pub struct FACE_PARAM_ST {
     face_geo_asym_data23: u8,
     face_geo_asym_data24: u8,
     face_geo_asym_data25: u8,
+}
+
+impl ParamDef for FACE_PARAM_ST {
+    const NAME: &str = "FACE_PARAM_ST";
 }
 
 impl FACE_PARAM_ST {
@@ -25014,6 +25298,7 @@ impl FACE_PARAM_ST {
     pub fn set_face_geo_asym_data25(&mut self, value: u8) {
         self.face_geo_asym_data25 = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -25226,6 +25511,10 @@ pub struct FACE_RANGE_PARAM_ST {
     face_tex_data34: f32,
     face_tex_data35: f32,
     burn_scar: f32,
+}
+
+impl ParamDef for FACE_RANGE_PARAM_ST {
+    const NAME: &str = "FACE_RANGE_PARAM_ST";
 }
 
 impl FACE_RANGE_PARAM_ST {
@@ -26876,6 +27165,7 @@ impl FACE_RANGE_PARAM_ST {
     pub fn set_burn_scar(&mut self, value: f32) {
         self.burn_scar = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -26888,6 +27178,10 @@ pub struct FE_TEXT_EFFECT_PARAM_ST {
     se_id: i32,
     bits_c: u8,
     pad2: [u8; 19],
+}
+
+impl ParamDef for FE_TEXT_EFFECT_PARAM_ST {
+    const NAME: &str = "FE_TEXT_EFFECT_PARAM_ST";
 }
 
 impl FE_TEXT_EFFECT_PARAM_ST {
@@ -26924,6 +27218,7 @@ impl FE_TEXT_EFFECT_PARAM_ST {
     pub fn set_can_mix_map_name(&mut self, value: u8) {
         self.bits_c = (self.bits_c & !(0b00000001 << 0)) | ((value & 0b00000001) << 0);
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -26937,6 +27232,10 @@ pub struct FINAL_DAMAGE_RATE_PARAM_ST {
     dark_rate: f32,
     stamina_rate: f32,
     sa_rate: f32,
+}
+
+impl ParamDef for FINAL_DAMAGE_RATE_PARAM_ST {
+    const NAME: &str = "FINAL_DAMAGE_RATE_PARAM_ST";
 }
 
 impl FINAL_DAMAGE_RATE_PARAM_ST {
@@ -26995,6 +27294,7 @@ impl FINAL_DAMAGE_RATE_PARAM_ST {
     pub fn set_sa_rate(&mut self, value: f32) {
         self.sa_rate = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -27201,6 +27501,10 @@ pub struct FOOT_SFX_PARAM_ST {
     sfx_id_197: u32,
     sfx_id_198: u32,
     sfx_id_199: u32,
+}
+
+impl ParamDef for FOOT_SFX_PARAM_ST {
+    const NAME: &str = "FOOT_SFX_PARAM_ST";
 }
 
 impl FOOT_SFX_PARAM_ST {
@@ -28803,6 +29107,7 @@ impl FOOT_SFX_PARAM_ST {
     pub fn set_sfx_id_199(&mut self, value: u32) {
         self.sfx_id_199 = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -28840,6 +29145,10 @@ pub struct GAME_AREA_PARAM_ST {
     boss_map_block_no: u8,
     boss_map_map_no: u8,
     reserve: [u8; 9],
+}
+
+impl ParamDef for GAME_AREA_PARAM_ST {
+    const NAME: &str = "GAME_AREA_PARAM_ST";
 }
 
 impl GAME_AREA_PARAM_ST {
@@ -29076,6 +29385,7 @@ impl GAME_AREA_PARAM_ST {
     pub fn set_boss_map_map_no(&mut self, value: u8) {
         self.boss_map_map_no = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -29088,6 +29398,10 @@ pub struct GAME_INFO_PARAM {
     sort_id: i32,
     event_id: i32,
     pad: [u8; 12],
+}
+
+impl ParamDef for GAME_INFO_PARAM {
+    const NAME: &str = "GAME_INFO_PARAM";
 }
 
 impl GAME_INFO_PARAM {
@@ -29130,6 +29444,7 @@ impl GAME_INFO_PARAM {
     pub fn set_event_id(&mut self, value: i32) {
         self.event_id = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -29482,6 +29797,10 @@ pub struct GAME_SYSTEM_COMMON_PARAM_ST {
     unknown_sp_effect_id_0x390: i32,
     base_revered_spirit_torrent_blessing_sp_effect_id: i32,
     end_pad: [u8; 108],
+}
+
+impl ParamDef for GAME_SYSTEM_COMMON_PARAM_ST {
+    const NAME: &str = "GAME_SYSTEM_COMMON_PARAM_ST";
 }
 
 impl GAME_SYSTEM_COMMON_PARAM_ST {
@@ -30717,29 +31036,19 @@ impl GAME_SYSTEM_COMMON_PARAM_ST {
         self.a_i_jump_anim_y_move_correct_rate_on_jump_off = value;
     }
 
-    pub fn stealth_system_sight_rate_not_in_stealth_rigid_not_sight_hide_stealth_mode(
-        &self,
-    ) -> f32 {
+    pub fn stealth_system_sight_rate_not_in_stealth_rigid_not_sight_hide_stealth_mode(&self) -> f32 {
         self.stealth_system_sight_rate_not_in_stealth_rigid_not_sight_hide_stealth_mode
     }
 
-    pub fn set_stealth_system_sight_rate_not_in_stealth_rigid_not_sight_hide_stealth_mode(
-        &mut self,
-        value: f32,
-    ) {
+    pub fn set_stealth_system_sight_rate_not_in_stealth_rigid_not_sight_hide_stealth_mode(&mut self, value: f32) {
         self.stealth_system_sight_rate_not_in_stealth_rigid_not_sight_hide_stealth_mode = value;
     }
 
-    pub fn stealth_system_sight_rate_not_in_stealth_rigid_sight_hide_not_stealth_mode(
-        &self,
-    ) -> f32 {
+    pub fn stealth_system_sight_rate_not_in_stealth_rigid_sight_hide_not_stealth_mode(&self) -> f32 {
         self.stealth_system_sight_rate_not_in_stealth_rigid_sight_hide_not_stealth_mode
     }
 
-    pub fn set_stealth_system_sight_rate_not_in_stealth_rigid_sight_hide_not_stealth_mode(
-        &mut self,
-        value: f32,
-    ) {
+    pub fn set_stealth_system_sight_rate_not_in_stealth_rigid_sight_hide_not_stealth_mode(&mut self, value: f32) {
         self.stealth_system_sight_rate_not_in_stealth_rigid_sight_hide_not_stealth_mode = value;
     }
 
@@ -30747,23 +31056,15 @@ impl GAME_SYSTEM_COMMON_PARAM_ST {
         self.stealth_system_sight_rate_not_in_stealth_rigid_sight_hide_stealth_mode
     }
 
-    pub fn set_stealth_system_sight_rate_not_in_stealth_rigid_sight_hide_stealth_mode(
-        &mut self,
-        value: f32,
-    ) {
+    pub fn set_stealth_system_sight_rate_not_in_stealth_rigid_sight_hide_stealth_mode(&mut self, value: f32) {
         self.stealth_system_sight_rate_not_in_stealth_rigid_sight_hide_stealth_mode = value;
     }
 
-    pub fn stealth_system_sight_rate_in_stealth_rigid_not_sight_hide_not_stealth_mode(
-        &self,
-    ) -> f32 {
+    pub fn stealth_system_sight_rate_in_stealth_rigid_not_sight_hide_not_stealth_mode(&self) -> f32 {
         self.stealth_system_sight_rate_in_stealth_rigid_not_sight_hide_not_stealth_mode
     }
 
-    pub fn set_stealth_system_sight_rate_in_stealth_rigid_not_sight_hide_not_stealth_mode(
-        &mut self,
-        value: f32,
-    ) {
+    pub fn set_stealth_system_sight_rate_in_stealth_rigid_not_sight_hide_not_stealth_mode(&mut self, value: f32) {
         self.stealth_system_sight_rate_in_stealth_rigid_not_sight_hide_not_stealth_mode = value;
     }
 
@@ -30771,10 +31072,7 @@ impl GAME_SYSTEM_COMMON_PARAM_ST {
         self.stealth_system_sight_rate_in_stealth_rigid_not_sight_hide_stealth_mode
     }
 
-    pub fn set_stealth_system_sight_rate_in_stealth_rigid_not_sight_hide_stealth_mode(
-        &mut self,
-        value: f32,
-    ) {
+    pub fn set_stealth_system_sight_rate_in_stealth_rigid_not_sight_hide_stealth_mode(&mut self, value: f32) {
         self.stealth_system_sight_rate_in_stealth_rigid_not_sight_hide_stealth_mode = value;
     }
 
@@ -30782,10 +31080,7 @@ impl GAME_SYSTEM_COMMON_PARAM_ST {
         self.stealth_system_sight_rate_in_stealth_rigid_sight_hide_not_stealth_mode
     }
 
-    pub fn set_stealth_system_sight_rate_in_stealth_rigid_sight_hide_not_stealth_mode(
-        &mut self,
-        value: f32,
-    ) {
+    pub fn set_stealth_system_sight_rate_in_stealth_rigid_sight_hide_not_stealth_mode(&mut self, value: f32) {
         self.stealth_system_sight_rate_in_stealth_rigid_sight_hide_not_stealth_mode = value;
     }
 
@@ -30793,10 +31088,7 @@ impl GAME_SYSTEM_COMMON_PARAM_ST {
         self.stealth_system_sight_rate_in_stealth_rigid_sight_hide_stealth_mode
     }
 
-    pub fn set_stealth_system_sight_rate_in_stealth_rigid_sight_hide_stealth_mode(
-        &mut self,
-        value: f32,
-    ) {
+    pub fn set_stealth_system_sight_rate_in_stealth_rigid_sight_hide_stealth_mode(&mut self, value: f32) {
         self.stealth_system_sight_rate_in_stealth_rigid_sight_hide_stealth_mode = value;
     }
 
@@ -31056,99 +31348,60 @@ impl GAME_SYSTEM_COMMON_PARAM_ST {
         self.ai_sight_rate_sunloss_very_dark = value;
     }
 
-    pub fn stealth_system_sight_angle_reduce_rate_not_in_stealth_rigid_not_sight_hide_stealth_mode(
-        &self,
-    ) -> f32 {
+    pub fn stealth_system_sight_angle_reduce_rate_not_in_stealth_rigid_not_sight_hide_stealth_mode(&self) -> f32 {
         self.stealth_system_sight_angle_reduce_rate_not_in_stealth_rigid_not_sight_hide_stealth_mode
     }
 
-    pub fn set_stealth_system_sight_angle_reduce_rate_not_in_stealth_rigid_not_sight_hide_stealth_mode(
-        &mut self,
-        value: f32,
-    ) {
+    pub fn set_stealth_system_sight_angle_reduce_rate_not_in_stealth_rigid_not_sight_hide_stealth_mode(&mut self, value: f32) {
         self.stealth_system_sight_angle_reduce_rate_not_in_stealth_rigid_not_sight_hide_stealth_mode = value;
     }
 
-    pub fn stealth_system_sight_angle_reduce_rate_not_in_stealth_rigid_sight_hide_not_stealth_mode(
-        &self,
-    ) -> f32 {
+    pub fn stealth_system_sight_angle_reduce_rate_not_in_stealth_rigid_sight_hide_not_stealth_mode(&self) -> f32 {
         self.stealth_system_sight_angle_reduce_rate_not_in_stealth_rigid_sight_hide_not_stealth_mode
     }
 
-    pub fn set_stealth_system_sight_angle_reduce_rate_not_in_stealth_rigid_sight_hide_not_stealth_mode(
-        &mut self,
-        value: f32,
-    ) {
+    pub fn set_stealth_system_sight_angle_reduce_rate_not_in_stealth_rigid_sight_hide_not_stealth_mode(&mut self, value: f32) {
         self.stealth_system_sight_angle_reduce_rate_not_in_stealth_rigid_sight_hide_not_stealth_mode = value;
     }
 
-    pub fn stealth_system_sight_angle_reduce_rate_not_in_stealth_rigid_sight_hide_stealth_mode(
-        &self,
-    ) -> f32 {
+    pub fn stealth_system_sight_angle_reduce_rate_not_in_stealth_rigid_sight_hide_stealth_mode(&self) -> f32 {
         self.stealth_system_sight_angle_reduce_rate_not_in_stealth_rigid_sight_hide_stealth_mode
     }
 
-    pub fn set_stealth_system_sight_angle_reduce_rate_not_in_stealth_rigid_sight_hide_stealth_mode(
-        &mut self,
-        value: f32,
-    ) {
-        self.stealth_system_sight_angle_reduce_rate_not_in_stealth_rigid_sight_hide_stealth_mode =
-            value;
+    pub fn set_stealth_system_sight_angle_reduce_rate_not_in_stealth_rigid_sight_hide_stealth_mode(&mut self, value: f32) {
+        self.stealth_system_sight_angle_reduce_rate_not_in_stealth_rigid_sight_hide_stealth_mode = value;
     }
 
-    pub fn stealth_system_sight_angle_reduce_rate_in_stealth_rigid_not_sight_hide_not_stealth_mode(
-        &self,
-    ) -> f32 {
+    pub fn stealth_system_sight_angle_reduce_rate_in_stealth_rigid_not_sight_hide_not_stealth_mode(&self) -> f32 {
         self.stealth_system_sight_angle_reduce_rate_in_stealth_rigid_not_sight_hide_not_stealth_mode
     }
 
-    pub fn set_stealth_system_sight_angle_reduce_rate_in_stealth_rigid_not_sight_hide_not_stealth_mode(
-        &mut self,
-        value: f32,
-    ) {
+    pub fn set_stealth_system_sight_angle_reduce_rate_in_stealth_rigid_not_sight_hide_not_stealth_mode(&mut self, value: f32) {
         self.stealth_system_sight_angle_reduce_rate_in_stealth_rigid_not_sight_hide_not_stealth_mode = value;
     }
 
-    pub fn stealth_system_sight_angle_reduce_rate_in_stealth_rigid_not_sight_hide_stealth_mode(
-        &self,
-    ) -> f32 {
+    pub fn stealth_system_sight_angle_reduce_rate_in_stealth_rigid_not_sight_hide_stealth_mode(&self) -> f32 {
         self.stealth_system_sight_angle_reduce_rate_in_stealth_rigid_not_sight_hide_stealth_mode
     }
 
-    pub fn set_stealth_system_sight_angle_reduce_rate_in_stealth_rigid_not_sight_hide_stealth_mode(
-        &mut self,
-        value: f32,
-    ) {
-        self.stealth_system_sight_angle_reduce_rate_in_stealth_rigid_not_sight_hide_stealth_mode =
-            value;
+    pub fn set_stealth_system_sight_angle_reduce_rate_in_stealth_rigid_not_sight_hide_stealth_mode(&mut self, value: f32) {
+        self.stealth_system_sight_angle_reduce_rate_in_stealth_rigid_not_sight_hide_stealth_mode = value;
     }
 
-    pub fn stealth_system_sight_angle_reduce_rate_in_stealth_rigid_sight_hide_not_stealth_mode(
-        &self,
-    ) -> f32 {
+    pub fn stealth_system_sight_angle_reduce_rate_in_stealth_rigid_sight_hide_not_stealth_mode(&self) -> f32 {
         self.stealth_system_sight_angle_reduce_rate_in_stealth_rigid_sight_hide_not_stealth_mode
     }
 
-    pub fn set_stealth_system_sight_angle_reduce_rate_in_stealth_rigid_sight_hide_not_stealth_mode(
-        &mut self,
-        value: f32,
-    ) {
-        self.stealth_system_sight_angle_reduce_rate_in_stealth_rigid_sight_hide_not_stealth_mode =
-            value;
+    pub fn set_stealth_system_sight_angle_reduce_rate_in_stealth_rigid_sight_hide_not_stealth_mode(&mut self, value: f32) {
+        self.stealth_system_sight_angle_reduce_rate_in_stealth_rigid_sight_hide_not_stealth_mode = value;
     }
 
-    pub fn stealth_system_sight_angle_reduce_rate_in_stealth_rigid_sight_hide_stealth_mode(
-        &self,
-    ) -> f32 {
+    pub fn stealth_system_sight_angle_reduce_rate_in_stealth_rigid_sight_hide_stealth_mode(&self) -> f32 {
         self.stealth_system_sight_angle_reduce_rate_in_stealth_rigid_sight_hide_stealth_mode
     }
 
-    pub fn set_stealth_system_sight_angle_reduce_rate_in_stealth_rigid_sight_hide_stealth_mode(
-        &mut self,
-        value: f32,
-    ) {
-        self.stealth_system_sight_angle_reduce_rate_in_stealth_rigid_sight_hide_stealth_mode =
-            value;
+    pub fn set_stealth_system_sight_angle_reduce_rate_in_stealth_rigid_sight_hide_stealth_mode(&mut self, value: f32) {
+        self.stealth_system_sight_angle_reduce_rate_in_stealth_rigid_sight_hide_stealth_mode = value;
     }
 
     pub fn weather_lot_condition_start_morning_hour(&self) -> u8 {
@@ -32070,6 +32323,7 @@ impl GAME_SYSTEM_COMMON_PARAM_ST {
     pub fn set_base_revered_spirit_torrent_blessing_sp_effect_id(&mut self, value: i32) {
         self.base_revered_spirit_torrent_blessing_sp_effect_id = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -32079,6 +32333,10 @@ pub struct CS_AA_QUALITY_DETAIL {
     enabled: u8,
     force_fxaa2: u8,
     dmy: [u8; 2],
+}
+
+impl ParamDef for CS_AA_QUALITY_DETAIL {
+    const NAME: &str = "CS_AA_QUALITY_DETAIL";
 }
 
 impl CS_AA_QUALITY_DETAIL {
@@ -32097,6 +32355,7 @@ impl CS_AA_QUALITY_DETAIL {
     pub fn set_force_fxaa2(&mut self, value: u8) {
         self.force_fxaa2 = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -32107,6 +32366,10 @@ pub struct CS_DECAL_QUALITY_DETAIL {
     dmy: [u8; 3],
 }
 
+impl ParamDef for CS_DECAL_QUALITY_DETAIL {
+    const NAME: &str = "CS_DECAL_QUALITY_DETAIL";
+}
+
 impl CS_DECAL_QUALITY_DETAIL {
     pub fn enabled(&self) -> u8 {
         self.enabled
@@ -32115,6 +32378,7 @@ impl CS_DECAL_QUALITY_DETAIL {
     pub fn set_enabled(&mut self, value: u8) {
         self.enabled = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -32125,6 +32389,10 @@ pub struct CS_DOF_QUALITY_DETAIL {
     dmy: [u8; 3],
     force_hi_reso_blur: i32,
     max_blur_level: i32,
+}
+
+impl ParamDef for CS_DOF_QUALITY_DETAIL {
+    const NAME: &str = "CS_DOF_QUALITY_DETAIL";
 }
 
 impl CS_DOF_QUALITY_DETAIL {
@@ -32151,6 +32419,7 @@ impl CS_DOF_QUALITY_DETAIL {
     pub fn set_max_blur_level(&mut self, value: i32) {
         self.max_blur_level = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -32169,6 +32438,10 @@ pub struct CS_EFFECT_QUALITY_DETAIL {
     f_lod_distance4_scale: f32,
     f_scale_render_distance_scale: f32,
     dmy: [u8; 4],
+}
+
+impl ParamDef for CS_EFFECT_QUALITY_DETAIL {
+    const NAME: &str = "CS_EFFECT_QUALITY_DETAIL";
 }
 
 impl CS_EFFECT_QUALITY_DETAIL {
@@ -32259,6 +32532,7 @@ impl CS_EFFECT_QUALITY_DETAIL {
     pub fn set_f_scale_render_distance_scale(&mut self, value: f32) {
         self.f_scale_render_distance_scale = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -32270,6 +32544,10 @@ pub struct CS_LIGHTING_QUALITY_DETAIL {
     forward_pass_lighting_enabled: u8,
     local_light_shadow_spec_level_max: u8,
     dmy: [u8; 1],
+}
+
+impl ParamDef for CS_LIGHTING_QUALITY_DETAIL {
+    const NAME: &str = "CS_LIGHTING_QUALITY_DETAIL";
 }
 
 impl CS_LIGHTING_QUALITY_DETAIL {
@@ -32304,6 +32582,7 @@ impl CS_LIGHTING_QUALITY_DETAIL {
     pub fn set_local_light_shadow_spec_level_max(&mut self, value: u8) {
         self.local_light_shadow_spec_level_max = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -32317,6 +32596,10 @@ pub struct CS_MOTION_BLUR_QUALITY_DETAIL {
     sample_count_bias: i32,
     recurrence_count_bias: i32,
     blur_max_length_scale: f32,
+}
+
+impl ParamDef for CS_MOTION_BLUR_QUALITY_DETAIL {
+    const NAME: &str = "CS_MOTION_BLUR_QUALITY_DETAIL";
 }
 
 impl CS_MOTION_BLUR_QUALITY_DETAIL {
@@ -32375,6 +32658,7 @@ impl CS_MOTION_BLUR_QUALITY_DETAIL {
     pub fn set_blur_max_length_scale(&mut self, value: f32) {
         self.blur_max_length_scale = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -32391,6 +32675,10 @@ pub struct CS_RAYTRACING_QUALITY_DETAIL {
     unk0x10: i32,
     penumbra_size: f32,
     render_distance: f32,
+}
+
+impl ParamDef for CS_RAYTRACING_QUALITY_DETAIL {
+    const NAME: &str = "CS_RAYTRACING_QUALITY_DETAIL";
 }
 
 impl CS_RAYTRACING_QUALITY_DETAIL {
@@ -32425,6 +32713,7 @@ impl CS_RAYTRACING_QUALITY_DETAIL {
     pub fn set_render_distance(&mut self, value: f32) {
         self.render_distance = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -32443,6 +32732,10 @@ pub struct CS_REFLECTION_QUALITY_DETAIL {
     ssr_ray_trace_step_scale: f32,
     ssr_fade_to_viewer_bias: f32,
     ssr_fresnel_reject_bias: f32,
+}
+
+impl ParamDef for CS_REFLECTION_QUALITY_DETAIL {
+    const NAME: &str = "CS_REFLECTION_QUALITY_DETAIL";
 }
 
 impl CS_REFLECTION_QUALITY_DETAIL {
@@ -32525,6 +32818,7 @@ impl CS_REFLECTION_QUALITY_DETAIL {
     pub fn set_ssr_fresnel_reject_bias(&mut self, value: f32) {
         self.ssr_fresnel_reject_bias = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -32535,6 +32829,10 @@ pub struct CS_SHADER_QUALITY_DETAIL {
     tessellation_enabled: u8,
     high_precision_normal_enabled: u8,
     dmy: [u8; 1],
+}
+
+impl ParamDef for CS_SHADER_QUALITY_DETAIL {
+    const NAME: &str = "CS_SHADER_QUALITY_DETAIL";
 }
 
 impl CS_SHADER_QUALITY_DETAIL {
@@ -32569,6 +32867,7 @@ impl CS_SHADER_QUALITY_DETAIL {
     pub fn set_dmy(&mut self, value: [u8; 1]) {
         self.dmy = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -32583,6 +32882,10 @@ pub struct CS_SHADOW_QUALITY_DETAIL {
     texture_min_size: u32,
     texture_max_size: u32,
     blur_count_bias: i32,
+}
+
+impl ParamDef for CS_SHADOW_QUALITY_DETAIL {
+    const NAME: &str = "CS_SHADOW_QUALITY_DETAIL";
 }
 
 impl CS_SHADOW_QUALITY_DETAIL {
@@ -32641,6 +32944,7 @@ impl CS_SHADOW_QUALITY_DETAIL {
     pub fn set_blur_count_bias(&mut self, value: i32) {
         self.blur_count_bias = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -32652,6 +32956,10 @@ pub struct CS_SSAO_QUALITY_DETAIL {
     cs_up_scale_enabled_type: u8,
     cs_use_normal_enabled_type: u8,
     dmy: [u8; 1],
+}
+
+impl ParamDef for CS_SSAO_QUALITY_DETAIL {
+    const NAME: &str = "CS_SSAO_QUALITY_DETAIL";
 }
 
 impl CS_SSAO_QUALITY_DETAIL {
@@ -32686,6 +32994,7 @@ impl CS_SSAO_QUALITY_DETAIL {
     pub fn set_cs_use_normal_enabled_type(&mut self, value: u8) {
         self.cs_use_normal_enabled_type = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -32695,6 +33004,10 @@ pub struct CS_TEXTURE_FILTER_QUALITY_DETAIL {
     filter: u8,
     dmy: [u8; 3],
     max_aniso_level: u32,
+}
+
+impl ParamDef for CS_TEXTURE_FILTER_QUALITY_DETAIL {
+    const NAME: &str = "CS_TEXTURE_FILTER_QUALITY_DETAIL";
 }
 
 impl CS_TEXTURE_FILTER_QUALITY_DETAIL {
@@ -32713,6 +33026,7 @@ impl CS_TEXTURE_FILTER_QUALITY_DETAIL {
     pub fn set_max_aniso_level(&mut self, value: u32) {
         self.max_aniso_level = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -32736,6 +33050,10 @@ pub struct CS_VOLUMETRIC_EFFECT_QUALITY_DETAIL {
     fog_volume_force_shadowing: u8,
     fog_volume_resolution: u8,
     pad2: [u8; 1],
+}
+
+impl ParamDef for CS_VOLUMETRIC_EFFECT_QUALITY_DETAIL {
+    const NAME: &str = "CS_VOLUMETRIC_EFFECT_QUALITY_DETAIL";
 }
 
 impl CS_VOLUMETRIC_EFFECT_QUALITY_DETAIL {
@@ -32858,6 +33176,7 @@ impl CS_VOLUMETRIC_EFFECT_QUALITY_DETAIL {
     pub fn set_fog_volume_resolution(&mut self, value: u8) {
         self.fog_volume_resolution = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -32868,6 +33187,10 @@ pub struct CS_WATER_QUALITY_DETAIL {
     dmy: [u8; 3],
 }
 
+impl ParamDef for CS_WATER_QUALITY_DETAIL {
+    const NAME: &str = "CS_WATER_QUALITY_DETAIL";
+}
+
 impl CS_WATER_QUALITY_DETAIL {
     pub fn interaction_enabled(&self) -> u8 {
         self.interaction_enabled
@@ -32876,6 +33199,7 @@ impl CS_WATER_QUALITY_DETAIL {
     pub fn set_interaction_enabled(&mut self, value: u8) {
         self.interaction_enabled = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -32888,6 +33212,10 @@ pub struct GESTURE_PARAM_ST {
     msg_anim_id: i32,
     bits_c: u8,
     pad1: [u8; 3],
+}
+
+impl ParamDef for GESTURE_PARAM_ST {
+    const NAME: &str = "GESTURE_PARAM_ST";
 }
 
 impl GESTURE_PARAM_ST {
@@ -32926,6 +33254,7 @@ impl GESTURE_PARAM_ST {
     pub fn set_cannot_use_riding(&mut self, value: u8) {
         self.bits_c = (self.bits_c & !(0b00000001 << 0)) | ((value & 0b00000001) << 0);
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -32936,6 +33265,10 @@ pub struct GPARAM_GRID_REGION_INFO_PARAM_ST {
     reserve: [u8; 28],
 }
 
+impl ParamDef for GPARAM_GRID_REGION_INFO_PARAM_ST {
+    const NAME: &str = "GPARAM_GRID_REGION_INFO_PARAM_ST";
+}
+
 impl GPARAM_GRID_REGION_INFO_PARAM_ST {
     pub fn gparam_grid_region_id(&self) -> u32 {
         self.gparam_grid_region_id
@@ -32944,6 +33277,7 @@ impl GPARAM_GRID_REGION_INFO_PARAM_ST {
     pub fn set_gparam_grid_region_id(&mut self, value: u32) {
         self.gparam_grid_region_id = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -32954,6 +33288,10 @@ pub struct GPARAM_REF_SETTINGS_PARAM_ST {
     disable_param_reserve2: [u8; 3],
     ref_target_map_id: i32,
     reserve: [u8; 24],
+}
+
+impl ParamDef for GPARAM_REF_SETTINGS_PARAM_ST {
+    const NAME: &str = "GPARAM_REF_SETTINGS_PARAM_ST";
 }
 
 impl GPARAM_REF_SETTINGS_PARAM_ST {
@@ -32974,6 +33312,7 @@ impl GPARAM_REF_SETTINGS_PARAM_ST {
     pub fn set_ref_target_map_id(&mut self, value: i32) {
         self.ref_target_map_id = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -32984,6 +33323,10 @@ pub struct GRAPHICS_COMMON_PARAM_ST {
     reserved02: [u8; 8],
     chara_wet_decal_fade_range: f32,
     reserved04: [u8; 240],
+}
+
+impl ParamDef for GRAPHICS_COMMON_PARAM_ST {
+    const NAME: &str = "GRAPHICS_COMMON_PARAM_ST";
 }
 
 impl GRAPHICS_COMMON_PARAM_ST {
@@ -33002,6 +33345,7 @@ impl GRAPHICS_COMMON_PARAM_ST {
     pub fn set_chara_wet_decal_fade_range(&mut self, value: f32) {
         self.chara_wet_decal_fade_range = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -33023,6 +33367,10 @@ pub struct CS_GRAPHICS_CONFIG_PARAM_ST {
     m_volumetric_effect_quality: u8,
     m_ray_tracing_quality: u8,
     m_dummy: [u8; 2],
+}
+
+impl ParamDef for CS_GRAPHICS_CONFIG_PARAM_ST {
+    const NAME: &str = "CS_GRAPHICS_CONFIG_PARAM_ST";
 }
 
 impl CS_GRAPHICS_CONFIG_PARAM_ST {
@@ -33137,6 +33485,7 @@ impl CS_GRAPHICS_CONFIG_PARAM_ST {
     pub fn set_m_ray_tracing_quality(&mut self, value: u8) {
         self.m_ray_tracing_quality = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -33149,6 +33498,10 @@ pub struct GRASS_LOD_RANGE_PARAM_ST {
     lod1_play: f32,
     lod2_range: f32,
     lod2_play: f32,
+}
+
+impl ParamDef for GRASS_LOD_RANGE_PARAM_ST {
+    const NAME: &str = "GRASS_LOD_RANGE_PARAM_ST";
 }
 
 impl GRASS_LOD_RANGE_PARAM_ST {
@@ -33199,6 +33552,7 @@ impl GRASS_LOD_RANGE_PARAM_ST {
     pub fn set_lod2_play(&mut self, value: f32) {
         self.lod2_play = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -33208,6 +33562,10 @@ pub struct GRASS_MAP_SETTINGS_PARAM_ST {
     grass_type0: u32,
     grass_type1: u32,
     grass_type2: u32,
+}
+
+impl ParamDef for GRASS_MAP_SETTINGS_PARAM_ST {
+    const NAME: &str = "GRASS_MAP_SETTINGS_PARAM_ST";
 }
 
 impl GRASS_MAP_SETTINGS_PARAM_ST {
@@ -33234,6 +33592,7 @@ impl GRASS_MAP_SETTINGS_PARAM_ST {
     pub fn set_grass_type2(&mut self, value: u32) {
         self.grass_type2 = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -33278,6 +33637,10 @@ pub struct GRASS_TYPE_PARAM_ST {
     pad: [u8; 3],
     simple_model_name: [u16; 16],
     model1_name: [u16; 16],
+}
+
+impl ParamDef for GRASS_TYPE_PARAM_ST {
+    const NAME: &str = "GRASS_TYPE_PARAM_ST";
 }
 
 impl GRASS_TYPE_PARAM_ST {
@@ -33560,6 +33923,7 @@ impl GRASS_TYPE_PARAM_ST {
     pub fn set_model1_name(&mut self, value: [u16; 16]) {
         self.model1_name = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -33702,6 +34066,10 @@ pub struct HIT_EFFECT_SE_PARAM_ST {
     energy_strong_blow_l: i32,
     energy_strong_blow_ll: i32,
     reserve: [u8; 100],
+}
+
+impl ParamDef for HIT_EFFECT_SE_PARAM_ST {
+    const NAME: &str = "HIT_EFFECT_SE_PARAM_ST";
 }
 
 impl HIT_EFFECT_SE_PARAM_ST {
@@ -34784,6 +35152,7 @@ impl HIT_EFFECT_SE_PARAM_ST {
     pub fn set_energy_strong_blow_ll(&mut self, value: i32) {
         self.energy_strong_blow_ll = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -34804,6 +35173,10 @@ pub struct HIT_EFFECT_SFX_CONCEPT_PARAM_ST {
     atk_none_1: i16,
     atk_none_2: i16,
     reserve: [u8; 52],
+}
+
+impl ParamDef for HIT_EFFECT_SFX_CONCEPT_PARAM_ST {
+    const NAME: &str = "HIT_EFFECT_SFX_CONCEPT_PARAM_ST";
 }
 
 impl HIT_EFFECT_SFX_CONCEPT_PARAM_ST {
@@ -34902,6 +35275,7 @@ impl HIT_EFFECT_SFX_CONCEPT_PARAM_ST {
     pub fn set_atk_none_2(&mut self, value: i16) {
         self.atk_none_2 = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -34928,6 +35302,10 @@ pub struct HIT_EFFECT_SFX_PARAM_ST {
     neutral_l: i32,
     neutral_specific1: i32,
     neutral_specific2: i32,
+}
+
+impl ParamDef for HIT_EFFECT_SFX_PARAM_ST {
+    const NAME: &str = "HIT_EFFECT_SFX_PARAM_ST";
 }
 
 impl HIT_EFFECT_SFX_PARAM_ST {
@@ -35090,6 +35468,7 @@ impl HIT_EFFECT_SFX_PARAM_ST {
     pub fn set_neutral_specific2(&mut self, value: i32) {
         self.neutral_specific2 = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -35123,6 +35502,10 @@ pub struct HIT_MTRL_PARAM_ST {
     sp_effect_id_for_wet02: i32,
     sp_effect_id_for_wet03: i32,
     sp_effect_id_for_wet04: i32,
+}
+
+impl ParamDef for HIT_MTRL_PARAM_ST {
+    const NAME: &str = "HIT_MTRL_PARAM_ST";
 }
 
 impl HIT_MTRL_PARAM_ST {
@@ -35367,6 +35750,7 @@ impl HIT_MTRL_PARAM_ST {
     pub fn set_sp_effect_id_for_wet04(&mut self, value: i32) {
         self.sp_effect_id_for_wet04 = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -35430,6 +35814,10 @@ pub struct ITEMLOT_PARAM_ST {
     game_clear_offset: i8,
     bits_95: u8,
     pad2: u16,
+}
+
+impl ParamDef for ITEMLOT_PARAM_ST {
+    const NAME: &str = "ITEMLOT_PARAM_ST";
 }
 
 impl ITEMLOT_PARAM_ST {
@@ -36036,6 +36424,7 @@ impl ITEMLOT_PARAM_ST {
     pub fn set_can_exec_by_hostile_ghost(&mut self, value: u8) {
         self.bits_95 = (self.bits_95 & !(0b00000001 << 1)) | ((value & 0b00000001) << 1);
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -36052,6 +36441,10 @@ pub struct CS_KEY_ASSIGN_MENUITEM_PARAM {
     view_pad: u8,
     view_keyboard_mouse: u8,
     padding: [u8; 6],
+}
+
+impl ParamDef for CS_KEY_ASSIGN_MENUITEM_PARAM {
+    const NAME: &str = "CS_KEY_ASSIGN_MENUITEM_PARAM";
 }
 
 impl CS_KEY_ASSIGN_MENUITEM_PARAM {
@@ -36126,6 +36519,7 @@ impl CS_KEY_ASSIGN_MENUITEM_PARAM {
     pub fn set_view_keyboard_mouse(&mut self, value: u8) {
         self.view_keyboard_mouse = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -36138,6 +36532,10 @@ pub struct KEY_ASSIGN_PARAM_ST {
     mouse_modify_key: i32,
     mouse_key_id: i32,
     reserved: [u8; 12],
+}
+
+impl ParamDef for KEY_ASSIGN_PARAM_ST {
+    const NAME: &str = "KEY_ASSIGN_PARAM_ST";
 }
 
 impl KEY_ASSIGN_PARAM_ST {
@@ -36172,6 +36570,7 @@ impl KEY_ASSIGN_PARAM_ST {
     pub fn set_mouse_key_id(&mut self, value: i32) {
         self.mouse_key_id = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -36209,6 +36608,10 @@ pub struct KNOCKBACK_PARAM_ST {
     guard_ll_dec_time: f32,
     guard_brake_dec_time: f32,
     pad: [u8; 8],
+}
+
+impl ParamDef for KNOCKBACK_PARAM_ST {
+    const NAME: &str = "KNOCKBACK_PARAM_ST";
 }
 
 impl KNOCKBACK_PARAM_ST {
@@ -36451,6 +36854,7 @@ impl KNOCKBACK_PARAM_ST {
     pub fn set_guard_brake_dec_time(&mut self, value: f32) {
         self.guard_brake_dec_time = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -36462,6 +36866,10 @@ pub struct KNOWLEDGE_LOADSCREEN_ITEM_PARAM_ST {
     unlock_flag_id: u32,
     invalid_flag_id: u32,
     msg_id: i32,
+}
+
+impl ParamDef for KNOWLEDGE_LOADSCREEN_ITEM_PARAM_ST {
+    const NAME: &str = "KNOWLEDGE_LOADSCREEN_ITEM_PARAM_ST";
 }
 
 impl KNOWLEDGE_LOADSCREEN_ITEM_PARAM_ST {
@@ -36498,6 +36906,7 @@ impl KNOWLEDGE_LOADSCREEN_ITEM_PARAM_ST {
     pub fn set_msg_id(&mut self, value: i32) {
         self.msg_id = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -36523,6 +36932,10 @@ pub struct LEGACY_DISTANT_VIEW_PARTS_REPLACE_PARAM {
     limited_map_regio_asset_parts_no: i32,
     limited_map_regio_asset_id_range_min: i32,
     limited_map_regio_asset_id_range_max: i32,
+}
+
+impl ParamDef for LEGACY_DISTANT_VIEW_PARTS_REPLACE_PARAM {
+    const NAME: &str = "LEGACY_DISTANT_VIEW_PARTS_REPLACE_PARAM";
 }
 
 impl LEGACY_DISTANT_VIEW_PARTS_REPLACE_PARAM {
@@ -36669,6 +37082,7 @@ impl LEGACY_DISTANT_VIEW_PARTS_REPLACE_PARAM {
     pub fn set_limited_map_regio_asset_id_range_max(&mut self, value: i32) {
         self.limited_map_regio_asset_id_range_max = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -36697,6 +37111,10 @@ pub struct LOAD_BALANCER_DRAW_DIST_SCALE_PARAM_ST {
     lv19: f32,
     lv20: f32,
     reserve: [u8; 44],
+}
+
+impl ParamDef for LOAD_BALANCER_DRAW_DIST_SCALE_PARAM_ST {
+    const NAME: &str = "LOAD_BALANCER_DRAW_DIST_SCALE_PARAM_ST";
 }
 
 impl LOAD_BALANCER_DRAW_DIST_SCALE_PARAM_ST {
@@ -36867,6 +37285,7 @@ impl LOAD_BALANCER_DRAW_DIST_SCALE_PARAM_ST {
     pub fn set_lv20(&mut self, value: f32) {
         self.lv20 = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -36884,6 +37303,10 @@ pub struct LOAD_BALANCER_NEW_DRAW_DIST_SCALE_PARAM_ST {
     shadw_draw_dist_scale_begin: f32,
     shadw_draw_dist_scale_end: f32,
     reserve2: [u8; 24],
+}
+
+impl ParamDef for LOAD_BALANCER_NEW_DRAW_DIST_SCALE_PARAM_ST {
+    const NAME: &str = "LOAD_BALANCER_NEW_DRAW_DIST_SCALE_PARAM_ST";
 }
 
 impl LOAD_BALANCER_NEW_DRAW_DIST_SCALE_PARAM_ST {
@@ -36950,6 +37373,7 @@ impl LOAD_BALANCER_NEW_DRAW_DIST_SCALE_PARAM_ST {
     pub fn set_shadw_draw_dist_scale_end(&mut self, value: f32) {
         self.shadw_draw_dist_scale_end = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -36989,6 +37413,10 @@ pub struct LOAD_BALANCER_PARAM_ST {
     dynamic_resolution_percentage_min: u8,
     dynamic_resolution_percentage_max: u8,
     reserve1: [u8; 30],
+}
+
+impl ParamDef for LOAD_BALANCER_PARAM_ST {
+    const NAME: &str = "LOAD_BALANCER_PARAM_ST";
 }
 
 impl LOAD_BALANCER_PARAM_ST {
@@ -37239,6 +37667,7 @@ impl LOAD_BALANCER_PARAM_ST {
     pub fn set_dynamic_resolution_percentage_max(&mut self, value: u8) {
         self.dynamic_resolution_percentage_max = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -37266,6 +37695,10 @@ pub struct LOCK_CAM_PARAM_ST {
     lock_tgt_keep_time: f32,
     chr_trans_chase_rate_for_normal: f32,
     pad: [u8; 48],
+}
+
+impl ParamDef for LOCK_CAM_PARAM_ST {
+    const NAME: &str = "LOCK_CAM_PARAM_ST";
 }
 
 impl LOCK_CAM_PARAM_ST {
@@ -37428,6 +37861,7 @@ impl LOCK_CAM_PARAM_ST {
     pub fn set_chr_trans_chase_rate_for_normal(&mut self, value: f32) {
         self.chr_trans_chase_rate_for_normal = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -37517,6 +37951,10 @@ pub struct MAGIC_PARAM_ST {
     consume_type10: u8,
     consume_loop_mp_for_menu: i16,
     pad: [u8; 8],
+}
+
+impl ParamDef for MAGIC_PARAM_ST {
+    const NAME: &str = "MAGIC_PARAM_ST";
 }
 
 impl MAGIC_PARAM_ST {
@@ -38447,6 +38885,7 @@ impl MAGIC_PARAM_ST {
     pub fn set_consume_loop_mp_for_menu(&mut self, value: i16) {
         self.consume_loop_mp_for_menu = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -38478,6 +38917,10 @@ pub struct MAP_DEFAULT_INFO_PARAM_ST {
     map_mimicry_establishment_param_id: i32,
     override_gi_resolution_xsx: i8,
     reserve: [u8; 7],
+}
+
+impl ParamDef for MAP_DEFAULT_INFO_PARAM_ST {
+    const NAME: &str = "MAP_DEFAULT_INFO_PARAM_ST";
 }
 
 impl MAP_DEFAULT_INFO_PARAM_ST {
@@ -38666,6 +39109,7 @@ impl MAP_DEFAULT_INFO_PARAM_ST {
     pub fn set_override_gi_resolution_xsx(&mut self, value: i8) {
         self.override_gi_resolution_xsx = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -38675,6 +39119,10 @@ pub struct MAP_GD_REGION_DRAW_PARAM {
     bits_0: u8,
     disable_param_reserve2: [u8; 3],
     override_iv_local_light_scale: f32,
+}
+
+impl ParamDef for MAP_GD_REGION_DRAW_PARAM {
+    const NAME: &str = "MAP_GD_REGION_DRAW_PARAM";
 }
 
 impl MAP_GD_REGION_DRAW_PARAM {
@@ -38695,6 +39143,7 @@ impl MAP_GD_REGION_DRAW_PARAM {
     pub fn set_override_iv_local_light_scale(&mut self, value: f32) {
         self.override_iv_local_light_scale = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -38705,6 +39154,10 @@ pub struct MAP_GD_REGION_ID_PARAM_ST {
     disable_param_reserve2: [u8; 3],
     map_region_id: u32,
     reserve: [u8; 24],
+}
+
+impl ParamDef for MAP_GD_REGION_ID_PARAM_ST {
+    const NAME: &str = "MAP_GD_REGION_ID_PARAM_ST";
 }
 
 impl MAP_GD_REGION_ID_PARAM_ST {
@@ -38725,6 +39178,7 @@ impl MAP_GD_REGION_ID_PARAM_ST {
     pub fn set_map_region_id(&mut self, value: u32) {
         self.map_region_id = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -38754,6 +39208,10 @@ pub struct MAP_GRID_CREATE_HEIGHT_LIMIT_DETAIL_INFO_PARAM_ST {
     unknown_0x3c: i32,
 }
 
+impl ParamDef for MAP_GRID_CREATE_HEIGHT_LIMIT_DETAIL_INFO_PARAM_ST {
+    const NAME: &str = "MAP_GRID_CREATE_HEIGHT_LIMIT_DETAIL_INFO_PARAM_ST";
+}
+
 impl MAP_GRID_CREATE_HEIGHT_LIMIT_DETAIL_INFO_PARAM_ST {
     pub fn map_id(&self) -> i32 {
         self.map_id
@@ -38762,6 +39220,7 @@ impl MAP_GRID_CREATE_HEIGHT_LIMIT_DETAIL_INFO_PARAM_ST {
     pub fn set_map_id(&mut self, value: i32) {
         self.map_id = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -38771,6 +39230,10 @@ pub struct MAP_GRID_CREATE_HEIGHT_LIMIT_INFO_PARAM_ST {
     grid_enable_create_height_min: f32,
     grid_enable_create_height_max: f32,
     reserve: [u8; 24],
+}
+
+impl ParamDef for MAP_GRID_CREATE_HEIGHT_LIMIT_INFO_PARAM_ST {
+    const NAME: &str = "MAP_GRID_CREATE_HEIGHT_LIMIT_INFO_PARAM_ST";
 }
 
 impl MAP_GRID_CREATE_HEIGHT_LIMIT_INFO_PARAM_ST {
@@ -38789,6 +39252,7 @@ impl MAP_GRID_CREATE_HEIGHT_LIMIT_INFO_PARAM_ST {
     pub fn set_grid_enable_create_height_max(&mut self, value: f32) {
         self.grid_enable_create_height_max = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -38808,6 +39272,10 @@ pub struct MAP_MIMICRY_ESTABLISHMENT_PARAM_ST {
     mimicry_sfx_id2: i32,
     mimicry_end_sfx_id2: i32,
     pad1: [u8; 16],
+}
+
+impl ParamDef for MAP_MIMICRY_ESTABLISHMENT_PARAM_ST {
+    const NAME: &str = "MAP_MIMICRY_ESTABLISHMENT_PARAM_ST";
 }
 
 impl MAP_MIMICRY_ESTABLISHMENT_PARAM_ST {
@@ -38906,6 +39374,7 @@ impl MAP_MIMICRY_ESTABLISHMENT_PARAM_ST {
     pub fn set_mimicry_end_sfx_id2(&mut self, value: i32) {
         self.mimicry_end_sfx_id2 = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -38920,6 +39389,10 @@ pub struct MAP_NAME_TEX_PARAM_ST {
     pad1: [u8; 1],
     map_name_id: i32,
     pad2: [u8; 4],
+}
+
+impl ParamDef for MAP_NAME_TEX_PARAM_ST {
+    const NAME: &str = "MAP_NAME_TEX_PARAM_ST";
 }
 
 impl MAP_NAME_TEX_PARAM_ST {
@@ -38964,6 +39437,7 @@ impl MAP_NAME_TEX_PARAM_ST {
     pub fn set_map_name_id(&mut self, value: i32) {
         self.map_name_id = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -38987,6 +39461,10 @@ pub struct MAP_NAME_TEX_PARAM_ST_DLC02 {
     unknown_text_id_2: i32,
     unknown_0x20: i32,
     unknown_0x24: i32,
+}
+
+impl ParamDef for MAP_NAME_TEX_PARAM_ST_DLC02 {
+    const NAME: &str = "MAP_NAME_TEX_PARAM_ST_DLC02";
 }
 
 impl MAP_NAME_TEX_PARAM_ST_DLC02 {
@@ -39031,6 +39509,7 @@ impl MAP_NAME_TEX_PARAM_ST_DLC02 {
     pub fn set_map_name_id(&mut self, value: i32) {
         self.map_name_id = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -39045,6 +39524,10 @@ pub struct MAP_PIECE_TEX_PARAM_ST {
     pad1: [u8; 1],
     save_map_name_id: i32,
     multi_play_area_id: i32,
+}
+
+impl ParamDef for MAP_PIECE_TEX_PARAM_ST {
+    const NAME: &str = "MAP_PIECE_TEX_PARAM_ST";
 }
 
 impl MAP_PIECE_TEX_PARAM_ST {
@@ -39097,6 +39580,7 @@ impl MAP_PIECE_TEX_PARAM_ST {
     pub fn set_multi_play_area_id(&mut self, value: i32) {
         self.multi_play_area_id = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -39117,6 +39601,10 @@ pub struct MAP_PIECE_TEX_PARAM_ST_DLC02 {
     unknown_0x1c: i32,
     unknown_play_region_1: i32,
     unknown_play_region_2: i32,
+}
+
+impl ParamDef for MAP_PIECE_TEX_PARAM_ST_DLC02 {
+    const NAME: &str = "MAP_PIECE_TEX_PARAM_ST_DLC02";
 }
 
 impl MAP_PIECE_TEX_PARAM_ST_DLC02 {
@@ -39169,6 +39657,7 @@ impl MAP_PIECE_TEX_PARAM_ST_DLC02 {
     pub fn set_multi_play_area_id(&mut self, value: i32) {
         self.multi_play_area_id = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -39183,6 +39672,10 @@ pub struct MATERIAL_EX_PARAM_ST {
     material_param_value3: f32,
     material_param_value4: f32,
     pad: [u8; 8],
+}
+
+impl ParamDef for MATERIAL_EX_PARAM_ST {
+    const NAME: &str = "MATERIAL_EX_PARAM_ST";
 }
 
 impl MATERIAL_EX_PARAM_ST {
@@ -39241,6 +39734,7 @@ impl MATERIAL_EX_PARAM_ST {
     pub fn set_material_param_value4(&mut self, value: f32) {
         self.material_param_value4 = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -39322,6 +39816,10 @@ pub struct MENU_COMMON_PARAM_ST {
     unknown_0xed: u8,
     unknown_0xee: u8,
     reserved33: [u8; 17],
+}
+
+impl ParamDef for MENU_COMMON_PARAM_ST {
+    const NAME: &str = "MENU_COMMON_PARAM_ST";
 }
 
 impl MENU_COMMON_PARAM_ST {
@@ -39780,6 +40278,7 @@ impl MENU_COMMON_PARAM_ST {
     pub fn set_pc_horse_hp_recover_disp_threshold(&mut self, value: u32) {
         self.pc_horse_hp_recover_disp_threshold = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -39802,6 +40301,10 @@ pub struct MENU_OFFSCR_REND_PARAM_ST {
     grapm_id_for_ps4: u32,
     grapm_id_for_xb1: u32,
     pad: [u8; 4],
+}
+
+impl ParamDef for MENU_OFFSCR_REND_PARAM_ST {
+    const NAME: &str = "MENU_OFFSCR_REND_PARAM_ST";
 }
 
 impl MENU_OFFSCR_REND_PARAM_ST {
@@ -39924,6 +40427,7 @@ impl MENU_OFFSCR_REND_PARAM_ST {
     pub fn set_grapm_id_for_xb1(&mut self, value: u32) {
         self.grapm_id_for_xb1 = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -39940,6 +40444,10 @@ pub struct MENU_PARAM_COLOR_TABLE_ST {
     v2: f32,
     s3: f32,
     v3: f32,
+}
+
+impl ParamDef for MENU_PARAM_COLOR_TABLE_ST {
+    const NAME: &str = "MENU_PARAM_COLOR_TABLE_ST";
 }
 
 impl MENU_PARAM_COLOR_TABLE_ST {
@@ -40006,6 +40514,7 @@ impl MENU_PARAM_COLOR_TABLE_ST {
     pub fn set_v3(&mut self, value: f32) {
         self.v3 = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -40017,6 +40526,10 @@ pub struct MENUPROPERTY_LAYOUT {
     caption_text_id: i32,
     help_text_id: i32,
     reserved: [u8; 4],
+}
+
+impl ParamDef for MENUPROPERTY_LAYOUT {
+    const NAME: &str = "MENUPROPERTY_LAYOUT";
 }
 
 impl MENUPROPERTY_LAYOUT {
@@ -40051,6 +40564,7 @@ impl MENUPROPERTY_LAYOUT {
     pub fn set_help_text_id(&mut self, value: i32) {
         self.help_text_id = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -40064,6 +40578,10 @@ pub struct MENUPROPERTY_SPEC {
     pad2: [u8; 1],
     format_type: u16,
     pad: [u8; 16],
+}
+
+impl ParamDef for MENUPROPERTY_SPEC {
+    const NAME: &str = "MENUPROPERTY_SPEC";
 }
 
 impl MENUPROPERTY_SPEC {
@@ -40106,6 +40624,7 @@ impl MENUPROPERTY_SPEC {
     pub fn set_format_type(&mut self, value: u16) {
         self.format_type = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -40116,6 +40635,10 @@ pub struct MENU_VALUE_TABLE_SPEC {
     text_id: i32,
     compare_type: i8,
     padding: [u8; 3],
+}
+
+impl ParamDef for MENU_VALUE_TABLE_SPEC {
+    const NAME: &str = "MENU_VALUE_TABLE_SPEC";
 }
 
 impl MENU_VALUE_TABLE_SPEC {
@@ -40142,6 +40665,7 @@ impl MENU_VALUE_TABLE_SPEC {
     pub fn set_compare_type(&mut self, value: i8) {
         self.compare_type = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -40156,6 +40680,10 @@ pub struct MIMICRY_ESTABLISHMENT_TEX_PARAM_ST {
     pad1: [u8; 1],
     mimicry_establishment_param_id: i32,
     pad2: [u8; 4],
+}
+
+impl ParamDef for MIMICRY_ESTABLISHMENT_TEX_PARAM_ST {
+    const NAME: &str = "MIMICRY_ESTABLISHMENT_TEX_PARAM_ST";
 }
 
 impl MIMICRY_ESTABLISHMENT_TEX_PARAM_ST {
@@ -40200,6 +40728,7 @@ impl MIMICRY_ESTABLISHMENT_TEX_PARAM_ST {
     pub fn set_mimicry_establishment_param_id(&mut self, value: i32) {
         self.mimicry_establishment_param_id = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -40218,6 +40747,10 @@ pub struct MIMICRY_ESTABLISHMENT_TEX_PARAM_ST_DLC02 {
     unknown_0x14: i32,
     unknown_0x18: i32,
     unknown_0x1c: i32,
+}
+
+impl ParamDef for MIMICRY_ESTABLISHMENT_TEX_PARAM_ST_DLC02 {
+    const NAME: &str = "MIMICRY_ESTABLISHMENT_TEX_PARAM_ST_DLC02";
 }
 
 impl MIMICRY_ESTABLISHMENT_TEX_PARAM_ST_DLC02 {
@@ -40262,6 +40795,7 @@ impl MIMICRY_ESTABLISHMENT_TEX_PARAM_ST_DLC02 {
     pub fn set_mimicry_establishment_param_id(&mut self, value: i32) {
         self.mimicry_establishment_param_id = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -40286,6 +40820,10 @@ pub struct MISSILE_PARAM_ST {
     explosion_die: u8,
     behavior_id: i32,
     reserve_last: [u8; 56],
+}
+
+impl ParamDef for MISSILE_PARAM_ST {
+    const NAME: &str = "MISSILE_PARAM_ST";
 }
 
 impl MISSILE_PARAM_ST {
@@ -40408,6 +40946,7 @@ impl MISSILE_PARAM_ST {
     pub fn set_behavior_id(&mut self, value: i32) {
         self.behavior_id = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -40438,6 +40977,10 @@ pub struct MODEL_SFX_PARAM_ST {
     sfx_id_7: i32,
     dmypoly_id_7: i32,
     reserve_7: [u8; 8],
+}
+
+impl ParamDef for MODEL_SFX_PARAM_ST {
+    const NAME: &str = "MODEL_SFX_PARAM_ST";
 }
 
 impl MODEL_SFX_PARAM_ST {
@@ -40568,6 +41111,7 @@ impl MODEL_SFX_PARAM_ST {
     pub fn set_dmypoly_id_7(&mut self, value: i32) {
         self.dmypoly_id_7 = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -40613,6 +41157,10 @@ pub struct MOVE_PARAM_ST {
     turn45_angle: u8,
     turn90_angle: u8,
     turn_wait_no_anim_angle: u8,
+}
+
+impl ParamDef for MOVE_PARAM_ST {
+    const NAME: &str = "MOVE_PARAM_ST";
 }
 
 impl MOVE_PARAM_ST {
@@ -40927,6 +41475,7 @@ impl MOVE_PARAM_ST {
     pub fn set_turn_wait_no_anim_angle(&mut self, value: u8) {
         self.turn_wait_no_anim_angle = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -40950,6 +41499,10 @@ pub struct MULTI_ESTUS_FLASK_BONUS_PARAM_ST {
     battle_royal: u8,
     yellow_monk: u8,
     pad1: [u8; 48],
+}
+
+impl ParamDef for MULTI_ESTUS_FLASK_BONUS_PARAM_ST {
+    const NAME: &str = "MULTI_ESTUS_FLASK_BONUS_PARAM_ST";
 }
 
 impl MULTI_ESTUS_FLASK_BONUS_PARAM_ST {
@@ -41080,6 +41633,7 @@ impl MULTI_ESTUS_FLASK_BONUS_PARAM_ST {
     pub fn set_yellow_monk(&mut self, value: u8) {
         self.yellow_monk = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -41093,6 +41647,10 @@ pub struct MULTI_PLAY_CORRECTION_PARAM_ST {
     client3_sp_effect_id: i32,
     b_override_sp_effect: u8,
     pad3: [u8; 15],
+}
+
+impl ParamDef for MULTI_PLAY_CORRECTION_PARAM_ST {
+    const NAME: &str = "MULTI_PLAY_CORRECTION_PARAM_ST";
 }
 
 impl MULTI_PLAY_CORRECTION_PARAM_ST {
@@ -41137,6 +41695,7 @@ impl MULTI_PLAY_CORRECTION_PARAM_ST {
     pub fn set_b_override_sp_effect(&mut self, value: u8) {
         self.b_override_sp_effect = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -41160,6 +41719,10 @@ pub struct MULTI_SOUL_BONUS_RATE_PARAM_ST {
     battle_royal: f32,
     yellow_monk: f32,
     pad1: [u8; 64],
+}
+
+impl ParamDef for MULTI_SOUL_BONUS_RATE_PARAM_ST {
+    const NAME: &str = "MULTI_SOUL_BONUS_RATE_PARAM_ST";
 }
 
 impl MULTI_SOUL_BONUS_RATE_PARAM_ST {
@@ -41290,6 +41853,7 @@ impl MULTI_SOUL_BONUS_RATE_PARAM_ST {
     pub fn set_yellow_monk(&mut self, value: f32) {
         self.yellow_monk = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -41304,6 +41868,10 @@ pub struct NETWORK_AREA_PARAM_ST {
     cell_offset_z: f32,
     bits_18: u8,
     dummy: [u8; 3],
+}
+
+impl ParamDef for NETWORK_AREA_PARAM_ST {
+    const NAME: &str = "NETWORK_AREA_PARAM_ST";
 }
 
 impl NETWORK_AREA_PARAM_ST {
@@ -41414,6 +41982,7 @@ impl NETWORK_AREA_PARAM_ST {
     pub fn set_enable_break_in_search(&mut self, value: u8) {
         self.bits_18 = (self.bits_18 & !(0b00000001 << 5)) | ((value & 0b00000001) << 5);
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -41469,6 +42038,10 @@ pub struct NETWORK_MSG_PARAM_ST {
     unknown_0xb0: i32,
     unknown_0xb4: i32,
     pad2_new: [u8; 8],
+}
+
+impl ParamDef for NETWORK_MSG_PARAM_ST {
+    const NAME: &str = "NETWORK_MSG_PARAM_ST";
 }
 
 impl NETWORK_MSG_PARAM_ST {
@@ -41807,6 +42380,7 @@ impl NETWORK_MSG_PARAM_ST {
     pub fn set_force_join_black_c_npc(&mut self, value: i32) {
         self.force_join_black_c_npc = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -41969,6 +42543,10 @@ pub struct NETWORK_PARAM_ST {
     yellow_monk_overall_flow_time_out_time: f32,
     pad14_0: [u8; 4],
     pad14_1: [u8; 8],
+}
+
+impl ParamDef for NETWORK_PARAM_ST {
+    const NAME: &str = "NETWORK_PARAM_ST";
 }
 
 impl NETWORK_PARAM_ST {
@@ -43123,6 +43701,7 @@ impl NETWORK_PARAM_ST {
     pub fn set_yellow_monk_overall_flow_time_out_time(&mut self, value: f32) {
         self.yellow_monk_overall_flow_time_out_time = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -43140,6 +43719,10 @@ pub struct NPC_AI_ACTION_PARAM_ST {
     gesture_id: i32,
     b_life_end_success: u8,
     pad1: [u8; 3],
+}
+
+impl ParamDef for NPC_AI_ACTION_PARAM_ST {
+    const NAME: &str = "NPC_AI_ACTION_PARAM_ST";
 }
 
 impl NPC_AI_ACTION_PARAM_ST {
@@ -43222,6 +43805,7 @@ impl NPC_AI_ACTION_PARAM_ST {
     pub fn set_b_life_end_success(&mut self, value: u8) {
         self.b_life_end_success = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -43428,6 +44012,10 @@ pub struct NPC_AI_BEHAVIOR_PROBABILITY_PARAM_ST {
     param197: i16,
     param198: i16,
     param199: i16,
+}
+
+impl ParamDef for NPC_AI_BEHAVIOR_PROBABILITY_PARAM_ST {
+    const NAME: &str = "NPC_AI_BEHAVIOR_PROBABILITY_PARAM_ST";
 }
 
 impl NPC_AI_BEHAVIOR_PROBABILITY_PARAM_ST {
@@ -45030,6 +45618,7 @@ impl NPC_AI_BEHAVIOR_PROBABILITY_PARAM_ST {
     pub fn set_param199(&mut self, value: i16) {
         self.param199 = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -45291,6 +45880,10 @@ pub struct NPC_PARAM_ST {
     lock_score_offset: f32,
     dlc_game_clear_sp_effect_id: i32,
     pad12: [u8; 4],
+}
+
+impl ParamDef for NPC_PARAM_ST {
+    const NAME: &str = "NPC_PARAM_ST";
 }
 
 impl NPC_PARAM_ST {
@@ -47967,6 +48560,7 @@ impl NPC_PARAM_ST {
     pub fn set_dlc_game_clear_sp_effect_id(&mut self, value: i32) {
         self.dlc_game_clear_sp_effect_id = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -48066,6 +48660,10 @@ pub struct NPC_THINK_PARAM_ST {
     weapon_off_anim_id: i32,
     weapon_on_anim_id: i32,
     surprise_anim_id: i32,
+}
+
+impl ParamDef for NPC_THINK_PARAM_ST {
+    const NAME: &str = "NPC_THINK_PARAM_ST";
 }
 
 impl NPC_THINK_PARAM_ST {
@@ -48868,6 +49466,7 @@ impl NPC_THINK_PARAM_ST {
     pub fn set_surprise_anim_id(&mut self, value: i32) {
         self.surprise_anim_id = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -48899,6 +49498,10 @@ pub struct OBJ_ACT_PARAM_ST {
     sp_qualified_id_new: i32,
     sp_qualified_id2_new: i32,
     pad2: [u8; 32],
+}
+
+impl ParamDef for OBJ_ACT_PARAM_ST {
+    const NAME: &str = "OBJ_ACT_PARAM_ST";
 }
 
 impl OBJ_ACT_PARAM_ST {
@@ -49085,6 +49688,7 @@ impl OBJ_ACT_PARAM_ST {
     pub fn set_sp_qualified_id2_new(&mut self, value: i32) {
         self.sp_qualified_id2_new = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -49123,6 +49727,10 @@ pub struct OBJECT_MATERIAL_SFX_PARAM_ST {
     sfx_id_29: u32,
     sfx_id_30: u32,
     sfx_id_31: u32,
+}
+
+impl ParamDef for OBJECT_MATERIAL_SFX_PARAM_ST {
+    const NAME: &str = "OBJECT_MATERIAL_SFX_PARAM_ST";
 }
 
 impl OBJECT_MATERIAL_SFX_PARAM_ST {
@@ -49381,6 +49989,7 @@ impl OBJECT_MATERIAL_SFX_PARAM_ST {
     pub fn set_sfx_id_31(&mut self, value: u32) {
         self.sfx_id_31 = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -49451,6 +50060,10 @@ pub struct OBJECT_PARAM_ST {
     reserved0: i32,
     sound_break_se_id: i32,
     pad_5: [u8; 40],
+}
+
+impl ParamDef for OBJECT_PARAM_ST {
+    const NAME: &str = "OBJECT_PARAM_ST";
 }
 
 impl OBJECT_PARAM_ST {
@@ -50079,6 +50692,7 @@ impl OBJECT_PARAM_ST {
     pub fn set_sound_break_se_id(&mut self, value: i32) {
         self.sound_break_se_id = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -50124,6 +50738,10 @@ pub struct PARTS_DRAW_PARAM_ST {
     foward_draw_envmap_blend_type: u8,
     lb_draw_dist_scale_param_id: u8,
     resereve: [u8; 34],
+}
+
+impl ParamDef for PARTS_DRAW_PARAM_ST {
+    const NAME: &str = "PARTS_DRAW_PARAM_ST";
 }
 
 impl PARTS_DRAW_PARAM_ST {
@@ -50432,6 +51050,7 @@ impl PARTS_DRAW_PARAM_ST {
     pub fn set_lb_draw_dist_scale_param_id(&mut self, value: u8) {
         self.lb_draw_dist_scale_param_id = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -50445,6 +51064,10 @@ pub struct PERFORMANCE_CHECK_PARAM {
     compare_value: f32,
     dummy2: [u8; 8],
     user_tag: [u16; 16],
+}
+
+impl ParamDef for PERFORMANCE_CHECK_PARAM {
+    const NAME: &str = "PERFORMANCE_CHECK_PARAM";
 }
 
 impl PERFORMANCE_CHECK_PARAM {
@@ -50487,6 +51110,7 @@ impl PERFORMANCE_CHECK_PARAM {
     pub fn set_user_tag(&mut self, value: [u16; 16]) {
         self.user_tag = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -50522,6 +51146,10 @@ pub struct PHANTOM_PARAM_ST {
     is_no2_pass: u8,
     edge_power: f32,
     glow_scale: f32,
+}
+
+impl ParamDef for PHANTOM_PARAM_ST {
+    const NAME: &str = "PHANTOM_PARAM_ST";
 }
 
 impl PHANTOM_PARAM_ST {
@@ -50748,6 +51376,7 @@ impl PHANTOM_PARAM_ST {
     pub fn set_glow_scale(&mut self, value: f32) {
         self.glow_scale = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -50825,6 +51454,10 @@ pub struct PLAYER_COMMON_PARAM_ST {
     unknown_0xdc: i32,
     unknown_0xe0: i32,
     reserved41: [u8; 28],
+}
+
+impl ParamDef for PLAYER_COMMON_PARAM_ST {
+    const NAME: &str = "PLAYER_COMMON_PARAM_ST";
 }
 
 impl PLAYER_COMMON_PARAM_ST {
@@ -51291,6 +51924,7 @@ impl PLAYER_COMMON_PARAM_ST {
     pub fn set_resist_curse_item_lot_param_id_map(&mut self, value: i32) {
         self.resist_curse_item_lot_param_id_map = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -51366,6 +52000,10 @@ pub struct PLAY_REGION_PARAM_ST {
     boss_id_16: u32,
     map_menu_unlock_event_id: u32,
     pad5: [u8; 32],
+}
+
+impl ParamDef for PLAY_REGION_PARAM_ST {
+    const NAME: &str = "PLAY_REGION_PARAM_ST";
 }
 
 impl PLAY_REGION_PARAM_ST {
@@ -52036,6 +52674,7 @@ impl PLAY_REGION_PARAM_ST {
     pub fn set_map_menu_unlock_event_id(&mut self, value: u32) {
         self.map_menu_unlock_event_id = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -52070,6 +52709,10 @@ pub struct POSTURE_CONTROL_PARAM_GENDER_ST {
     a016_left_elbow_io: i16,
     a016_both_legs_io: i16,
     pad: [u8; 10],
+}
+
+impl ParamDef for POSTURE_CONTROL_PARAM_GENDER_ST {
+    const NAME: &str = "POSTURE_CONTROL_PARAM_GENDER_ST";
 }
 
 impl POSTURE_CONTROL_PARAM_GENDER_ST {
@@ -52288,6 +52931,7 @@ impl POSTURE_CONTROL_PARAM_GENDER_ST {
     pub fn set_a016_both_legs_io(&mut self, value: i16) {
         self.a016_both_legs_io = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -52331,6 +52975,10 @@ pub struct POSTURE_CONTROL_PARAM_PRO_ST {
     a016_left_arm_io: i16,
     a016_left_arm_fb: i16,
     pad: [u8; 8],
+}
+
+impl ParamDef for POSTURE_CONTROL_PARAM_PRO_ST {
+    const NAME: &str = "POSTURE_CONTROL_PARAM_PRO_ST";
 }
 
 impl POSTURE_CONTROL_PARAM_PRO_ST {
@@ -52621,6 +53269,7 @@ impl POSTURE_CONTROL_PARAM_PRO_ST {
     pub fn set_a016_left_arm_fb(&mut self, value: i16) {
         self.a016_left_arm_fb = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -52640,6 +53289,10 @@ pub struct POSTURE_CONTROL_PARAM_WEP_LEFT_ST {
     a003_left_wrist_io: i16,
     a003_left_weapon_rotation: i16,
     pad: [u8; 8],
+}
+
+impl ParamDef for POSTURE_CONTROL_PARAM_WEP_LEFT_ST {
+    const NAME: &str = "POSTURE_CONTROL_PARAM_WEP_LEFT_ST";
 }
 
 impl POSTURE_CONTROL_PARAM_WEP_LEFT_ST {
@@ -52738,6 +53391,7 @@ impl POSTURE_CONTROL_PARAM_WEP_LEFT_ST {
     pub fn set_a003_left_weapon_rotation(&mut self, value: i16) {
         self.a003_left_weapon_rotation = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -52816,6 +53470,10 @@ pub struct POSTURE_CONTROL_PARAM_WEP_RIGHT_ST {
     a016_left_wrist_fb: i16,
     a016_left_wrist_io: i16,
     a016_leftt_weapon_rotation: i16,
+}
+
+impl ParamDef for POSTURE_CONTROL_PARAM_WEP_RIGHT_ST {
+    const NAME: &str = "POSTURE_CONTROL_PARAM_WEP_RIGHT_ST";
 }
 
 impl POSTURE_CONTROL_PARAM_WEP_RIGHT_ST {
@@ -53394,6 +54052,7 @@ impl POSTURE_CONTROL_PARAM_WEP_RIGHT_ST {
     pub fn set_a016_leftt_weapon_rotation(&mut self, value: i16) {
         self.a016_leftt_weapon_rotation = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -53449,6 +54108,10 @@ pub struct RANDOM_APPEAR_EDIT_PARAM_ST {
     rate23: u32,
     param_id24: i32,
     rate24: u32,
+}
+
+impl ParamDef for RANDOM_APPEAR_EDIT_PARAM_ST {
+    const NAME: &str = "RANDOM_APPEAR_EDIT_PARAM_ST";
 }
 
 impl RANDOM_APPEAR_EDIT_PARAM_ST {
@@ -53843,6 +54506,7 @@ impl RANDOM_APPEAR_EDIT_PARAM_ST {
     pub fn set_rate24(&mut self, value: u32) {
         self.rate24 = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -53862,6 +54526,10 @@ pub struct RANDOM_APPEAR_PARAM_ST {
     bits_a: u8,
     bits_b: u8,
     bits_c: u8,
+}
+
+impl ParamDef for RANDOM_APPEAR_PARAM_ST {
+    const NAME: &str = "RANDOM_APPEAR_PARAM_ST";
 }
 
 impl RANDOM_APPEAR_PARAM_ST {
@@ -54864,6 +55532,7 @@ impl RANDOM_APPEAR_PARAM_ST {
     pub fn set_slot99(&mut self, value: u8) {
         self.bits_c = (self.bits_c & !(0b00000001 << 3)) | ((value & 0b00000001) << 3);
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -54889,6 +55558,10 @@ pub struct REINFORCE_PARAM_PROTECTOR_ST {
     resist_freeze_rate: f32,
     resist_sleep_rate: f32,
     resist_madness_rate: f32,
+}
+
+impl ParamDef for REINFORCE_PARAM_PROTECTOR_ST {
+    const NAME: &str = "REINFORCE_PARAM_PROTECTOR_ST";
 }
 
 impl REINFORCE_PARAM_PROTECTOR_ST {
@@ -55043,6 +55716,7 @@ impl REINFORCE_PARAM_PROTECTOR_ST {
     pub fn set_resist_madness_rate(&mut self, value: f32) {
         self.resist_madness_rate = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -55088,6 +55762,10 @@ pub struct REINFORCE_PARAM_WEAPON_ST {
     sleep_guard_def_rate: f32,
     madness_guard_def_rate: f32,
     base_atk_rate: f32,
+}
+
+impl ParamDef for REINFORCE_PARAM_WEAPON_ST {
+    const NAME: &str = "REINFORCE_PARAM_WEAPON_ST";
 }
 
 impl REINFORCE_PARAM_WEAPON_ST {
@@ -55394,6 +56072,7 @@ impl REINFORCE_PARAM_WEAPON_ST {
     pub fn set_base_atk_rate(&mut self, value: f32) {
         self.base_atk_rate = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -55410,6 +56089,10 @@ pub struct RESIST_CORRECT_PARAM_ST {
     add_rate3: f32,
     add_rate4: f32,
     add_rate5: f32,
+}
+
+impl ParamDef for RESIST_CORRECT_PARAM_ST {
+    const NAME: &str = "RESIST_CORRECT_PARAM_ST";
 }
 
 impl RESIST_CORRECT_PARAM_ST {
@@ -55492,6 +56175,7 @@ impl RESIST_CORRECT_PARAM_ST {
     pub fn set_add_rate5(&mut self, value: f32) {
         self.add_rate5 = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -55499,6 +56183,10 @@ impl RESIST_CORRECT_PARAM_ST {
 #[repr(C)]
 pub struct REVERB_AUX_SEND_BUS_PARAM_ST {
     reverb_aux_send_bus_name: [u8; 32],
+}
+
+impl ParamDef for REVERB_AUX_SEND_BUS_PARAM_ST {
+    const NAME: &str = "REVERB_AUX_SEND_BUS_PARAM_ST";
 }
 
 impl REVERB_AUX_SEND_BUS_PARAM_ST {
@@ -55509,6 +56197,7 @@ impl REVERB_AUX_SEND_BUS_PARAM_ST {
     pub fn set_reverb_aux_send_bus_name(&mut self, value: [u8; 32]) {
         self.reverb_aux_send_bus_name = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -55529,6 +56218,10 @@ pub struct RIDE_PARAM_ST {
     diff_ang_min: f32,
     diff_ang_max: f32,
     pad: [u8; 12],
+}
+
+impl ParamDef for RIDE_PARAM_ST {
+    const NAME: &str = "RIDE_PARAM_ST";
 }
 
 impl RIDE_PARAM_ST {
@@ -55635,6 +56328,7 @@ impl RIDE_PARAM_ST {
     pub fn set_diff_ang_max(&mut self, value: f32) {
         self.diff_ang_max = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -55673,6 +56367,10 @@ pub struct ROLE_PARAM_ST {
     sign_phantom_id: i32,
     non_player_summon_start_anim_id: i32,
     pad2: [u8; 16],
+}
+
+impl ParamDef for ROLE_PARAM_ST {
+    const NAME: &str = "ROLE_PARAM_ST";
 }
 
 impl ROLE_PARAM_ST {
@@ -55907,6 +56605,7 @@ impl ROLE_PARAM_ST {
     pub fn set_non_player_summon_start_anim_id(&mut self, value: i32) {
         self.non_player_summon_start_anim_id = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -55932,6 +56631,10 @@ pub struct ROLLING_OBJ_LOT_PARAM_ST {
     create_weight_6: u8,
     create_weight_7: u8,
     reserve_0: [u8; 20],
+}
+
+impl ParamDef for ROLLING_OBJ_LOT_PARAM_ST {
+    const NAME: &str = "ROLLING_OBJ_LOT_PARAM_ST";
 }
 
 impl ROLLING_OBJ_LOT_PARAM_ST {
@@ -56072,6 +56775,7 @@ impl ROLLING_OBJ_LOT_PARAM_ST {
     pub fn set_create_weight_7(&mut self, value: u8) {
         self.create_weight_7 = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -56084,6 +56788,10 @@ pub struct RUNTIME_BONE_CONTROL_PARAM_ST {
     apply_bone: [u8; 32],
     target_bone1: [u8; 32],
     target_bone2: [u8; 32],
+}
+
+impl ParamDef for RUNTIME_BONE_CONTROL_PARAM_ST {
+    const NAME: &str = "RUNTIME_BONE_CONTROL_PARAM_ST";
 }
 
 impl RUNTIME_BONE_CONTROL_PARAM_ST {
@@ -56126,6 +56834,7 @@ impl RUNTIME_BONE_CONTROL_PARAM_ST {
     pub fn set_target_bone2(&mut self, value: [u8; 32]) {
         self.target_bone2 = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -56133,6 +56842,10 @@ impl RUNTIME_BONE_CONTROL_PARAM_ST {
 #[repr(C)]
 pub struct SE_ACTIVATION_RANGE_PARAM_ST {
     activate_range: f32,
+}
+
+impl ParamDef for SE_ACTIVATION_RANGE_PARAM_ST {
+    const NAME: &str = "SE_ACTIVATION_RANGE_PARAM_ST";
 }
 
 impl SE_ACTIVATION_RANGE_PARAM_ST {
@@ -56143,6 +56856,7 @@ impl SE_ACTIVATION_RANGE_PARAM_ST {
     pub fn set_activate_range(&mut self, value: f32) {
         self.activate_range = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -56153,6 +56867,10 @@ pub struct SE_MATERIAL_CONVERT_PARAM_ST {
     pad: [u8; 3],
 }
 
+impl ParamDef for SE_MATERIAL_CONVERT_PARAM_ST {
+    const NAME: &str = "SE_MATERIAL_CONVERT_PARAM_ST";
+}
+
 impl SE_MATERIAL_CONVERT_PARAM_ST {
     pub fn se_material_id(&self) -> u8 {
         self.se_material_id
@@ -56161,6 +56879,7 @@ impl SE_MATERIAL_CONVERT_PARAM_ST {
     pub fn set_se_material_id(&mut self, value: u8) {
         self.se_material_id = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -56168,6 +56887,10 @@ impl SE_MATERIAL_CONVERT_PARAM_ST {
 #[repr(C)]
 pub struct SFX_BLOCK_RES_SHARE_PARAM {
     share_block_rs_map_uid_val: u32,
+}
+
+impl ParamDef for SFX_BLOCK_RES_SHARE_PARAM {
+    const NAME: &str = "SFX_BLOCK_RES_SHARE_PARAM";
 }
 
 impl SFX_BLOCK_RES_SHARE_PARAM {
@@ -56178,6 +56901,7 @@ impl SFX_BLOCK_RES_SHARE_PARAM {
     pub fn set_share_block_rs_map_uid_val(&mut self, value: u32) {
         self.share_block_rs_map_uid_val = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -56202,6 +56926,10 @@ pub struct SHOP_LINEUP_PARAM {
     menu_title_msg_id: i32,
     menu_icon_id: i16,
     pad2: [u8; 2],
+}
+
+impl ParamDef for SHOP_LINEUP_PARAM {
+    const NAME: &str = "SHOP_LINEUP_PARAM";
 }
 
 impl SHOP_LINEUP_PARAM {
@@ -56324,6 +57052,7 @@ impl SHOP_LINEUP_PARAM {
     pub fn set_menu_icon_id(&mut self, value: i16) {
         self.menu_icon_id = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -56346,6 +57075,10 @@ pub struct SIGN_PUDDLE_PARAM_ST {
     location_text_id: i32,
     sort_id: i32,
     end_pad: [u8; 4],
+}
+
+impl ParamDef for SIGN_PUDDLE_PARAM_ST {
+    const NAME: &str = "SIGN_PUDDLE_PARAM_ST";
 }
 
 impl SIGN_PUDDLE_PARAM_ST {
@@ -56438,6 +57171,7 @@ impl SIGN_PUDDLE_PARAM_ST {
     pub fn set_sort_id(&mut self, value: i32) {
         self.sort_id = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -56449,6 +57183,10 @@ pub struct SIGN_PUDDLE_SUB_CATEGORY_PARAM_ST {
     sign_puddle_tab_id: u16,
     unknown_0xa: u16,
     end_pad: [u8; 4],
+}
+
+impl ParamDef for SIGN_PUDDLE_SUB_CATEGORY_PARAM_ST {
+    const NAME: &str = "SIGN_PUDDLE_SUB_CATEGORY_PARAM_ST";
 }
 
 impl SIGN_PUDDLE_SUB_CATEGORY_PARAM_ST {
@@ -56467,6 +57205,7 @@ impl SIGN_PUDDLE_SUB_CATEGORY_PARAM_ST {
     pub fn set_sign_puddle_tab_id(&mut self, value: u16) {
         self.sign_puddle_tab_id = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -56477,6 +57216,10 @@ pub struct SIGN_PUDDLE_TAB_PARAM_ST {
     tab_text_id: i32,
     unknown_0x8: i32,
     unknown_0xc: i32,
+}
+
+impl ParamDef for SIGN_PUDDLE_TAB_PARAM_ST {
+    const NAME: &str = "SIGN_PUDDLE_TAB_PARAM_ST";
 }
 
 impl SIGN_PUDDLE_TAB_PARAM_ST {
@@ -56495,6 +57238,7 @@ impl SIGN_PUDDLE_TAB_PARAM_ST {
     pub fn set_tab_text_id(&mut self, value: i32) {
         self.tab_text_id = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -56502,6 +57246,10 @@ impl SIGN_PUDDLE_TAB_PARAM_ST {
 #[repr(C)]
 pub struct SOUND_ASSET_SOUND_OBJ_ENABLE_DIST_PARAM_ST {
     sound_obj_enable_dist: f32,
+}
+
+impl ParamDef for SOUND_ASSET_SOUND_OBJ_ENABLE_DIST_PARAM_ST {
+    const NAME: &str = "SOUND_ASSET_SOUND_OBJ_ENABLE_DIST_PARAM_ST";
 }
 
 impl SOUND_ASSET_SOUND_OBJ_ENABLE_DIST_PARAM_ST {
@@ -56512,6 +57260,7 @@ impl SOUND_ASSET_SOUND_OBJ_ENABLE_DIST_PARAM_ST {
     pub fn set_sound_obj_enable_dist(&mut self, value: f32) {
         self.sound_obj_enable_dist = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -56522,6 +57271,10 @@ pub struct SOUND_AUTO_ENV_SOUND_GROUP_PARAM_ST {
     expand_range: f32,
     follow_speed: f32,
     follow_rate: f32,
+}
+
+impl ParamDef for SOUND_AUTO_ENV_SOUND_GROUP_PARAM_ST {
+    const NAME: &str = "SOUND_AUTO_ENV_SOUND_GROUP_PARAM_ST";
 }
 
 impl SOUND_AUTO_ENV_SOUND_GROUP_PARAM_ST {
@@ -56556,6 +57309,7 @@ impl SOUND_AUTO_ENV_SOUND_GROUP_PARAM_ST {
     pub fn set_follow_rate(&mut self, value: f32) {
         self.follow_rate = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -56570,6 +57324,10 @@ pub struct SOUND_AUTO_REVERB_EVALUATION_DIST_PARAM_ST {
     enable_life_time: f32,
     max_dist_record_num: u32,
     ignore_dist_num_for_max: u32,
+}
+
+impl ParamDef for SOUND_AUTO_REVERB_EVALUATION_DIST_PARAM_ST {
+    const NAME: &str = "SOUND_AUTO_REVERB_EVALUATION_DIST_PARAM_ST";
 }
 
 impl SOUND_AUTO_REVERB_EVALUATION_DIST_PARAM_ST {
@@ -56636,6 +57394,7 @@ impl SOUND_AUTO_REVERB_EVALUATION_DIST_PARAM_ST {
     pub fn set_ignore_dist_num_for_max(&mut self, value: u32) {
         self.ignore_dist_num_for_max = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -56653,6 +57412,10 @@ pub struct SOUND_AUTO_REVERB_SELECT_PARAM_ST {
     dist_min_b: f32,
     dist_max_b: f32,
     no_hit_num_min: i32,
+}
+
+impl ParamDef for SOUND_AUTO_REVERB_SELECT_PARAM_ST {
+    const NAME: &str = "SOUND_AUTO_REVERB_SELECT_PARAM_ST";
 }
 
 impl SOUND_AUTO_REVERB_SELECT_PARAM_ST {
@@ -56735,6 +57498,7 @@ impl SOUND_AUTO_REVERB_SELECT_PARAM_ST {
     pub fn set_no_hit_num_min(&mut self, value: i32) {
         self.no_hit_num_min = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -56769,6 +57533,10 @@ pub struct SOUND_CHR_PHYSICS_SE_PARAM_ST {
     contact_check_rigid_idx13: i8,
     contact_check_rigid_idx14: i8,
     contact_check_rigid_idx15: i8,
+}
+
+impl ParamDef for SOUND_CHR_PHYSICS_SE_PARAM_ST {
+    const NAME: &str = "SOUND_CHR_PHYSICS_SE_PARAM_ST";
 }
 
 impl SOUND_CHR_PHYSICS_SE_PARAM_ST {
@@ -56981,6 +57749,7 @@ impl SOUND_CHR_PHYSICS_SE_PARAM_ST {
     pub fn set_contact_check_rigid_idx15(&mut self, value: i8) {
         self.contact_check_rigid_idx15 = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -56989,6 +57758,10 @@ impl SOUND_CHR_PHYSICS_SE_PARAM_ST {
 pub struct SOUND_COMMON_INGAME_PARAM_ST {
     param_key_str: [u8; 32],
     param_value_str: [u8; 32],
+}
+
+impl ParamDef for SOUND_COMMON_INGAME_PARAM_ST {
+    const NAME: &str = "SOUND_COMMON_INGAME_PARAM_ST";
 }
 
 impl SOUND_COMMON_INGAME_PARAM_ST {
@@ -57007,6 +57780,7 @@ impl SOUND_COMMON_INGAME_PARAM_ST {
     pub fn set_param_value_str(&mut self, value: [u8; 32]) {
         self.param_value_str = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -57015,6 +57789,10 @@ impl SOUND_COMMON_INGAME_PARAM_ST {
 pub struct SOUND_COMMON_SYSTEM_PARAM_ST {
     param_key_str: [u8; 32],
     param_value_str: [u8; 32],
+}
+
+impl ParamDef for SOUND_COMMON_SYSTEM_PARAM_ST {
+    const NAME: &str = "SOUND_COMMON_SYSTEM_PARAM_ST";
 }
 
 impl SOUND_COMMON_SYSTEM_PARAM_ST {
@@ -57033,6 +57811,7 @@ impl SOUND_COMMON_SYSTEM_PARAM_ST {
     pub fn set_param_value_str(&mut self, value: [u8; 32]) {
         self.param_value_str = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -57054,6 +57833,10 @@ pub struct SOUND_CUTSCENE_PARAM_ST {
     unknown_0x1b: u8,
     reserved: [u8; 4],
     reserved2: [u8; 4],
+}
+
+impl ParamDef for SOUND_CUTSCENE_PARAM_ST {
+    const NAME: &str = "SOUND_CUTSCENE_PARAM_ST";
 }
 
 impl SOUND_CUTSCENE_PARAM_ST {
@@ -57114,6 +57897,7 @@ impl SOUND_CUTSCENE_PARAM_ST {
     pub fn set_enter_map_mute_stop_time_on_draw_cutscene(&mut self, value: f32) {
         self.enter_map_mute_stop_time_on_draw_cutscene = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -57130,6 +57914,10 @@ pub struct SPEEDTREE_MODEL_PARAM_ST {
     min_translucency_branch: f32,
     max_translucency_branch: f32,
     billboard_back_specular_weaken_param: f32,
+}
+
+impl ParamDef for SPEEDTREE_MODEL_PARAM_ST {
+    const NAME: &str = "SPEEDTREE_MODEL_PARAM_ST";
 }
 
 impl SPEEDTREE_MODEL_PARAM_ST {
@@ -57212,6 +58000,7 @@ impl SPEEDTREE_MODEL_PARAM_ST {
     pub fn set_billboard_back_specular_weaken_param(&mut self, value: f32) {
         self.billboard_back_specular_weaken_param = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -57506,6 +58295,10 @@ pub struct SP_EFFECT_PARAM_ST {
     goods_consumption_rate: f32,
     guard_stamina_mult: f32,
     spirit_death_sp_effect_id: i32,
+}
+
+impl ParamDef for SP_EFFECT_PARAM_ST {
+    const NAME: &str = "SP_EFFECT_PARAM_ST";
 }
 
 impl SP_EFFECT_PARAM_ST {
@@ -60576,6 +61369,7 @@ impl SP_EFFECT_PARAM_ST {
     pub fn set_spirit_death_sp_effect_id(&mut self, value: i32) {
         self.spirit_death_sp_effect_id = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -60586,6 +61380,10 @@ pub struct SP_EFFECT_SET_PARAM_ST {
     sp_effect_id2: i32,
     sp_effect_id3: i32,
     sp_effect_id4: i32,
+}
+
+impl ParamDef for SP_EFFECT_SET_PARAM_ST {
+    const NAME: &str = "SP_EFFECT_SET_PARAM_ST";
 }
 
 impl SP_EFFECT_SET_PARAM_ST {
@@ -60620,6 +61418,7 @@ impl SP_EFFECT_SET_PARAM_ST {
     pub fn set_sp_effect_id4(&mut self, value: i32) {
         self.sp_effect_id4 = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -60682,6 +61481,10 @@ pub struct SP_EFFECT_VFX_PARAM_ST {
     unknown_0x99: u8,
     unknown_0x9a: u8,
     pad: [u8; 9],
+}
+
+impl ParamDef for SP_EFFECT_VFX_PARAM_ST {
+    const NAME: &str = "SP_EFFECT_VFX_PARAM_ST";
 }
 
 impl SP_EFFECT_VFX_PARAM_ST {
@@ -61218,6 +62021,7 @@ impl SP_EFFECT_VFX_PARAM_ST {
     pub fn set_foot_decal_material_offset_overwrite_id(&mut self, value: i16) {
         self.foot_decal_material_offset_overwrite_id = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -61242,6 +62046,10 @@ pub struct SWORD_ARTS_PARAM_ST {
     sword_arts_type_new: u16,
     icon_id: u16,
     ai_usage_id: i32,
+}
+
+impl ParamDef for SWORD_ARTS_PARAM_ST {
+    const NAME: &str = "SWORD_ARTS_PARAM_ST";
 }
 
 impl SWORD_ARTS_PARAM_ST {
@@ -61414,6 +62222,7 @@ impl SWORD_ARTS_PARAM_ST {
     pub fn set_ai_usage_id(&mut self, value: i32) {
         self.ai_usage_id = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -61440,6 +62249,10 @@ pub struct TALK_PARAM_ST {
     talk_animation_id: i32,
     bits_40: u8,
     pad1: [u8; 31],
+}
+
+impl ParamDef for TALK_PARAM_ST {
+    const NAME: &str = "TALK_PARAM_ST";
 }
 
 impl TALK_PARAM_ST {
@@ -61582,6 +62395,7 @@ impl TALK_PARAM_ST {
     pub fn set_is_force_disp(&mut self, value: u8) {
         self.bits_40 = (self.bits_40 & !(0b00000001 << 0)) | ((value & 0b00000001) << 0);
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -61620,6 +62434,10 @@ pub struct THROW_DIRECTION_SFX_PARAM_ST {
     sfx_id_29: i32,
     sfx_id_30: i32,
     pad1: [u8; 20],
+}
+
+impl ParamDef for THROW_DIRECTION_SFX_PARAM_ST {
+    const NAME: &str = "THROW_DIRECTION_SFX_PARAM_ST";
 }
 
 impl THROW_DIRECTION_SFX_PARAM_ST {
@@ -61870,6 +62688,7 @@ impl THROW_DIRECTION_SFX_PARAM_ST {
     pub fn set_sfx_id_30(&mut self, value: i32) {
         self.sfx_id_30 = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -61912,6 +62731,10 @@ pub struct THROW_PARAM_ST {
     adsrob_model_pos_interpolation_time: f32,
     throw_following_end_easing_time: f32,
     pad1: [u8; 24],
+}
+
+impl ParamDef for THROW_PARAM_ST {
+    const NAME: &str = "THROW_PARAM_ST";
 }
 
 impl THROW_PARAM_ST {
@@ -62230,6 +63053,7 @@ impl THROW_PARAM_ST {
     pub fn set_throw_following_end_easing_time(&mut self, value: f32) {
         self.throw_following_end_easing_time = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -62245,6 +63069,10 @@ pub struct TOUGHNESS_PARAM_ST {
     unk1: f32,
     unk2: f32,
     pad1: [u8; 8],
+}
+
+impl ParamDef for TOUGHNESS_PARAM_ST {
+    const NAME: &str = "TOUGHNESS_PARAM_ST";
 }
 
 impl TOUGHNESS_PARAM_ST {
@@ -62287,6 +63115,7 @@ impl TOUGHNESS_PARAM_ST {
     pub fn set_pro_correction_rate(&mut self, value: f32) {
         self.pro_correction_rate = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -62306,6 +63135,10 @@ pub struct TUTORIAL_PARAM_ST {
     display_min_time: f32,
     display_time: f32,
     pad3: [u8; 4],
+}
+
+impl ParamDef for TUTORIAL_PARAM_ST {
+    const NAME: &str = "TUTORIAL_PARAM_ST";
 }
 
 impl TUTORIAL_PARAM_ST {
@@ -62382,6 +63215,7 @@ impl TUTORIAL_PARAM_ST {
     pub fn set_display_time(&mut self, value: f32) {
         self.display_time = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -62393,6 +63227,10 @@ pub struct WAYPOINT_PARAM_ST {
     attribute3: i16,
     attribute4: i16,
     padding4: [u8; 8],
+}
+
+impl ParamDef for WAYPOINT_PARAM_ST {
+    const NAME: &str = "WAYPOINT_PARAM_ST";
 }
 
 impl WAYPOINT_PARAM_ST {
@@ -62427,6 +63265,7 @@ impl WAYPOINT_PARAM_ST {
     pub fn set_attribute4(&mut self, value: i16) {
         self.attribute4 = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -62457,6 +63296,10 @@ pub struct WEATHER_ASSET_CREATE_PARAM_ST {
     create_asset_limit_id2: i8,
     create_asset_limit_id3: i8,
     reserved2: [u8; 4],
+}
+
+impl ParamDef for WEATHER_ASSET_CREATE_PARAM_ST {
+    const NAME: &str = "WEATHER_ASSET_CREATE_PARAM_ST";
 }
 
 impl WEATHER_ASSET_CREATE_PARAM_ST {
@@ -62627,6 +63470,7 @@ impl WEATHER_ASSET_CREATE_PARAM_ST {
     pub fn set_create_asset_limit_id3(&mut self, value: i8) {
         self.create_asset_limit_id3 = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -62653,6 +63497,10 @@ pub struct WEATHER_ASSET_REPLACE_PARAM_ST {
     create_asset_limit_id2: i8,
     create_asset_limit_id3: i8,
     reserved1: [u8; 4],
+}
+
+impl ParamDef for WEATHER_ASSET_REPLACE_PARAM_ST {
+    const NAME: &str = "WEATHER_ASSET_REPLACE_PARAM_ST";
 }
 
 impl WEATHER_ASSET_REPLACE_PARAM_ST {
@@ -62775,6 +63623,7 @@ impl WEATHER_ASSET_REPLACE_PARAM_ST {
     pub fn set_create_asset_limit_id3(&mut self, value: i8) {
         self.create_asset_limit_id3 = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -62821,6 +63670,10 @@ pub struct WEATHER_LOT_PARAM_ST {
     timezone_end_hour: u8,
     timezone_end_minute: u8,
     reserve: [u8; 9],
+}
+
+impl ParamDef for WEATHER_LOT_PARAM_ST {
+    const NAME: &str = "WEATHER_LOT_PARAM_ST";
 }
 
 impl WEATHER_LOT_PARAM_ST {
@@ -63129,6 +63982,7 @@ impl WEATHER_LOT_PARAM_ST {
     pub fn set_timezone_end_minute(&mut self, value: u8) {
         self.timezone_end_minute = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -63143,6 +63997,10 @@ pub struct WEATHER_LOT_TEX_PARAM_ST {
     pad1: [u8; 1],
     weather_log_id: i32,
     pad2: [u8; 4],
+}
+
+impl ParamDef for WEATHER_LOT_TEX_PARAM_ST {
+    const NAME: &str = "WEATHER_LOT_TEX_PARAM_ST";
 }
 
 impl WEATHER_LOT_TEX_PARAM_ST {
@@ -63187,6 +64045,7 @@ impl WEATHER_LOT_TEX_PARAM_ST {
     pub fn set_weather_log_id(&mut self, value: i32) {
         self.weather_log_id = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -63204,6 +64063,10 @@ pub struct WEATHER_LOT_TEX_PARAM_ST_DLC02 {
     unknown_0x10: i32,
     unknown_0x14: i32,
     unknown_0x18: i32,
+}
+
+impl ParamDef for WEATHER_LOT_TEX_PARAM_ST_DLC02 {
+    const NAME: &str = "WEATHER_LOT_TEX_PARAM_ST_DLC02";
 }
 
 impl WEATHER_LOT_TEX_PARAM_ST_DLC02 {
@@ -63248,6 +64111,7 @@ impl WEATHER_LOT_TEX_PARAM_ST_DLC02 {
     pub fn set_weather_log_id(&mut self, value: i32) {
         self.weather_log_id = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -63271,6 +64135,10 @@ pub struct WEATHER_PARAM_ST {
     sfx_id_outdoor: i32,
     ai_sight_rate: f32,
     dist_view_weather_gparam_override_weight: f32,
+}
+
+impl ParamDef for WEATHER_PARAM_ST {
+    const NAME: &str = "WEATHER_PARAM_ST";
 }
 
 impl WEATHER_PARAM_ST {
@@ -63409,6 +64277,7 @@ impl WEATHER_PARAM_ST {
     pub fn set_dist_view_weather_gparam_override_weight(&mut self, value: f32) {
         self.dist_view_weather_gparam_override_weight = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -63477,6 +64346,10 @@ pub struct WEP_ABSORP_POS_PARAM_ST {
     unknown_0x56: i8,
     unknown_0x57: i8,
     reserve: [u8; 8],
+}
+
+impl ParamDef for WEP_ABSORP_POS_PARAM_ST {
+    const NAME: &str = "WEP_ABSORP_POS_PARAM_ST";
 }
 
 impl WEP_ABSORP_POS_PARAM_ST {
@@ -63921,6 +64794,7 @@ impl WEP_ABSORP_POS_PARAM_ST {
     pub fn set_disp_pos_type_left_hang_3(&mut self, value: u8) {
         self.disp_pos_type_left_hang_3 = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -63940,6 +64814,10 @@ pub struct WET_ASPECT_PARAM_ST {
     shininess_rate: f32,
     shininess: u8,
     reserve_4: [u8; 11],
+}
+
+impl ParamDef for WET_ASPECT_PARAM_ST {
+    const NAME: &str = "WET_ASPECT_PARAM_ST";
 }
 
 impl WET_ASPECT_PARAM_ST {
@@ -64006,6 +64884,7 @@ impl WET_ASPECT_PARAM_ST {
     pub fn set_shininess(&mut self, value: u8) {
         self.shininess = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -64016,6 +64895,10 @@ pub struct WHITE_SIGN_COOL_TIME_PARAM_ST {
     limitation_time_normal_dried_finger: f32,
     limitation_time_guardian: f32,
     limitation_time_guardian_dried_finger: f32,
+}
+
+impl ParamDef for WHITE_SIGN_COOL_TIME_PARAM_ST {
+    const NAME: &str = "WHITE_SIGN_COOL_TIME_PARAM_ST";
 }
 
 impl WHITE_SIGN_COOL_TIME_PARAM_ST {
@@ -64050,6 +64933,7 @@ impl WHITE_SIGN_COOL_TIME_PARAM_ST {
     pub fn set_limitation_time_guardian_dried_finger(&mut self, value: f32) {
         self.limitation_time_guardian_dried_finger = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -64074,6 +64958,10 @@ pub struct WORLD_MAP_LEGACY_CONV_PARAM_ST {
     dst_pos_z: f32,
     bits_24: u8,
     pad4: [u8; 11],
+}
+
+impl ParamDef for WORLD_MAP_LEGACY_CONV_PARAM_ST {
+    const NAME: &str = "WORLD_MAP_LEGACY_CONV_PARAM_ST";
 }
 
 impl WORLD_MAP_LEGACY_CONV_PARAM_ST {
@@ -64192,6 +65080,7 @@ impl WORLD_MAP_LEGACY_CONV_PARAM_ST {
     pub fn set_is_base_point(&mut self, value: u8) {
         self.bits_24 = (self.bits_24 & !(0b00000001 << 0)) | ((value & 0b00000001) << 0);
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -64213,6 +65102,10 @@ pub struct WORLD_MAP_PIECE_PARAM_ST {
     acquisition_event_res_offset_x: f32,
     acquisition_event_res_offset_y: f32,
     pad: [u8; 12],
+}
+
+impl ParamDef for WORLD_MAP_PIECE_PARAM_ST {
+    const NAME: &str = "WORLD_MAP_PIECE_PARAM_ST";
 }
 
 impl WORLD_MAP_PIECE_PARAM_ST {
@@ -64321,6 +65214,7 @@ impl WORLD_MAP_PIECE_PARAM_ST {
     pub fn set_acquisition_event_res_offset_y(&mut self, value: f32) {
         self.acquisition_event_res_offset_y = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -64339,6 +65233,10 @@ pub struct WORLD_MAP_PLACE_NAME_PARAM_ST {
     pos_x: f32,
     pos_y: f32,
     pos_z: f32,
+}
+
+impl ParamDef for WORLD_MAP_PLACE_NAME_PARAM_ST {
+    const NAME: &str = "WORLD_MAP_PLACE_NAME_PARAM_ST";
 }
 
 impl WORLD_MAP_PLACE_NAME_PARAM_ST {
@@ -64415,6 +65313,7 @@ impl WORLD_MAP_PLACE_NAME_PARAM_ST {
     pub fn set_pos_z(&mut self, value: f32) {
         self.pos_z = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -64504,6 +65403,10 @@ pub struct WORLD_MAP_POINT_PARAM_ST {
     text_disable_flag2_id6: i32,
     text_disable_flag2_id7: i32,
     text_disable_flag2_id8: i32,
+}
+
+impl ParamDef for WORLD_MAP_POINT_PARAM_ST {
+    const NAME: &str = "WORLD_MAP_POINT_PARAM_ST";
 }
 
 impl WORLD_MAP_POINT_PARAM_ST {
@@ -65176,6 +66079,7 @@ impl WORLD_MAP_POINT_PARAM_ST {
     pub fn set_text_disable_flag2_id8(&mut self, value: i32) {
         self.text_disable_flag2_id8 = value;
     }
+
 }
 
 #[derive(Debug, Clone)]
@@ -65185,6 +66089,10 @@ pub struct WWISE_VALUE_TO_STR_CONVERT_PARAM_ST {
     bits_0: u8,
     disable_param_reserve2: [u8; 3],
     param_str: [u8; 32],
+}
+
+impl ParamDef for WWISE_VALUE_TO_STR_CONVERT_PARAM_ST {
+    const NAME: &str = "WWISE_VALUE_TO_STR_CONVERT_PARAM_ST";
 }
 
 impl WWISE_VALUE_TO_STR_CONVERT_PARAM_ST {
@@ -65205,4 +66113,6 @@ impl WWISE_VALUE_TO_STR_CONVERT_PARAM_ST {
     pub fn set_param_str(&mut self, value: [u8; 32]) {
         self.param_str = value;
     }
+
 }
+
