@@ -36,7 +36,7 @@ impl DebugDisplay for GXFfxGraphicsResourceManager {
         if ui.collapsing_header("Graphics Resource Manager", TreeNodeFlags::empty()) {
             ui.indent();
             render_graphics_resource_manager(
-                &self.resource_container.scene_ctrl,
+                unsafe {&self.resource_container.scene_ctrl.as_ref()},
                 self.resource_container.fxr_definitions.iter().map(|f| f),
                 ui,
             );

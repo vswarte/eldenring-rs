@@ -139,14 +139,11 @@ impl ImguiRenderLoop for EldenRingDebugGui {
                 if let Some(item) = ui.tab_item("Render") {
                     render_debug_singleton::<CSCamera>(&ui);
                     render_debug_singleton::<CSFade>(&ui);
+                    render_debug_singleton::<CSSfxImp>(&ui);
                     render_debug_singleton::<CSWorldSceneDrawParamManager>(&ui);
                     item.end();
                 }
 
-                if let Some(item) = ui.tab_item("SFX") {
-                    render_debug_singleton::<CSSfxImp>(&ui);
-                    item.end();
-                }
                 tabs.end();
             });
     }
