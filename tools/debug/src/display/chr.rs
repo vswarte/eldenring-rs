@@ -1,6 +1,6 @@
 use game::cs::{
-    CSChrModelParamModifierModule, ChrAsm, ChrAsmEquipEntries, ChrAsmEquipment, ChrIns,
-    ChrInsModuleContainer, CSChrPhysicsModule, EquipGameData, EquipInventoryData, EquipItemData,
+    CSChrModelParamModifierModule, CSChrPhysicsModule, ChrAsm, ChrAsmEquipEntries, ChrAsmEquipment,
+    ChrIns, ChrInsModuleContainer, EquipGameData, EquipInventoryData, EquipItemData,
     EquipMagicData, PlayerGameData, PlayerIns,
 };
 use hudhook::imgui::{TableColumnSetup, TableFlags, TreeNodeFlags, Ui};
