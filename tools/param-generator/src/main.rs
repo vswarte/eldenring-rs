@@ -23,7 +23,7 @@ fn main() -> io::Result<()> {
     let input_path = Path::new(&args.input);
     let mut output = String::new();
 
-    output.push_str("/// THIS FILE IS GENERATED FROM THE PARAM DEFS, DO NOT EDIT IT DIRECTLY\n\n");
+    output.push_str("//! THIS FILE IS GENERATED FROM THE PARAM DEFS, DO NOT EDIT IT DIRECTLY\n\n");
 
     output.push_str("/// Trait to perform safe param lookups.\n");
     output.push_str("pub trait ParamDef {\n");
