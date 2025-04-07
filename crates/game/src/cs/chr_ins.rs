@@ -270,7 +270,7 @@ pub struct ChrInsModuleContainer {
     pub event: OwnedPtr<CSChrEventModule>,
     magic: usize,
     /// Describes the characters physics-related properties.
-    pub physics: OwnedPtr<ChrPhysicsModule>,
+    pub physics: OwnedPtr<CSChrPhysicsModule>,
     fall: usize,
     ladder: usize,
     action_request: usize,
@@ -303,7 +303,7 @@ pub struct ChrInsModuleContainer {
 
 #[repr(C)]
 /// Source of name: RTTI
-pub struct ChrPhysicsModule {
+pub struct CSChrPhysicsModule {
     vftable: usize,
     pub owner: NonNull<ChrIns>,
     unk10: [u8; 0x40],
