@@ -97,7 +97,7 @@ pub struct CSSessionManager {
     unk174: u32,
     unk178: u8,
     unk179: u8,
-    p2p_control_byte: u8,
+    unk17a: u8,
     unk17b: u8,
     unk17c: u32,
     player_data_man: usize,
