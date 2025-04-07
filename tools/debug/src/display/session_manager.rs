@@ -26,13 +26,10 @@ impl DebugDisplay for CSSessionManager {
             ui.unindent();
         }
 
-        if self.stay_in_multiplay_area_warp_data.is_some()
-            && ui.collapsing_header("Stay in Multiplay Area Warp Data", TreeNodeFlags::empty())
-        {
+        if ui.collapsing_header("Stay in Multiplay Area Warp Data", TreeNodeFlags::empty()) {
             ui.indent();
             self.stay_in_multiplay_area_warp_data
                 .as_ref()
-                .unwrap()
                 .render_debug(ui);
             ui.unindent();
         }
