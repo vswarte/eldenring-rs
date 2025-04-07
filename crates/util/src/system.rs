@@ -8,6 +8,8 @@ use pelite::pattern::Atom;
 use pelite::pe64::{Pe, Rva};
 use thiserror::Error;
 
+use crate::program::Program;
+
 // WinMain -> SethInstance
 // used to set global hInstance later used by CSWindow
 // and can be used to determine if the game has finished initializing
@@ -34,10 +36,7 @@ pub enum SystemInitError {
 
 /// Wait for the system to finish initializing by waiting a global hInstance to be populated for CSWindow.
 /// This happens after the CRT init and after duplicate instance checks.
-pub fn wait_for_system_init<'a, T>(module: &T, timeout: Duration) -> Result<(), SystemInitError>
-where
-    T: Pe<'a>,
-{
+pub fn wait_for_system_init(module: &Program, timeout: Duration) -> Result<(), SystemInitError> {
     if std::ptr::eq(GLOBAL_HINSTANCE.load(Ordering::Relaxed), 0x0 as _) {
         let mut captures = [Rva::default(); 2];
         module
