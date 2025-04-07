@@ -11,6 +11,8 @@ Rust bindings to facilitate mod creation for Elden Ring.
 <summary>Example mod code: render debug line</summary>
 
 ```rust
+use std::time::Duration;
+
 use eldenring::{
     cs::{CSTaskImp, RendMan, WorldChrMan},
     fd4::FD4TaskData,
@@ -28,8 +30,10 @@ pub unsafe extern "C" fn DllMain(_hmodule: usize, reason: u32) -> bool {
     if reason == 1 {
         // Kick off new thread.
         std::thread::spawn(|| {
+            // Get the current program instance.
+            let program = Program::current();
             // Wait for game to boot up.
-            wait_for_system_init(-1).expect("Could not await system init.");
+            wait_for_system_init(&program, Duration::MAX).expect("Could not await system init.");
 
             // Retrieve games task runner.
             let cs_task = get_instance::<CSTaskImp>().unwrap().unwrap();
@@ -86,13 +90,13 @@ pub unsafe extern "C" fn DllMain(_hmodule: usize, reason: u32) -> bool {
         });
     }
 
-    // Signal that DllMain executed successfully 
+    // Signal that DllMain executed successfully
     true
 }
 ```
 
 Result:
-![Debug line rendered by example mode code](img/example-mod-debug-line.png) 
+![Debug line rendered by example mode code](img/example-mod-debug-line.png)
 
 </details>
 
