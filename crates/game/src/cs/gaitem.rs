@@ -32,12 +32,12 @@ pub struct CSGaitemImpEntry {
 
 #[repr(C)]
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash)]
-pub struct GaitemHandle(u32);
+pub struct GaitemHandle(i32);
 
 impl GaitemHandle {
-    pub const fn from_parts(selector: u32, category: GaitemCategory) -> Result<Self, ()> {
+    pub const fn from_parts(selector: i32, category: GaitemCategory) -> Result<Self, ()> {
         Ok(GaitemHandle(
-            selector & 0x00FFFFFF | ((category as u32) | 0xfffffff8) << 28,
+            selector & 0x00FFFFFF | ((category as i32) | -8) << 28,
         ))
     }
 
@@ -45,11 +45,11 @@ impl GaitemHandle {
         self.0 >> 23 & 1 == 1
     }
 
-    pub const fn selector(self) -> u32 {
+    pub const fn selector(self) -> i32 {
         self.0 & 0x00ffffff
     }
 
-    pub const fn index(self) -> u32 {
+    pub const fn index(self) -> i32 {
         self.0 & 0xffff
     }
 
@@ -81,13 +81,41 @@ impl GaitemCategory {
     }
 }
 
+
+#[repr(C)]
+pub struct CSWepGaitemIns {
+    pub gaitem_ins: CSGaitemIns,
+    /// Item durability mechanic. Unused in ER.
+    pub durability: u32,
+    _unk14: u32,
+    /// Gem slots, used for ashes of war in ER.
+    pub gem_slot_table: CSGemSlotTable,
+}
+
+#[repr(C)]
+pub struct CSGemSlotTable {
+    vtable: usize,
+    pub gem_slots: [CSGemSlot; 1],
+}
+
+#[repr(C)]
+pub struct CSGemSlot {
+    vtable: usize,
+    /// Refers to the actual gem entry in the CSGaitemImp.
+    pub gaitem_handle: GaitemHandle,
+    unkc: u32,
+}
+
 #[cfg(test)]
 mod test {
-    use crate::cs::{CSGaitemImp, CSGaitemIns};
+    use crate::cs::{CSGaitemImp, CSGaitemIns, CSGemSlot, CSGemSlotTable, CSWepGaitemIns};
 
     #[test]
     fn proper_sizes() {
         assert_eq!(0x19038, size_of::<CSGaitemImp>());
         assert_eq!(0x10, size_of::<CSGaitemIns>());
+        assert_eq!(0x30, size_of::<CSWepGaitemIns>());
+        assert_eq!(0x18, size_of::<CSGemSlotTable>());
+        assert_eq!(0x10, size_of::<CSGemSlot>());
     }
 }
