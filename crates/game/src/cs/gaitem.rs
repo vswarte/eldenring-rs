@@ -81,7 +81,6 @@ impl GaitemCategory {
     }
 }
 
-
 #[repr(C)]
 pub struct CSWepGaitemIns {
     pub gaitem_ins: CSGaitemIns,
@@ -110,6 +109,7 @@ pub struct CSGemSlot {
 pub struct CSGemGaitemIns {
     pub gaitem_ins: CSGaitemIns,
     gaitem_handle: GaitemHandle,
+    /// Item ID of the active gem.
     pub item_id: u32,
 }
 
