@@ -12,22 +12,18 @@ pub enum GaitemCategory {
     Accessory = 2,
     Goods = 3,
     Gem = 4,
-    Invalid = 255,
 }
 
-impl From<u8> for GaitemCategory {
-    fn from(value: u8) -> Self {
-        match value {
+impl GaitemCategory {
+    pub const fn from_u8(val: &u8) -> Result<Self, ()> {
+        Ok(match val {
             0 => GaitemCategory::Weapon,
             1 => GaitemCategory::Protector,
             2 => GaitemCategory::Accessory,
             3 => GaitemCategory::Goods,
             4 => GaitemCategory::Gem,
-            _ => {
-                tracing::warn!("Unknown GaitemCategory: {}", value);
-                GaitemCategory::Invalid
-            }
-        }
+            _ => return Err(()),
+        })
     }
 }
 
@@ -47,11 +43,11 @@ pub struct CSGaitemImpEntry {
 #[repr(C)]
 pub struct CSGaitemImp {
     vftable: usize,
-    pub gaitem_instances: [OwnedPtr<CSGaitemImp>; 5120],
+    pub gaitem_instances: [OwnedPtr<CSGaitemIns>; 5120],
     pub gaitem_entries: [CSGaitemImpEntry; 5120],
     pub indexes: [u32; 5120],
-    pub write_idx: u32,
-    pub read_idx: u32,
+    pub write_index: u32,
+    pub read_index: u32,
     rand_xorshift: [u8; 0x18],
     unk23028: [u8; 8],
     pub is_being_serialized: bool,
@@ -63,28 +59,26 @@ pub struct CSGaitemImp {
 pub struct GaitemHandle(u32);
 
 impl GaitemHandle {
-    /// converts gaitem handle to selector
-    pub const fn to_selector(self) -> u32 {
-        self.0 & 0x00ffffff
+    pub const fn from_parts(selector: u32, category: GaitemCategory) -> Result<Self, ()> {
+        Ok(GaitemHandle(
+            selector & 0x00FFFFFF | ((category as u32) | 0xfffffff8) << 28,
+        ))
     }
 
-    pub fn from_parts(selector: u32, category: GaitemCategory) -> Self {
-        GaitemHandle(selector & 0x00FFFFFF | ((category as u32) | 0xfffffff8) << 28)
-    }
-
-    /// returns true if the gaitem handle has index
-    /// and therefore is refcounted in CSGaitemImp
     pub const fn is_indexed(self) -> bool {
         self.0 >> 23 & 1 == 1
     }
 
-    /// returns the index of the gaitem handle in CSGaitemImp
+    pub const fn selector(self) -> u32 {
+        self.0 & 0x00ffffff
+    }
+
     pub const fn index(self) -> u32 {
         self.0 & 0xffff
     }
 
-    pub fn category(self) -> GaitemCategory {
-        GaitemCategory::from((self.0 >> 28 & 7) as u8)
+    pub const fn category(self) -> Result<GaitemCategory, ()> {
+        GaitemCategory::from_u8(&((self.0 >> 28 & 7) as u8))
     }
 }
 
@@ -95,7 +89,7 @@ impl Display for GaitemHandle {
             "Gaitem Handle: {:0>8}, Category: {:?}, Selector: {:0>6}, Indexed: {:?}",
             self.0,
             self.category(),
-            self.to_selector(),
+            self.selector(),
             self.is_indexed()
         )
     }
