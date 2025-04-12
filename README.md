@@ -30,10 +30,8 @@ pub unsafe extern "C" fn DllMain(_hmodule: usize, reason: u32) -> bool {
     if reason == 1 {
         // Kick off new thread.
         std::thread::spawn(|| {
-            // Get the current program instance.
-            let program = Program::current();
-            // Wait for game to boot up.
-            wait_for_system_init(&program, Duration::MAX).expect("Could not await system init.");
+            // Wait for game (current program we're injected into) to boot up.
+            wait_for_system_init(&Program::current(), Duration::MAX).expect("Could not await system init.");
 
             // Retrieve games task runner.
             let cs_task = get_instance::<CSTaskImp>().unwrap().unwrap();
