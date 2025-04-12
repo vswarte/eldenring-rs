@@ -72,8 +72,8 @@ impl CSGaitemIns {
 
 #[repr(C)]
 pub struct CSGaitemImpEntry {
-    pub unindexed_gaitem_handle: u32,
-    pub ref_count: u32,
+    unindexed_gaitem_handle: u32,
+    ref_count: u32,
 }
 
 #[repr(C)]
