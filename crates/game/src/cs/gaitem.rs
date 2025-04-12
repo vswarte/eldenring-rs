@@ -4,6 +4,7 @@ use crate::pointer::OwnedPtr;
 
 use super::ItemId;
 #[repr(C)]
+#[dlrf::singleton("CSGaitem")]
 pub struct CSGaitemImp {
     vftable: usize,
     pub gaitems: [Option<OwnedPtr<CSGaitemIns>>; 5120],
