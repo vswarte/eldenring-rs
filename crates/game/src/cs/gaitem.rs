@@ -106,9 +106,16 @@ pub struct CSGemSlot {
     unkc: u32,
 }
 
+#[repr(C)]
+pub struct CSGemGaitemIns {
+    pub gaitem_ins: CSGaitemIns,
+    gaitem_handle: GaitemHandle,
+    pub item_id: u32,
+}
+
 #[cfg(test)]
 mod test {
-    use crate::cs::{CSGaitemImp, CSGaitemIns, CSGemSlot, CSGemSlotTable, CSWepGaitemIns};
+    use crate::cs::{CSGaitemImp, CSGaitemIns, CSGemGaitemIns, CSGemSlot, CSGemSlotTable, CSWepGaitemIns};
 
     #[test]
     fn proper_sizes() {
@@ -117,5 +124,6 @@ mod test {
         assert_eq!(0x30, size_of::<CSWepGaitemIns>());
         assert_eq!(0x18, size_of::<CSGemSlotTable>());
         assert_eq!(0x10, size_of::<CSGemSlot>());
+        assert_eq!(0x18, size_of::<CSGemGaitemIns>());
     }
 }
