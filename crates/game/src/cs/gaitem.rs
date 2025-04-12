@@ -25,7 +25,7 @@ pub struct CSGaitemIns {
 }
 
 impl CSGaitemIns {
-    /// Downcast the CSGaitemIns to the derivant class. Will return None if no the requested type
+    /// Downcast the CSGaitemIns to the derivant class. Will return None if the requested type
     /// does not match the gaitem ins's type.
     pub fn as_wep(&self) -> Option<&CSWepGaitemIns> {
         Some(match self.gaitem_handle.category() {
@@ -36,7 +36,7 @@ impl CSGaitemIns {
         })
     }
 
-    /// Downcast the CSGaitemIns to the derivant class. Will return None if no the requested type
+    /// Downcast the CSGaitemIns to the derivant class. Will return None if the requested type
     /// does not match the gaitem ins's type.
     pub fn as_wep_mut(&mut self) -> Option<&mut CSWepGaitemIns> {
         Some(match self.gaitem_handle.category() {
@@ -47,7 +47,7 @@ impl CSGaitemIns {
         })
     }
 
-    /// Downcast the CSGaitemIns to the derivant class. Will return None if no the requested type
+    /// Downcast the CSGaitemIns to the derivant class. Will return None if the requested type
     /// does not match the gaitem ins's type.
     pub fn as_gem(&self) -> Option<&CSGemGaitemIns> {
         Some(match self.gaitem_handle.category() {
@@ -58,7 +58,7 @@ impl CSGaitemIns {
         })
     }
 
-    /// Downcast the CSGaitemIns to the derivant class. Will return None if no the requested type
+    /// Downcast the CSGaitemIns to the derivant class. Will return None if the requested type
     /// does not match the gaitem ins's type.
     pub fn as_gem_mut(&mut self) -> Option<&mut CSGemGaitemIns> {
         Some(match self.gaitem_handle.category() {
