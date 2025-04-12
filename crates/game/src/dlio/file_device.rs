@@ -7,14 +7,10 @@ use std::{
 use vtable_rs::VPtr;
 
 use crate::{
-    dlio::DLIOResult,
-    dlkr::{DLAllocatorBase, DLPlainLightMutex},
-    dltx::{DLBasicString, DLString},
-    pointer::OwnedPtr,
-    Vector,
+    dlio::DLIOResult, dlkr::{DLAllocatorBase, DLPlainLightMutex}, dltx::{DLBasicString, DLString}, dlut::DLDateTime, pointer::OwnedPtr, Vector
 };
 
-use super::{DLDateTime, DLFileSeekDirection, OpenFileMode};
+use super::{DLFileSeekDirection, OpenFileMode};
 
 #[repr(u32)]
 pub enum DLFileDeviceDriveType {
@@ -302,7 +298,7 @@ pub struct BndEntry {
 
 #[repr(C)]
 pub struct DLFileOperatorContainer {
-    allocator: OwnedPtr<DLAllocatorBase>,
+    allocator: NonNull<DLAllocatorBase>,
     read_file_operator: OwnedPtr<DLFileOperatorBase>,
     write_file_operator: OwnedPtr<DLFileOperatorBase>,
     flags: u32,
@@ -553,7 +549,7 @@ where
         seek_mode: DLFileSeekDirection,
     ) -> bool {
         tracing::debug!(
-            "AdapterFileOperator::seek({}, {}, {})",
+            "AdapterFileOperator::seek({}, {}, {:?})",
             is_stream,
             offset,
             seek_mode
