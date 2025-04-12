@@ -6,13 +6,15 @@ use super::ItemId;
 #[repr(C)]
 pub struct CSGaitemImp {
     vftable: usize,
-    pub gaitem_instances: [OwnedPtr<CSGaitemIns>; 5120],
-    pub gaitem_entries: [CSGaitemImpEntry; 5120],
-    pub indexes: [u32; 5120],
-    pub write_index: u32,
-    pub read_index: u32,
+    pub gaitems: [Option<OwnedPtr<CSGaitemIns>>; 5120],
+    // TODO: fact-check this
+    gaitem_descriptors: [CSGaitemImpEntry; 5120],
+    indexes: [u32; 5120],
+    write_index: u32,
+    read_index: u32,
     rand_xorshift: [u8; 0x18],
     unk23028: [u8; 8],
+    /// Becomes true if the CSGaitemImp is being serialized for saving to the save file.
     pub is_being_serialized: bool,
     unk23038: [u8; 7],
 }
@@ -87,16 +89,18 @@ impl GaitemHandle {
         ))
     }
 
+    /// Indicates if the gaitem handle refers to a GaitemIns available in CSGaitemImp.
     pub const fn is_indexed(self) -> bool {
         self.0 >> 23 & 1 == 1
     }
 
-    pub const fn selector(self) -> i32 {
-        self.0 & 0x00ffffff
+    pub const fn selector(self) -> u32 {
+        (self.0 & 0x00ffffff) as u32
     }
 
-    pub const fn index(self) -> i32 {
-        self.0 & 0xffff
+    /// Index of the GaitemIns inside of the CSGaitemImp  
+    pub const fn index(self) -> u32 {
+        (self.0 & 0xffff) as u32
     }
 
     pub const fn category(self) -> Result<GaitemCategory, ()> {
