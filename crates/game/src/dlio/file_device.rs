@@ -1,23 +1,20 @@
-use std::fmt::{Debug, Display};
-use std::io::{Cursor, SeekFrom};
 use std::{
-    ffi::c_void,
-    io::{Read, Seek},
+    fmt::Display,
+    io::{Cursor, Read, Seek, SeekFrom},
     ptr::NonNull,
 };
 
-use crate::dlio::common::DLIOResult;
-use crate::dlkr::DLAllocatorVmt;
+use vtable_rs::VPtr;
+
 use crate::{
+    dlio::DLIOResult,
     dlkr::{DLAllocatorBase, DLPlainLightMutex},
     dltx::{DLBasicString, DLString},
     pointer::OwnedPtr,
     Vector,
 };
-use vtable_rs::VPtr;
-use windows::Win32::Foundation::SYSTEMTIME;
 
-use super::common::{DLDateTime, DLFileSeekDirection, OpenFileMode};
+use super::{DLDateTime, DLFileSeekDirection, OpenFileMode};
 
 #[repr(u32)]
 pub enum DLFileDeviceDriveType {
