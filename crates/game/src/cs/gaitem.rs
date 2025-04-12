@@ -24,6 +24,52 @@ pub struct CSGaitemIns {
     pub item_id: ItemId,
 }
 
+impl CSGaitemIns {
+    /// Downcast the CSGaitemIns to the derivant class. Will return None if no the requested type
+    /// does not match the gaitem ins's type.
+    pub fn as_wep(&self) -> Option<&CSWepGaitemIns> {
+        Some(match self.gaitem_handle.category() {
+            // Safety: consumers are not allowed to make their own CSGaitemIns and other instances
+            // come from the game. The category can reliably be used to do this downcast.
+            Ok(GaitemCategory::Weapon) => unsafe { std::mem::transmute(self) },
+            _ => return None,
+        })
+    }
+
+    /// Downcast the CSGaitemIns to the derivant class. Will return None if no the requested type
+    /// does not match the gaitem ins's type.
+    pub fn as_wep_mut(&mut self) -> Option<&mut CSWepGaitemIns> {
+        Some(match self.gaitem_handle.category() {
+            // Safety: consumers are not allowed to make their own CSGaitemIns and other instances
+            // come from the game. The category can reliably be used to do this downcast.
+            Ok(GaitemCategory::Weapon) => unsafe { std::mem::transmute(self) },
+            _ => return None,
+        })
+    }
+
+    /// Downcast the CSGaitemIns to the derivant class. Will return None if no the requested type
+    /// does not match the gaitem ins's type.
+    pub fn as_gem(&self) -> Option<&CSGemGaitemIns> {
+        Some(match self.gaitem_handle.category() {
+            // Safety: consumers are not allowed to make their own CSGaitemIns and other instances
+            // come from the game. The category can reliably be used to do this downcast.
+            Ok(GaitemCategory::Gem) => unsafe { std::mem::transmute(self) },
+            _ => return None,
+        })
+    }
+
+    /// Downcast the CSGaitemIns to the derivant class. Will return None if no the requested type
+    /// does not match the gaitem ins's type.
+    pub fn as_gem_mut(&mut self) -> Option<&mut CSGemGaitemIns> {
+        Some(match self.gaitem_handle.category() {
+            // Safety: consumers are not allowed to make their own CSGaitemIns and other instances
+            // come from the game. The category can reliably be used to do this downcast.
+            Ok(GaitemCategory::Gem) => unsafe { std::mem::transmute(self) },
+            _ => return None,
+        })
+    }
+}
+
 #[repr(C)]
 pub struct CSGaitemImpEntry {
     pub unindexed_gaitem_handle: u32,
@@ -115,7 +161,9 @@ pub struct CSGemGaitemIns {
 
 #[cfg(test)]
 mod test {
-    use crate::cs::{CSGaitemImp, CSGaitemIns, CSGemGaitemIns, CSGemSlot, CSGemSlotTable, CSWepGaitemIns};
+    use crate::cs::{
+        CSGaitemImp, CSGaitemIns, CSGemGaitemIns, CSGemSlot, CSGemSlotTable, CSWepGaitemIns,
+    };
 
     #[test]
     fn proper_sizes() {
