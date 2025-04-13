@@ -7,7 +7,12 @@ use std::{
 use vtable_rs::VPtr;
 
 use crate::{
-    dlio::DLIOResult, dlkr::{DLAllocatorBase, DLPlainLightMutex}, dltx::{DLBasicString, DLString}, dlut::DLDateTime, pointer::OwnedPtr, Vector
+    dlio::DLIOResult,
+    dlkr::{DLAllocatorBase, DLPlainLightMutex},
+    dltx::{DLBasicString, DLString},
+    dlut::DLDateTime,
+    pointer::OwnedPtr,
+    Vector,
 };
 
 use super::{DLFileSeekDirection, OpenFileMode};
@@ -41,7 +46,7 @@ pub trait DLFileDeviceVmt {
         operator_container: &mut DLFileOperatorContainer,
         allocator: &mut DLAllocatorBase,
         is_temp_file: bool,
-    ) -> OwnedPtr<DLFileOperatorBase>;
+    ) -> *const DLFileOperatorBase;
 
     fn file_enumerator(&self) -> *const u8;
 
@@ -108,15 +113,15 @@ pub trait DLFileOperatorVmt {
     fn clear_file_info(&mut self) -> bool;
 
     /// Returns a pointer to the virtual disk operator.
-    fn get_virtual_disk_operator(&self) -> OwnedPtr<DLFileOperatorBase>;
+    fn get_virtual_disk_operator(&self) -> *const DLFileOperatorBase;
 
     /// Binds the file operator to a device image.
     fn bind_device_image(
         &mut self,
         image_spi: &DLFileDeviceImageSPIBase,
-    ) -> OwnedPtr<DLFileDeviceImageSPIBase>;
+    ) -> *const DLFileDeviceImageSPIBase;
 
-    /// Checks that path exists and is a file that can be readed.
+    /// Checks that path exists and is a file that can be read.
     fn is_readable(&mut self) -> bool;
 
     /// Checks if the file is writable.
@@ -329,7 +334,7 @@ impl DLFileDeviceVmt for DLFileDeviceBase {
         operator_container: &mut DLFileOperatorContainer,
         allocator: &mut DLAllocatorBase,
         is_temp_file: bool,
-    ) -> OwnedPtr<DLFileOperatorBase> {
+    ) -> *const DLFileOperatorBase {
         (self.vftable.get_file_operator)(
             self,
             name_dlstring,
@@ -457,7 +462,7 @@ where
         unimplemented!()
     }
 
-    extern "C" fn get_virtual_disk_operator(&self) -> OwnedPtr<DLFileOperatorBase> {
+    extern "C" fn get_virtual_disk_operator(&self) -> *const DLFileOperatorBase {
         tracing::debug!("AdapterFileOperator::get_virtual_disk_operator()");
         unimplemented!()
     }
@@ -465,7 +470,7 @@ where
     extern "C" fn bind_device_image(
         &mut self,
         image_spi: &DLFileDeviceImageSPIBase,
-    ) -> OwnedPtr<DLFileDeviceImageSPIBase> {
+    ) -> *const DLFileDeviceImageSPIBase {
         tracing::debug!("AdapterFileOperator::bind_device_image()");
         unimplemented!()
     }
