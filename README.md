@@ -50,7 +50,7 @@ pub unsafe extern "C" fn DllMain(_hmodule: usize, reason: u32) -> bool {
 
                     // Grab the main player from WorldChrMan if it's available. Bail otherwise.
                     let Some(player) = get_instance::<WorldChrMan>()
-                        .expect("No reflection data for RendMan")
+                        .expect("No reflection data for WorldChrMan")
                         .map(|w| w.main_player.as_ref())
                         .flatten()
                     else {
