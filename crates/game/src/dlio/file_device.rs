@@ -391,22 +391,31 @@ where
     }
 }
 
+impl<R> Display for AdapterFileOperator<R>
+where
+    R: Read + Seek + 'static,
+{
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "AdapterFileOperator({})", self.base.path)
+    }
+}
+
 impl<R> DLFileOperatorVmt for AdapterFileOperator<R>
 where
     R: Read + Seek + 'static,
 {
     extern "C" fn destructor(&mut self) {
-        tracing::debug!("AdapterFileOperator::destructor()");
+        tracing::debug!("{self}::destructor()");
     }
 
     extern "C" fn copy_from(&mut self, source: &DLFileOperatorBase) -> bool {
-        tracing::debug!("AdapterFileOperator::copy_from()");
+        tracing::debug!("{self}::copy_from()");
         unimplemented!()
     }
 
     extern "C" fn set_path(&mut self, path: &DLString, param_3: bool, param_4: bool) -> bool {
         tracing::debug!(
-            "AdapterFileOperator::set_path({}, {}, {})",
+            "{self}::set_path({}, {}, {})",
             path.to_string(),
             param_3,
             param_4
@@ -425,7 +434,7 @@ where
         param_4: bool,
     ) -> bool {
         tracing::debug!(
-            "AdapterFileOperator::set_path_other_1({}, {}, {})",
+            "{self}::set_path_other_1({}, {}, {})",
             path.to_string(),
             param_3,
             param_4
@@ -440,7 +449,7 @@ where
         param_4: bool,
     ) -> bool {
         tracing::debug!(
-            "AdapterFileOperator::set_path_other_2({}, {}, {})",
+            "{self}::set_path_other_2({}, {}, {})",
             path.to_string(),
             param_3,
             param_4
@@ -449,7 +458,7 @@ where
     }
 
     extern "C" fn set_state(&mut self, param_2: bool, param_3: bool) -> bool {
-        tracing::debug!("AdapterFileOperator::set_state({}, {})", param_2, param_3);
+        tracing::debug!("{self}::set_state({}, {})", param_2, param_3);
 
         self.base.io_state.0 &= 0xfffffff9;
         self.base.io_state.0 |= ((((param_3 as u32 & 1) * 2) | (param_2 as u32 & 1)) * 2);
@@ -458,12 +467,12 @@ where
     }
 
     extern "C" fn clear_file_info(&mut self) -> bool {
-        tracing::debug!("AdapterFileOperator::clear_file_info()");
+        tracing::debug!("{self}::clear_file_info()");
         unimplemented!()
     }
 
     extern "C" fn get_virtual_disk_operator(&self) -> *const DLFileOperatorBase {
-        tracing::debug!("AdapterFileOperator::get_virtual_disk_operator()");
+        tracing::debug!("{self}::get_virtual_disk_operator()");
         unimplemented!()
     }
 
@@ -471,26 +480,26 @@ where
         &mut self,
         image_spi: &DLFileDeviceImageSPIBase,
     ) -> *const DLFileDeviceImageSPIBase {
-        tracing::debug!("AdapterFileOperator::bind_device_image()");
+        tracing::debug!("{self}::bind_device_image()");
         unimplemented!()
     }
 
     extern "C" fn is_readable(&mut self) -> bool {
-        tracing::debug!("AdapterFileOperator::is_readable()");
+        tracing::debug!("{self}::is_readable()");
         unimplemented!()
     }
     extern "C" fn is_writable(&mut self) -> bool {
-        tracing::debug!("AdapterFileOperator::is_writable()");
+        tracing::debug!("{self}::is_writable()");
         unimplemented!()
     }
 
     extern "C" fn last_access_time(&self, ptr: *const DLDateTime) -> *const DLDateTime {
-        tracing::debug!("AdapterFileOperator::last_access_time()");
+        tracing::debug!("{self}::last_access_time()");
         unimplemented!()
     }
 
     extern "C" fn last_modify_time(&self, ptr: *const DLDateTime) -> *const DLDateTime {
-        tracing::debug!("AdapterFileOperator::last_modify_time()");
+        tracing::debug!("{self}::last_modify_time()");
         unimplemented!()
     }
 
@@ -498,52 +507,52 @@ where
         let current = self.buffer.stream_position().unwrap();
         let end = self.buffer.seek(SeekFrom::End(0)).unwrap() as usize;
         self.buffer.seek(SeekFrom::Start(current));
-        tracing::debug!("AdapterFileOperator::file_size() -> {end}");
+        tracing::debug!("{self}::file_size() -> {end}");
         end
     }
 
     extern "C" fn get_read_size(&mut self) -> usize {
-        tracing::debug!("AdapterFileOperator::get_read_size()");
+        tracing::debug!("{self}::get_read_size()");
         unimplemented!()
     }
 
     extern "C" fn get_write_size(&self) -> usize {
-        tracing::debug!("AdapterFileOperator::get_write_size()");
+        tracing::debug!("{self}::get_write_size()");
         unimplemented!()
     }
 
     extern "C" fn set_eof(&mut self) {
-        tracing::debug!("AdapterFileOperator::set_eof()");
+        tracing::debug!("{self}::set_eof()");
         unimplemented!()
     }
 
     extern "C" fn is_eof(&self) -> bool {
-        tracing::debug!("AdapterFileOperator::is_eof()");
+        tracing::debug!("{self}::is_eof()");
         unimplemented!()
     }
 
     extern "C" fn is_directory(&self) -> bool {
-        tracing::debug!("AdapterFileOperator::is_directory()");
+        tracing::debug!("{self}::is_directory()");
         unimplemented!()
     }
 
     extern "C" fn is_open(&self) -> bool {
-        tracing::debug!("AdapterFileOperator::is_open()");
+        tracing::debug!("{self}::is_open()");
         true
     }
 
     extern "C" fn open(&mut self, open_mode: OpenFileMode) -> bool {
-        tracing::debug!("AdapterFileOperator::open({:?})", open_mode);
+        tracing::debug!("{self}::open({:?})", open_mode);
         true
     }
 
     extern "C" fn close(&mut self) -> bool {
-        tracing::debug!("AdapterFileOperator::close()");
+        tracing::debug!("{self}::close()");
         true
     }
 
     extern "C" fn set_read_only(&mut self, is_open: bool) -> bool {
-        tracing::debug!("AdapterFileOperator::set_read_only({})", is_open);
+        tracing::debug!("{self}::set_read_only({})", is_open);
         unimplemented!()
     }
 
@@ -553,22 +562,17 @@ where
         offset: i64,
         seek_mode: DLFileSeekDirection,
     ) -> bool {
-        tracing::debug!(
-            "AdapterFileOperator::seek({}, {}, {:?})",
-            is_stream,
-            offset,
-            seek_mode
-        );
+        tracing::debug!("{self}::seek({}, {}, {:?})", is_stream, offset, seek_mode);
         unimplemented!()
     }
 
     extern "C" fn cursor_position(&self) -> usize {
-        tracing::debug!("AdapterFileOperator::cursor_position()");
+        tracing::debug!("{self}::cursor_position()");
         unimplemented!()
     }
 
     unsafe extern "C" fn read(&mut self, output: *mut u8, length: usize) -> i32 {
-        tracing::debug!("AdapterFileOperator::read({:x?}, {})", output, length);
+        tracing::debug!("{self}::read({:x?}, {})", output, length);
         let mut buffer = vec![0x0u8; length];
         self.buffer.read_exact(&mut buffer).unwrap();
 
@@ -578,33 +582,25 @@ where
     }
 
     extern "C" fn write(&mut self, input: *const u8, length: usize) -> usize {
-        tracing::debug!("AdapterFileOperator::write_file({:x?}, {})", input, length);
+        tracing::debug!("{self}::write_file({:x?}, {})", input, length);
         unimplemented!()
     }
 
     extern "C" fn get_async_block_size(&self) -> usize {
-        tracing::debug!("AdapterFileOperator::get_async_block_size()");
+        tracing::debug!("{self}::get_async_block_size()");
         unimplemented!()
     }
     extern "C" fn get_async_buffer_alignment_size(&self) -> usize {
-        tracing::debug!("AdapterFileOperator::get_async_buffer_alignment_size()");
+        tracing::debug!("{self}::get_async_buffer_alignment_size()");
         unimplemented!()
     }
 
     unsafe extern "C" fn start_async_read(&mut self, output: *mut u8, length: usize) -> bool {
-        tracing::debug!(
-            "AdapterFileOperator::start_async_read({:x?}, {})",
-            output,
-            length
-        );
+        tracing::debug!("{self}::start_async_read({:x?}, {})", output, length);
         unimplemented!()
     }
     extern "C" fn start_async_write(&mut self, input: *const u8, length: usize) -> bool {
-        tracing::debug!(
-            "AdapterFileOperator::start_async_write({:x?}, {})",
-            input,
-            length
-        );
+        tracing::debug!("{self}::start_async_write({:x?}, {})", input, length);
         unimplemented!()
     }
     extern "C" fn query_async_status(
@@ -612,46 +608,46 @@ where
         bytes_remaining: &mut usize,
         bytes_transferred: Option<&mut usize>,
     ) -> bool {
-        tracing::debug!("AdapterFileOperator::query_async_status()");
+        tracing::debug!("{self}::query_async_status()");
         unimplemented!()
     }
     extern "C" fn get_open_mode(&self) -> OpenFileMode {
-        tracing::debug!("AdapterFileOperator::get_open_mode()");
+        tracing::debug!("{self}::get_open_mode()");
         unimplemented!()
     }
 
     extern "C" fn delete(&mut self) -> bool {
-        tracing::debug!("AdapterFileOperator::delete()");
+        tracing::debug!("{self}::delete()");
         unimplemented!()
     }
 
     extern "C" fn flush(&mut self) {
-        tracing::debug!("AdapterFileOperator::flush()");
+        tracing::debug!("{self}::flush()");
         unimplemented!()
     }
 
     extern "C" fn populate_file_info(&mut self) -> bool {
-        tracing::debug!("AdapterFileOperator::populate_file_info()");
+        tracing::debug!("{self}::populate_file_info()");
         unimplemented!()
     }
 
     extern "C" fn unk2(&mut self) -> bool {
-        tracing::debug!("AdapterFileOperator::unk2()");
+        tracing::debug!("{self}::unk2()");
         unimplemented!()
     }
 
     extern "C" fn rename_w(&mut self, path: *const u16) -> bool {
-        tracing::debug!("AdapterFileOperator::rename_w({:x?})", path);
+        tracing::debug!("{self}::rename_w({:x?})", path);
         unimplemented!()
     }
 
     extern "C" fn rename(&mut self, path: *const u8) -> bool {
-        tracing::debug!("AdapterFileOperator::rename({:x?})", path);
+        tracing::debug!("{self}::rename({:x?})", path);
         unimplemented!()
     }
 
     extern "C" fn create_directory(&mut self) -> bool {
-        tracing::debug!("AdapterFileOperator::create_directory()");
+        tracing::debug!("{self}::create_directory()");
         unimplemented!()
     }
 }

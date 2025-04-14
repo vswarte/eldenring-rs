@@ -1,7 +1,7 @@
 use std::fmt::{Debug, Display};
 
 #[repr(u32)]
-#[derive(Debug)]
+#[derive(Debug, Clone, Copy)]
 /// Determines the starting position for passed-in offsets.
 pub enum DLFileSeekDirection {
     /// Seek from start of stream.
@@ -29,6 +29,7 @@ pub enum DLIOResult {
 }
 
 #[repr(C)]
+#[derive(Clone, Copy)]
 pub struct OpenFileMode(pub u32);
 
 impl OpenFileMode {
