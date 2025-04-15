@@ -1,14 +1,105 @@
+use std::ptr::NonNull;
+
 use windows::Win32::Foundation::BOOL;
 
+use crate::pointer::OwnedPtr;
+
+use super::{CSEzTask, CSEzUpdateTask};
+
 #[repr(C)]
-#[derive(Debug)]
 #[dlrf::singleton("CSMenuMan")]
 pub struct CSMenuMan {
     vftable: usize,
-    unk8: [u8; 0x78],
-    pub popup_menu: usize,
-    unk88: [u8; 0xB4],
+    menu_data: usize,
+    player_status_calculator: usize,
+    unk18: [u8; 2],
+    pub disable_mouse_cursor: bool,
+    unk1b: [u8; 0x65],
+    pub popup_menu: Option<NonNull<CSPopupMenu>>,
+    window_job: usize,
+    unk90: [u8; 0xAC],
     /// disables all save menu callbacks
     /// additionally, can disable auto save
-    pub disable_save_menu: i32,
+    pub disable_save_menu: BOOL,
+    unk140: [u8; 0x520],
+    pub player_menu_ctrl: CSPlayerMenuCtrl,
+    null_player_menu_ctrl: usize,
+    unk6b0: [u8; 0x60],
+    pub back_screen_data: BackScreenData,
+    pub loading_screen_data: LoadingScreenData,
+    unk748: [u8; 0x118],
+    system_announce_view_model: usize,
+    pub update_task: CSEzUpdateTask<CSEzTask, Self>,
+    unk890: [u8; 0x10],
+}
+
+#[repr(C)]
+pub struct CSPopupMenu {
+    vftable: usize,
+    pub menu_man: NonNull<CSMenuMan>,
+    unk10: usize,
+    unk18: usize,
+    unk20: [u8; 0x90],
+    current_top_menu_job: usize,
+    unkb8: [u8; 0xb0],
+    input_data: u64,
+    unk170: [u8; 0x120],
+    pub show_failed_to_save: bool,
+    unkb91: [u8; 0x8f],
+}
+
+#[repr(C)]
+pub struct CSPlayerMenuCtrl {
+    vftable: usize,
+    unk8: [u8; 0x10],
+    chr_menu_flags: [u8; 0x10],
+    unk28: [u8; 0x20],
+}
+
+#[repr(C)]
+pub struct BackScreenData {
+    vftable: usize,
+    unk8: [u8; 0x8],
+}
+
+#[repr(C)]
+pub struct LoadingScreenData {
+    vftable: usize,
+    unk8: [u8; 0x20],
+}
+
+#[repr(C)]
+pub struct FeSystemAnnounceViewModel {
+    menu_view_model: usize,
+    view: usize,
+    message_queue: FeSystemAnnounceViewModelMessageQueue,
+}
+
+#[repr(C)]
+pub struct FeSystemAnnounceViewModelMessageQueue {
+    unk0: usize,
+    unk8: usize,
+    elements: usize,
+    capacity: usize,
+    unk20: usize,
+    count: usize,
+}
+
+#[cfg(test)]
+mod test {
+    use crate::cs::{
+        BackScreenData, CSMenuMan, CSPlayerMenuCtrl, CSPopupMenu, FeSystemAnnounceViewModel,
+        FeSystemAnnounceViewModelMessageQueue, LoadingScreenData,
+    };
+
+    #[test]
+    fn proper_sizes() {
+        assert_eq!(0x8a0, size_of::<CSMenuMan>());
+        assert_eq!(0x320, size_of::<CSPopupMenu>());
+        assert_eq!(0x48, size_of::<CSPlayerMenuCtrl>());
+        assert_eq!(0x10, size_of::<BackScreenData>());
+        assert_eq!(0x28, size_of::<LoadingScreenData>());
+        assert_eq!(0x40, size_of::<FeSystemAnnounceViewModel>());
+        assert_eq!(0x30, size_of::<FeSystemAnnounceViewModelMessageQueue>());
+    }
 }
