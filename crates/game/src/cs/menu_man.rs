@@ -34,6 +34,26 @@ pub struct CSMenuMan {
 }
 
 #[repr(C)]
+pub struct CSMenuData {
+    vftable: usize,
+    unk8: [u8; 0x54],
+    pub show_steam_names: bool,
+    unk5d: [u8; 0x13],
+    pub menu_gaitem_use_state: CSMenuGaitemUseState,
+    unk88: bool,
+    unk89: [u8; 0x67],
+}
+
+#[repr(C)]
+pub struct CSMenuGaitemUseState {
+    vftable: usize,
+    unk8: u32,
+    pub quick_slot_item_id: u32,
+    unk10: u32,
+    unk14: u32,
+}
+
+#[repr(C)]
 pub struct CSPopupMenu {
     vftable: usize,
     pub menu_man: NonNull<CSMenuMan>,
@@ -88,13 +108,15 @@ pub struct FeSystemAnnounceViewModelMessageQueue {
 #[cfg(test)]
 mod test {
     use crate::cs::{
-        BackScreenData, CSMenuMan, CSPlayerMenuCtrl, CSPopupMenu, FeSystemAnnounceViewModel,
-        FeSystemAnnounceViewModelMessageQueue, LoadingScreenData,
+        BackScreenData, CSMenuData, CSMenuGaitemUseState, CSMenuMan, CSPlayerMenuCtrl, CSPopupMenu,
+        FeSystemAnnounceViewModel, FeSystemAnnounceViewModelMessageQueue, LoadingScreenData,
     };
 
     #[test]
     fn proper_sizes() {
         assert_eq!(0x8a0, size_of::<CSMenuMan>());
+        assert_eq!(0xF0, size_of::<CSMenuData>());
+        assert_eq!(0x18, size_of::<CSMenuGaitemUseState>());
         assert_eq!(0x320, size_of::<CSPopupMenu>());
         assert_eq!(0x48, size_of::<CSPlayerMenuCtrl>());
         assert_eq!(0x10, size_of::<BackScreenData>());
