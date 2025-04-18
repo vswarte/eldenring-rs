@@ -8,7 +8,7 @@ use super::{CSEzTask, CSEzUpdateTask};
 
 #[repr(C)]
 #[dlrf::singleton("CSMenuMan")]
-pub struct CSMenuMan {
+pub struct CSMenuManImp {
     vftable: usize,
     menu_data: usize,
     player_status_calculator: usize,
@@ -56,7 +56,7 @@ pub struct CSMenuGaitemUseState {
 #[repr(C)]
 pub struct CSPopupMenu {
     vftable: usize,
-    pub menu_man: NonNull<CSMenuMan>,
+    pub menu_man: NonNull<CSMenuManImp>,
     unk10: usize,
     unk18: usize,
     unk20: [u8; 0x90],
@@ -108,13 +108,13 @@ pub struct FeSystemAnnounceViewModelMessageQueue {
 #[cfg(test)]
 mod test {
     use crate::cs::{
-        BackScreenData, CSMenuData, CSMenuGaitemUseState, CSMenuMan, CSPlayerMenuCtrl, CSPopupMenu,
+        BackScreenData, CSMenuData, CSMenuGaitemUseState, CSMenuManImp, CSPlayerMenuCtrl, CSPopupMenu,
         FeSystemAnnounceViewModel, FeSystemAnnounceViewModelMessageQueue, LoadingScreenData,
     };
 
     #[test]
     fn proper_sizes() {
-        assert_eq!(0x8a0, size_of::<CSMenuMan>());
+        assert_eq!(0x8a0, size_of::<CSMenuManImp>());
         assert_eq!(0xF0, size_of::<CSMenuData>());
         assert_eq!(0x18, size_of::<CSMenuGaitemUseState>());
         assert_eq!(0x320, size_of::<CSPopupMenu>());
