@@ -173,7 +173,7 @@ pub struct TagHudData {
     pub chr_name: MenuLabelString,
     pub role_string: MenuLabelString,
     unk98: [u8; 0x40],
-    pub has_sp_effect_592: bool,
+    has_sp_effect_592: bool,
     unkd9: [u8; 0xb],
     pub role_name_color: u8,
     unke5: [u8; 0x43],
@@ -211,7 +211,7 @@ pub struct ChrTagEntry {
     /// The team type of the character
     pub team_type: u8,
     /// Does this character have the sp effect 590?
-    pub has_sp_effect_590: bool,
+    has_sp_effect_590: bool,
     unk_a4: u8,
     /// Is this summon a debug summon
     /// Will replace the name to "Debug" in japanese
