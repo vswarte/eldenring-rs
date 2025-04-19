@@ -108,8 +108,9 @@ pub struct FeSystemAnnounceViewModelMessageQueue {
 #[cfg(test)]
 mod test {
     use crate::cs::{
-        BackScreenData, CSMenuData, CSMenuGaitemUseState, CSMenuManImp, CSPlayerMenuCtrl, CSPopupMenu,
-        FeSystemAnnounceViewModel, FeSystemAnnounceViewModelMessageQueue, LoadingScreenData,
+        BackScreenData, CSMenuData, CSMenuGaitemUseState, CSMenuManImp, CSPlayerMenuCtrl,
+        CSPopupMenu, FeSystemAnnounceViewModel, FeSystemAnnounceViewModelMessageQueue,
+        LoadingScreenData,
     };
 
     #[test]
