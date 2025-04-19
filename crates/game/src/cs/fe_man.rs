@@ -185,8 +185,8 @@ pub struct ChrTagEntry {
     unk10: bool,
     /// Is line of sight to this character blocked?
     pub is_line_of_sight_blocked: bool,
-    /// Can this character be locked on to?
-    pub is_valid_target: bool,
+    /// Is this character currently not on screen?
+    pub is_not_on_screen: bool,
     pub role_name_color: u8,
     unk14: [u8; 4],
     /// String, containing the role of the character
