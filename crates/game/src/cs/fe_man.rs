@@ -17,7 +17,7 @@ pub struct CSFeManImp {
     fe_system_announce_view: usize,
     fe_summon_message_view: usize,
     clock_view: usize,
-    unk40: [u8; 40],
+    unk48: [u8; 40],
     unk70: usize,
     /// Toggle, to enable/disable the HUD
     pub enable_hud: bool,
@@ -25,7 +25,6 @@ pub struct CSFeManImp {
     /// Structure, holding intermidiate data FrontEndView
     /// read from menu window jobs
     pub frontend_values: FrontEndViewValues,
-    unk4e5c: [u8; 4],
     auto_hide_ctrl_ptr: usize,
     unk4e68: [u8; 8],
     auto_hide_ctrl: [u8; 0xb04],
@@ -133,6 +132,8 @@ pub struct FrontEndViewValues {
     pub remote_pc_tag_data: [TagHudData; 7],
     unk26a0: [u8; 0xfb8],
     unk3658: MenuLabelString,
+    unk3690: [u8; 0x10],
+    unk36a0: MenuLabelString,
     unk36d8: [u8; 8],
     pub full_screen_message_request_id: i32,
     unk36e4: [u8; 4],
@@ -145,7 +146,7 @@ pub struct FrontEndViewValues {
     pub summoned_spirit_ash_count: u32,
     unk4d5c: [u8; 4],
     pub spirit_ash_display: [CSFeSpiritAshDisplay; 5],
-    unk4dd8: [u8; 4],
+    unk4dd8: [u8; 8],
 }
 
 #[repr(C)]
@@ -226,14 +227,14 @@ mod test {
 
     #[test]
     fn proper_sizes() {
-        assert_eq!(0x83E0, size_of::<CSFeManImp>());
+        assert_eq!(0x8420, size_of::<CSFeManImp>());
         assert_eq!(0x20, size_of::<BossHealthDisplayEntry>());
         assert_eq!(0x280, size_of::<SummonMsgQueue>());
         assert_eq!(0x50, size_of::<SummonMsgData>());
         assert_eq!(0xb0, size_of::<ChrTagEntry>());
         assert_eq!(0x128, size_of::<TagHudData>());
-        assert_eq!(0x25C08, size_of::<FrontEndView>());
-        assert_eq!(0x4D98, size_of::<FrontEndViewValues>());
+        assert_eq!(0x25c08, size_of::<FrontEndView>());
+        assert_eq!(0x4de0, size_of::<FrontEndViewValues>());
         assert_eq!(0x18, size_of::<CSFeSpiritAshDisplay>());
         assert_eq!(0x38, size_of::<MenuLabelString>());
     }
