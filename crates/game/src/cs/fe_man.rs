@@ -244,7 +244,7 @@ pub struct MenuLabelString {
 
 impl Display for MenuLabelString {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        if !self.string.is_empty() {
+        if !self.string.inner.length == 0 {
             return write!(f, "{}", self.string);
         }
 

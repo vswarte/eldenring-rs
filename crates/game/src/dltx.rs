@@ -44,7 +44,7 @@ impl DLBasicString {
 #[derive(Default)]
 pub struct DLString {
     allocator: usize,
-    inner: DLBasicString,
+    pub inner: DLBasicString,
     unk28: u32,
     unk2c: u32,
 }
