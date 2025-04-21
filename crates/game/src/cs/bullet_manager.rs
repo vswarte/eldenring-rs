@@ -3,7 +3,7 @@ use std::ptr::NonNull;
 use crate::matrix::FSVector4;
 use crate::pointer::OwnedPtr;
 
-use super::{CSBulletIns, FieldInsHandle};
+use super::{CSBulletIns, ChrCam, FieldInsHandle};
 
 #[repr(C)]
 #[dlrf::singleton("CSBulletManager")]
@@ -14,7 +14,7 @@ pub struct CSBulletManager {
     pub bullets: BufferAndAllocLinkedList<CSBulletIns, 128, 128>,
     unk_bullet_sfx_related: BufferAndAllocLinkedList<[u8; 0x9d0], 64, 192>,
     unk40: BufferAndAllocLinkedList<[u8; 0x4220], 4, 28>,
-    chr_cam: usize,
+    pub chr_cam: Option<NonNull<ChrCam>>,
     unk68: u8,
     _pad69: [u8; 7],
     unk70: u64,

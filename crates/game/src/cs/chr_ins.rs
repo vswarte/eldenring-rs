@@ -18,6 +18,7 @@ use crate::cs::gaitem::GaitemHandle;
 use crate::cs::network_session::PlayerNetworkSession;
 use crate::cs::player_game_data::{ChrAsm, PlayerGameData};
 use crate::cs::session_manager::{SessionManagerPlayerEntry, SessionManagerPlayerEntryBase};
+use crate::cs::task::{CSEzRabbitNoUpdateTask, CSEzVoidTask};
 use crate::cs::world_chr_man::{ChrSetEntry, WorldBlockChr};
 use crate::cs::world_geom_man::{CSMsbParts, CSMsbPartsEne};
 
@@ -73,6 +74,17 @@ impl NetChrSyncFlags {
     }
 }
 
+#[repr(i32)]
+#[derive(Clone, Copy, PartialEq, Eq, Hash)]
+pub enum OmissionMode {
+    NoUpdate = -2,
+    Normal = 0,
+    OneFps = 1,
+    FiveFps = 5,
+    TwentyFps = 20,
+    ThirtyFps = 30,
+}
+
 #[repr(C)]
 /// Abstract base class to all characters. NPCs, Enemies, Players, Summons, Ghosts, even gesturing
 /// character on bloodmessages inherit from this.
@@ -107,16 +119,16 @@ pub struct ChrIns {
     unka0_position: FSVector4,
     /// Time in seconds since last update ran for the ChrIns.
     pub chr_update_delta_time: f32,
-    pub render_distance: u32,
+    pub omission_mode: OmissionMode,
     /// Amount of frames between updates for this ChrIns.
-    pub frames_per_update: u32,
-    pub render_visibility: u32,
+    /// Uses same values as omission mode.
+    pub frames_per_update: OmissionMode,
+    unkbc: OmissionMode,
     pub target_velocity_recorder: usize,
-    unkc8: usize,
-    unkd0_position: usize,
-    unkd8: [u8; 0x88],
-    pub last_used_item: i16,
-    unk162: i16,
+    unkc8: [u8; 0x8],
+    pub lock_on_target_position: FSVector4,
+    unkd8: [u8; 0x80],
+    pub last_used_item: i32,
     unk164: u32,
     unk168: u32,
     unk16c: u32,
@@ -124,8 +136,8 @@ pub struct ChrIns {
     unk174: u32,
     /// Container for the speffects applied to this character.
     pub special_effect: OwnedPtr<SpecialEffect>,
-    /// Refers to what field ins you were last killed by.
-    pub last_killed_by: FieldInsHandle,
+    /// Refers to what field ins you were last hit by.
+    pub last_hit_by: FieldInsHandle,
     pub character_id: u32,
     unk18c: u32,
     pub module_container: OwnedPtr<ChrInsModuleContainer>,
@@ -148,18 +160,78 @@ pub struct ChrIns {
     unk1e0: u32,
     pub network_authority: u32,
     pub event_entity_id: u32,
-    rest: [u8; 0x388],
+    unk1ec: f32,
+    unk1f0: usize,
+    unk1f8: usize,
+    unk200: [u8; 0x18],
+    pub character_creator_steam_id: u64,
+    pub mimicry_asset: i32,
+    pub mimicry_establishment_param_id: i32,
+    unk228: u32,
+    unk22c: u32,
+    pub chr_fade_multiplier: f32,
+    pub chr_fade_multiplier_reset: f32,
+    unk238: f32,
+    unk23c: f32,
+    unk240: f32,
+    unk244: f32,
+    unk248: f32,
+    unk24c: f32,
+    unk250: [u8; 0xc],
+    unk25c: [u8; 0x20],
+    unk27c: [u8; 0x84],
+    chr_slot_sys: [u8; 0x40],
+    unk340: usize,
+    unk348: [u8; 0x40],
+    last_received_packet60: u32,
+    unk38c: [u8; 0xc],
+    pose_importer: usize,
+    unk3a0: usize,
+    anim_skeleton_to_model_modifier: usize,
+    unk3b0: usize,
+    cloth_state: [u8; 0x30],
+    unk3e8: i32,
+    unk3ec: u32,
+    unk3f0: f32,
+    unk3f4: f32,
+    unk3f8: f32,
+    unk3fc: f32,
+    unk400: f32,
+    unk404: f32,
+    unk408: f32,
+    unk40c: [u8; 0x4],
+    pub update_data_module_task: CSEzVoidTask<CSEzRabbitNoUpdateTask, ChrIns>,
+    pub update_chr_ctrl_task: CSEzVoidTask<CSEzRabbitNoUpdateTask, ChrIns>,
+    pub update_chr_model_task: CSEzVoidTask<CSEzRabbitNoUpdateTask, ChrIns>,
+    pub update_havok_task: CSEzVoidTask<CSEzRabbitNoUpdateTask, ChrIns>,
+    pub update_replay_recorder_task: CSEzVoidTask<CSEzRabbitNoUpdateTask, ChrIns>,
+    pub update_behavior_task: CSEzVoidTask<CSEzRabbitNoUpdateTask, ChrIns>,
+    unk530: [u8; 0x2],
+    unk532: u8,
+    unk533: [u8; 0x11],
+    pub role_param_id: i32,
+    unk548: [u8; 0x38],
 }
 
 #[repr(C)]
 pub struct ChrInsFlags([u8; 5]);
 
 impl ChrInsFlags {
+    // byte 0 bit 0 Skip omission mode updates
     // byte 0 bit 5 No gravity
     // byte 1 bit 3 Enabe render
     // byte 1 bit 7 Death flag
-    // byte 2 bit 4 Disable floating name
+    // byte 2 bit 4 Draw tag offscreen
     // byte 4 bit 2 Trigger falldeath camera (See note below)
+    // byte 4 bit 4 Enable character tag
+    pub fn set_skip_omission_mode_updates(&mut self, val: bool) {
+        self.0[0] = self.0[0] & 0b11111110 | val as u8;
+    }
+    /// Controls if the character omission mode should be automatically updated
+    /// Setting this to true will make the character not update its omission mode
+    pub const fn skip_omission_mode_updates(&self) -> bool {
+        self.0[0] & 0b00000001 != 0
+    }
 
     pub fn set_no_gravity(&mut self, val: bool) {
         self.0[0] = self.0[0] & 0b11011111 | (val as u8) << 5;
@@ -181,11 +253,13 @@ impl ChrInsFlags {
     pub const fn death_flag(&self) -> bool {
         self.0[1] & 0b10000000 != 0
     }
-
-    pub fn set_disable_floating_name(&mut self, val: bool) {
+    pub fn set_draw_tag_offscreen(&mut self, val: bool) {
         self.0[2] = self.0[2] & 0b11101111 | (val as u8) << 4;
     }
-    pub const fn disable_floating_name(&self) -> bool {
+    /// This flag is used to determine if the character tag (name, hp, etc) should be
+    /// rendered on the side of the screen instead of above the character.
+    /// Works only on friendly characters tags, not lock on ones.
+    pub const fn draw_tag_offscreen(&self) -> bool {
         self.0[2] & 0b00010000 != 0
     }
 
@@ -196,6 +270,13 @@ impl ChrInsFlags {
     /// If you want to disable it, check state on ChrCam instead.
     pub const fn trigger_falldeath_camera(&self) -> bool {
         self.0[4] & 0b00000100 != 0
+    }
+    pub fn set_enable_character_tag(&mut self, val: bool) {
+        self.0[4] = self.0[4] & 0b11101111 | (val as u8) << 4;
+    }
+    /// This flag controls should the character tag (name, hp, etc) be rendered or not.
+    pub const fn enable_character_tag(&self) -> bool {
+        self.0[4] & 0b00010000 != 0
     }
 }
 
@@ -591,9 +672,18 @@ pub struct ChrCtrl {
     unk20: usize,
     pub ragdoll_ins: usize,
     pub chr_collision: usize,
-    unk38: [u8; 0xb8],
+    unk38: [u8; 0x88],
+    hkxpwv_res_cap: usize,
+    unkc8: usize,
+    hover_warp_ctrl: usize,
+    ai_jump_move_ctrl: usize,
+    chr_model_pos_easing: usize,
+    unke8: [u8; 0x8],
     pub flags: ChrCtrlFlags,
-    unkf1: [u8; 0x34],
+    unkf4: [u8; 0xc],
+    unk100: FSVector4,
+    unk110: FSVector4,
+    unk120: [u8; 0x8],
     pub chr_ragdoll_state: u8,
     unk12c: f32,
     unk130: [u8; 0x48],
@@ -768,7 +858,7 @@ pub struct PlayerSessionHolder {
 }
 
 #[repr(i32)]
-#[derive(Clone, Debug, PartialEq, Eq, Hash)]
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash)]
 /// Role of character in PvP/PvE.
 /// Changes a lot of things, like appearance, what items you can use, etc.
 pub enum ChrType {

@@ -19,6 +19,7 @@ pub(crate) mod sfx;
 pub(crate) mod shared;
 pub(crate) mod task;
 pub(crate) mod world_chr_man;
+pub(crate) mod fe_man;
 
 pub trait DebugDisplay {
     fn render_debug(&self, ui: &&mut Ui);

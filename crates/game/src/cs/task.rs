@@ -46,10 +46,19 @@ pub struct CSEzUpdateTask<TEzTask, TSubject> {
     pub subject: NonNull<TSubject>,
 
     /// Takes in the subject and the delta time
-    pub executor: fn(&TSubject, f32),
+    pub executor: fn(&TSubject, &FD4Time),
 }
 
-type CSEzVoidTask<TEzTask, TSubject> = CSEzUpdateTask<TEzTask, TSubject>;
+pub type CSEzVoidTask<TEzTask, TSubject> = CSEzUpdateTask<TEzTask, TSubject>;
+
+#[repr(C)]
+pub struct CSEzRabbitTask {
+    pub base: CSEzTask,
+    unk18: u32,
+    unk1c: u32,
+}
+
+pub type CSEzRabbitNoUpdateTask = CSEzRabbitTask;
 
 #[repr(C)]
 pub struct CSEzTaskProxy {

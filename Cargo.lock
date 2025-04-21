@@ -84,7 +84,7 @@ checksum = "ace50bade8e6234aa140d9a2f552bbee1db4d353f69b8217bc503490fc1a9f26"
 
 [[package]]
 name = "binary-mapper"
-version = "0.6.0"
+version = "0.7.0"
 dependencies = [
  "clap",
  "memmap",
@@ -230,7 +230,7 @@ dependencies = [
 
 [[package]]
 name = "debug"
-version = "0.6.0"
+version = "0.7.0"
 dependencies = [
  "eldenring",
  "eldenring-dlrf",
@@ -267,7 +267,7 @@ checksum = "48c757948c5ede0e46177b7add2e67155f70e33c07fea8284df6576da70b3719"
 
 [[package]]
 name = "eldenring"
-version = "0.6.0"
+version = "0.7.0"
 dependencies = [
  "eldenring-dlrf",
  "nalgebra",
@@ -284,14 +284,14 @@ dependencies = [
 
 [[package]]
 name = "eldenring-dlrf"
-version = "0.6.0"
+version = "0.7.0"
 dependencies = [
  "eldenring-dlrf-derive",
 ]
 
 [[package]]
 name = "eldenring-dlrf-derive"
-version = "0.6.0"
+version = "0.7.0"
 dependencies = [
  "quote",
  "syn",
@@ -299,7 +299,7 @@ dependencies = [
 
 [[package]]
 name = "eldenring-util"
-version = "0.6.0"
+version = "0.7.0"
 dependencies = [
  "eldenring",
  "eldenring-dlrf",
@@ -609,7 +609,7 @@ checksum = "b15813163c1d831bf4a13c3610c05c0d03b39feb07f7e09fa234dac9b15aaf39"
 
 [[package]]
 name = "param-generator"
-version = "0.6.0"
+version = "0.7.0"
 dependencies = [
  "clap",
  "quick-xml",
