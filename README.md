@@ -100,6 +100,7 @@ Result:
 
 # Credits (aside listed contributors to this repository)
  - Tremwil (for the arxan code restoration disabler, vtable-rs and a few other boilerplate-y things as well as implementing the initial FD4 singleton finder for TGA that I appropriated).
+ - Dasaav (for heaps of engine-related structures).
  - Sfix (for coming up with the FD4 singleton finder approach at all).
  - Yui (for some structures as well as AOBs and hinting at some logic existing in the binary).
 
