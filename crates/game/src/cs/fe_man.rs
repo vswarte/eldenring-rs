@@ -1,4 +1,9 @@
-use std::{fmt::Display, ptr::NonNull};
+use std::{
+    ffi::{OsStr, OsString},
+    fmt::Display,
+    os::windows::ffi::OsStringExt,
+    ptr::NonNull,
+};
 
 use crate::{dltx::DLString, matrix::FSVector4, pointer::OwnedPtr, CSFixedList};
 
@@ -235,26 +240,26 @@ pub struct CSFeSpiritAshDisplay {
 
 #[repr(C)]
 /// Custom string type used to interact with the scaleform
-/// Scaleform requires only the pointer to wide char string
-/// but this type is used for better memory management
+/// If string value is static, it will be stored in the static_string pointer
+/// otherwise it will be stored in the DLString and the static_string pointer will be null
 pub struct MenuLabelString {
-    pub raw_string: *const u16,
-    pub string: DLString,
+    pub static_string: *const u16,
+    pub allocated_string: DLString,
 }
 
 impl Display for MenuLabelString {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        if !self.string.inner.length == 0 {
-            return write!(f, "{}", self.string);
+        if !self.allocated_string.inner.length == 0 {
+            return write!(f, "{}", self.allocated_string);
         }
 
-        if self.raw_string.is_null() {
+        if self.static_string.is_null() {
             return write!(f, "");
         }
 
         unsafe {
             let string_size = (0..)
-                .map(|i| *self.raw_string.add(i))
+                .map(|i| *self.static_string.add(i))
                 .take_while(|&c| c != 0)
                 .count();
 
@@ -262,7 +267,7 @@ impl Display for MenuLabelString {
                 return write!(f, "");
             }
 
-            let slice = std::slice::from_raw_parts(self.raw_string, string_size);
+            let slice = std::slice::from_raw_parts(self.static_string, string_size);
             write!(f, "{}", String::from_utf16_lossy(slice))
         }
     }
