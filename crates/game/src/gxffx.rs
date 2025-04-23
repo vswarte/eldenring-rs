@@ -48,27 +48,11 @@ mod test {
     use std::mem::size_of;
 
     #[test]
-    fn proper_size_fxr_wrapper() {
+    fn proper_sizes() {
         assert_eq!(0x10, size_of::<FxrWrapper>());
-    }
-
-    #[test]
-    fn proper_size_fxr_list_node() {
         assert_eq!(0x10, size_of::<FxrListNode>());
-    }
-
-    #[test]
-    fn proper_size_fxr_resource_container() {
         assert_eq!(0x30, size_of::<FxrResourceContainer>());
-    }
-
-    #[test]
-    fn proper_size_gx_ffx_graphics_resource_manager() {
         assert_eq!(0x168, size_of::<GXFfxGraphicsResourceManager>());
-    }
-
-    #[test]
-    fn proper_size_gx_ffx_scene_ctrl() {
         assert_eq!(0x30, size_of::<GXFfxSceneCtrl>());
     }
 }
