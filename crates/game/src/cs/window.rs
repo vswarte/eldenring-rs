@@ -1,17 +1,20 @@
-use windows::Win32::Foundation::HWND;
+use windows::core::PCWSTR;
 
 #[repr(C)]
 /// Source of name: RTTI
 #[dlrf::singleton("CSWindow")]
 pub struct CSWindowImp {
     vftable: usize,
-    pub window_handle: HWND,
-    unk10: [u8; 0x10],
+    pub window_handle: isize,
+    pub lp_window_name: PCWSTR,
+    pub lp_class_name: PCWSTR,
     pub screen_pos_x: i32,
     pub screen_pos_y: i32,
     pub screen_width: i32,
     pub screen_height: i32,
-    pub base_addr: usize,
+    /// hInstance from WinMain, used to interact with windows api
+    /// E.g. CreateWindowExW
+    pub window_module_handle: isize,
     screen_mode_ctrl: usize,
     unk40: [u8; 0x2c],
     pub runtime_window_config: CSWindowScreenConfig,
@@ -57,7 +60,7 @@ pub enum CSWindowType {
     Borderless = 2,
 }
 
-#[repr(C)]
+#[repr(u32)]
 pub enum QualityLevelSetting {
     Low = 0,
     Medium = 1,
@@ -65,7 +68,7 @@ pub enum QualityLevelSetting {
     Maximum = 3,
 }
 
-#[repr(C)]
+#[repr(u32)]
 pub enum ToggleableGraphicsQuality {
     Off = 0,
     Low = 1,
@@ -74,13 +77,13 @@ pub enum ToggleableGraphicsQuality {
     Maximum = 4,
 }
 
-#[repr(C)]
+#[repr(u32)]
 pub enum OnOffSetting {
     Off = 0,
     On = 1,
 }
 
-#[repr(C)]
+#[repr(u32)]
 pub enum FpsTarget {
     FPS30 = 0,
     FPS60 = 1,
@@ -88,7 +91,7 @@ pub enum FpsTarget {
     FPS120 = 3,
 }
 
-#[repr(C)]
+#[repr(u32)]
 pub enum QualitySetting {
     Low = 1,
     Medium = 2,

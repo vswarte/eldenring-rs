@@ -1,5 +1,8 @@
 use std::ptr::NonNull;
 
+use windows::core::PCSTR;
+
+use crate::param::ParamDef;
 use crate::pointer::OwnedPtr;
 
 use super::resource::FD4ResCap;
@@ -13,10 +16,33 @@ pub struct FD4ParamRepository {
     allocator: usize,
 }
 
+impl FD4ParamRepository {
+    pub fn get<T: ParamDef>(&self, id: u32) -> Option<&T> {
+        let file_header = self
+            .res_rep
+            .res_cap_holder
+            .entries()
+            .find(|e| e.data.name().as_str().eq(T::NAME))?;
+
+        // SAFETY: we shouldn't run into invalid casts because of the code gen dictating T::NAME.
+        unsafe { file_header.data.get(id) }
+    }
+
+    pub fn get_mut<T: ParamDef>(&mut self, id: u32) -> Option<&mut T> {
+        let file_header = self
+            .res_rep
+            .res_cap_holder
+            .entries_mut()
+            .find(|e| e.data.name().as_str().eq(T::NAME))?;
+
+        // SAFETY: we shouldn't run into invalid casts because of the code gen dictating T::NAME.
+        unsafe { file_header.data.get_mut(id) }
+    }
+}
+
 #[repr(C)]
 pub struct FD4ParamResCap {
-    pub res_cap: FD4ResCap<Self>,
-
+    pub inner: FD4ResCap<Self>,
     /// Size of data at pointer.
     pub size: u64,
     /// Raw row data for this param file.
@@ -25,7 +51,13 @@ pub struct FD4ParamResCap {
 
 impl AsRef<FD4ResCap<Self>> for FD4ParamResCap {
     fn as_ref(&self) -> &FD4ResCap<Self> {
-        &self.res_cap
+        &self.inner
+    }
+}
+
+impl AsMut<FD4ResCap<Self>> for FD4ParamResCap {
+    fn as_mut(&mut self) -> &mut FD4ResCap<Self> {
+        &mut self.inner
     }
 }
 
@@ -35,7 +67,18 @@ pub struct ParamData {
 }
 
 impl ParamData {
-    pub fn row_descriptors(&self) -> &[ParamRowDescriptor] {
+    pub fn name(&self) -> String {
+        unsafe {
+            PCSTR(
+                (self as *const _ as usize + self.header.param_type.name_offset as usize)
+                    as *const _,
+            )
+            .to_string()
+            .unwrap()
+        }
+    }
+
+    fn row_descriptors(&self) -> &[ParamRowDescriptor] {
         unsafe {
             // The row descriptors are right after the header.
             std::slice::from_raw_parts(
@@ -76,23 +119,31 @@ impl ParamData {
 
 #[repr(C)]
 pub struct ParamFileHeader {
-    name_offset: u32,
-    unk4: u32,
+    strings_offset: u32,
+    short_data_offset: u16,
+    unk6: u16,
     pub paramdef_version: u16,
     pub row_count: u16,
-    unkc: u32,
-    unk10: u64,
-    unk18: u64,
-    unk20: u64,
-    unk28: u64,
-    data_offset: u64,
-    unk38: u64,
+    param_type: ParamTypeDescriptor,
+    endianness: u8,
+    flags_2d: u8,
+    flags_2e: u8,
+    pub paramdef_format_version: u8,
+    unk30: [u8; 0x10],
 }
 
 #[repr(C)]
-pub struct ParamRowDescriptor {
-    pub id: u32,
+pub struct ParamTypeDescriptor {
+    unk0: u32,
+    name_offset: u32,
+    /// String will be stored here if it fits.
+    _pad8: [u8; 24],
+}
+
+#[repr(C)]
+struct ParamRowDescriptor {
+    id: u32,
     _pad4: u32,
-    pub data_offset: usize,
-    pub name_offset: usize,
+    data_offset: usize,
+    name_offset: usize,
 }

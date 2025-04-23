@@ -2,7 +2,7 @@
 use std::ops::{Add, Mul, MulAssign, Sub};
 
 use nalgebra::RowVector4;
-use nalgebra_glm::{Mat4, Vec4};
+use nalgebra_glm::{Mat4, Vec3, Vec4};
 
 #[repr(C, align(16))]
 #[derive(Debug, Clone, Copy)]
@@ -31,6 +31,15 @@ impl Add<FSVector4> for FSVector4 {
             self.2 - rhs.2,
             self.3 - rhs.3,
         )
+    }
+}
+
+#[repr(C)]
+#[derive(Debug, Clone, Copy)]
+pub struct FSVector3(pub f32, pub f32, pub f32);
+impl From<FSVector3> for Vec3 {
+    fn from(val: FSVector3) -> Self {
+        Vec3::new(val.0, val.1, val.2)
     }
 }
 

@@ -13,11 +13,16 @@ impl DebugDisplay for DLFileDeviceManager {
             ui.indent();
             if let Some(_t) = ui.begin_table_header(
                 "dl-file-device-manager-virtual-roots",
-                [TableColumnSetup::new("Root")],
+                [
+                    TableColumnSetup::new("Root"),
+                    TableColumnSetup::new("Mount"),
+                ],
             ) {
                 self.virtual_roots.items().iter().for_each(|vr| {
                     ui.table_next_column();
-                    ui.text(vr.to_string());
+                    ui.text(vr[0].to_string());
+                    ui.table_next_column();
+                    ui.text(vr[1].to_string());
                 });
             }
             ui.unindent();

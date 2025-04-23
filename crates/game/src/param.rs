@@ -1,4 +1,9 @@
-/// THIS FILE IS GENERATED FROM THE PARAM DEFS, DO NOT EDIT IT DIRECTLY
+//! THIS FILE IS GENERATED FROM THE PARAM DEFS, DO NOT EDIT IT DIRECTLY
+
+/// Trait to perform safe param lookups.
+pub trait ParamDef {
+    const NAME: &str;
+}
 
 #[derive(Debug, Clone)]
 #[allow(non_camel_case_types)]
@@ -28,6 +33,10 @@ pub struct ACTIONBUTTON_PARAM_ST {
     override_action_button_id_for_ride: i32,
     exec_invalid_time: f32,
     padding6: [u8; 28],
+}
+
+impl ParamDef for ACTIONBUTTON_PARAM_ST {
+    const NAME: &str = "ACTIONBUTTON_PARAM_ST";
 }
 
 impl ACTIONBUTTON_PARAM_ST {
@@ -334,6 +343,10 @@ pub struct AI_ANIM_TBL_PARAM {
     bits_c1: u8,
     bits_c2: u8,
     pad0: [u8; 13],
+}
+
+impl ParamDef for AI_ANIM_TBL_PARAM {
+    const NAME: &str = "AI_ANIM_TBL_PARAM";
 }
 
 impl AI_ANIM_TBL_PARAM {
@@ -1411,6 +1424,10 @@ pub struct AI_ATTACK_PARAM_ST {
     combo_exec_range: f32,
 }
 
+impl ParamDef for AI_ATTACK_PARAM_ST {
+    const NAME: &str = "AI_ATTACK_PARAM_ST";
+}
+
 impl AI_ATTACK_PARAM_ST {
     pub fn attack_table_id(&self) -> i32 {
         self.attack_table_id
@@ -1886,6 +1903,10 @@ pub struct AI_ODDS_PARAM {
     act98: u8,
     act99: u8,
     pad0: [u8; 12],
+}
+
+impl ParamDef for AI_ODDS_PARAM {
+    const NAME: &str = "AI_ODDS_PARAM";
 }
 
 impl AI_ODDS_PARAM {
@@ -2708,6 +2729,10 @@ pub struct AI_SOUND_PARAM_ST {
     pad1: [u8; 6],
 }
 
+impl ParamDef for AI_SOUND_PARAM_ST {
+    const NAME: &str = "AI_SOUND_PARAM_ST";
+}
+
 impl AI_SOUND_PARAM_ST {
     pub fn radius(&self) -> f32 {
         self.radius
@@ -2874,6 +2899,10 @@ pub struct AI_STANDARD_INFO_BANK {
     attack4_cone_angle: u8,
     reserve13: [u8; 7],
     reserve_last: [u8; 32],
+}
+
+impl ParamDef for AI_STANDARD_INFO_BANK {
+    const NAME: &str = "AI_STANDARD_INFO_BANK";
 }
 
 impl AI_STANDARD_INFO_BANK {
@@ -3263,6 +3292,10 @@ pub struct ASSET_GEOMETORY_PARAM_ST {
     unknown_0x124: u8,
     unknown_0x125: u8,
     reserve_0: [u8; 26],
+}
+
+impl ParamDef for ASSET_GEOMETORY_PARAM_ST {
+    const NAME: &str = "ASSET_GEOMETORY_PARAM_ST";
 }
 
 impl ASSET_GEOMETORY_PARAM_ST {
@@ -4291,6 +4324,10 @@ pub struct ASSET_MATERIAL_SFX_PARAM_ST {
     sfx_id_31: u32,
 }
 
+impl ParamDef for ASSET_MATERIAL_SFX_PARAM_ST {
+    const NAME: &str = "ASSET_MATERIAL_SFX_PARAM_ST";
+}
+
 impl ASSET_MATERIAL_SFX_PARAM_ST {
     pub fn sfx_id_00(&self) -> u32 {
         self.sfx_id_00
@@ -4578,6 +4615,10 @@ pub struct ASSET_MODEL_SFX_PARAM_ST {
     dmypoly_id_7: i32,
     is_disable_iv: u8,
     reserve_7: [u8; 7],
+}
+
+impl ParamDef for ASSET_MODEL_SFX_PARAM_ST {
+    const NAME: &str = "ASSET_MODEL_SFX_PARAM_ST";
 }
 
 impl ASSET_MODEL_SFX_PARAM_ST {
@@ -4915,6 +4956,10 @@ pub struct ATK_PARAM_ST {
     sub_category3: u8,
     sub_category4: u8,
     pad7: [u8; 10],
+}
+
+impl ParamDef for ATK_PARAM_ST {
+    const NAME: &str = "ATK_PARAM_ST";
 }
 
 impl ATK_PARAM_ST {
@@ -6656,6 +6701,10 @@ pub struct ATTACK_ELEMENT_CORRECT_PARAM_ST {
     pad2: [u8; 24],
 }
 
+impl ParamDef for ATTACK_ELEMENT_CORRECT_PARAM_ST {
+    const NAME: &str = "ATTACK_ELEMENT_CORRECT_PARAM_ST";
+}
+
 impl ATTACK_ELEMENT_CORRECT_PARAM_ST {
     #[allow(clippy::identity_op)]
     pub fn is_strength_correct_by_physics(&self) -> u8 {
@@ -7322,6 +7371,10 @@ pub struct AUTO_CREATE_ENV_SOUND_PARAM_ST {
     limite_rotate_max: f32,
 }
 
+impl ParamDef for AUTO_CREATE_ENV_SOUND_PARAM_ST {
+    const NAME: &str = "AUTO_CREATE_ENV_SOUND_PARAM_ST";
+}
+
 impl AUTO_CREATE_ENV_SOUND_PARAM_ST {
     pub fn range_min(&self) -> f32 {
         self.range_min
@@ -7401,6 +7454,10 @@ pub struct BASECHR_SELECT_MENU_PARAM_ST {
     reserve: [u8; 12],
 }
 
+impl ParamDef for BASECHR_SELECT_MENU_PARAM_ST {
+    const NAME: &str = "BASECHR_SELECT_MENU_PARAM_ST";
+}
+
 impl BASECHR_SELECT_MENU_PARAM_ST {
     #[allow(clippy::identity_op)]
     pub fn disable_param_nt(&self) -> u8 {
@@ -7461,6 +7518,10 @@ pub struct BEHAVIOR_PARAM_ST {
     category: u8,
     hero_point: u8,
     pad1: [u8; 2],
+}
+
+impl ParamDef for BEHAVIOR_PARAM_ST {
+    const NAME: &str = "BEHAVIOR_PARAM_ST";
 }
 
 impl BEHAVIOR_PARAM_ST {
@@ -7624,6 +7685,10 @@ pub struct BONFIRE_WARP_PARAM_ST {
     text_disable_flag2_id8: i32,
     alt_icon_id: u16,
     alt_forbidden_icon_id: u16,
+}
+
+impl ParamDef for BONFIRE_WARP_PARAM_ST {
+    const NAME: &str = "BONFIRE_WARP_PARAM_ST";
 }
 
 impl BONFIRE_WARP_PARAM_ST {
@@ -8232,6 +8297,10 @@ pub struct BONFIRE_WARP_SUB_CATEGORY_PARAM_ST {
     pad: [u8; 4],
 }
 
+impl ParamDef for BONFIRE_WARP_SUB_CATEGORY_PARAM_ST {
+    const NAME: &str = "BONFIRE_WARP_SUB_CATEGORY_PARAM_ST";
+}
+
 impl BONFIRE_WARP_SUB_CATEGORY_PARAM_ST {
     #[allow(clippy::identity_op)]
     pub fn disable_param_nt(&self) -> u8 {
@@ -8278,6 +8347,10 @@ pub struct BONFIRE_WARP_TAB_PARAM_ST {
     sort_id: i32,
     icon_id: u16,
     pad: [u8; 2],
+}
+
+impl ParamDef for BONFIRE_WARP_TAB_PARAM_ST {
+    const NAME: &str = "BONFIRE_WARP_TAB_PARAM_ST";
 }
 
 impl BONFIRE_WARP_TAB_PARAM_ST {
@@ -8364,6 +8437,10 @@ pub struct BUDDY_PARAM_ST {
     unknown_0x94: i32,
     unknown_0x98: i32,
     unknown_0x9c: u32,
+}
+
+impl ParamDef for BUDDY_PARAM_ST {
+    const NAME: &str = "BUDDY_PARAM_ST";
 }
 
 impl BUDDY_PARAM_ST {
@@ -8590,6 +8667,10 @@ pub struct BUDDY_STONE_PARAM_ST {
     pad3: [u8; 24],
 }
 
+impl ParamDef for BUDDY_STONE_PARAM_ST {
+    const NAME: &str = "BUDDY_STONE_PARAM_ST";
+}
+
 impl BUDDY_STONE_PARAM_ST {
     #[allow(clippy::identity_op)]
     pub fn disable_param_nt(&self) -> u8 {
@@ -8716,6 +8797,10 @@ pub struct BUDGET_PARAM_ST {
     vram_chr_and_parts: f32,
     havok_navimesh: f32,
     reserve_1: [u8; 24],
+}
+
+impl ParamDef for BUDGET_PARAM_ST {
+    const NAME: &str = "BUDGET_PARAM_ST";
 }
 
 impl BUDGET_PARAM_ST {
@@ -8937,6 +9022,10 @@ pub struct BULLET_CREATE_LIMIT_PARAM_ST {
     pad: [u8; 30],
 }
 
+impl ParamDef for BULLET_CREATE_LIMIT_PARAM_ST {
+    const NAME: &str = "BULLET_CREATE_LIMIT_PARAM_ST";
+}
+
 impl BULLET_CREATE_LIMIT_PARAM_ST {
     pub fn limit_num_by_group(&self) -> u8 {
         self.limit_num_by_group
@@ -9055,6 +9144,10 @@ pub struct BULLET_PARAM_ST {
     sp_bullet_dist_up_rate: f32,
     nolock_target_dist: f32,
     pad4: [u8; 8],
+}
+
+impl ParamDef for BULLET_PARAM_ST {
+    const NAME: &str = "BULLET_PARAM_ST";
 }
 
 impl BULLET_PARAM_ST {
@@ -10065,6 +10158,10 @@ pub struct CACL_CORRECT_GRAPH_ST {
     pad: [u8; 4],
 }
 
+impl ParamDef for CACL_CORRECT_GRAPH_ST {
+    const NAME: &str = "CACL_CORRECT_GRAPH_ST";
+}
+
 impl CACL_CORRECT_GRAPH_ST {
     pub fn stage_max_val0(&self) -> f32 {
         self.stage_max_val0
@@ -10231,6 +10328,10 @@ pub struct CAMERA_FADE_PARAM_ST {
     dummy: [u8; 12],
 }
 
+impl ParamDef for CAMERA_FADE_PARAM_ST {
+    const NAME: &str = "CAMERA_FADE_PARAM_ST";
+}
+
 impl CAMERA_FADE_PARAM_ST {
     pub fn near_min_dist(&self) -> f32 {
         self.near_min_dist
@@ -10283,6 +10384,10 @@ pub struct CEREMONY_PARAM_ST {
     override_map_place_name_id: i32,
     override_save_map_name_id: i32,
     pad2: [u8; 16],
+}
+
+impl ParamDef for CEREMONY_PARAM_ST {
+    const NAME: &str = "CEREMONY_PARAM_ST";
 }
 
 impl CEREMONY_PARAM_ST {
@@ -10445,6 +10550,10 @@ pub struct CHARACTER_INIT_PARAM {
     pad7: [u8; 5],
     voice_type: u8,
     reserve: [u8; 6],
+}
+
+impl ParamDef for CHARACTER_INIT_PARAM {
+    const NAME: &str = "CHARACTER_INIT_PARAM";
 }
 
 impl CHARACTER_INIT_PARAM {
@@ -11303,6 +11412,10 @@ pub struct CHARMAKEMENU_LISTITEM_PARAM_ST {
     reserved: [u8; 7],
 }
 
+impl ParamDef for CHARMAKEMENU_LISTITEM_PARAM_ST {
+    const NAME: &str = "CHARMAKEMENU_LISTITEM_PARAM_ST";
+}
+
 impl CHARMAKEMENU_LISTITEM_PARAM_ST {
     pub fn value(&self) -> i32 {
         self.value
@@ -11346,6 +11459,10 @@ pub struct CHARMAKEMENUTOP_PARAM_ST {
     help_text_id: i32,
     unlock_event_flag_id: u32,
     reserved: [u8; 4],
+}
+
+impl ParamDef for CHARMAKEMENUTOP_PARAM_ST {
+    const NAME: &str = "CHARMAKEMENUTOP_PARAM_ST";
 }
 
 impl CHARMAKEMENUTOP_PARAM_ST {
@@ -11449,6 +11566,10 @@ pub struct CHR_ACTIVATE_CONDITION_PARAM_ST {
     time_end_hour: u8,
     time_end_min: u8,
     pad2: [u8; 2],
+}
+
+impl ParamDef for CHR_ACTIVATE_CONDITION_PARAM_ST {
+    const NAME: &str = "CHR_ACTIVATE_CONDITION_PARAM_ST";
 }
 
 impl CHR_ACTIVATE_CONDITION_PARAM_ST {
@@ -11634,6 +11755,10 @@ pub struct CHR_EQUIP_MODEL_PARAM_ST {
     unknown_0x8: i32,
 }
 
+impl ParamDef for CHR_EQUIP_MODEL_PARAM_ST {
+    const NAME: &str = "CHR_EQUIP_MODEL_PARAM_ST";
+}
+
 impl CHR_EQUIP_MODEL_PARAM_ST {}
 
 #[derive(Debug, Clone)]
@@ -11647,6 +11772,10 @@ pub struct CHR_MODEL_PARAM_ST {
     camera_dither_fade_id: i16,
     report_anim_mem_size_mb: f32,
     unk: u32,
+}
+
+impl ParamDef for CHR_MODEL_PARAM_ST {
+    const NAME: &str = "CHR_MODEL_PARAM_ST";
 }
 
 impl CHR_MODEL_PARAM_ST {
@@ -11729,6 +11858,10 @@ pub struct CLEAR_COUNT_CORRECT_PARAM_ST {
     sleep_damage_rate: f32,
     madness_damage_rate: f32,
     pad1: [u8; 4],
+}
+
+impl ParamDef for CLEAR_COUNT_CORRECT_PARAM_ST {
+    const NAME: &str = "CLEAR_COUNT_CORRECT_PARAM_ST";
 }
 
 impl CLEAR_COUNT_CORRECT_PARAM_ST {
@@ -11989,6 +12122,10 @@ pub struct COMMON_SYSTEM_PARAM_ST {
     reserve0: [u8; 60],
 }
 
+impl ParamDef for COMMON_SYSTEM_PARAM_ST {
+    const NAME: &str = "COMMON_SYSTEM_PARAM_ST";
+}
+
 impl COMMON_SYSTEM_PARAM_ST {
     pub fn map_save_map_name_id_on_game_start(&self) -> u32 {
         self.map_save_map_name_id_on_game_start
@@ -12011,6 +12148,10 @@ pub struct COOL_TIME_PARAM_ST {
     observe_time_2: f32,
     limitation_time_3: f32,
     observe_time_3: f32,
+}
+
+impl ParamDef for COOL_TIME_PARAM_ST {
+    const NAME: &str = "COOL_TIME_PARAM_ST";
 }
 
 impl COOL_TIME_PARAM_ST {
@@ -12094,6 +12235,10 @@ pub struct CUTSCENE_GPARAM_TIME_PARAM_ST {
     dst_timezone_deep_night_b: u8,
     reserved: [u8; 1],
     post_play_ingame_time: f32,
+}
+
+impl ParamDef for CUTSCENE_GPARAM_TIME_PARAM_ST {
+    const NAME: &str = "CUTSCENE_GPARAM_TIME_PARAM_ST";
 }
 
 impl CUTSCENE_GPARAM_TIME_PARAM_ST {
@@ -12239,6 +12384,10 @@ pub struct CUTSCENE_GPARAM_WEATHER_PARAM_ST {
     reserved2: [u8; 1],
     override_map_gd_region_id: i16,
     reserved1: [u8; 12],
+}
+
+impl ParamDef for CUTSCENE_GPARAM_WEATHER_PARAM_ST {
+    const NAME: &str = "CUTSCENE_GPARAM_WEATHER_PARAM_ST";
 }
 
 impl CUTSCENE_GPARAM_WEATHER_PARAM_ST {
@@ -12570,6 +12719,10 @@ pub struct CUTSCENE_MAP_ID_PARAM_ST {
     hit_parts_1: i32,
 }
 
+impl ParamDef for CUTSCENE_MAP_ID_PARAM_ST {
+    const NAME: &str = "CUTSCENE_MAP_ID_PARAM_ST";
+}
+
 impl CUTSCENE_MAP_ID_PARAM_ST {
     #[allow(clippy::identity_op)]
     pub fn disable_param_nt(&self) -> u8 {
@@ -12678,6 +12831,10 @@ pub struct CUTSCENE_TEXTURE_LOAD_PARAM_ST {
     tex_name_13: [u8; 16],
     tex_name_14: [u8; 16],
     tex_name_15: [u8; 16],
+}
+
+impl ParamDef for CUTSCENE_TEXTURE_LOAD_PARAM_ST {
+    const NAME: &str = "CUTSCENE_TEXTURE_LOAD_PARAM_ST";
 }
 
 impl CUTSCENE_TEXTURE_LOAD_PARAM_ST {
@@ -12838,6 +12995,10 @@ pub struct CUTSCENE_TIMEZONE_CONVERT_PARAM_ST {
     dst_cutscen_time: f32,
 }
 
+impl ParamDef for CUTSCENE_TIMEZONE_CONVERT_PARAM_ST {
+    const NAME: &str = "CUTSCENE_TIMEZONE_CONVERT_PARAM_ST";
+}
+
 impl CUTSCENE_TIMEZONE_CONVERT_PARAM_ST {
     pub fn src_timezone_start(&self) -> f32 {
         self.src_timezone_start
@@ -12861,6 +13022,10 @@ impl CUTSCENE_TIMEZONE_CONVERT_PARAM_ST {
 #[repr(C)]
 pub struct CUTSCENE_WEATHER_OVERRIDE_GPARAM_ID_CONVERT_PARAM_ST {
     weather_override_gparam_id: u32,
+}
+
+impl ParamDef for CUTSCENE_WEATHER_OVERRIDE_GPARAM_ID_CONVERT_PARAM_ST {
+    const NAME: &str = "CUTSCENE_WEATHER_OVERRIDE_GPARAM_ID_CONVERT_PARAM_ST";
 }
 
 impl CUTSCENE_WEATHER_OVERRIDE_GPARAM_ID_CONVERT_PARAM_ST {
@@ -12953,6 +13118,10 @@ pub struct DECAL_PARAM_ST {
     emissive_color_b: u8,
     max_decal_sfx_creatable_slope_angle_deg: f32,
     pad_02: [u8; 40],
+}
+
+impl ParamDef for DECAL_PARAM_ST {
+    const NAME: &str = "DECAL_PARAM_ST";
 }
 
 impl DECAL_PARAM_ST {
@@ -13708,6 +13877,10 @@ pub struct DEFAULT_KEY_ASSIGN {
     time1_7: f32,
     time2_7: f32,
     a2d_threshold_7: f32,
+}
+
+impl ParamDef for DEFAULT_KEY_ASSIGN {
+    const NAME: &str = "DEFAULT_KEY_ASSIGN";
 }
 
 impl DEFAULT_KEY_ASSIGN {
@@ -14808,6 +14981,10 @@ pub struct DIRECTION_CAMERA_PARAM_ST {
     pad1: [u8; 15],
 }
 
+impl ParamDef for DIRECTION_CAMERA_PARAM_ST {
+    const NAME: &str = "DIRECTION_CAMERA_PARAM_ST";
+}
+
 impl DIRECTION_CAMERA_PARAM_ST {
     #[allow(clippy::identity_op)]
     pub fn is_use_option(&self) -> u8 {
@@ -14833,6 +15010,10 @@ pub struct ENEMY_COMMON_PARAM_ST {
     find_unfavorable_failed_point_dist: f32,
     find_unfavorable_failed_point_height: f32,
     reserved18: [u8; 184],
+}
+
+impl ParamDef for ENEMY_COMMON_PARAM_ST {
+    const NAME: &str = "ENEMY_COMMON_PARAM_ST";
 }
 
 impl ENEMY_COMMON_PARAM_ST {
@@ -14911,6 +15092,10 @@ pub struct ENEMY_STANDARD_INFO_BANK {
     stamina_consumption: u16,
     deffenct_phys: u16,
     reserve_last2: [u8; 48],
+}
+
+impl ParamDef for ENEMY_STANDARD_INFO_BANK {
+    const NAME: &str = "ENEMY_STANDARD_INFO_BANK";
 }
 
 impl ENEMY_STANDARD_INFO_BANK {
@@ -15090,6 +15275,10 @@ pub struct ENV_OBJ_LOT_PARAM_ST {
     reserve_0: [u8; 24],
 }
 
+impl ParamDef for ENV_OBJ_LOT_PARAM_ST {
+    const NAME: &str = "ENV_OBJ_LOT_PARAM_ST";
+}
+
 impl ENV_OBJ_LOT_PARAM_ST {
     pub fn asset_id_0(&self) -> i32 {
         self.asset_id_0
@@ -15247,6 +15436,10 @@ pub struct EQUIP_MTRL_SET_PARAM_ST {
     pad_cate: [u8; 2],
     bits_30: u8,
     pad: [u8; 3],
+}
+
+impl ParamDef for EQUIP_MTRL_SET_PARAM_ST {
+    const NAME: &str = "EQUIP_MTRL_SET_PARAM_ST";
 }
 
 impl EQUIP_MTRL_SET_PARAM_ST {
@@ -15495,6 +15688,10 @@ pub struct EQUIP_PARAM_ACCESSORY_ST {
     resident_sp_effect_id3: i32,
     resident_sp_effect_id4: i32,
     pad1: [u8; 4],
+}
+
+impl ParamDef for EQUIP_PARAM_ACCESSORY_ST {
+    const NAME: &str = "EQUIP_PARAM_ACCESSORY_ST";
 }
 
 impl EQUIP_PARAM_ACCESSORY_ST {
@@ -15829,6 +16026,10 @@ pub struct EQUIP_PARAM_CUSTOM_WEAPON_ST {
     pad: [u8; 7],
 }
 
+impl ParamDef for EQUIP_PARAM_CUSTOM_WEAPON_ST {
+    const NAME: &str = "EQUIP_PARAM_CUSTOM_WEAPON_ST";
+}
+
 impl EQUIP_PARAM_CUSTOM_WEAPON_ST {
     pub fn base_wep_id(&self) -> i32 {
         self.base_wep_id
@@ -15897,6 +16098,10 @@ pub struct EQUIP_PARAM_GEM_ST {
     sp_effect_id_for_atk2: i32,
     mount_wep_text_id: i32,
     pad6: [u8; 8],
+}
+
+impl ParamDef for EQUIP_PARAM_GEM_ST {
+    const NAME: &str = "EQUIP_PARAM_GEM_ST";
 }
 
 impl EQUIP_PARAM_GEM_ST {
@@ -16920,6 +17125,10 @@ pub struct EQUIP_PARAM_GOODS_ST {
     reserve5: [u8; 2],
     item_get_tutorial_flag_id: u32,
     reserve3: [u8; 8],
+}
+
+impl ParamDef for EQUIP_PARAM_GOODS_ST {
+    const NAME: &str = "EQUIP_PARAM_GOODS_ST";
 }
 
 impl EQUIP_PARAM_GOODS_ST {
@@ -18099,6 +18308,10 @@ pub struct EQUIP_PARAM_PROTECTOR_ST {
     invisible_flag_sex_ver94: u8,
     invisible_flag_sex_ver95: u8,
     pad404: [u8; 14],
+}
+
+impl ParamDef for EQUIP_PARAM_PROTECTOR_ST {
+    const NAME: &str = "EQUIP_PARAM_PROTECTOR_ST";
 }
 
 impl EQUIP_PARAM_PROTECTOR_ST {
@@ -20358,6 +20571,10 @@ pub struct EQUIP_PARAM_WEAPON_ST {
     vs_player_dmg_correct_rate_curse: f32,
     restrict_special_sword_art: u8,
     pad: [u8; 7],
+}
+
+impl ParamDef for EQUIP_PARAM_WEAPON_ST {
+    const NAME: &str = "EQUIP_PARAM_WEAPON_ST";
 }
 
 impl EQUIP_PARAM_WEAPON_ST {
@@ -22641,6 +22858,10 @@ pub struct ESTUS_FLASK_RECOVERY_PARAM_ST {
     pad: [u8; 8],
 }
 
+impl ParamDef for ESTUS_FLASK_RECOVERY_PARAM_ST {
+    const NAME: &str = "ESTUS_FLASK_RECOVERY_PARAM_ST";
+}
+
 impl ESTUS_FLASK_RECOVERY_PARAM_ST {
     pub fn host(&self) -> u8 {
         self.host
@@ -22812,6 +23033,10 @@ pub struct EVENT_FLAG_USAGE_PARAM_ST {
     padding1: [u8; 2],
     flag_num: i32,
     padding2: [u8; 24],
+}
+
+impl ParamDef for EVENT_FLAG_USAGE_PARAM_ST {
+    const NAME: &str = "EVENT_FLAG_USAGE_PARAM_ST";
 }
 
 impl EVENT_FLAG_USAGE_PARAM_ST {
@@ -23080,6 +23305,10 @@ pub struct FACE_PARAM_ST {
     face_geo_asym_data23: u8,
     face_geo_asym_data24: u8,
     face_geo_asym_data25: u8,
+}
+
+impl ParamDef for FACE_PARAM_ST {
+    const NAME: &str = "FACE_PARAM_ST";
 }
 
 impl FACE_PARAM_ST {
@@ -25228,6 +25457,10 @@ pub struct FACE_RANGE_PARAM_ST {
     burn_scar: f32,
 }
 
+impl ParamDef for FACE_RANGE_PARAM_ST {
+    const NAME: &str = "FACE_RANGE_PARAM_ST";
+}
+
 impl FACE_RANGE_PARAM_ST {
     pub fn face_parts_id(&self) -> f32 {
         self.face_parts_id
@@ -26890,6 +27123,10 @@ pub struct FE_TEXT_EFFECT_PARAM_ST {
     pad2: [u8; 19],
 }
 
+impl ParamDef for FE_TEXT_EFFECT_PARAM_ST {
+    const NAME: &str = "FE_TEXT_EFFECT_PARAM_ST";
+}
+
 impl FE_TEXT_EFFECT_PARAM_ST {
     pub fn res_id(&self) -> i16 {
         self.res_id
@@ -26937,6 +27174,10 @@ pub struct FINAL_DAMAGE_RATE_PARAM_ST {
     dark_rate: f32,
     stamina_rate: f32,
     sa_rate: f32,
+}
+
+impl ParamDef for FINAL_DAMAGE_RATE_PARAM_ST {
+    const NAME: &str = "FINAL_DAMAGE_RATE_PARAM_ST";
 }
 
 impl FINAL_DAMAGE_RATE_PARAM_ST {
@@ -27201,6 +27442,10 @@ pub struct FOOT_SFX_PARAM_ST {
     sfx_id_197: u32,
     sfx_id_198: u32,
     sfx_id_199: u32,
+}
+
+impl ParamDef for FOOT_SFX_PARAM_ST {
+    const NAME: &str = "FOOT_SFX_PARAM_ST";
 }
 
 impl FOOT_SFX_PARAM_ST {
@@ -28842,6 +29087,10 @@ pub struct GAME_AREA_PARAM_ST {
     reserve: [u8; 9],
 }
 
+impl ParamDef for GAME_AREA_PARAM_ST {
+    const NAME: &str = "GAME_AREA_PARAM_ST";
+}
+
 impl GAME_AREA_PARAM_ST {
     #[allow(clippy::identity_op)]
     pub fn disable_param_nt(&self) -> u8 {
@@ -29088,6 +29337,10 @@ pub struct GAME_INFO_PARAM {
     sort_id: i32,
     event_id: i32,
     pad: [u8; 12],
+}
+
+impl ParamDef for GAME_INFO_PARAM {
+    const NAME: &str = "GAME_INFO_PARAM";
 }
 
 impl GAME_INFO_PARAM {
@@ -29482,6 +29735,10 @@ pub struct GAME_SYSTEM_COMMON_PARAM_ST {
     unknown_sp_effect_id_0x390: i32,
     base_revered_spirit_torrent_blessing_sp_effect_id: i32,
     end_pad: [u8; 108],
+}
+
+impl ParamDef for GAME_SYSTEM_COMMON_PARAM_ST {
+    const NAME: &str = "GAME_SYSTEM_COMMON_PARAM_ST";
 }
 
 impl GAME_SYSTEM_COMMON_PARAM_ST {
@@ -32081,6 +32338,10 @@ pub struct CS_AA_QUALITY_DETAIL {
     dmy: [u8; 2],
 }
 
+impl ParamDef for CS_AA_QUALITY_DETAIL {
+    const NAME: &str = "CS_AA_QUALITY_DETAIL";
+}
+
 impl CS_AA_QUALITY_DETAIL {
     pub fn enabled(&self) -> u8 {
         self.enabled
@@ -32107,6 +32368,10 @@ pub struct CS_DECAL_QUALITY_DETAIL {
     dmy: [u8; 3],
 }
 
+impl ParamDef for CS_DECAL_QUALITY_DETAIL {
+    const NAME: &str = "CS_DECAL_QUALITY_DETAIL";
+}
+
 impl CS_DECAL_QUALITY_DETAIL {
     pub fn enabled(&self) -> u8 {
         self.enabled
@@ -32125,6 +32390,10 @@ pub struct CS_DOF_QUALITY_DETAIL {
     dmy: [u8; 3],
     force_hi_reso_blur: i32,
     max_blur_level: i32,
+}
+
+impl ParamDef for CS_DOF_QUALITY_DETAIL {
+    const NAME: &str = "CS_DOF_QUALITY_DETAIL";
 }
 
 impl CS_DOF_QUALITY_DETAIL {
@@ -32169,6 +32438,10 @@ pub struct CS_EFFECT_QUALITY_DETAIL {
     f_lod_distance4_scale: f32,
     f_scale_render_distance_scale: f32,
     dmy: [u8; 4],
+}
+
+impl ParamDef for CS_EFFECT_QUALITY_DETAIL {
+    const NAME: &str = "CS_EFFECT_QUALITY_DETAIL";
 }
 
 impl CS_EFFECT_QUALITY_DETAIL {
@@ -32272,6 +32545,10 @@ pub struct CS_LIGHTING_QUALITY_DETAIL {
     dmy: [u8; 1],
 }
 
+impl ParamDef for CS_LIGHTING_QUALITY_DETAIL {
+    const NAME: &str = "CS_LIGHTING_QUALITY_DETAIL";
+}
+
 impl CS_LIGHTING_QUALITY_DETAIL {
     pub fn local_light_dist_factor(&self) -> f32 {
         self.local_light_dist_factor
@@ -32317,6 +32594,10 @@ pub struct CS_MOTION_BLUR_QUALITY_DETAIL {
     sample_count_bias: i32,
     recurrence_count_bias: i32,
     blur_max_length_scale: f32,
+}
+
+impl ParamDef for CS_MOTION_BLUR_QUALITY_DETAIL {
+    const NAME: &str = "CS_MOTION_BLUR_QUALITY_DETAIL";
 }
 
 impl CS_MOTION_BLUR_QUALITY_DETAIL {
@@ -32393,6 +32674,10 @@ pub struct CS_RAYTRACING_QUALITY_DETAIL {
     render_distance: f32,
 }
 
+impl ParamDef for CS_RAYTRACING_QUALITY_DETAIL {
+    const NAME: &str = "CS_RAYTRACING_QUALITY_DETAIL";
+}
+
 impl CS_RAYTRACING_QUALITY_DETAIL {
     pub fn enable_raytrace_ao(&self) -> u8 {
         self.enable_raytrace_ao
@@ -32443,6 +32728,10 @@ pub struct CS_REFLECTION_QUALITY_DETAIL {
     ssr_ray_trace_step_scale: f32,
     ssr_fade_to_viewer_bias: f32,
     ssr_fresnel_reject_bias: f32,
+}
+
+impl ParamDef for CS_REFLECTION_QUALITY_DETAIL {
+    const NAME: &str = "CS_REFLECTION_QUALITY_DETAIL";
 }
 
 impl CS_REFLECTION_QUALITY_DETAIL {
@@ -32537,6 +32826,10 @@ pub struct CS_SHADER_QUALITY_DETAIL {
     dmy: [u8; 1],
 }
 
+impl ParamDef for CS_SHADER_QUALITY_DETAIL {
+    const NAME: &str = "CS_SHADER_QUALITY_DETAIL";
+}
+
 impl CS_SHADER_QUALITY_DETAIL {
     pub fn sss_enabled(&self) -> u8 {
         self.sss_enabled
@@ -32583,6 +32876,10 @@ pub struct CS_SHADOW_QUALITY_DETAIL {
     texture_min_size: u32,
     texture_max_size: u32,
     blur_count_bias: i32,
+}
+
+impl ParamDef for CS_SHADOW_QUALITY_DETAIL {
+    const NAME: &str = "CS_SHADOW_QUALITY_DETAIL";
 }
 
 impl CS_SHADOW_QUALITY_DETAIL {
@@ -32654,6 +32951,10 @@ pub struct CS_SSAO_QUALITY_DETAIL {
     dmy: [u8; 1],
 }
 
+impl ParamDef for CS_SSAO_QUALITY_DETAIL {
+    const NAME: &str = "CS_SSAO_QUALITY_DETAIL";
+}
+
 impl CS_SSAO_QUALITY_DETAIL {
     pub fn enabled(&self) -> u8 {
         self.enabled
@@ -32697,6 +32998,10 @@ pub struct CS_TEXTURE_FILTER_QUALITY_DETAIL {
     max_aniso_level: u32,
 }
 
+impl ParamDef for CS_TEXTURE_FILTER_QUALITY_DETAIL {
+    const NAME: &str = "CS_TEXTURE_FILTER_QUALITY_DETAIL";
+}
+
 impl CS_TEXTURE_FILTER_QUALITY_DETAIL {
     pub fn filter(&self) -> u8 {
         self.filter
@@ -32736,6 +33041,10 @@ pub struct CS_VOLUMETRIC_EFFECT_QUALITY_DETAIL {
     fog_volume_force_shadowing: u8,
     fog_volume_resolution: u8,
     pad2: [u8; 1],
+}
+
+impl ParamDef for CS_VOLUMETRIC_EFFECT_QUALITY_DETAIL {
+    const NAME: &str = "CS_VOLUMETRIC_EFFECT_QUALITY_DETAIL";
 }
 
 impl CS_VOLUMETRIC_EFFECT_QUALITY_DETAIL {
@@ -32868,6 +33177,10 @@ pub struct CS_WATER_QUALITY_DETAIL {
     dmy: [u8; 3],
 }
 
+impl ParamDef for CS_WATER_QUALITY_DETAIL {
+    const NAME: &str = "CS_WATER_QUALITY_DETAIL";
+}
+
 impl CS_WATER_QUALITY_DETAIL {
     pub fn interaction_enabled(&self) -> u8 {
         self.interaction_enabled
@@ -32888,6 +33201,10 @@ pub struct GESTURE_PARAM_ST {
     msg_anim_id: i32,
     bits_c: u8,
     pad1: [u8; 3],
+}
+
+impl ParamDef for GESTURE_PARAM_ST {
+    const NAME: &str = "GESTURE_PARAM_ST";
 }
 
 impl GESTURE_PARAM_ST {
@@ -32936,6 +33253,10 @@ pub struct GPARAM_GRID_REGION_INFO_PARAM_ST {
     reserve: [u8; 28],
 }
 
+impl ParamDef for GPARAM_GRID_REGION_INFO_PARAM_ST {
+    const NAME: &str = "GPARAM_GRID_REGION_INFO_PARAM_ST";
+}
+
 impl GPARAM_GRID_REGION_INFO_PARAM_ST {
     pub fn gparam_grid_region_id(&self) -> u32 {
         self.gparam_grid_region_id
@@ -32954,6 +33275,10 @@ pub struct GPARAM_REF_SETTINGS_PARAM_ST {
     disable_param_reserve2: [u8; 3],
     ref_target_map_id: i32,
     reserve: [u8; 24],
+}
+
+impl ParamDef for GPARAM_REF_SETTINGS_PARAM_ST {
+    const NAME: &str = "GPARAM_REF_SETTINGS_PARAM_ST";
 }
 
 impl GPARAM_REF_SETTINGS_PARAM_ST {
@@ -32984,6 +33309,10 @@ pub struct GRAPHICS_COMMON_PARAM_ST {
     reserved02: [u8; 8],
     chara_wet_decal_fade_range: f32,
     reserved04: [u8; 240],
+}
+
+impl ParamDef for GRAPHICS_COMMON_PARAM_ST {
+    const NAME: &str = "GRAPHICS_COMMON_PARAM_ST";
 }
 
 impl GRAPHICS_COMMON_PARAM_ST {
@@ -33023,6 +33352,10 @@ pub struct CS_GRAPHICS_CONFIG_PARAM_ST {
     m_volumetric_effect_quality: u8,
     m_ray_tracing_quality: u8,
     m_dummy: [u8; 2],
+}
+
+impl ParamDef for CS_GRAPHICS_CONFIG_PARAM_ST {
+    const NAME: &str = "CS_GRAPHICS_CONFIG_PARAM_ST";
 }
 
 impl CS_GRAPHICS_CONFIG_PARAM_ST {
@@ -33151,6 +33484,10 @@ pub struct GRASS_LOD_RANGE_PARAM_ST {
     lod2_play: f32,
 }
 
+impl ParamDef for GRASS_LOD_RANGE_PARAM_ST {
+    const NAME: &str = "GRASS_LOD_RANGE_PARAM_ST";
+}
+
 impl GRASS_LOD_RANGE_PARAM_ST {
     pub fn lod0_range(&self) -> f32 {
         self.lod0_range
@@ -33208,6 +33545,10 @@ pub struct GRASS_MAP_SETTINGS_PARAM_ST {
     grass_type0: u32,
     grass_type1: u32,
     grass_type2: u32,
+}
+
+impl ParamDef for GRASS_MAP_SETTINGS_PARAM_ST {
+    const NAME: &str = "GRASS_MAP_SETTINGS_PARAM_ST";
 }
 
 impl GRASS_MAP_SETTINGS_PARAM_ST {
@@ -33278,6 +33619,10 @@ pub struct GRASS_TYPE_PARAM_ST {
     pad: [u8; 3],
     simple_model_name: [u16; 16],
     model1_name: [u16; 16],
+}
+
+impl ParamDef for GRASS_TYPE_PARAM_ST {
+    const NAME: &str = "GRASS_TYPE_PARAM_ST";
 }
 
 impl GRASS_TYPE_PARAM_ST {
@@ -33702,6 +34047,10 @@ pub struct HIT_EFFECT_SE_PARAM_ST {
     energy_strong_blow_l: i32,
     energy_strong_blow_ll: i32,
     reserve: [u8; 100],
+}
+
+impl ParamDef for HIT_EFFECT_SE_PARAM_ST {
+    const NAME: &str = "HIT_EFFECT_SE_PARAM_ST";
 }
 
 impl HIT_EFFECT_SE_PARAM_ST {
@@ -34806,6 +35155,10 @@ pub struct HIT_EFFECT_SFX_CONCEPT_PARAM_ST {
     reserve: [u8; 52],
 }
 
+impl ParamDef for HIT_EFFECT_SFX_CONCEPT_PARAM_ST {
+    const NAME: &str = "HIT_EFFECT_SFX_CONCEPT_PARAM_ST";
+}
+
 impl HIT_EFFECT_SFX_CONCEPT_PARAM_ST {
     pub fn atk_iron_1(&self) -> i16 {
         self.atk_iron_1
@@ -34928,6 +35281,10 @@ pub struct HIT_EFFECT_SFX_PARAM_ST {
     neutral_l: i32,
     neutral_specific1: i32,
     neutral_specific2: i32,
+}
+
+impl ParamDef for HIT_EFFECT_SFX_PARAM_ST {
+    const NAME: &str = "HIT_EFFECT_SFX_PARAM_ST";
 }
 
 impl HIT_EFFECT_SFX_PARAM_ST {
@@ -35123,6 +35480,10 @@ pub struct HIT_MTRL_PARAM_ST {
     sp_effect_id_for_wet02: i32,
     sp_effect_id_for_wet03: i32,
     sp_effect_id_for_wet04: i32,
+}
+
+impl ParamDef for HIT_MTRL_PARAM_ST {
+    const NAME: &str = "HIT_MTRL_PARAM_ST";
 }
 
 impl HIT_MTRL_PARAM_ST {
@@ -35430,6 +35791,10 @@ pub struct ITEMLOT_PARAM_ST {
     game_clear_offset: i8,
     bits_95: u8,
     pad2: u16,
+}
+
+impl ParamDef for ITEMLOT_PARAM_ST {
+    const NAME: &str = "ITEMLOT_PARAM_ST";
 }
 
 impl ITEMLOT_PARAM_ST {
@@ -36054,6 +36419,10 @@ pub struct CS_KEY_ASSIGN_MENUITEM_PARAM {
     padding: [u8; 6],
 }
 
+impl ParamDef for CS_KEY_ASSIGN_MENUITEM_PARAM {
+    const NAME: &str = "CS_KEY_ASSIGN_MENUITEM_PARAM";
+}
+
 impl CS_KEY_ASSIGN_MENUITEM_PARAM {
     pub fn text_id(&self) -> i32 {
         self.text_id
@@ -36140,6 +36509,10 @@ pub struct KEY_ASSIGN_PARAM_ST {
     reserved: [u8; 12],
 }
 
+impl ParamDef for KEY_ASSIGN_PARAM_ST {
+    const NAME: &str = "KEY_ASSIGN_PARAM_ST";
+}
+
 impl KEY_ASSIGN_PARAM_ST {
     pub fn keyboard_modify_key(&self) -> i32 {
         self.keyboard_modify_key
@@ -36209,6 +36582,10 @@ pub struct KNOCKBACK_PARAM_ST {
     guard_ll_dec_time: f32,
     guard_brake_dec_time: f32,
     pad: [u8; 8],
+}
+
+impl ParamDef for KNOCKBACK_PARAM_ST {
+    const NAME: &str = "KNOCKBACK_PARAM_ST";
 }
 
 impl KNOCKBACK_PARAM_ST {
@@ -36464,6 +36841,10 @@ pub struct KNOWLEDGE_LOADSCREEN_ITEM_PARAM_ST {
     msg_id: i32,
 }
 
+impl ParamDef for KNOWLEDGE_LOADSCREEN_ITEM_PARAM_ST {
+    const NAME: &str = "KNOWLEDGE_LOADSCREEN_ITEM_PARAM_ST";
+}
+
 impl KNOWLEDGE_LOADSCREEN_ITEM_PARAM_ST {
     #[allow(clippy::identity_op)]
     pub fn disable_param_nt(&self) -> u8 {
@@ -36523,6 +36904,10 @@ pub struct LEGACY_DISTANT_VIEW_PARTS_REPLACE_PARAM {
     limited_map_regio_asset_parts_no: i32,
     limited_map_regio_asset_id_range_min: i32,
     limited_map_regio_asset_id_range_max: i32,
+}
+
+impl ParamDef for LEGACY_DISTANT_VIEW_PARTS_REPLACE_PARAM {
+    const NAME: &str = "LEGACY_DISTANT_VIEW_PARTS_REPLACE_PARAM";
 }
 
 impl LEGACY_DISTANT_VIEW_PARTS_REPLACE_PARAM {
@@ -36697,6 +37082,10 @@ pub struct LOAD_BALANCER_DRAW_DIST_SCALE_PARAM_ST {
     lv19: f32,
     lv20: f32,
     reserve: [u8; 44],
+}
+
+impl ParamDef for LOAD_BALANCER_DRAW_DIST_SCALE_PARAM_ST {
+    const NAME: &str = "LOAD_BALANCER_DRAW_DIST_SCALE_PARAM_ST";
 }
 
 impl LOAD_BALANCER_DRAW_DIST_SCALE_PARAM_ST {
@@ -36886,6 +37275,10 @@ pub struct LOAD_BALANCER_NEW_DRAW_DIST_SCALE_PARAM_ST {
     reserve2: [u8; 24],
 }
 
+impl ParamDef for LOAD_BALANCER_NEW_DRAW_DIST_SCALE_PARAM_ST {
+    const NAME: &str = "LOAD_BALANCER_NEW_DRAW_DIST_SCALE_PARAM_ST";
+}
+
 impl LOAD_BALANCER_NEW_DRAW_DIST_SCALE_PARAM_ST {
     pub fn draw_dist_lv_begin(&self) -> u8 {
         self.draw_dist_lv_begin
@@ -36989,6 +37382,10 @@ pub struct LOAD_BALANCER_PARAM_ST {
     dynamic_resolution_percentage_min: u8,
     dynamic_resolution_percentage_max: u8,
     reserve1: [u8; 30],
+}
+
+impl ParamDef for LOAD_BALANCER_PARAM_ST {
+    const NAME: &str = "LOAD_BALANCER_PARAM_ST";
 }
 
 impl LOAD_BALANCER_PARAM_ST {
@@ -37268,6 +37665,10 @@ pub struct LOCK_CAM_PARAM_ST {
     pad: [u8; 48],
 }
 
+impl ParamDef for LOCK_CAM_PARAM_ST {
+    const NAME: &str = "LOCK_CAM_PARAM_ST";
+}
+
 impl LOCK_CAM_PARAM_ST {
     pub fn cam_dist_target(&self) -> f32 {
         self.cam_dist_target
@@ -37517,6 +37918,10 @@ pub struct MAGIC_PARAM_ST {
     consume_type10: u8,
     consume_loop_mp_for_menu: i16,
     pad: [u8; 8],
+}
+
+impl ParamDef for MAGIC_PARAM_ST {
+    const NAME: &str = "MAGIC_PARAM_ST";
 }
 
 impl MAGIC_PARAM_ST {
@@ -38480,6 +38885,10 @@ pub struct MAP_DEFAULT_INFO_PARAM_ST {
     reserve: [u8; 7],
 }
 
+impl ParamDef for MAP_DEFAULT_INFO_PARAM_ST {
+    const NAME: &str = "MAP_DEFAULT_INFO_PARAM_ST";
+}
+
 impl MAP_DEFAULT_INFO_PARAM_ST {
     #[allow(clippy::identity_op)]
     pub fn disable_param_nt(&self) -> u8 {
@@ -38677,6 +39086,10 @@ pub struct MAP_GD_REGION_DRAW_PARAM {
     override_iv_local_light_scale: f32,
 }
 
+impl ParamDef for MAP_GD_REGION_DRAW_PARAM {
+    const NAME: &str = "MAP_GD_REGION_DRAW_PARAM";
+}
+
 impl MAP_GD_REGION_DRAW_PARAM {
     #[allow(clippy::identity_op)]
     pub fn disable_param_nt(&self) -> u8 {
@@ -38705,6 +39118,10 @@ pub struct MAP_GD_REGION_ID_PARAM_ST {
     disable_param_reserve2: [u8; 3],
     map_region_id: u32,
     reserve: [u8; 24],
+}
+
+impl ParamDef for MAP_GD_REGION_ID_PARAM_ST {
+    const NAME: &str = "MAP_GD_REGION_ID_PARAM_ST";
 }
 
 impl MAP_GD_REGION_ID_PARAM_ST {
@@ -38754,6 +39171,10 @@ pub struct MAP_GRID_CREATE_HEIGHT_LIMIT_DETAIL_INFO_PARAM_ST {
     unknown_0x3c: i32,
 }
 
+impl ParamDef for MAP_GRID_CREATE_HEIGHT_LIMIT_DETAIL_INFO_PARAM_ST {
+    const NAME: &str = "MAP_GRID_CREATE_HEIGHT_LIMIT_DETAIL_INFO_PARAM_ST";
+}
+
 impl MAP_GRID_CREATE_HEIGHT_LIMIT_DETAIL_INFO_PARAM_ST {
     pub fn map_id(&self) -> i32 {
         self.map_id
@@ -38771,6 +39192,10 @@ pub struct MAP_GRID_CREATE_HEIGHT_LIMIT_INFO_PARAM_ST {
     grid_enable_create_height_min: f32,
     grid_enable_create_height_max: f32,
     reserve: [u8; 24],
+}
+
+impl ParamDef for MAP_GRID_CREATE_HEIGHT_LIMIT_INFO_PARAM_ST {
+    const NAME: &str = "MAP_GRID_CREATE_HEIGHT_LIMIT_INFO_PARAM_ST";
 }
 
 impl MAP_GRID_CREATE_HEIGHT_LIMIT_INFO_PARAM_ST {
@@ -38808,6 +39233,10 @@ pub struct MAP_MIMICRY_ESTABLISHMENT_PARAM_ST {
     mimicry_sfx_id2: i32,
     mimicry_end_sfx_id2: i32,
     pad1: [u8; 16],
+}
+
+impl ParamDef for MAP_MIMICRY_ESTABLISHMENT_PARAM_ST {
+    const NAME: &str = "MAP_MIMICRY_ESTABLISHMENT_PARAM_ST";
 }
 
 impl MAP_MIMICRY_ESTABLISHMENT_PARAM_ST {
@@ -38922,6 +39351,10 @@ pub struct MAP_NAME_TEX_PARAM_ST {
     pad2: [u8; 4],
 }
 
+impl ParamDef for MAP_NAME_TEX_PARAM_ST {
+    const NAME: &str = "MAP_NAME_TEX_PARAM_ST";
+}
+
 impl MAP_NAME_TEX_PARAM_ST {
     #[allow(clippy::identity_op)]
     pub fn disable_param_nt(&self) -> u8 {
@@ -38989,6 +39422,10 @@ pub struct MAP_NAME_TEX_PARAM_ST_DLC02 {
     unknown_0x24: i32,
 }
 
+impl ParamDef for MAP_NAME_TEX_PARAM_ST_DLC02 {
+    const NAME: &str = "MAP_NAME_TEX_PARAM_ST_DLC02";
+}
+
 impl MAP_NAME_TEX_PARAM_ST_DLC02 {
     #[allow(clippy::identity_op)]
     pub fn disable_param_nt(&self) -> u8 {
@@ -39045,6 +39482,10 @@ pub struct MAP_PIECE_TEX_PARAM_ST {
     pad1: [u8; 1],
     save_map_name_id: i32,
     multi_play_area_id: i32,
+}
+
+impl ParamDef for MAP_PIECE_TEX_PARAM_ST {
+    const NAME: &str = "MAP_PIECE_TEX_PARAM_ST";
 }
 
 impl MAP_PIECE_TEX_PARAM_ST {
@@ -39119,6 +39560,10 @@ pub struct MAP_PIECE_TEX_PARAM_ST_DLC02 {
     unknown_play_region_2: i32,
 }
 
+impl ParamDef for MAP_PIECE_TEX_PARAM_ST_DLC02 {
+    const NAME: &str = "MAP_PIECE_TEX_PARAM_ST_DLC02";
+}
+
 impl MAP_PIECE_TEX_PARAM_ST_DLC02 {
     #[allow(clippy::identity_op)]
     pub fn disable_param_nt(&self) -> u8 {
@@ -39183,6 +39628,10 @@ pub struct MATERIAL_EX_PARAM_ST {
     material_param_value3: f32,
     material_param_value4: f32,
     pad: [u8; 8],
+}
+
+impl ParamDef for MATERIAL_EX_PARAM_ST {
+    const NAME: &str = "MATERIAL_EX_PARAM_ST";
 }
 
 impl MATERIAL_EX_PARAM_ST {
@@ -39322,6 +39771,10 @@ pub struct MENU_COMMON_PARAM_ST {
     unknown_0xed: u8,
     unknown_0xee: u8,
     reserved33: [u8; 17],
+}
+
+impl ParamDef for MENU_COMMON_PARAM_ST {
+    const NAME: &str = "MENU_COMMON_PARAM_ST";
 }
 
 impl MENU_COMMON_PARAM_ST {
@@ -39804,6 +40257,10 @@ pub struct MENU_OFFSCR_REND_PARAM_ST {
     pad: [u8; 4],
 }
 
+impl ParamDef for MENU_OFFSCR_REND_PARAM_ST {
+    const NAME: &str = "MENU_OFFSCR_REND_PARAM_ST";
+}
+
 impl MENU_OFFSCR_REND_PARAM_ST {
     pub fn cam_at_pos_x(&self) -> f32 {
         self.cam_at_pos_x
@@ -39942,6 +40399,10 @@ pub struct MENU_PARAM_COLOR_TABLE_ST {
     v3: f32,
 }
 
+impl ParamDef for MENU_PARAM_COLOR_TABLE_ST {
+    const NAME: &str = "MENU_PARAM_COLOR_TABLE_ST";
+}
+
 impl MENU_PARAM_COLOR_TABLE_ST {
     pub fn lerp_mode(&self) -> u8 {
         self.lerp_mode
@@ -40019,6 +40480,10 @@ pub struct MENUPROPERTY_LAYOUT {
     reserved: [u8; 4],
 }
 
+impl ParamDef for MENUPROPERTY_LAYOUT {
+    const NAME: &str = "MENUPROPERTY_LAYOUT";
+}
+
 impl MENUPROPERTY_LAYOUT {
     pub fn layout_path(&self) -> &[u8; 16] {
         &self.layout_path
@@ -40064,6 +40529,10 @@ pub struct MENUPROPERTY_SPEC {
     pad2: [u8; 1],
     format_type: u16,
     pad: [u8; 16],
+}
+
+impl ParamDef for MENUPROPERTY_SPEC {
+    const NAME: &str = "MENUPROPERTY_SPEC";
 }
 
 impl MENUPROPERTY_SPEC {
@@ -40118,6 +40587,10 @@ pub struct MENU_VALUE_TABLE_SPEC {
     padding: [u8; 3],
 }
 
+impl ParamDef for MENU_VALUE_TABLE_SPEC {
+    const NAME: &str = "MENU_VALUE_TABLE_SPEC";
+}
+
 impl MENU_VALUE_TABLE_SPEC {
     pub fn value(&self) -> i32 {
         self.value
@@ -40156,6 +40629,10 @@ pub struct MIMICRY_ESTABLISHMENT_TEX_PARAM_ST {
     pad1: [u8; 1],
     mimicry_establishment_param_id: i32,
     pad2: [u8; 4],
+}
+
+impl ParamDef for MIMICRY_ESTABLISHMENT_TEX_PARAM_ST {
+    const NAME: &str = "MIMICRY_ESTABLISHMENT_TEX_PARAM_ST";
 }
 
 impl MIMICRY_ESTABLISHMENT_TEX_PARAM_ST {
@@ -40218,6 +40695,10 @@ pub struct MIMICRY_ESTABLISHMENT_TEX_PARAM_ST_DLC02 {
     unknown_0x14: i32,
     unknown_0x18: i32,
     unknown_0x1c: i32,
+}
+
+impl ParamDef for MIMICRY_ESTABLISHMENT_TEX_PARAM_ST_DLC02 {
+    const NAME: &str = "MIMICRY_ESTABLISHMENT_TEX_PARAM_ST_DLC02";
 }
 
 impl MIMICRY_ESTABLISHMENT_TEX_PARAM_ST_DLC02 {
@@ -40286,6 +40767,10 @@ pub struct MISSILE_PARAM_ST {
     explosion_die: u8,
     behavior_id: i32,
     reserve_last: [u8; 56],
+}
+
+impl ParamDef for MISSILE_PARAM_ST {
+    const NAME: &str = "MISSILE_PARAM_ST";
 }
 
 impl MISSILE_PARAM_ST {
@@ -40438,6 +40923,10 @@ pub struct MODEL_SFX_PARAM_ST {
     sfx_id_7: i32,
     dmypoly_id_7: i32,
     reserve_7: [u8; 8],
+}
+
+impl ParamDef for MODEL_SFX_PARAM_ST {
+    const NAME: &str = "MODEL_SFX_PARAM_ST";
 }
 
 impl MODEL_SFX_PARAM_ST {
@@ -40613,6 +41102,10 @@ pub struct MOVE_PARAM_ST {
     turn45_angle: u8,
     turn90_angle: u8,
     turn_wait_no_anim_angle: u8,
+}
+
+impl ParamDef for MOVE_PARAM_ST {
+    const NAME: &str = "MOVE_PARAM_ST";
 }
 
 impl MOVE_PARAM_ST {
@@ -40952,6 +41445,10 @@ pub struct MULTI_ESTUS_FLASK_BONUS_PARAM_ST {
     pad1: [u8; 48],
 }
 
+impl ParamDef for MULTI_ESTUS_FLASK_BONUS_PARAM_ST {
+    const NAME: &str = "MULTI_ESTUS_FLASK_BONUS_PARAM_ST";
+}
+
 impl MULTI_ESTUS_FLASK_BONUS_PARAM_ST {
     pub fn host(&self) -> u8 {
         self.host
@@ -41095,6 +41592,10 @@ pub struct MULTI_PLAY_CORRECTION_PARAM_ST {
     pad3: [u8; 15],
 }
 
+impl ParamDef for MULTI_PLAY_CORRECTION_PARAM_ST {
+    const NAME: &str = "MULTI_PLAY_CORRECTION_PARAM_ST";
+}
+
 impl MULTI_PLAY_CORRECTION_PARAM_ST {
     #[allow(clippy::identity_op)]
     pub fn disable_param_nt(&self) -> u8 {
@@ -41160,6 +41661,10 @@ pub struct MULTI_SOUL_BONUS_RATE_PARAM_ST {
     battle_royal: f32,
     yellow_monk: f32,
     pad1: [u8; 64],
+}
+
+impl ParamDef for MULTI_SOUL_BONUS_RATE_PARAM_ST {
+    const NAME: &str = "MULTI_SOUL_BONUS_RATE_PARAM_ST";
 }
 
 impl MULTI_SOUL_BONUS_RATE_PARAM_ST {
@@ -41304,6 +41809,10 @@ pub struct NETWORK_AREA_PARAM_ST {
     cell_offset_z: f32,
     bits_18: u8,
     dummy: [u8; 3],
+}
+
+impl ParamDef for NETWORK_AREA_PARAM_ST {
+    const NAME: &str = "NETWORK_AREA_PARAM_ST";
 }
 
 impl NETWORK_AREA_PARAM_ST {
@@ -41469,6 +41978,10 @@ pub struct NETWORK_MSG_PARAM_ST {
     unknown_0xb0: i32,
     unknown_0xb4: i32,
     pad2_new: [u8; 8],
+}
+
+impl ParamDef for NETWORK_MSG_PARAM_ST {
+    const NAME: &str = "NETWORK_MSG_PARAM_ST";
 }
 
 impl NETWORK_MSG_PARAM_ST {
@@ -41969,6 +42482,10 @@ pub struct NETWORK_PARAM_ST {
     yellow_monk_overall_flow_time_out_time: f32,
     pad14_0: [u8; 4],
     pad14_1: [u8; 8],
+}
+
+impl ParamDef for NETWORK_PARAM_ST {
+    const NAME: &str = "NETWORK_PARAM_ST";
 }
 
 impl NETWORK_PARAM_ST {
@@ -43142,6 +43659,10 @@ pub struct NPC_AI_ACTION_PARAM_ST {
     pad1: [u8; 3],
 }
 
+impl ParamDef for NPC_AI_ACTION_PARAM_ST {
+    const NAME: &str = "NPC_AI_ACTION_PARAM_ST";
+}
+
 impl NPC_AI_ACTION_PARAM_ST {
     pub fn move_dir(&self) -> u8 {
         self.move_dir
@@ -43428,6 +43949,10 @@ pub struct NPC_AI_BEHAVIOR_PROBABILITY_PARAM_ST {
     param197: i16,
     param198: i16,
     param199: i16,
+}
+
+impl ParamDef for NPC_AI_BEHAVIOR_PROBABILITY_PARAM_ST {
+    const NAME: &str = "NPC_AI_BEHAVIOR_PROBABILITY_PARAM_ST";
 }
 
 impl NPC_AI_BEHAVIOR_PROBABILITY_PARAM_ST {
@@ -45291,6 +45816,10 @@ pub struct NPC_PARAM_ST {
     lock_score_offset: f32,
     dlc_game_clear_sp_effect_id: i32,
     pad12: [u8; 4],
+}
+
+impl ParamDef for NPC_PARAM_ST {
+    const NAME: &str = "NPC_PARAM_ST";
 }
 
 impl NPC_PARAM_ST {
@@ -48068,6 +48597,10 @@ pub struct NPC_THINK_PARAM_ST {
     surprise_anim_id: i32,
 }
 
+impl ParamDef for NPC_THINK_PARAM_ST {
+    const NAME: &str = "NPC_THINK_PARAM_ST";
+}
+
 impl NPC_THINK_PARAM_ST {
     #[allow(clippy::identity_op)]
     pub fn disable_param_nt(&self) -> u8 {
@@ -48901,6 +49434,10 @@ pub struct OBJ_ACT_PARAM_ST {
     pad2: [u8; 32],
 }
 
+impl ParamDef for OBJ_ACT_PARAM_ST {
+    const NAME: &str = "OBJ_ACT_PARAM_ST";
+}
+
 impl OBJ_ACT_PARAM_ST {
     pub fn action_enable_msg_id(&self) -> i32 {
         self.action_enable_msg_id
@@ -49123,6 +49660,10 @@ pub struct OBJECT_MATERIAL_SFX_PARAM_ST {
     sfx_id_29: u32,
     sfx_id_30: u32,
     sfx_id_31: u32,
+}
+
+impl ParamDef for OBJECT_MATERIAL_SFX_PARAM_ST {
+    const NAME: &str = "OBJECT_MATERIAL_SFX_PARAM_ST";
 }
 
 impl OBJECT_MATERIAL_SFX_PARAM_ST {
@@ -49451,6 +49992,10 @@ pub struct OBJECT_PARAM_ST {
     reserved0: i32,
     sound_break_se_id: i32,
     pad_5: [u8; 40],
+}
+
+impl ParamDef for OBJECT_PARAM_ST {
+    const NAME: &str = "OBJECT_PARAM_ST";
 }
 
 impl OBJECT_PARAM_ST {
@@ -50126,6 +50671,10 @@ pub struct PARTS_DRAW_PARAM_ST {
     resereve: [u8; 34],
 }
 
+impl ParamDef for PARTS_DRAW_PARAM_ST {
+    const NAME: &str = "PARTS_DRAW_PARAM_ST";
+}
+
 impl PARTS_DRAW_PARAM_ST {
     pub fn lv01_border_dist(&self) -> f32 {
         self.lv01_border_dist
@@ -50447,6 +50996,10 @@ pub struct PERFORMANCE_CHECK_PARAM {
     user_tag: [u16; 16],
 }
 
+impl ParamDef for PERFORMANCE_CHECK_PARAM {
+    const NAME: &str = "PERFORMANCE_CHECK_PARAM";
+}
+
 impl PERFORMANCE_CHECK_PARAM {
     pub fn work_tag(&self) -> u8 {
         self.work_tag
@@ -50522,6 +51075,10 @@ pub struct PHANTOM_PARAM_ST {
     is_no2_pass: u8,
     edge_power: f32,
     glow_scale: f32,
+}
+
+impl ParamDef for PHANTOM_PARAM_ST {
+    const NAME: &str = "PHANTOM_PARAM_ST";
 }
 
 impl PHANTOM_PARAM_ST {
@@ -50825,6 +51382,10 @@ pub struct PLAYER_COMMON_PARAM_ST {
     unknown_0xdc: i32,
     unknown_0xe0: i32,
     reserved41: [u8; 28],
+}
+
+impl ParamDef for PLAYER_COMMON_PARAM_ST {
+    const NAME: &str = "PLAYER_COMMON_PARAM_ST";
 }
 
 impl PLAYER_COMMON_PARAM_ST {
@@ -51366,6 +51927,10 @@ pub struct PLAY_REGION_PARAM_ST {
     boss_id_16: u32,
     map_menu_unlock_event_id: u32,
     pad5: [u8; 32],
+}
+
+impl ParamDef for PLAY_REGION_PARAM_ST {
+    const NAME: &str = "PLAY_REGION_PARAM_ST";
 }
 
 impl PLAY_REGION_PARAM_ST {
@@ -52072,6 +52637,10 @@ pub struct POSTURE_CONTROL_PARAM_GENDER_ST {
     pad: [u8; 10],
 }
 
+impl ParamDef for POSTURE_CONTROL_PARAM_GENDER_ST {
+    const NAME: &str = "POSTURE_CONTROL_PARAM_GENDER_ST";
+}
+
 impl POSTURE_CONTROL_PARAM_GENDER_ST {
     pub fn a000_right_elbow_io(&self) -> i16 {
         self.a000_right_elbow_io
@@ -52331,6 +52900,10 @@ pub struct POSTURE_CONTROL_PARAM_PRO_ST {
     a016_left_arm_io: i16,
     a016_left_arm_fb: i16,
     pad: [u8; 8],
+}
+
+impl ParamDef for POSTURE_CONTROL_PARAM_PRO_ST {
+    const NAME: &str = "POSTURE_CONTROL_PARAM_PRO_ST";
 }
 
 impl POSTURE_CONTROL_PARAM_PRO_ST {
@@ -52642,6 +53215,10 @@ pub struct POSTURE_CONTROL_PARAM_WEP_LEFT_ST {
     pad: [u8; 8],
 }
 
+impl ParamDef for POSTURE_CONTROL_PARAM_WEP_LEFT_ST {
+    const NAME: &str = "POSTURE_CONTROL_PARAM_WEP_LEFT_ST";
+}
+
 impl POSTURE_CONTROL_PARAM_WEP_LEFT_ST {
     pub fn a000_left_arm_fb(&self) -> i16 {
         self.a000_left_arm_fb
@@ -52816,6 +53393,10 @@ pub struct POSTURE_CONTROL_PARAM_WEP_RIGHT_ST {
     a016_left_wrist_fb: i16,
     a016_left_wrist_io: i16,
     a016_leftt_weapon_rotation: i16,
+}
+
+impl ParamDef for POSTURE_CONTROL_PARAM_WEP_RIGHT_ST {
+    const NAME: &str = "POSTURE_CONTROL_PARAM_WEP_RIGHT_ST";
 }
 
 impl POSTURE_CONTROL_PARAM_WEP_RIGHT_ST {
@@ -53451,6 +54032,10 @@ pub struct RANDOM_APPEAR_EDIT_PARAM_ST {
     rate24: u32,
 }
 
+impl ParamDef for RANDOM_APPEAR_EDIT_PARAM_ST {
+    const NAME: &str = "RANDOM_APPEAR_EDIT_PARAM_ST";
+}
+
 impl RANDOM_APPEAR_EDIT_PARAM_ST {
     pub fn appear_num(&self) -> u32 {
         self.appear_num
@@ -53862,6 +54447,10 @@ pub struct RANDOM_APPEAR_PARAM_ST {
     bits_a: u8,
     bits_b: u8,
     bits_c: u8,
+}
+
+impl ParamDef for RANDOM_APPEAR_PARAM_ST {
+    const NAME: &str = "RANDOM_APPEAR_PARAM_ST";
 }
 
 impl RANDOM_APPEAR_PARAM_ST {
@@ -54891,6 +55480,10 @@ pub struct REINFORCE_PARAM_PROTECTOR_ST {
     resist_madness_rate: f32,
 }
 
+impl ParamDef for REINFORCE_PARAM_PROTECTOR_ST {
+    const NAME: &str = "REINFORCE_PARAM_PROTECTOR_ST";
+}
+
 impl REINFORCE_PARAM_PROTECTOR_ST {
     pub fn physics_def_rate(&self) -> f32 {
         self.physics_def_rate
@@ -55088,6 +55681,10 @@ pub struct REINFORCE_PARAM_WEAPON_ST {
     sleep_guard_def_rate: f32,
     madness_guard_def_rate: f32,
     base_atk_rate: f32,
+}
+
+impl ParamDef for REINFORCE_PARAM_WEAPON_ST {
+    const NAME: &str = "REINFORCE_PARAM_WEAPON_ST";
 }
 
 impl REINFORCE_PARAM_WEAPON_ST {
@@ -55412,6 +56009,10 @@ pub struct RESIST_CORRECT_PARAM_ST {
     add_rate5: f32,
 }
 
+impl ParamDef for RESIST_CORRECT_PARAM_ST {
+    const NAME: &str = "RESIST_CORRECT_PARAM_ST";
+}
+
 impl RESIST_CORRECT_PARAM_ST {
     pub fn add_point1(&self) -> f32 {
         self.add_point1
@@ -55501,6 +56102,10 @@ pub struct REVERB_AUX_SEND_BUS_PARAM_ST {
     reverb_aux_send_bus_name: [u8; 32],
 }
 
+impl ParamDef for REVERB_AUX_SEND_BUS_PARAM_ST {
+    const NAME: &str = "REVERB_AUX_SEND_BUS_PARAM_ST";
+}
+
 impl REVERB_AUX_SEND_BUS_PARAM_ST {
     pub fn reverb_aux_send_bus_name(&self) -> &[u8; 32] {
         &self.reverb_aux_send_bus_name
@@ -55529,6 +56134,10 @@ pub struct RIDE_PARAM_ST {
     diff_ang_min: f32,
     diff_ang_max: f32,
     pad: [u8; 12],
+}
+
+impl ParamDef for RIDE_PARAM_ST {
+    const NAME: &str = "RIDE_PARAM_ST";
 }
 
 impl RIDE_PARAM_ST {
@@ -55673,6 +56282,10 @@ pub struct ROLE_PARAM_ST {
     sign_phantom_id: i32,
     non_player_summon_start_anim_id: i32,
     pad2: [u8; 16],
+}
+
+impl ParamDef for ROLE_PARAM_ST {
+    const NAME: &str = "ROLE_PARAM_ST";
 }
 
 impl ROLE_PARAM_ST {
@@ -55934,6 +56547,10 @@ pub struct ROLLING_OBJ_LOT_PARAM_ST {
     reserve_0: [u8; 20],
 }
 
+impl ParamDef for ROLLING_OBJ_LOT_PARAM_ST {
+    const NAME: &str = "ROLLING_OBJ_LOT_PARAM_ST";
+}
+
 impl ROLLING_OBJ_LOT_PARAM_ST {
     #[allow(clippy::identity_op)]
     pub fn disable_param_nt(&self) -> u8 {
@@ -56086,6 +56703,10 @@ pub struct RUNTIME_BONE_CONTROL_PARAM_ST {
     target_bone2: [u8; 32],
 }
 
+impl ParamDef for RUNTIME_BONE_CONTROL_PARAM_ST {
+    const NAME: &str = "RUNTIME_BONE_CONTROL_PARAM_ST";
+}
+
 impl RUNTIME_BONE_CONTROL_PARAM_ST {
     pub fn chr_id(&self) -> u32 {
         self.chr_id
@@ -56135,6 +56756,10 @@ pub struct SE_ACTIVATION_RANGE_PARAM_ST {
     activate_range: f32,
 }
 
+impl ParamDef for SE_ACTIVATION_RANGE_PARAM_ST {
+    const NAME: &str = "SE_ACTIVATION_RANGE_PARAM_ST";
+}
+
 impl SE_ACTIVATION_RANGE_PARAM_ST {
     pub fn activate_range(&self) -> f32 {
         self.activate_range
@@ -56153,6 +56778,10 @@ pub struct SE_MATERIAL_CONVERT_PARAM_ST {
     pad: [u8; 3],
 }
 
+impl ParamDef for SE_MATERIAL_CONVERT_PARAM_ST {
+    const NAME: &str = "SE_MATERIAL_CONVERT_PARAM_ST";
+}
+
 impl SE_MATERIAL_CONVERT_PARAM_ST {
     pub fn se_material_id(&self) -> u8 {
         self.se_material_id
@@ -56168,6 +56797,10 @@ impl SE_MATERIAL_CONVERT_PARAM_ST {
 #[repr(C)]
 pub struct SFX_BLOCK_RES_SHARE_PARAM {
     share_block_rs_map_uid_val: u32,
+}
+
+impl ParamDef for SFX_BLOCK_RES_SHARE_PARAM {
+    const NAME: &str = "SFX_BLOCK_RES_SHARE_PARAM";
 }
 
 impl SFX_BLOCK_RES_SHARE_PARAM {
@@ -56202,6 +56835,10 @@ pub struct SHOP_LINEUP_PARAM {
     menu_title_msg_id: i32,
     menu_icon_id: i16,
     pad2: [u8; 2],
+}
+
+impl ParamDef for SHOP_LINEUP_PARAM {
+    const NAME: &str = "SHOP_LINEUP_PARAM";
 }
 
 impl SHOP_LINEUP_PARAM {
@@ -56348,6 +56985,10 @@ pub struct SIGN_PUDDLE_PARAM_ST {
     end_pad: [u8; 4],
 }
 
+impl ParamDef for SIGN_PUDDLE_PARAM_ST {
+    const NAME: &str = "SIGN_PUDDLE_PARAM_ST";
+}
+
 impl SIGN_PUDDLE_PARAM_ST {
     #[allow(clippy::identity_op)]
     pub fn disable_param_nt(&self) -> u8 {
@@ -56451,6 +57092,10 @@ pub struct SIGN_PUDDLE_SUB_CATEGORY_PARAM_ST {
     end_pad: [u8; 4],
 }
 
+impl ParamDef for SIGN_PUDDLE_SUB_CATEGORY_PARAM_ST {
+    const NAME: &str = "SIGN_PUDDLE_SUB_CATEGORY_PARAM_ST";
+}
+
 impl SIGN_PUDDLE_SUB_CATEGORY_PARAM_ST {
     pub fn sign_puddle_category_text(&self) -> i32 {
         self.sign_puddle_category_text
@@ -56479,6 +57124,10 @@ pub struct SIGN_PUDDLE_TAB_PARAM_ST {
     unknown_0xc: i32,
 }
 
+impl ParamDef for SIGN_PUDDLE_TAB_PARAM_ST {
+    const NAME: &str = "SIGN_PUDDLE_TAB_PARAM_ST";
+}
+
 impl SIGN_PUDDLE_TAB_PARAM_ST {
     pub fn is_dlc_tab(&self) -> i32 {
         self.is_dlc_tab
@@ -56504,6 +57153,10 @@ pub struct SOUND_ASSET_SOUND_OBJ_ENABLE_DIST_PARAM_ST {
     sound_obj_enable_dist: f32,
 }
 
+impl ParamDef for SOUND_ASSET_SOUND_OBJ_ENABLE_DIST_PARAM_ST {
+    const NAME: &str = "SOUND_ASSET_SOUND_OBJ_ENABLE_DIST_PARAM_ST";
+}
+
 impl SOUND_ASSET_SOUND_OBJ_ENABLE_DIST_PARAM_ST {
     pub fn sound_obj_enable_dist(&self) -> f32 {
         self.sound_obj_enable_dist
@@ -56522,6 +57175,10 @@ pub struct SOUND_AUTO_ENV_SOUND_GROUP_PARAM_ST {
     expand_range: f32,
     follow_speed: f32,
     follow_rate: f32,
+}
+
+impl ParamDef for SOUND_AUTO_ENV_SOUND_GROUP_PARAM_ST {
+    const NAME: &str = "SOUND_AUTO_ENV_SOUND_GROUP_PARAM_ST";
 }
 
 impl SOUND_AUTO_ENV_SOUND_GROUP_PARAM_ST {
@@ -56570,6 +57227,10 @@ pub struct SOUND_AUTO_REVERB_EVALUATION_DIST_PARAM_ST {
     enable_life_time: f32,
     max_dist_record_num: u32,
     ignore_dist_num_for_max: u32,
+}
+
+impl ParamDef for SOUND_AUTO_REVERB_EVALUATION_DIST_PARAM_ST {
+    const NAME: &str = "SOUND_AUTO_REVERB_EVALUATION_DIST_PARAM_ST";
 }
 
 impl SOUND_AUTO_REVERB_EVALUATION_DIST_PARAM_ST {
@@ -56653,6 +57314,10 @@ pub struct SOUND_AUTO_REVERB_SELECT_PARAM_ST {
     dist_min_b: f32,
     dist_max_b: f32,
     no_hit_num_min: i32,
+}
+
+impl ParamDef for SOUND_AUTO_REVERB_SELECT_PARAM_ST {
+    const NAME: &str = "SOUND_AUTO_REVERB_SELECT_PARAM_ST";
 }
 
 impl SOUND_AUTO_REVERB_SELECT_PARAM_ST {
@@ -56769,6 +57434,10 @@ pub struct SOUND_CHR_PHYSICS_SE_PARAM_ST {
     contact_check_rigid_idx13: i8,
     contact_check_rigid_idx14: i8,
     contact_check_rigid_idx15: i8,
+}
+
+impl ParamDef for SOUND_CHR_PHYSICS_SE_PARAM_ST {
+    const NAME: &str = "SOUND_CHR_PHYSICS_SE_PARAM_ST";
 }
 
 impl SOUND_CHR_PHYSICS_SE_PARAM_ST {
@@ -56991,6 +57660,10 @@ pub struct SOUND_COMMON_INGAME_PARAM_ST {
     param_value_str: [u8; 32],
 }
 
+impl ParamDef for SOUND_COMMON_INGAME_PARAM_ST {
+    const NAME: &str = "SOUND_COMMON_INGAME_PARAM_ST";
+}
+
 impl SOUND_COMMON_INGAME_PARAM_ST {
     pub fn param_key_str(&self) -> &[u8; 32] {
         &self.param_key_str
@@ -57015,6 +57688,10 @@ impl SOUND_COMMON_INGAME_PARAM_ST {
 pub struct SOUND_COMMON_SYSTEM_PARAM_ST {
     param_key_str: [u8; 32],
     param_value_str: [u8; 32],
+}
+
+impl ParamDef for SOUND_COMMON_SYSTEM_PARAM_ST {
+    const NAME: &str = "SOUND_COMMON_SYSTEM_PARAM_ST";
 }
 
 impl SOUND_COMMON_SYSTEM_PARAM_ST {
@@ -57054,6 +57731,10 @@ pub struct SOUND_CUTSCENE_PARAM_ST {
     unknown_0x1b: u8,
     reserved: [u8; 4],
     reserved2: [u8; 4],
+}
+
+impl ParamDef for SOUND_CUTSCENE_PARAM_ST {
+    const NAME: &str = "SOUND_CUTSCENE_PARAM_ST";
 }
 
 impl SOUND_CUTSCENE_PARAM_ST {
@@ -57130,6 +57811,10 @@ pub struct SPEEDTREE_MODEL_PARAM_ST {
     min_translucency_branch: f32,
     max_translucency_branch: f32,
     billboard_back_specular_weaken_param: f32,
+}
+
+impl ParamDef for SPEEDTREE_MODEL_PARAM_ST {
+    const NAME: &str = "SPEEDTREE_MODEL_PARAM_ST";
 }
 
 impl SPEEDTREE_MODEL_PARAM_ST {
@@ -57506,6 +58191,10 @@ pub struct SP_EFFECT_PARAM_ST {
     goods_consumption_rate: f32,
     guard_stamina_mult: f32,
     spirit_death_sp_effect_id: i32,
+}
+
+impl ParamDef for SP_EFFECT_PARAM_ST {
+    const NAME: &str = "SP_EFFECT_PARAM_ST";
 }
 
 impl SP_EFFECT_PARAM_ST {
@@ -60588,6 +61277,10 @@ pub struct SP_EFFECT_SET_PARAM_ST {
     sp_effect_id4: i32,
 }
 
+impl ParamDef for SP_EFFECT_SET_PARAM_ST {
+    const NAME: &str = "SP_EFFECT_SET_PARAM_ST";
+}
+
 impl SP_EFFECT_SET_PARAM_ST {
     pub fn sp_effect_id1(&self) -> i32 {
         self.sp_effect_id1
@@ -60682,6 +61375,10 @@ pub struct SP_EFFECT_VFX_PARAM_ST {
     unknown_0x99: u8,
     unknown_0x9a: u8,
     pad: [u8; 9],
+}
+
+impl ParamDef for SP_EFFECT_VFX_PARAM_ST {
+    const NAME: &str = "SP_EFFECT_VFX_PARAM_ST";
 }
 
 impl SP_EFFECT_VFX_PARAM_ST {
@@ -61244,6 +61941,10 @@ pub struct SWORD_ARTS_PARAM_ST {
     ai_usage_id: i32,
 }
 
+impl ParamDef for SWORD_ARTS_PARAM_ST {
+    const NAME: &str = "SWORD_ARTS_PARAM_ST";
+}
+
 impl SWORD_ARTS_PARAM_ST {
     #[allow(clippy::identity_op)]
     pub fn disable_param_nt(&self) -> u8 {
@@ -61442,6 +62143,10 @@ pub struct TALK_PARAM_ST {
     pad1: [u8; 31],
 }
 
+impl ParamDef for TALK_PARAM_ST {
+    const NAME: &str = "TALK_PARAM_ST";
+}
+
 impl TALK_PARAM_ST {
     #[allow(clippy::identity_op)]
     pub fn disable_param_nt(&self) -> u8 {
@@ -61620,6 +62325,10 @@ pub struct THROW_DIRECTION_SFX_PARAM_ST {
     sfx_id_29: i32,
     sfx_id_30: i32,
     pad1: [u8; 20],
+}
+
+impl ParamDef for THROW_DIRECTION_SFX_PARAM_ST {
+    const NAME: &str = "THROW_DIRECTION_SFX_PARAM_ST";
 }
 
 impl THROW_DIRECTION_SFX_PARAM_ST {
@@ -61912,6 +62621,10 @@ pub struct THROW_PARAM_ST {
     adsrob_model_pos_interpolation_time: f32,
     throw_following_end_easing_time: f32,
     pad1: [u8; 24],
+}
+
+impl ParamDef for THROW_PARAM_ST {
+    const NAME: &str = "THROW_PARAM_ST";
 }
 
 impl THROW_PARAM_ST {
@@ -62247,6 +62960,10 @@ pub struct TOUGHNESS_PARAM_ST {
     pad1: [u8; 8],
 }
 
+impl ParamDef for TOUGHNESS_PARAM_ST {
+    const NAME: &str = "TOUGHNESS_PARAM_ST";
+}
+
 impl TOUGHNESS_PARAM_ST {
     pub fn correction_rate(&self) -> f32 {
         self.correction_rate
@@ -62306,6 +63023,10 @@ pub struct TUTORIAL_PARAM_ST {
     display_min_time: f32,
     display_time: f32,
     pad3: [u8; 4],
+}
+
+impl ParamDef for TUTORIAL_PARAM_ST {
+    const NAME: &str = "TUTORIAL_PARAM_ST";
 }
 
 impl TUTORIAL_PARAM_ST {
@@ -62395,6 +63116,10 @@ pub struct WAYPOINT_PARAM_ST {
     padding4: [u8; 8],
 }
 
+impl ParamDef for WAYPOINT_PARAM_ST {
+    const NAME: &str = "WAYPOINT_PARAM_ST";
+}
+
 impl WAYPOINT_PARAM_ST {
     pub fn attribute1(&self) -> i16 {
         self.attribute1
@@ -62457,6 +63182,10 @@ pub struct WEATHER_ASSET_CREATE_PARAM_ST {
     create_asset_limit_id2: i8,
     create_asset_limit_id3: i8,
     reserved2: [u8; 4],
+}
+
+impl ParamDef for WEATHER_ASSET_CREATE_PARAM_ST {
+    const NAME: &str = "WEATHER_ASSET_CREATE_PARAM_ST";
 }
 
 impl WEATHER_ASSET_CREATE_PARAM_ST {
@@ -62655,6 +63384,10 @@ pub struct WEATHER_ASSET_REPLACE_PARAM_ST {
     reserved1: [u8; 4],
 }
 
+impl ParamDef for WEATHER_ASSET_REPLACE_PARAM_ST {
+    const NAME: &str = "WEATHER_ASSET_REPLACE_PARAM_ST";
+}
+
 impl WEATHER_ASSET_REPLACE_PARAM_ST {
     pub fn map_id(&self) -> u32 {
         self.map_id
@@ -62821,6 +63554,10 @@ pub struct WEATHER_LOT_PARAM_ST {
     timezone_end_hour: u8,
     timezone_end_minute: u8,
     reserve: [u8; 9],
+}
+
+impl ParamDef for WEATHER_LOT_PARAM_ST {
+    const NAME: &str = "WEATHER_LOT_PARAM_ST";
 }
 
 impl WEATHER_LOT_PARAM_ST {
@@ -63145,6 +63882,10 @@ pub struct WEATHER_LOT_TEX_PARAM_ST {
     pad2: [u8; 4],
 }
 
+impl ParamDef for WEATHER_LOT_TEX_PARAM_ST {
+    const NAME: &str = "WEATHER_LOT_TEX_PARAM_ST";
+}
+
 impl WEATHER_LOT_TEX_PARAM_ST {
     #[allow(clippy::identity_op)]
     pub fn disable_param_nt(&self) -> u8 {
@@ -63204,6 +63945,10 @@ pub struct WEATHER_LOT_TEX_PARAM_ST_DLC02 {
     unknown_0x10: i32,
     unknown_0x14: i32,
     unknown_0x18: i32,
+}
+
+impl ParamDef for WEATHER_LOT_TEX_PARAM_ST_DLC02 {
+    const NAME: &str = "WEATHER_LOT_TEX_PARAM_ST_DLC02";
 }
 
 impl WEATHER_LOT_TEX_PARAM_ST_DLC02 {
@@ -63271,6 +64016,10 @@ pub struct WEATHER_PARAM_ST {
     sfx_id_outdoor: i32,
     ai_sight_rate: f32,
     dist_view_weather_gparam_override_weight: f32,
+}
+
+impl ParamDef for WEATHER_PARAM_ST {
+    const NAME: &str = "WEATHER_PARAM_ST";
 }
 
 impl WEATHER_PARAM_ST {
@@ -63477,6 +64226,10 @@ pub struct WEP_ABSORP_POS_PARAM_ST {
     unknown_0x56: i8,
     unknown_0x57: i8,
     reserve: [u8; 8],
+}
+
+impl ParamDef for WEP_ABSORP_POS_PARAM_ST {
+    const NAME: &str = "WEP_ABSORP_POS_PARAM_ST";
 }
 
 impl WEP_ABSORP_POS_PARAM_ST {
@@ -63942,6 +64695,10 @@ pub struct WET_ASPECT_PARAM_ST {
     reserve_4: [u8; 11],
 }
 
+impl ParamDef for WET_ASPECT_PARAM_ST {
+    const NAME: &str = "WET_ASPECT_PARAM_ST";
+}
+
 impl WET_ASPECT_PARAM_ST {
     pub fn base_color_r(&self) -> u8 {
         self.base_color_r
@@ -64018,6 +64775,10 @@ pub struct WHITE_SIGN_COOL_TIME_PARAM_ST {
     limitation_time_guardian_dried_finger: f32,
 }
 
+impl ParamDef for WHITE_SIGN_COOL_TIME_PARAM_ST {
+    const NAME: &str = "WHITE_SIGN_COOL_TIME_PARAM_ST";
+}
+
 impl WHITE_SIGN_COOL_TIME_PARAM_ST {
     pub fn limitation_time_normal(&self) -> f32 {
         self.limitation_time_normal
@@ -64074,6 +64835,10 @@ pub struct WORLD_MAP_LEGACY_CONV_PARAM_ST {
     dst_pos_z: f32,
     bits_24: u8,
     pad4: [u8; 11],
+}
+
+impl ParamDef for WORLD_MAP_LEGACY_CONV_PARAM_ST {
+    const NAME: &str = "WORLD_MAP_LEGACY_CONV_PARAM_ST";
 }
 
 impl WORLD_MAP_LEGACY_CONV_PARAM_ST {
@@ -64215,6 +64980,10 @@ pub struct WORLD_MAP_PIECE_PARAM_ST {
     pad: [u8; 12],
 }
 
+impl ParamDef for WORLD_MAP_PIECE_PARAM_ST {
+    const NAME: &str = "WORLD_MAP_PIECE_PARAM_ST";
+}
+
 impl WORLD_MAP_PIECE_PARAM_ST {
     #[allow(clippy::identity_op)]
     pub fn disable_param_nt(&self) -> u8 {
@@ -64339,6 +65108,10 @@ pub struct WORLD_MAP_PLACE_NAME_PARAM_ST {
     pos_x: f32,
     pos_y: f32,
     pos_z: f32,
+}
+
+impl ParamDef for WORLD_MAP_PLACE_NAME_PARAM_ST {
+    const NAME: &str = "WORLD_MAP_PLACE_NAME_PARAM_ST";
 }
 
 impl WORLD_MAP_PLACE_NAME_PARAM_ST {
@@ -64504,6 +65277,10 @@ pub struct WORLD_MAP_POINT_PARAM_ST {
     text_disable_flag2_id6: i32,
     text_disable_flag2_id7: i32,
     text_disable_flag2_id8: i32,
+}
+
+impl ParamDef for WORLD_MAP_POINT_PARAM_ST {
+    const NAME: &str = "WORLD_MAP_POINT_PARAM_ST";
 }
 
 impl WORLD_MAP_POINT_PARAM_ST {
@@ -65185,6 +65962,10 @@ pub struct WWISE_VALUE_TO_STR_CONVERT_PARAM_ST {
     bits_0: u8,
     disable_param_reserve2: [u8; 3],
     param_str: [u8; 32],
+}
+
+impl ParamDef for WWISE_VALUE_TO_STR_CONVERT_PARAM_ST {
+    const NAME: &str = "WWISE_VALUE_TO_STR_CONVERT_PARAM_ST";
 }
 
 impl WWISE_VALUE_TO_STR_CONVERT_PARAM_ST {

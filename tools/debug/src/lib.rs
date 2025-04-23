@@ -1,3 +1,5 @@
+use std::time::Duration;
+
 use display::DebugDisplay;
 use game::cs::CSBulletManager;
 use game::cs::CSSfxImp;
@@ -46,7 +48,8 @@ pub unsafe extern "C" fn DllMain(hmodule: HINSTANCE, reason: u32) -> bool {
         tracing_subscriber::fmt().with_writer(appender).init();
 
         std::thread::spawn(move || {
-            wait_for_system_init(5000).expect("Timeout waiting for system init");
+            wait_for_system_init(&Program::current(), Duration::MAX)
+                .expect("Timeout waiting for system init");
 
             if let Err(e) = Hudhook::builder()
                 .with::<ImguiDx12Hooks>(EldenRingDebugGui::new())

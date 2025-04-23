@@ -48,7 +48,10 @@ pub struct ChrCam {
     ex_follow_cam: OwnedPtr<CSPersCam>,
     aim_cam: OwnedPtr<CSPersCam>,
     dist_view_cam: OwnedPtr<CSPersCam>,
-    unk78: u32,
+    /// Setting this to True will reset the camera to the default position.
+    /// (behind player's back)
+    pub request_camera_reset: bool,
+    unk79: [u8; 0x3],
     pub camera_type: ChrCamType,
     unk80: [u8; 0xc],
     pub pad_accelleration: FSVector4,

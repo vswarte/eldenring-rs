@@ -11,6 +11,8 @@ Rust bindings to facilitate mod creation for Elden Ring.
 <summary>Example mod code: render debug line</summary>
 
 ```rust
+use std::time::Duration;
+
 use eldenring::{
     cs::{CSTaskImp, RendMan, WorldChrMan},
     fd4::FD4TaskData,
@@ -28,8 +30,8 @@ pub unsafe extern "C" fn DllMain(_hmodule: usize, reason: u32) -> bool {
     if reason == 1 {
         // Kick off new thread.
         std::thread::spawn(|| {
-            // Wait for game to boot up.
-            wait_for_system_init(-1).expect("Could not await system init.");
+            // Wait for game (current program we're injected into) to boot up.
+            wait_for_system_init(&Program::current(), Duration::MAX).expect("Could not await system init.");
 
             // Retrieve games task runner.
             let cs_task = get_instance::<CSTaskImp>().unwrap().unwrap();
@@ -50,7 +52,7 @@ pub unsafe extern "C" fn DllMain(_hmodule: usize, reason: u32) -> bool {
 
                     // Grab the main player from WorldChrMan if it's available. Bail otherwise.
                     let Some(player) = get_instance::<WorldChrMan>()
-                        .expect("No reflection data for RendMan")
+                        .expect("No reflection data for WorldChrMan")
                         .map(|w| w.main_player.as_ref())
                         .flatten()
                     else {
@@ -86,18 +88,19 @@ pub unsafe extern "C" fn DllMain(_hmodule: usize, reason: u32) -> bool {
         });
     }
 
-    // Signal that DllMain executed successfully 
+    // Signal that DllMain executed successfully
     true
 }
 ```
 
 Result:
-![Debug line rendered by example mode code](img/example-mod-debug-line.png) 
+![Debug line rendered by example mode code](img/example-mod-debug-line.png)
 
 </details>
 
 # Credits (aside listed contributors to this repository)
  - Tremwil (for the arxan code restoration disabler, vtable-rs and a few other boilerplate-y things as well as implementing the initial FD4 singleton finder for TGA that I appropriated).
+ - Dasaav (for heaps of engine-related structures).
  - Sfix (for coming up with the FD4 singleton finder approach at all).
  - Yui (for some structures as well as AOBs and hinting at some logic existing in the binary).
 
