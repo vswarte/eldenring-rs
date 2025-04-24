@@ -100,7 +100,7 @@ Result:
 
 # Project structure (crates)
  - `crates/game` [![Crates.io](https://img.shields.io/crates/v/eldenring.svg?label=eldenring)](https://crates.io/crates/eldenring) contains the definitions for the games structures.
- - `crates/util` [![Crates.io](https://img.shields.io/crates/v/eldenring-util.svg?label=eldenring-util)](https://crates.io/crates/eldenring-util) providers helper methods for common stuff like interacting with the games task system, using the dlrf metadata to obtain refs to singletons, looking up characters by their FieldInsHandle, havok raycasting and a bunch more.
+ - `crates/util` [![Crates.io](https://img.shields.io/crates/v/eldenring-util.svg?label=eldenring-util)](https://crates.io/crates/eldenring-util) provides helper methods for common stuff like interacting with the games task system, using the dlrf metadata to obtain refs to singletons, looking up characters by their FieldInsHandle, havok raycasting and a bunch more.
  - `crates/dlrf` [![Crates.io](https://img.shields.io/crates/v/eldenring-dlrf.svg?label=eldenring-dlrf)](https://crates.io/crates/eldenring-dlrf) Defines a trait and exports a macro for interacting with the games reflection system.
  - `crates/dlrf/derive` [![Crates.io](https://img.shields.io/crates/v/eldenring-dlrf-derive.svg?label=eldenring-dlrf-derive)](https://crates.io/crates/eldenring-dlrf-derive) Defines the derive macro for implementing the DLRF trait on types. **Do not depend on this directly since the macro is reexported through `eldenring-dlrf`**.
 
