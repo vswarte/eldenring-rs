@@ -2,8 +2,6 @@
 Rust bindings to facilitate mod creation for Elden Ring.
 
 [![Build Status](https://github.com/vswarte/eldenring-rs/actions/workflows/rust.yml/badge.svg)](https://github.com/vswarte/eldenring-rs/actions)
-[![Crates.io](https://img.shields.io/crates/v/eldenring.svg)](https://crates.io/crates/eldenring)
-[![Documentation](https://docs.rs/eldenring/badge.svg)](https://docs.rs/eldenring)
 ![Crates.io License](https://img.shields.io/crates/l/eldenring)
 
 <details>
@@ -99,10 +97,10 @@ Result:
 </details>
 
 # Project structure (crates)
- - `crates/game` [![Crates.io](https://img.shields.io/crates/v/eldenring.svg?label=eldenring)](https://crates.io/crates/eldenring) contains the definitions for the games structures.
- - `crates/util` [![Crates.io](https://img.shields.io/crates/v/eldenring-util.svg?label=eldenring-util)](https://crates.io/crates/eldenring-util) provides helper methods for common stuff like interacting with the games task system, using the dlrf metadata to obtain refs to singletons, looking up characters by their FieldInsHandle, havok raycasting and a bunch more.
- - `crates/dlrf` [![Crates.io](https://img.shields.io/crates/v/eldenring-dlrf.svg?label=eldenring-dlrf)](https://crates.io/crates/eldenring-dlrf) Defines a trait and exports a macro for interacting with the games reflection system.
- - `crates/dlrf/derive` [![Crates.io](https://img.shields.io/crates/v/eldenring-dlrf-derive.svg?label=eldenring-dlrf-derive)](https://crates.io/crates/eldenring-dlrf-derive) Defines the derive macro for implementing the DLRF trait on types. **Do not depend on this directly since the macro is reexported through `eldenring-dlrf`**.
+ - `crates/game` Contains the definitions for the games structures. [![Crates.io](https://img.shields.io/crates/v/eldenring.svg?label=eldenring)](https://crates.io/crates/eldenring) [![Documentation](https://docs.rs/eldenring/badge.svg)](https://docs.rs/eldenring)
+ - `crates/util` Provides helper methods for common stuff. [![Crates.io](https://img.shields.io/crates/v/eldenring-util.svg?label=eldenring-util)](https://crates.io/crates/eldenring-util) [![Documentation](https://docs.rs/eldenring-util/badge.svg)](https://docs.rs/eldenring-util) 
+ - `crates/dlrf` Defines a trait and exports a macro for interacting with the games reflection system. [![Crates.io](https://img.shields.io/crates/v/eldenring-dlrf.svg?label=eldenring-dlrf)](https://crates.io/crates/eldenring-dlrf)  [![Documentation](https://docs.rs/eldenring-dlrf/badge.svg)](https://docs.rs/eldenring-dlrf) 
+ - `crates/dlrf/derive` Defines the derive macro for implementing the DLRF trait on types. **Do not depend on this directly since the macro is reexported through `eldenring-dlrf`**. [![Crates.io](https://img.shields.io/crates/v/eldenring-dlrf-derive.svg?label=eldenring-dlrf-derive)](https://crates.io/crates/eldenring-dlrf-derive)  [![Documentation](https://docs.rs/eldenring-dlrf-derive/badge.svg)](https://docs.rs/eldenring-dlrf-derive) 
 
 # Credits (aside listed contributors to this repository)
  - Tremwil (for the arxan code restoration disabler, vtable-rs and a few other boilerplate-y things as well as implementing the initial FD4 singleton finder for TGA that I appropriated).
