@@ -1,4 +1,5 @@
 [package]
+readme = "README.md"
 name = "param-generator"
 version.workspace = true
 edition.workspace = true
