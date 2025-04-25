@@ -124,14 +124,12 @@ fn generate_code(def: &StructDef) -> String {
 
                 code.push_str("    #[allow(clippy::identity_op)]\n");
                 code.push_str(&format!(
-                    "    pub fn {}(&self) -> u8 {{\n        (self.{} >> {}) & 0b{:08b}\n    }}\n\n",
-                    normalized_name, group_name, used_bits, mask
+                    "    pub fn {normalized_name}(&self) -> u8 {{\n        (self.{group_name} >> {used_bits}) & 0b{mask:08b}\n    }}\n\n"
                 ));
 
                 code.push_str("    #[allow(clippy::identity_op)]\n");
                 code.push_str(&format!(
-                    "    pub fn set_{}(&mut self, value: u8) {{\n        self.{} = (self.{} & !(0b{:08b} << {})) | ((value & 0b{:08b}) << {});\n    }}\n\n",
-                    normalized_name, group_name, group_name, mask, used_bits, mask, used_bits
+                    "    pub fn set_{normalized_name}(&mut self, value: u8) {{\n        self.{group_name} = (self.{group_name} & !(0b{mask:08b} << {used_bits})) | ((value & 0b{mask:08b}) << {used_bits});\n    }}\n\n"
                 ));
             }
             FieldType::Standard(_) => {

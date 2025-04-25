@@ -32,7 +32,7 @@ pub fn render_debug_singleton<T: DLRFSingleton + DebugDisplay + 'static>(ui: &&m
             if ui.collapsing_header(T::DLRF_NAME, TreeNodeFlags::empty()) {
                 ui.indent();
                 let pointer = instance as *const T;
-                let mut pointer_string = format!("{:#x?}", pointer);
+                let mut pointer_string = format!("{pointer:#x?}");
                 let label = format!("{} instance", T::DLRF_NAME);
                 ui.input_text(label.as_str(), &mut pointer_string)
                     .read_only(true)

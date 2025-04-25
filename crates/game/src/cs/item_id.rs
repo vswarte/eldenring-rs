@@ -25,7 +25,7 @@ impl From<i8> for ItemCategory {
             8 => ItemCategory::Gem,
             // 15 = u4::MAX
             15 | -1 => ItemCategory::None,
-            _ => panic!("Invalid item category: {}", value),
+            _ => panic!("Invalid item category: {value}"),
         }
     }
 }
