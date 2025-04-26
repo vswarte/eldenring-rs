@@ -48,7 +48,7 @@ impl DebugDisplay for ChrAsm {
         }
 
         for (i, e) in self.gaitem_handles.iter().enumerate() {
-            ui.text(format!("Gaitem handle {i}: {e}"));
+            ui.text(format!("Gaitem handle {i}: {e:?}"));
         }
 
         for (i, e) in self.equipment_param_ids.iter().enumerate() {
@@ -89,41 +89,44 @@ impl DebugDisplay for ChrAsmEquipment {
 
 impl DebugDisplay for ChrAsmEquipEntries {
     fn render_debug(&self, ui: &&mut Ui) {
-        ui.text(format!("Primary Left weapon: {}", self.weapon_primary_left));
         ui.text(format!(
-            "Primary Right weapon: {}",
+            "Primary Left weapon: {:?}",
+            self.weapon_primary_left
+        ));
+        ui.text(format!(
+            "Primary Right weapon: {:?}",
             self.weapon_primary_right
         ));
         ui.text(format!(
-            "Secondary Left weapon: {}",
+            "Secondary Left weapon: {:?}",
             self.weapon_secondary_left
         ));
         ui.text(format!(
-            "Secondary Right weapon: {}",
+            "Secondary Right weapon: {:?}",
             self.weapon_secondary_right
         ));
         ui.text(format!(
-            "Tertiary Left weapon: {}",
+            "Tertiary Left weapon: {:?}",
             self.weapon_tertiary_left
         ));
         ui.text(format!(
-            "Tertiary Right weapon: {}",
+            "Tertiary Right weapon: {:?}",
             self.weapon_tertiary_right
         ));
 
-        ui.text(format!("Primary Left arrow: {}", self.arrow_primary));
-        ui.text(format!("Primary Left bolt: {}", self.bolt_primary));
-        ui.text(format!("Secondary Left arrow: {}", self.arrow_secondary));
-        ui.text(format!("Secondary Left bolt: {}", self.bolt_secondary));
-        ui.text(format!("Tertiary Left arrow: {}", self.arrow_tertiary));
-        ui.text(format!("Tertiary Left bolt: {}", self.bolt_tertiary));
+        ui.text(format!("Primary Left arrow: {:?}", self.arrow_primary));
+        ui.text(format!("Primary Left bolt: {:?}", self.bolt_primary));
+        ui.text(format!("Secondary Left arrow: {:?}", self.arrow_secondary));
+        ui.text(format!("Secondary Left bolt: {:?}", self.bolt_secondary));
+        ui.text(format!("Tertiary Left arrow: {:?}", self.arrow_tertiary));
+        ui.text(format!("Tertiary Left bolt: {:?}", self.bolt_tertiary));
 
-        ui.text(format!("Protector Head: {}", self.protector_head));
-        ui.text(format!("Protector Chest: {}", self.protector_chest));
-        ui.text(format!("Protector Hands: {}", self.protector_hands));
-        ui.text(format!("Protector Legs: {}", self.protector_legs));
+        ui.text(format!("Protector Head: {:?}", self.protector_head));
+        ui.text(format!("Protector Chest: {:?}", self.protector_chest));
+        ui.text(format!("Protector Hands: {:?}", self.protector_hands));
+        ui.text(format!("Protector Legs: {:?}", self.protector_legs));
 
-        ui.text(format!("Hair???: {}", self.hair));
+        ui.text(format!("Hair: {:?}", self.hair));
 
         if ui.collapsing_header("Accessories", TreeNodeFlags::empty()) {
             ui.indent();
@@ -141,7 +144,7 @@ impl DebugDisplay for ChrAsmEquipEntries {
                         ui.table_next_column();
                         ui.text(index.to_string());
                         ui.table_next_column();
-                        ui.text(item.to_string());
+                        ui.text(format!("{item:x?}"));
                     });
             }
             ui.unindent();
@@ -165,7 +168,7 @@ impl DebugDisplay for ChrAsmEquipEntries {
                         ui.table_next_column();
                         ui.text(index.to_string());
                         ui.table_next_column();
-                        ui.text(item.to_string());
+                        ui.text(format!("{item:x?}"));
                     });
             }
             ui.unindent();
@@ -185,7 +188,7 @@ impl DebugDisplay for ChrAsmEquipEntries {
                     ui.text(index.to_string());
 
                     ui.table_next_column();
-                    ui.text(item.to_string());
+                    ui.text(format!("{item:x?}"));
                 });
             }
             ui.unindent();
@@ -257,7 +260,7 @@ impl DebugDisplay for EquipGameData {
                         ui.text(index.to_string());
 
                         ui.table_next_column();
-                        ui.text(item.item_id.to_string());
+                        ui.text(format!("{:x?}", item.item_id));
 
                         ui.table_next_column();
                         ui.text(item.quantity.to_string());
@@ -322,7 +325,7 @@ impl DebugDisplay for EquipItemData {
                         ui.align_text_to_frame_padding();
 
                         ui.table_next_column();
-                        ui.text(item.gaitem_handle.to_string());
+                        ui.text(format!("{:x?}", item.gaitem_handle));
 
                         ui.table_next_column();
                         ui.text(item.index.to_string());
@@ -350,7 +353,7 @@ impl DebugDisplay for EquipItemData {
                         ui.text(index.to_string());
 
                         ui.table_next_column();
-                        ui.text(item.gaitem_handle.to_string());
+                        ui.text(format!("{:x?}", item.gaitem_handle));
 
                         ui.table_next_column();
                         ui.text(item.index.to_string());
@@ -360,7 +363,7 @@ impl DebugDisplay for EquipItemData {
         }
 
         ui.text(format!(
-            "Greatrune: {}, index: {}",
+            "Greatrune: {:x?}, index: {}",
             self.great_rune.gaitem_handle, self.great_rune.index
         ));
 
@@ -407,10 +410,10 @@ impl DebugDisplay for EquipInventoryData {
                         ui.text(index.to_string());
 
                         ui.table_next_column();
-                        ui.text(item.gaitem_handle.to_string());
+                        ui.text(format!("{:x?}", item.gaitem_handle));
 
                         ui.table_next_column();
-                        ui.text(item.item_id.to_string());
+                        ui.text(format!("{:x?}", item.item_id));
 
                         ui.table_next_column();
                         ui.text(item.quantity.to_string());
@@ -448,10 +451,10 @@ impl DebugDisplay for EquipInventoryData {
                         ui.text(index.to_string());
 
                         ui.table_next_column();
-                        ui.text(item.gaitem_handle.to_string());
+                        ui.text(format!("{:x?}", item.gaitem_handle));
 
                         ui.table_next_column();
-                        ui.text(item.item_id.to_string());
+                        ui.text(format!("{:x?}", item.item_id));
 
                         ui.table_next_column();
                         ui.text(item.quantity.to_string());
@@ -489,10 +492,10 @@ impl DebugDisplay for EquipInventoryData {
                         ui.text(index.to_string());
 
                         ui.table_next_column();
-                        ui.text(item.gaitem_handle.to_string());
+                        ui.text(format!("{:x?}", item.gaitem_handle));
 
                         ui.table_next_column();
-                        ui.text(item.item_id.to_string());
+                        ui.text(format!("{:x?}", item.item_id));
 
                         ui.table_next_column();
                         ui.text(item.quantity.to_string());

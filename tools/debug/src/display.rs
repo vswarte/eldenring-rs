@@ -9,6 +9,7 @@ pub(crate) mod dlio;
 pub(crate) mod event_flag;
 pub(crate) mod fade;
 pub(crate) mod field_area;
+pub(crate) mod gaitem;
 pub(crate) mod geometry;
 pub(crate) mod gparam;
 pub(crate) mod net_man;

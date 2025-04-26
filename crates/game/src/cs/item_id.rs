@@ -1,8 +1,16 @@
 use std::fmt::Display;
 
+use thiserror::Error;
+
 #[repr(C)]
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash)]
 pub struct ItemId(i32);
+
+#[derive(Debug, Error)]
+pub enum ItemIdError {
+    #[error("Not a valid item category {0}")]
+    InvalidCategory(i8),
+}
 
 #[repr(i8)]
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash)]
@@ -15,18 +23,17 @@ pub enum ItemCategory {
     None = -1,
 }
 
-impl From<i8> for ItemCategory {
-    fn from(value: i8) -> Self {
-        match value {
+impl ItemCategory {
+    pub const fn from_i8(val: &i8) -> Result<Self, ItemIdError> {
+        Ok(match val {
             0 => ItemCategory::Weapon,
             1 => ItemCategory::Protector,
             2 => ItemCategory::Accessory,
             4 => ItemCategory::Goods,
             8 => ItemCategory::Gem,
-            // 15 = u4::MAX
             15 | -1 => ItemCategory::None,
-            _ => panic!("Invalid item category: {value}"),
-        }
+            _ => return Err(ItemIdError::InvalidCategory(*val)),
+        })
     }
 }
 
@@ -42,28 +49,13 @@ impl ItemId {
         self.0 & 0x0FFFFFFF
     }
 
-    pub fn category(&self) -> ItemCategory {
-        ItemCategory::from((self.0 >> 28) as i8)
+    pub const fn category(&self) -> Result<ItemCategory, ItemIdError> {
+        ItemCategory::from_i8(&((self.0 >> 28) as i8))
     }
 }
 
 impl From<i32> for ItemId {
     fn from(value: i32) -> Self {
         Self(value)
-    }
-}
-
-impl Display for ItemId {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        if self.category() == ItemCategory::None {
-            write!(f, "Item ID: -1")
-        } else {
-            write!(
-                f,
-                "Item ID: {}, Category: {:?}",
-                self.item_id(),
-                self.category()
-            )
-        }
     }
 }

@@ -2,6 +2,7 @@ use std::time::Duration;
 
 use display::DebugDisplay;
 use game::cs::CSBulletManager;
+use game::cs::CSGaitemImp;
 use game::cs::CSSfxImp;
 use game::cs::CSWindowImp;
 use game::cs::CSWorldSceneDrawParamManager;
@@ -123,6 +124,11 @@ impl ImguiRenderLoop for EldenRingDebugGui {
                     render_debug_singleton::<CSWorldGeomMan>(&ui);
                     render_debug_singleton::<WorldAreaTime>(&ui);
                     render_debug_singleton::<CSBulletManager>(&ui);
+                    item.end();
+                }
+
+                if let Some(item) = ui.tab_item("Inventory") {
+                    render_debug_singleton::<CSGaitemImp>(&ui);
                     item.end();
                 }
 

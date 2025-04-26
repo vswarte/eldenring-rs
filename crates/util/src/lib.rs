@@ -6,6 +6,7 @@ pub mod character_type_properties;
 pub mod ez_draw;
 pub mod ez_state;
 pub mod fade;
+pub mod gaitem;
 pub mod geometry;
 pub mod havok;
 pub mod input;

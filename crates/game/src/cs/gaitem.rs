@@ -1,34 +1,25 @@
-use std::fmt::Display;
+use std::{fmt::Display, mem::transmute};
+
+use thiserror::Error;
 
 use crate::pointer::OwnedPtr;
 
 use super::ItemId;
-
-#[repr(u8)]
-#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash)]
-pub enum GaitemCategory {
-    Weapon = 0,
-    Protector = 1,
-    Accessory = 2,
-    Goods = 3,
-    Gem = 4,
-    Invalid = 255,
-}
-
-impl From<u8> for GaitemCategory {
-    fn from(value: u8) -> Self {
-        match value {
-            0 => GaitemCategory::Weapon,
-            1 => GaitemCategory::Protector,
-            2 => GaitemCategory::Accessory,
-            3 => GaitemCategory::Goods,
-            4 => GaitemCategory::Gem,
-            _ => {
-                tracing::warn!("Unknown GaitemCategory: {}", value);
-                GaitemCategory::Invalid
-            }
-        }
-    }
+#[repr(C)]
+#[dlrf::singleton("CSGaitem")]
+pub struct CSGaitemImp {
+    vftable: usize,
+    pub gaitems: [Option<OwnedPtr<CSGaitemIns>>; 5120],
+    // TODO: fact-check this
+    gaitem_descriptors: [CSGaitemImpEntry; 5120],
+    indexes: [u32; 5120],
+    write_index: u32,
+    read_index: u32,
+    rand_xorshift: [u8; 0x18],
+    unk23028: [u8; 8],
+    /// Becomes true if the CSGaitemImp is being serialized for saving to the save file.
+    pub is_being_serialized: bool,
+    unk23038: [u8; 7],
 }
 
 #[repr(C)]
@@ -38,65 +29,166 @@ pub struct CSGaitemIns {
     pub item_id: ItemId,
 }
 
-#[repr(C)]
-pub struct CSGaitemImpEntry {
-    pub unindexed_gaitem_handle: u32,
-    pub ref_count: u32,
+impl CSGaitemIns {
+    /// Downcast the CSGaitemIns to the derivant class. Will return None if the requested type
+    /// does not match the gaitem ins's type.
+    pub fn as_wep(&self) -> Option<&CSWepGaitemIns> {
+        Some(match self.gaitem_handle.category() {
+            // Safety: consumers are not allowed to make their own CSGaitemIns and other instances
+            // come from the game. The category can reliably be used to do this downcast.
+            Ok(GaitemCategory::Weapon) => unsafe {
+                transmute::<&CSGaitemIns, &CSWepGaitemIns>(self)
+            },
+            _ => return None,
+        })
+    }
+
+    /// Downcast the CSGaitemIns to the derivant class. Will return None if the requested type
+    /// does not match the gaitem ins's type.
+    pub fn as_wep_mut(&mut self) -> Option<&mut CSWepGaitemIns> {
+        Some(match self.gaitem_handle.category() {
+            // Safety: consumers are not allowed to make their own CSGaitemIns and other instances
+            // come from the game. The category can reliably be used to do this downcast.
+            Ok(GaitemCategory::Weapon) => unsafe {
+                transmute::<&mut CSGaitemIns, &mut CSWepGaitemIns>(self)
+            },
+            _ => return None,
+        })
+    }
+
+    /// Downcast the CSGaitemIns to the derivant class. Will return None if the requested type
+    /// does not match the gaitem ins's type.
+    pub fn as_gem(&self) -> Option<&CSGemGaitemIns> {
+        Some(match self.gaitem_handle.category() {
+            // Safety: consumers are not allowed to make their own CSGaitemIns and other instances
+            // come from the game. The category can reliably be used to do this downcast.
+            Ok(GaitemCategory::Gem) => unsafe { transmute::<&CSGaitemIns, &CSGemGaitemIns>(self) },
+            _ => return None,
+        })
+    }
+
+    /// Downcast the CSGaitemIns to the derivant class. Will return None if the requested type
+    /// does not match the gaitem ins's type.
+    pub fn as_gem_mut(&mut self) -> Option<&mut CSGemGaitemIns> {
+        Some(match self.gaitem_handle.category() {
+            // Safety: consumers are not allowed to make their own CSGaitemIns and other instances
+            // come from the game. The category can reliably be used to do this downcast.
+            Ok(GaitemCategory::Gem) => unsafe {
+                transmute::<&mut CSGaitemIns, &mut CSGemGaitemIns>(self)
+            },
+            _ => return None,
+        })
+    }
 }
 
 #[repr(C)]
-pub struct CSGaitemImp {
-    vftable: usize,
-    pub gaitem_instances: [OwnedPtr<CSGaitemImp>; 5120],
-    pub gaitem_entries: [CSGaitemImpEntry; 5120],
-    pub indexes: [u32; 5120],
-    pub write_idx: u32,
-    pub read_idx: u32,
-    rand_xorshift: [u8; 0x18],
-    unk23028: [u8; 8],
-    pub is_being_serialized: bool,
-    unk23038: [u8; 7],
+pub struct CSGaitemImpEntry {
+    unindexed_gaitem_handle: u32,
+    ref_count: u32,
 }
 
 #[repr(C)]
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash)]
-pub struct GaitemHandle(u32);
+pub struct GaitemHandle(i32);
+
+#[derive(Debug, Error)]
+pub enum GaitemHandleError {
+    #[error("Not a valid Gaitem handle category {0}")]
+    InvalidCategory(u8),
+}
 
 impl GaitemHandle {
-    /// converts gaitem handle to selector
-    pub const fn to_selector(self) -> u32 {
-        self.0 & 0x00ffffff
+    pub const fn from_parts(selector: i32, category: GaitemCategory) -> Self {
+        GaitemHandle(selector & 0x00FFFFFF | ((category as i32) | -8) << 28)
     }
 
-    pub fn from_parts(selector: u32, category: GaitemCategory) -> Self {
-        GaitemHandle(selector & 0x00FFFFFF | ((category as u32) | 0xfffffff8) << 28)
-    }
-
-    /// returns true if the gaitem handle has index
-    /// and therefore is refcounted in CSGaitemImp
+    /// Indicates if the gaitem handle refers to a GaitemIns available in CSGaitemImp.
     pub const fn is_indexed(self) -> bool {
         self.0 >> 23 & 1 == 1
     }
 
-    /// returns the index of the gaitem handle in CSGaitemImp
-    pub const fn index(self) -> u32 {
-        self.0 & 0xffff
+    pub const fn selector(self) -> u32 {
+        (self.0 & 0x00ffffff) as u32
     }
 
-    pub fn category(self) -> GaitemCategory {
-        GaitemCategory::from((self.0 >> 28 & 7) as u8)
+    /// Index of the GaitemIns inside of the CSGaitemImp  
+    pub const fn index(self) -> u32 {
+        (self.0 & 0xffff) as u32
+    }
+
+    pub const fn category(self) -> Result<GaitemCategory, GaitemHandleError> {
+        GaitemCategory::from_u8(&((self.0 >> 28 & 7) as u8))
     }
 }
 
-impl Display for GaitemHandle {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(
-            f,
-            "Gaitem Handle: {:0>8}, Category: {:?}, Selector: {:0>6}, Indexed: {:?}",
-            self.0,
-            self.category(),
-            self.to_selector(),
-            self.is_indexed()
-        )
+#[repr(u8)]
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash)]
+pub enum GaitemCategory {
+    Weapon = 0,
+    Protector = 1,
+    Accessory = 2,
+    Goods = 3,
+    Gem = 4,
+}
+
+impl GaitemCategory {
+    pub const fn from_u8(val: &u8) -> Result<Self, GaitemHandleError> {
+        Ok(match val {
+            0 => GaitemCategory::Weapon,
+            1 => GaitemCategory::Protector,
+            2 => GaitemCategory::Accessory,
+            3 => GaitemCategory::Goods,
+            4 => GaitemCategory::Gem,
+            _ => return Err(GaitemHandleError::InvalidCategory(*val)),
+        })
+    }
+}
+
+#[repr(C)]
+pub struct CSWepGaitemIns {
+    pub gaitem_ins: CSGaitemIns,
+    /// Item durability mechanic. Unused in ER.
+    pub durability: u32,
+    _unk14: u32,
+    /// Gem slots, used for ashes of war in ER.
+    pub gem_slot_table: CSGemSlotTable,
+}
+
+#[repr(C)]
+pub struct CSGemSlotTable {
+    vtable: usize,
+    pub gem_slots: [CSGemSlot; 1],
+}
+
+#[repr(C)]
+pub struct CSGemSlot {
+    vtable: usize,
+    /// Refers to the actual gem entry in the CSGaitemImp.
+    pub gaitem_handle: GaitemHandle,
+    unkc: u32,
+}
+
+#[repr(C)]
+pub struct CSGemGaitemIns {
+    pub gaitem_ins: CSGaitemIns,
+    gaitem_handle: GaitemHandle,
+    /// Item ID of the active gem.
+    pub item_id: u32,
+}
+
+#[cfg(test)]
+mod test {
+    use crate::cs::{
+        CSGaitemImp, CSGaitemIns, CSGemGaitemIns, CSGemSlot, CSGemSlotTable, CSWepGaitemIns,
+    };
+
+    #[test]
+    fn proper_sizes() {
+        assert_eq!(0x19038, size_of::<CSGaitemImp>());
+        assert_eq!(0x10, size_of::<CSGaitemIns>());
+        assert_eq!(0x30, size_of::<CSWepGaitemIns>());
+        assert_eq!(0x18, size_of::<CSGemSlotTable>());
+        assert_eq!(0x10, size_of::<CSGemSlot>());
+        assert_eq!(0x18, size_of::<CSGemGaitemIns>());
     }
 }
