@@ -5,7 +5,8 @@ members = [
     "crates/util",
     "crates/dlrf",
     "tools/debug",
-    "tools/binary-mapper", "tools/param-generator",
+    "tools/binary-mapper",
+    "tools/param-generator",
 ]
 
 [workspace.package]
@@ -22,8 +23,8 @@ util = { path = "crates/util", version = "0.6.0", package = "eldenring-util" }
 binary_mapper = { path = "crates/binary-mapper" }
 thiserror = "1"
 tracing = "0.1"
-nalgebra-glm = "0.18"
-nalgebra = "0.32"
+nalgebra-glm = "0.19"
+nalgebra = "0.33"
 byteorder = "1"
 pelite = "0.10"
 vtable-rs = "0.1.4"

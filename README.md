@@ -2,8 +2,6 @@
 Rust bindings to facilitate mod creation for Elden Ring.
 
 [![Build Status](https://github.com/vswarte/eldenring-rs/actions/workflows/rust.yml/badge.svg)](https://github.com/vswarte/eldenring-rs/actions)
-[![Crates.io](https://img.shields.io/crates/v/eldenring.svg)](https://crates.io/crates/eldenring)
-[![Documentation](https://docs.rs/eldenring/badge.svg)](https://docs.rs/eldenring)
 ![Crates.io License](https://img.shields.io/crates/l/eldenring)
 
 <details>
@@ -11,6 +9,8 @@ Rust bindings to facilitate mod creation for Elden Ring.
 <summary>Example mod code: render debug line</summary>
 
 ```rust
+use std::time::Duration;
+
 use eldenring::{
     cs::{CSTaskImp, RendMan, WorldChrMan},
     fd4::FD4TaskData,
@@ -28,8 +28,8 @@ pub unsafe extern "C" fn DllMain(_hmodule: usize, reason: u32) -> bool {
     if reason == 1 {
         // Kick off new thread.
         std::thread::spawn(|| {
-            // Wait for game to boot up.
-            wait_for_system_init(-1).expect("Could not await system init.");
+            // Wait for game (current program we're injected into) to boot up.
+            wait_for_system_init(&Program::current(), Duration::MAX).expect("Could not await system init.");
 
             // Retrieve games task runner.
             let cs_task = get_instance::<CSTaskImp>().unwrap().unwrap();
@@ -50,7 +50,7 @@ pub unsafe extern "C" fn DllMain(_hmodule: usize, reason: u32) -> bool {
 
                     // Grab the main player from WorldChrMan if it's available. Bail otherwise.
                     let Some(player) = get_instance::<WorldChrMan>()
-                        .expect("No reflection data for RendMan")
+                        .expect("No reflection data for WorldChrMan")
                         .map(|w| w.main_player.as_ref())
                         .flatten()
                     else {
@@ -86,18 +86,25 @@ pub unsafe extern "C" fn DllMain(_hmodule: usize, reason: u32) -> bool {
         });
     }
 
-    // Signal that DllMain executed successfully 
+    // Signal that DllMain executed successfully
     true
 }
 ```
 
 Result:
-![Debug line rendered by example mode code](img/example-mod-debug-line.png) 
+![Debug line rendered by example mode code](img/example-mod-debug-line.png)
 
 </details>
 
+# Project structure (crates)
+ - `crates/game` Contains the definitions for the games structures. [![Crates.io](https://img.shields.io/crates/v/eldenring.svg?label=eldenring)](https://crates.io/crates/eldenring) [![Documentation](https://docs.rs/eldenring/badge.svg)](https://docs.rs/eldenring)
+ - `crates/util` Provides helper methods for common stuff. [![Crates.io](https://img.shields.io/crates/v/eldenring-util.svg?label=eldenring-util)](https://crates.io/crates/eldenring-util) [![Documentation](https://docs.rs/eldenring-util/badge.svg)](https://docs.rs/eldenring-util) 
+ - `crates/dlrf` Defines a trait and exports a macro for interacting with the games reflection system. [![Crates.io](https://img.shields.io/crates/v/eldenring-dlrf.svg?label=eldenring-dlrf)](https://crates.io/crates/eldenring-dlrf)  [![Documentation](https://docs.rs/eldenring-dlrf/badge.svg)](https://docs.rs/eldenring-dlrf) 
+ - `crates/dlrf/derive` Defines the derive macro for implementing the DLRF trait on types. **Do not depend on this directly since the macro is reexported through `eldenring-dlrf`**. [![Crates.io](https://img.shields.io/crates/v/eldenring-dlrf-derive.svg?label=eldenring-dlrf-derive)](https://crates.io/crates/eldenring-dlrf-derive)  [![Documentation](https://docs.rs/eldenring-dlrf-derive/badge.svg)](https://docs.rs/eldenring-dlrf-derive) 
+
 # Credits (aside listed contributors to this repository)
  - Tremwil (for the arxan code restoration disabler, vtable-rs and a few other boilerplate-y things as well as implementing the initial FD4 singleton finder for TGA that I appropriated).
+ - Dasaav (for heaps of engine-related structures).
  - Sfix (for coming up with the FD4 singleton finder approach at all).
  - Yui (for some structures as well as AOBs and hinting at some logic existing in the binary).
 

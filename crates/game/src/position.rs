@@ -102,7 +102,7 @@ impl HavokPosition {
 impl Display for HavokPosition {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         let Self(x, y, z, _) = self;
-        write!(f, "HavokPosition({}, {}, {})", x, y, z)
+        write!(f, "HavokPosition({x}, {y}, {z})")
     }
 }
 

@@ -7,11 +7,12 @@ use crate::{
     dlkr::{DLAllocatorBase, DLPlainLightMutex},
     dltx::{DLCodedString, DLInplaceStr},
     fd4::FD4Time,
+    matrix::{FSVector3, FSVector4},
     pointer::OwnedPtr,
     DoublyLinkedList, Vector,
 };
 
-use super::{CSEzTask, CSEzUpdateTask};
+use super::{CSEzTask, CSEzUpdateTask, MapId, P2PEntityHandle};
 
 #[repr(u32)]
 #[derive(Debug, PartialEq)]
@@ -89,8 +90,19 @@ pub struct CSSessionManager {
     manager_impl_steam: usize,
     unk68: usize,
     pub players: Vector<CSSessionManagerPlayerEntry>,
-    pub host_player: CSSessionManagerPlayerEntry,
-    unk190: usize,
+    pub host_player: CSSessionManagerPlayerEntryBase,
+    unk160: usize,
+    unk168: usize,
+    unk170: u32,
+    unk174: u32,
+    unk178: u8,
+    unk179: u8,
+    unk17a: u8,
+    unk17b: u8,
+    unk17c: u32,
+    player_data_man: usize,
+    /// Object, used to warp players back to the latest valid multiplay area in case they step out of it.
+    pub stay_in_multiplay_area_warp_data: OwnedPtr<CSStayInMultiplayAreaWarpData>,
     protocol_state_1_timeout: FD4Time,
     protocol_state_2_timeout: FD4Time,
     unk1b8: usize,
@@ -162,32 +174,68 @@ pub struct CSSessionManager {
 }
 
 #[repr(C)]
-pub struct CSSessionManagerPlayerEntry {
+pub struct CSSessionManagerPlayerEntryBase {
     internal_thread_steam_connection: usize,
     internal_thread_steam_socket: usize,
     pub steam_id: u64,
     pub steam_name: DLInplaceStr<1, 64>,
     connection_ref_info: usize,
     voice_chat_member_ref_info: usize,
-    game_data_index: i32,
-    chr_type: u32,
-    unkd8: u32,
-    unkdc: i32,
-    unke0: u32,
-    unke4: u32,
+}
+
+#[repr(C)]
+pub struct CSSessionManagerPlayerEntry {
+    pub base: CSSessionManagerPlayerEntryBase,
+    /// Index in networked player game data list, will be -1 for host.
+    pub game_data_index: i32,
+    unkd4: u32,
+    unkd8: usize,
+    pub p2p_entity_handle: P2PEntityHandle,
     unke8: u8,
-    unke9: u8,
-    p2p_control_byte: u8,
-    unkeb: u8,
-    unkec: u8,
-    unked: u8,
-    unkef: u8,
-    unkf0: usize,
-    unkf8: u32,
-    team_type: u8,
-    unkfd: u8,
-    unkfe: u8,
-    unkff: u8,
+    pub is_host: bool,
+    unkea: [u8; 0x16],
+}
+
+#[repr(C)]
+pub struct StayInMultiplayFadeTrackerEntry {
+    /// Steam ID of the player who is currently in warp and should not be rendered.
+    pub steam_id: u64,
+    /// Time in seconds until the player should be rendered again.
+    pub fade_time: f32,
+    _pad: [u8; 4],
+}
+
+#[repr(C)]
+/// Object used to warp players back to the latest valid multiplay area in case they step out of it.
+pub struct CSStayInMultiplayAreaWarpData {
+    /// Vector of remote player warp trackers.
+    /// Used to check when player rendering should be disabled using bitflag on ChrIns at 0x1c5.
+    /// When warp time is 0, player rendering is enabled back.
+    pub player_fade_tracker: Vector<StayInMultiplayFadeTrackerEntry>,
+    /// Sent by host to clients on connect in packet 90 (0x5A).
+    /// Contains the ID of the play area the host was in when the client connected.
+    /// If current multiplay area ID has different boss ID than this one, player will be warped to latest stored position.
+    /// Setting this to 0 will disable this.
+    pub multiplay_start_area_id: u32,
+    unk24: u32,
+    stay_in_multiplay_area_warp_step: [u8; 0xc8],
+    /// Last position player was before stepping out of the multiplay area, relative to the map.
+    /// Read from GameMan and uses same logic as bloodstains.
+    pub saved_position: FSVector3,
+    /// Last MapId player was before stepping out of the multiplay area.
+    /// Read from GameMan and uses same logic as bloodstains.
+    pub saved_map_id: MapId,
+    /// Delay before the player is warped back to the safe position.
+    /// Used for fadeout effect and updated by task.
+    /// This is set to 0 when the player is warped back.
+    pub warp_request_delay: f32,
+    /// Setting this to true will completely disable multiplay area restrictions,
+    /// allowing player to go anywhere on the map.
+    pub disable_multiplay_restriction: bool,
+    /// Controls if the player should be warped back to the saved position.
+    /// False when falling, or doing something else that can mess up the warp.
+    pub is_warp_possible: bool,
+    _pad: [u8; 0x2],
 }
 
 #[repr(C)]

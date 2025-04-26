@@ -1,10 +1,10 @@
+use crate::dlut::DLDateTime;
+
 #[repr(C)]
 #[dlrf::singleton("WorldAreaTime")]
 pub struct WorldAreaTime {
-    unk0: u64,
-    pub clock: WorldAreaTimeClock,
-    unk10: u64,
-    pub previous_tick_clock: WorldAreaTimeClock,
+    pub clock: DLDateTime,
+    pub previous_tick_clock: DLDateTime,
     unk20: f32,
     unk24: f32,
     pub target_hour: u32,
@@ -15,10 +15,6 @@ pub struct WorldAreaTime {
     unk3c: f32,
     // TODO: rest
 }
-
-#[repr(C)]
-/// A packed clock as used by the game.
-pub struct WorldAreaTimeClock(pub u64);
 
 #[repr(u32)]
 pub enum AiSightTimeOfDay {

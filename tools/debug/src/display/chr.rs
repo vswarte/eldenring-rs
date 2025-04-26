@@ -1,6 +1,6 @@
 use game::cs::{
-    CSChrModelParamModifierModule, ChrAsm, ChrAsmEquipEntries, ChrAsmEquipment, ChrIns,
-    ChrInsModuleContainer, ChrPhysicsModule, EquipGameData, EquipInventoryData, EquipItemData,
+    CSChrModelParamModifierModule, CSChrPhysicsModule, ChrAsm, ChrAsmEquipEntries, ChrAsmEquipment,
+    ChrIns, ChrInsModuleContainer, EquipGameData, EquipInventoryData, EquipItemData,
     EquipMagicData, PlayerGameData, PlayerIns,
 };
 use hudhook::imgui::{TableColumnSetup, TableFlags, TreeNodeFlags, Ui};
@@ -48,11 +48,11 @@ impl DebugDisplay for ChrAsm {
         }
 
         for (i, e) in self.gaitem_handles.iter().enumerate() {
-            ui.text(format!("Gaitem handle {}: {:?}", i, e));
+            ui.text(format!("Gaitem handle {i}: {e:?}"));
         }
 
         for (i, e) in self.equipment_param_ids.iter().enumerate() {
-            ui.text(format!("Equipment param ID {}: {:?}", i, e));
+            ui.text(format!("Equipment param ID {i}: {e:?}"));
         }
     }
 }
@@ -581,7 +581,7 @@ impl DebugDisplay for ChrInsModuleContainer {
     }
 }
 
-impl DebugDisplay for ChrPhysicsModule {
+impl DebugDisplay for CSChrPhysicsModule {
     fn render_debug(&self, ui: &&mut Ui) {
         ui.text(format!("Position: {}", self.position));
         ui.text(format!("Orientation: {}", self.orientation));

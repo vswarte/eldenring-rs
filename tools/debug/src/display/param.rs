@@ -27,11 +27,11 @@ impl DebugDisplay for FD4ParamRepository {
 
                     ui.table_next_column();
                     let row_count = res_cap.data.header.row_count;
-                    ui.text(format!("{:?}", row_count));
+                    ui.text(format!("{row_count:?}"));
 
                     ui.table_next_column();
                     let paramdef_version = res_cap.data.header.paramdef_version;
-                    ui.text(format!("{:?}", paramdef_version));
+                    ui.text(format!("{paramdef_version:?}"));
 
                     ui.table_next_column();
                     let bytes_ptr = res_cap.data.as_ptr();
