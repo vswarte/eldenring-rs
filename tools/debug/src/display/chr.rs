@@ -144,7 +144,7 @@ impl DebugDisplay for ChrAsmEquipEntries {
                         ui.table_next_column();
                         ui.text(index.to_string());
                         ui.table_next_column();
-                        ui.text(format!("{:x?}", item));
+                        ui.text(format!("{item:x?}"));
                     });
             }
             ui.unindent();
@@ -168,7 +168,7 @@ impl DebugDisplay for ChrAsmEquipEntries {
                         ui.table_next_column();
                         ui.text(index.to_string());
                         ui.table_next_column();
-                        ui.text(format!("{:x?}", item));
+                        ui.text(format!("{item:x?}"));
                     });
             }
             ui.unindent();
@@ -188,7 +188,7 @@ impl DebugDisplay for ChrAsmEquipEntries {
                     ui.text(index.to_string());
 
                     ui.table_next_column();
-                    ui.text(format!("{:x?}", item));
+                    ui.text(format!("{item:x?}"));
                 });
             }
             ui.unindent();

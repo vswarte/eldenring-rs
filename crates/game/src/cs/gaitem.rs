@@ -1,4 +1,6 @@
-use std::fmt::Display;
+use std::{fmt::Display, mem::transmute};
+
+use thiserror::Error;
 
 use crate::pointer::OwnedPtr;
 
@@ -34,7 +36,7 @@ impl CSGaitemIns {
         Some(match self.gaitem_handle.category() {
             // Safety: consumers are not allowed to make their own CSGaitemIns and other instances
             // come from the game. The category can reliably be used to do this downcast.
-            Ok(GaitemCategory::Weapon) => unsafe { std::mem::transmute(self) },
+            Ok(GaitemCategory::Weapon) => unsafe { transmute::<&CSGaitemIns, &CSWepGaitemIns>(self) },
             _ => return None,
         })
     }
@@ -45,7 +47,7 @@ impl CSGaitemIns {
         Some(match self.gaitem_handle.category() {
             // Safety: consumers are not allowed to make their own CSGaitemIns and other instances
             // come from the game. The category can reliably be used to do this downcast.
-            Ok(GaitemCategory::Weapon) => unsafe { std::mem::transmute(self) },
+            Ok(GaitemCategory::Weapon) => unsafe { transmute::<&mut CSGaitemIns, &mut CSWepGaitemIns>(self) },
             _ => return None,
         })
     }
@@ -56,7 +58,7 @@ impl CSGaitemIns {
         Some(match self.gaitem_handle.category() {
             // Safety: consumers are not allowed to make their own CSGaitemIns and other instances
             // come from the game. The category can reliably be used to do this downcast.
-            Ok(GaitemCategory::Gem) => unsafe { std::mem::transmute(self) },
+            Ok(GaitemCategory::Gem) => unsafe { transmute::<&CSGaitemIns, &CSGemGaitemIns>(self) },
             _ => return None,
         })
     }
@@ -67,7 +69,7 @@ impl CSGaitemIns {
         Some(match self.gaitem_handle.category() {
             // Safety: consumers are not allowed to make their own CSGaitemIns and other instances
             // come from the game. The category can reliably be used to do this downcast.
-            Ok(GaitemCategory::Gem) => unsafe { std::mem::transmute(self) },
+            Ok(GaitemCategory::Gem) => unsafe { transmute::<&mut CSGaitemIns, &mut CSGemGaitemIns>(self) },
             _ => return None,
         })
     }
@@ -79,15 +81,22 @@ pub struct CSGaitemImpEntry {
     ref_count: u32,
 }
 
+
 #[repr(C)]
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash)]
 pub struct GaitemHandle(i32);
 
+#[derive(Debug, Error)]
+pub enum GaitemHandleError {
+    #[error("Not a valid Gaitem handle category {0}")]
+    InvalidCategory(u8),
+}
+
 impl GaitemHandle {
-    pub const fn from_parts(selector: i32, category: GaitemCategory) -> Result<Self, ()> {
-        Ok(GaitemHandle(
+    pub const fn from_parts(selector: i32, category: GaitemCategory) -> Self {
+        GaitemHandle(
             selector & 0x00FFFFFF | ((category as i32) | -8) << 28,
-        ))
+        )
     }
 
     /// Indicates if the gaitem handle refers to a GaitemIns available in CSGaitemImp.
@@ -104,7 +113,7 @@ impl GaitemHandle {
         (self.0 & 0xffff) as u32
     }
 
-    pub const fn category(self) -> Result<GaitemCategory, ()> {
+    pub const fn category(self) -> Result<GaitemCategory, GaitemHandleError> {
         GaitemCategory::from_u8(&((self.0 >> 28 & 7) as u8))
     }
 }
@@ -120,14 +129,14 @@ pub enum GaitemCategory {
 }
 
 impl GaitemCategory {
-    pub const fn from_u8(val: &u8) -> Result<Self, ()> {
+    pub const fn from_u8(val: &u8) -> Result<Self, GaitemHandleError> {
         Ok(match val {
             0 => GaitemCategory::Weapon,
             1 => GaitemCategory::Protector,
             2 => GaitemCategory::Accessory,
             3 => GaitemCategory::Goods,
             4 => GaitemCategory::Gem,
-            _ => return Err(()),
+            _ => return Err(GaitemHandleError::InvalidCategory(*val)),
         })
     }
 }

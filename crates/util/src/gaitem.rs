@@ -18,11 +18,7 @@ impl CSGaitemImpExt for CSGaitemImp {
             return None;
         }
 
-        let Some(gaitem) = self.gaitems[index].as_ref() else {
-            return None;
-        };
-
-        Some(gaitem.as_ref())
+        Some(self.gaitems[index].as_ref()?.as_ref())
     }
 
     fn gaitem_ins_by_handle_mut(&mut self, handle: &GaitemHandle) -> Option<&mut CSGaitemIns> {
@@ -36,10 +32,6 @@ impl CSGaitemImpExt for CSGaitemImp {
             return None;
         }
 
-        let Some(gaitem) = self.gaitems[index].as_mut() else {
-            return None;
-        };
-
-        Some(gaitem.as_mut())
+        Some(self.gaitems[index].as_mut()?.as_mut())
     }
 }

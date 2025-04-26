@@ -1,8 +1,17 @@
 use std::fmt::Display;
 
+use thiserror::Error;
+
 #[repr(C)]
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash)]
 pub struct ItemId(i32);
+
+
+#[derive(Debug, Error)]
+pub enum ItemIdError {
+    #[error("Not a valid item category {0}")]
+    InvalidCategory(i8),
+}
 
 #[repr(i8)]
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash)]
@@ -16,15 +25,15 @@ pub enum ItemCategory {
 }
 
 impl ItemCategory {
-    pub const fn from_i8(value: i8) -> Result<Self, ()> {
-        Ok(match value {
+    pub const fn from_i8(val: &i8) -> Result<Self, ItemIdError> {
+        Ok(match val {
             0 => ItemCategory::Weapon,
             1 => ItemCategory::Protector,
             2 => ItemCategory::Accessory,
             4 => ItemCategory::Goods,
             8 => ItemCategory::Gem,
             15 | -1 => ItemCategory::None,
-            _ => return Err(()),
+            _ => return Err(ItemIdError::InvalidCategory(*val)),
         })
     }
 }
@@ -41,8 +50,8 @@ impl ItemId {
         self.0 & 0x0FFFFFFF
     }
 
-    pub const fn category(&self) -> Result<ItemCategory, ()> {
-        ItemCategory::from_i8((self.0 >> 28) as i8)
+    pub const fn category(&self) -> Result<ItemCategory, ItemIdError> {
+        ItemCategory::from_i8(&((self.0 >> 28) as i8))
     }
 }
 
