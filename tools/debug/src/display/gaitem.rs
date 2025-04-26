@@ -16,7 +16,7 @@ impl DebugDisplay for CSGaitemImp {
                 ],
             ) {
                 ui.indent();
-                for gaitem in self.gaitems.iter().filter_map(|f| f.as_ref()){
+                for gaitem in self.gaitems.iter().filter_map(|f| f.as_ref()) {
                     let gaitem = gaitem.as_ref();
 
                     ui.table_next_column();
@@ -30,7 +30,10 @@ impl DebugDisplay for CSGaitemImp {
 
                     ui.table_next_column();
                     if let Some(wep) = gaitem.as_wep() {
-                        ui.text(format!("AoW handle: {:x?}", wep.gem_slot_table.gem_slots[0].gaitem_handle));
+                        ui.text(format!(
+                            "AoW handle: {:x?}",
+                            wep.gem_slot_table.gem_slots[0].gaitem_handle
+                        ));
                     } else if let Some(gem) = gaitem.as_gem() {
                         ui.text(format!("Gem item ID: {:?}", gem.item_id));
                     } else {

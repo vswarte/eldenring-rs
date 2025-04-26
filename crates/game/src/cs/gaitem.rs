@@ -36,7 +36,9 @@ impl CSGaitemIns {
         Some(match self.gaitem_handle.category() {
             // Safety: consumers are not allowed to make their own CSGaitemIns and other instances
             // come from the game. The category can reliably be used to do this downcast.
-            Ok(GaitemCategory::Weapon) => unsafe { transmute::<&CSGaitemIns, &CSWepGaitemIns>(self) },
+            Ok(GaitemCategory::Weapon) => unsafe {
+                transmute::<&CSGaitemIns, &CSWepGaitemIns>(self)
+            },
             _ => return None,
         })
     }
@@ -47,7 +49,9 @@ impl CSGaitemIns {
         Some(match self.gaitem_handle.category() {
             // Safety: consumers are not allowed to make their own CSGaitemIns and other instances
             // come from the game. The category can reliably be used to do this downcast.
-            Ok(GaitemCategory::Weapon) => unsafe { transmute::<&mut CSGaitemIns, &mut CSWepGaitemIns>(self) },
+            Ok(GaitemCategory::Weapon) => unsafe {
+                transmute::<&mut CSGaitemIns, &mut CSWepGaitemIns>(self)
+            },
             _ => return None,
         })
     }
@@ -69,7 +73,9 @@ impl CSGaitemIns {
         Some(match self.gaitem_handle.category() {
             // Safety: consumers are not allowed to make their own CSGaitemIns and other instances
             // come from the game. The category can reliably be used to do this downcast.
-            Ok(GaitemCategory::Gem) => unsafe { transmute::<&mut CSGaitemIns, &mut CSGemGaitemIns>(self) },
+            Ok(GaitemCategory::Gem) => unsafe {
+                transmute::<&mut CSGaitemIns, &mut CSGemGaitemIns>(self)
+            },
             _ => return None,
         })
     }
@@ -80,7 +86,6 @@ pub struct CSGaitemImpEntry {
     unindexed_gaitem_handle: u32,
     ref_count: u32,
 }
-
 
 #[repr(C)]
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash)]
@@ -94,9 +99,7 @@ pub enum GaitemHandleError {
 
 impl GaitemHandle {
     pub const fn from_parts(selector: i32, category: GaitemCategory) -> Self {
-        GaitemHandle(
-            selector & 0x00FFFFFF | ((category as i32) | -8) << 28,
-        )
+        GaitemHandle(selector & 0x00FFFFFF | ((category as i32) | -8) << 28)
     }
 
     /// Indicates if the gaitem handle refers to a GaitemIns available in CSGaitemImp.

@@ -6,7 +6,6 @@ use thiserror::Error;
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash)]
 pub struct ItemId(i32);
 
-
 #[derive(Debug, Error)]
 pub enum ItemIdError {
     #[error("Not a valid item category {0}")]
