@@ -5,20 +5,21 @@ use std::slice::SliceIndex;
 use vtable_rs::VPtr;
 use windows::core::PCWSTR;
 
-use crate::cs::ChrSetEntry;
+use crate::cs::MapId;
 use crate::fd4::FD4Time;
-use crate::matrix::FSVector4;
+use crate::matrix::{FSMatrix4x4, FSVector4};
 use crate::pointer::OwnedPtr;
 use crate::position::{BlockPosition, HavokPosition};
 use crate::rotation::Quaternion;
-use crate::SessionManagerPlayerEntryBase;
 use crate::Vector;
 
-use super::player_game_data::PlayerGameData;
-use super::{
-    CSMsbParts, CSMsbPartsEne, CSSessionManagerPlayerEntry, FieldInsBaseVmt, FieldInsHandle,
-    GaitemHandle, MapId, PlayerNetworkSession, WorldBlockChr,
-};
+use crate::cs::field_ins::{FieldInsBaseVmt, FieldInsHandle};
+use crate::cs::gaitem::GaitemHandle;
+use crate::cs::network_session::PlayerNetworkSession;
+use crate::cs::player_game_data::{ChrAsm, PlayerGameData};
+use crate::cs::session_manager::{SessionManagerPlayerEntry, SessionManagerPlayerEntryBase};
+use crate::cs::world_chr_man::{ChrSetEntry, WorldBlockChr};
+use crate::cs::world_geom_man::{CSMsbParts, CSMsbPartsEne};
 
 #[repr(C)]
 #[derive(Debug, Clone, PartialEq, Eq, Hash)]
@@ -594,6 +595,56 @@ pub struct ChrCtrl {
     pub flags: ChrCtrlFlags,
     unkf1: [u8; 0x34],
     pub chr_ragdoll_state: u8,
+    unk12c: f32,
+    unk130: [u8; 0x48],
+    walk_twist: usize,
+    unk180: usize,
+    unk188: [u8; 0x4],
+    pub weight_type: u32,
+    unk190: [u8; 0x10],
+    /// Offset from the character's dmypoly for the tag position (name, hp, etc).
+    /// Will modify position of the resulting tag.
+    pub lock_on_chr_tag_dmypoly_offset: FSVector4,
+    unk1b0: [u8; 0x80],
+    pub model_matrix: FSMatrix4x4,
+    unk270: [u8; 0x40],
+    unk2b0: FSVector4,
+    unk2c0: FSVector4,
+    unk2d0: [u8; 0x4],
+    pub scale_size_x: f32,
+    pub scale_size_y: f32,
+    pub scale_size_z: f32,
+    pub offset_y: f32,
+    unk2e4: [u8; 0x14],
+    unk2f8: usize,
+    unk300: [u8; 0x28],
+    /// Should the character match undulation of the map?
+    /// Fetched from NpcParam
+    pub is_undulation: bool,
+    /// Should FootIK be used for undulation correction?
+    pub use_ik_normal_by_undulation: bool,
+    unk32a: [u8; 0x2],
+    /// Forward undulation correction angle.
+    pub forward_undulation_limit_radians: f32,
+    /// Backward undulation correction angle.
+    pub backward_undulation_limit_radians: f32,
+    /// Side undulation correction angle.
+    pub side_undulation: f32,
+    /// Speed of undulation correction.
+    pub undulation_correction_gain: f32,
+    unk33c: [u8; 0x14],
+    unk350: FSVector4,
+    unk360: FSVector4,
+    unk370: [u8; 0x10],
+    unk380: FSVector4,
+    unk390: [u8; 0x19],
+    /// Group, deciding how character will collide with other characters.
+    /// Fetched from NpcParam
+    pub hit_group_and_navimesh: u8,
+    hit_group_and_navimesh_unk: u8,
+    unk3ab: [u8; 0x5],
+    unk3b0: usize,
+    unk3b8: [u8; 0x18],
 }
 
 #[repr(C)]
