@@ -152,7 +152,12 @@ impl ImguiRenderLoop for EldenRingDebugGui {
                     render_debug_singleton::<CSWorldSceneDrawParamManager>(&ui);
                     item.end();
                 }
-
+                if let Some(item) = ui.tab_item("Eject") {
+                    if ui.button("Eject") {
+                        eject();
+                    }
+                    item.end();
+                }
                 tabs.end();
             });
     }
