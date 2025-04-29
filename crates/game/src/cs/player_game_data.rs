@@ -114,7 +114,7 @@ pub struct PlayerGameData {
     pub effective_arcane: u32,
     unk2ac: u32,
     pub equipment: EquipGameData,
-    face_data: [u8; 0x170],
+    pub face_data: FaceData,
     /// Describes the storage box contents.
     pub storage: OwnedPtr<EquipInventoryData>,
     gesture_game_data: usize,
@@ -147,7 +147,22 @@ pub struct PlayerGameData {
     pub quick_match_team: u8,
     unka99: [u8; 0x13],
     pub quick_match_map_load_ready: bool,
-    unkaad: [u8; 0x3b],
+
+#[repr(C)]
+pub struct FaceData {
+    vftable: usize,
+    pub face_data_buffer: FaceDataBuffer,
+    unk128: usize,
+    unk130: [f32; 7],
+    unk14c: [u8; 0x24],
+}
+
+#[repr(C)]
+pub struct FaceDataBuffer {
+    pub magic: [u8; 4],
+    pub version: u32,
+    pub buffer_size: u32,
+    pub buffer: [u8; 276],
 }
 
 #[repr(C)]
