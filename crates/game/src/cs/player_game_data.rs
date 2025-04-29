@@ -217,8 +217,8 @@ pub struct ChrAsmEquipEntries {
     pub protector_chest: ItemId,
     pub protector_hands: ItemId,
     pub protector_legs: ItemId,
-    // Unused in Elden Ring
-    pub hair: ItemId,
+    // Unused field
+    pub unused: ItemId,
     pub accessories: [ItemId; 4],
     pub covenant: ItemId,
     pub quick_tems: [ItemId; 10],
