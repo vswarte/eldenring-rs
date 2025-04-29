@@ -2,6 +2,8 @@ use std::ptr::NonNull;
 
 use crate::pointer::OwnedPtr;
 
+use super::CSSosSignMan;
+
 #[dlrf::singleton("CSEventMan")]
 #[repr(C)]
 pub struct CSEventManImp {
@@ -42,7 +44,7 @@ pub struct CSEventManImp {
 pub struct CSEventSosSignCtrl {
     vftable: usize,
     unk8: [u8; 0x40],
-    sos_sign: usize,
+    pub sos_sign_man: Option<NonNull<CSSosSignMan>>,
     unk50: u32,
     unk54: u32,
 }
