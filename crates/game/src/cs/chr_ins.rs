@@ -11,6 +11,7 @@ use crate::matrix::FSVector4;
 use crate::pointer::OwnedPtr;
 use crate::position::{BlockPosition, HavokPosition};
 use crate::rotation::Quaternion;
+use crate::SessionManagerPlayerEntryBase;
 use crate::Vector;
 
 use super::player_game_data::PlayerGameData;
@@ -672,8 +673,8 @@ pub struct PlayerIns {
     /// Players cannot be hurt if this is above 0.
     pub invincibility_timer_for_net_player: f32,
     unk67c: [u8; 0x34],
-    pub locked_on_enemy: FieldInsHandle, // 0x6b0
-    pub session_manager_player_entry: NonNull<CSSessionManagerPlayerEntry>,
+    pub locked_on_enemy: FieldInsHandle,
+    pub session_manager_player_entry: OwnedPtr<SessionManagerPlayerEntryBase>,
     /// Position within the current block.
     pub block_position: BlockPosition,
     /// Angle as radians. Relative to the orientation of the current block.

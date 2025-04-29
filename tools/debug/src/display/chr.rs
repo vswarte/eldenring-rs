@@ -25,7 +25,7 @@ impl DebugDisplay for PlayerIns {
 
         if ui.collapsing_header("Session Player Entry", TreeNodeFlags::empty()) {
             ui.indent();
-            unsafe { self.session_manager_player_entry.as_ref() }.render_debug(ui);
+            self.session_manager_player_entry.as_ref().render_debug(ui);
             ui.unindent();
         }
 
