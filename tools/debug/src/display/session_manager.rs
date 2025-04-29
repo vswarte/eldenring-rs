@@ -1,6 +1,6 @@
 use game::cs::{
-    CSSessionManager, CSSessionManagerPlayerEntry, CSSessionManagerPlayerEntryBase,
-    CSStayInMultiplayAreaWarpData,
+    CSSessionManager, CSStayInMultiplayAreaWarpData, SessionManagerPlayerEntry,
+    SessionManagerPlayerEntryBase,
 };
 use hudhook::imgui::{TableColumnSetup, TreeNodeFlags, Ui};
 
@@ -36,7 +36,7 @@ impl DebugDisplay for CSSessionManager {
     }
 }
 
-impl DebugDisplay for CSSessionManagerPlayerEntryBase {
+impl DebugDisplay for SessionManagerPlayerEntryBase {
     fn render_debug(&self, ui: &&mut Ui) {
         ui.input_text("Steam Name", &mut self.steam_name.to_string())
             .read_only(true)
@@ -47,7 +47,7 @@ impl DebugDisplay for CSSessionManagerPlayerEntryBase {
     }
 }
 
-impl DebugDisplay for CSSessionManagerPlayerEntry {
+impl DebugDisplay for SessionManagerPlayerEntry {
     fn render_debug(&self, ui: &&mut Ui) {
         self.base.render_debug(ui);
         ui.text(format!("Game data index: {}", self.game_data_index));

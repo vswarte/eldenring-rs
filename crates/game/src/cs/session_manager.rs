@@ -89,8 +89,8 @@ pub struct CSSessionManager {
     unk5c: u32,
     manager_impl_steam: usize,
     unk68: usize,
-    pub players: Vector<CSSessionManagerPlayerEntry>,
-    pub host_player: CSSessionManagerPlayerEntryBase,
+    pub players: Vector<SessionManagerPlayerEntry>,
+    pub host_player: SessionManagerPlayerEntryBase,
     unk160: usize,
     unk168: usize,
     unk170: u32,
@@ -174,7 +174,7 @@ pub struct CSSessionManager {
 }
 
 #[repr(C)]
-pub struct CSSessionManagerPlayerEntryBase {
+pub struct SessionManagerPlayerEntryBase {
     internal_thread_steam_connection: usize,
     internal_thread_steam_socket: usize,
     pub steam_id: u64,
@@ -184,8 +184,8 @@ pub struct CSSessionManagerPlayerEntryBase {
 }
 
 #[repr(C)]
-pub struct CSSessionManagerPlayerEntry {
-    pub base: CSSessionManagerPlayerEntryBase,
+pub struct SessionManagerPlayerEntry {
+    pub base: SessionManagerPlayerEntryBase,
     /// Index in networked player game data list, will be -1 for host.
     pub game_data_index: i32,
     unkd4: u32,
