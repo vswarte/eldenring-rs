@@ -406,3 +406,109 @@ pub struct EquipDataItem {
     pub gaitem_handle: GaitemHandle,
     pub index: i32,
 }
+
+#[repr(u32)]
+pub enum ChrAsmSlot {
+    WeaponLeft1 = 0,
+    WeaponRight1 = 1,
+    WeaponLeft2 = 2,
+    WeaponRight2 = 3,
+    WeaponLeft3 = 4,
+    WeaponRight3 = 5,
+    Arrow1 = 6,
+    Bolt1 = 7,
+    Arrow2 = 8,
+    Bolt2 = 9,
+    Arrow3 = 10,
+    Bolt3 = 11,
+    ProtectorHead = 12,
+    ProtectorChest = 13,
+    ProtectorHands = 14,
+    ProtectorLegs = 15,
+    Accessory1 = 17,
+    Accessory2 = 18,
+    Accessory3 = 19,
+    Accessory4 = 20,
+    AccessoryCovenant = 21,
+    // ----- Slots below are not used in the param id lists and handles -----
+    QuickItem1 = 22,
+    QuickItem2 = 23,
+    QuickItem3 = 24,
+    QuickItem4 = 25,
+    QuickItem5 = 26,
+    QuickItem6 = 27,
+    QuickItem7 = 28,
+    QuickItem8 = 29,
+    QuickItem9 = 30,
+    QuickItem10 = 31,
+    Pouch1 = 32,
+    Pouch2 = 33,
+    Pouch3 = 34,
+    Pouch4 = 35,
+    Pouch5 = 36,
+    Pouch6 = 37,
+    GreatRune = 38,
+}
+
+impl<T> Index<ChrAsmSlot> for [T] {
+    type Output = T;
+
+    fn index(&self, index: ChrAsmSlot) -> &Self::Output {
+        &self[index as usize]
+    }
+}
+
+#[repr(C)]
+pub struct ChrAsmEquipmentSlots {
+    /// Points to the slot in the equipment list used for rendering the left-hand weapon.
+    /// 0 for primary, 1 for secondary, 2 for tertiary.
+    pub left_weapon_slot: u32,
+    /// Points to the slot in the equipment list used for rendering the right-hand weapon.
+    /// 0 for primary, 1 for secondary, 2 for tertiary.
+    pub right_weapon_slot: u32,
+    /// Points to the slot in the equipment list used for rendering the left-hand arrow.
+    /// 0 for primary, 1 for secondary.
+    pub left_arrow_slot: u32,
+    /// Points to the slot in the equipment list used for rendering the right-hand arrow.
+    /// 0 for primary, 1 for secondary.
+    pub right_arrow_slot: u32,
+    /// Points to the slot in the equipment list used for rendering the left-hand bolt.
+    /// 0 for primary, 1 for secondary.
+    pub left_bolt_slot: u32,
+    /// Points to the slot in the equipment list used for rendering the right-hand bolt.
+    /// 0 for primary, 1 for secondary.
+    pub right_bolt_slot: u32,
+}
+#[repr(u32)]
+#[derive(Debug)]
+pub enum ChrAsmArmStyle {
+    EmptyHanded = 0,
+    OneHanded = 1,
+    LeftBothHands = 2,
+    RightBothHands = 3,
+}
+
+#[repr(C)]
+pub struct ChrAsmEquipment {
+    /// Determines how you're holding your weapon.
+    pub arm_style: ChrAsmArmStyle,
+    pub selected_slots: ChrAsmEquipmentSlots,
+}
+
+#[repr(C)]
+/// Describes how the character should be rendered in terms of selecting the
+/// appropriate parts to be rendered.
+///
+/// Source of name: RTTI in earlier games (vmt has been removed from ER after some patch?)
+pub struct ChrAsm {
+    unk0: i32,
+    unk4: i32,
+    pub equipment: ChrAsmEquipment,
+    /// Holds references to the inventory slots for each equipment piece.
+    pub gaitem_handles: [GaitemHandle; 22],
+    /// Holds the param IDs for each equipment piece.
+    pub equipment_param_ids: [i32; 22],
+    unkd4: u32,
+    unkd8: u32,
+    _paddc: [u8; 12],
+}
