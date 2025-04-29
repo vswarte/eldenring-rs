@@ -1,8 +1,10 @@
+use std::ops::Index;
 use std::ptr::NonNull;
 
-use crate::{pointer::OwnedPtr, Vector};
+use crate::pointer::OwnedPtr;
+use crate::Vector;
 
-use super::{ChrAsm, FieldInsHandle, GaitemHandle, ItemId};
+use crate::cs::{FieldInsHandle, GaitemHandle, ItemId};
 
 #[repr(C)]
 /// Source of name: RTTI
@@ -65,7 +67,10 @@ pub struct PlayerGameData {
     pub white_ring_active: u8,
     pub blue_ring_active: u8,
     pub team_type: u8,
-    unke6: [u8; 0x6],
+    unke6: u8,
+    /// True if the player is in their own world.
+    pub is_my_world: bool,
+    unke8: [u8; 0x4],
     unkec: u32,
     unkf0: [u8; 0x4],
     pub solo_breakin_point: u32,
@@ -139,14 +144,21 @@ pub struct PlayerGameData {
     menu_ref_special_effect_1: usize,
     menu_ref_special_effect_2: usize,
     menu_ref_special_effect_3: usize,
-    // unka90: [u8; 0x1c],
-    // isUsingFesteringBloodyFinger
     pub is_using_festering_bloody_finger: bool,
     unka91: [u8; 3],
     pub networked_speffect_entry_count: u32,
     pub quick_match_team: u8,
     unka99: [u8; 0x13],
     pub quick_match_map_load_ready: bool,
+    unkaad: [u8; 0x2],
+    /// Should sign cooldown be enabled?
+    /// Each time your coop player dies and you have someone in your world
+    /// you will get a cooldown depending on WhiteSignCoolTimeParam and level from SosSignMan
+    pub sign_cooldown_enabled: bool,
+    unkab0: [u8; 0x2f],
+    unkadf: u8,
+    unkae0: [u8; 0x8],
+}
 
 #[repr(C)]
 pub struct FaceData {
