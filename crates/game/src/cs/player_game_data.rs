@@ -394,7 +394,7 @@ pub struct EquipMagicData {
     vftable: usize,
     pub equip_game_data: NonNull<EquipGameData>,
     pub entries: [EquipMagicItem; 14],
-    pub selected_slot: u32,
+    pub selected_slot: i32,
     unk84: u32,
 }
 
