@@ -93,7 +93,9 @@ pub struct CSSessionManager {
     pub host_player: SessionManagerPlayerEntryBase,
     unk160: usize,
     unk168: usize,
-    unk170: u32,
+    /// Player limit for current session.
+    /// Set to 4 in open world and 6 in quickmatch arena.
+    pub session_player_limit: u32,
     unk174: u32,
     unk178: u8,
     unk179: u8,
@@ -103,6 +105,7 @@ pub struct CSSessionManager {
     player_data_man: usize,
     /// Object, used to warp players back to the latest valid multiplay area in case they step out of it.
     pub stay_in_multiplay_area_warp_data: OwnedPtr<CSStayInMultiplayAreaWarpData>,
+    unk190: usize,
     protocol_state_1_timeout: FD4Time,
     protocol_state_2_timeout: FD4Time,
     unk1b8: usize,
@@ -132,7 +135,9 @@ pub struct CSSessionManager {
     unk250: u32,
     unk254: u32,
     unk258: u32,
-    unk25c: u32,
+    /// This number set to 1 on init and never changed.
+    /// If it's more then 1, all sessions will be set to this size instead of what game requests.
+    pub session_player_limit_override: u32,
     /// P2P Send queue? Seems unused? Maybe left-over from DS2?
     p2p_send_queue: CSSessionManagerP2PSendQueue,
     pub mutex: DLPlainLightMutex,

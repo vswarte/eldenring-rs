@@ -10,6 +10,14 @@ impl DebugDisplay for CSSessionManager {
     fn render_debug(&self, ui: &&mut Ui) {
         ui.text(format!("Lobby state: {:?}", self.lobby_state));
         ui.text(format!("Protocol state: {:?}", self.protocol_state));
+        ui.text(format!(
+            "Session player limit: {}",
+            self.session_player_limit
+        ));
+        ui.text(format!(
+            "Session player limit override: {}",
+            self.session_player_limit_override
+        ));
 
         if ui.collapsing_header("Members", TreeNodeFlags::empty()) {
             ui.indent();
