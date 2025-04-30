@@ -16,7 +16,7 @@ impl DebugDisplay for CSFeManImp {
         if ui.collapsing_header("Enemy Character Tags", TreeNodeFlags::empty()) {
             ui.indent();
             for (i, tag) in self.enemy_chr_tag_displays.iter().enumerate() {
-                if ui.collapsing_header(format!("Enemy Tag {}", i), TreeNodeFlags::empty()) {
+                if ui.collapsing_header(format!("Enemy Tag {i}"), TreeNodeFlags::empty()) {
                     ui.indent();
                     tag.render_debug(ui);
                     ui.unindent();
@@ -28,7 +28,7 @@ impl DebugDisplay for CSFeManImp {
         if ui.collapsing_header("Friendly Character Tags", TreeNodeFlags::empty()) {
             ui.indent();
             for (i, tag) in self.friendly_chr_tag_displays.iter().enumerate() {
-                if ui.collapsing_header(format!("Friendly Tag {}", i), TreeNodeFlags::empty()) {
+                if ui.collapsing_header(format!("Friendly Tag {i}"), TreeNodeFlags::empty()) {
                     ui.indent();
                     tag.render_debug(ui);
                     ui.unindent();
@@ -40,7 +40,7 @@ impl DebugDisplay for CSFeManImp {
         if ui.collapsing_header("Boss Health Displays", TreeNodeFlags::empty()) {
             ui.indent();
             for (i, boss) in self.boss_health_displays.iter().enumerate() {
-                if ui.collapsing_header(format!("Boss {}", i), TreeNodeFlags::empty()) {
+                if ui.collapsing_header(format!("Boss {i}"), TreeNodeFlags::empty()) {
                     ui.indent();
                     ui.text(format!("FMG ID: {}", boss.fmg_id));
                     ui.text(format!("Handle: {:?}", boss.field_ins_handle));
@@ -65,7 +65,7 @@ impl DebugDisplay for CSFeManImp {
             if ui.collapsing_header("Message Buffer", TreeNodeFlags::empty()) {
                 ui.indent();
                 for (i, msg_id) in self.proc_status_messages.iter().enumerate() {
-                    ui.text(format!("Message {}: {}", i, msg_id));
+                    ui.text(format!("Message {i}: {msg_id}"));
                 }
                 ui.unindent();
             }
@@ -199,7 +199,7 @@ impl DebugDisplay for FrontEndViewValues {
         if ui.collapsing_header("Enemy Tags", TreeNodeFlags::empty()) {
             ui.indent();
             for (i, tag) in self.enemy_chr_tag_data.iter().enumerate() {
-                if ui.collapsing_header(format!("Enemy {}", i), TreeNodeFlags::empty()) {
+                if ui.collapsing_header(format!("Enemy {i}"), TreeNodeFlags::empty()) {
                     ui.indent();
                     tag.render_debug(ui);
                     ui.unindent();
@@ -211,7 +211,7 @@ impl DebugDisplay for FrontEndViewValues {
         if ui.collapsing_header("Boss List Tags", TreeNodeFlags::empty()) {
             ui.indent();
             for (i, tag) in self.boss_list_tag_data.iter().enumerate() {
-                if ui.collapsing_header(format!("Boss {}", i), TreeNodeFlags::empty()) {
+                if ui.collapsing_header(format!("Boss {i}"), TreeNodeFlags::empty()) {
                     ui.indent();
                     tag.render_debug(ui);
                     ui.unindent();
@@ -223,7 +223,7 @@ impl DebugDisplay for FrontEndViewValues {
         if ui.collapsing_header("Friendly Tags", TreeNodeFlags::empty()) {
             ui.indent();
             for (i, tag) in self.friendly_chr_tag_data.iter().enumerate() {
-                if ui.collapsing_header(format!("Friendly {}", i), TreeNodeFlags::empty()) {
+                if ui.collapsing_header(format!("Friendly {i}"), TreeNodeFlags::empty()) {
                     ui.indent();
                     tag.render_debug(ui);
                     ui.unindent();
@@ -251,7 +251,7 @@ impl DebugDisplay for FrontEndViewValues {
             ));
 
             for (i, spirit) in self.spirit_ash_display.iter().enumerate() {
-                if ui.collapsing_header(format!("Spirit Ash {}", i), TreeNodeFlags::empty()) {
+                if ui.collapsing_header(format!("Spirit Ash {i}"), TreeNodeFlags::empty()) {
                     ui.indent();
                     ui.text(format!(
                         "HP: {}/{} (Max Uncapped: {})",
