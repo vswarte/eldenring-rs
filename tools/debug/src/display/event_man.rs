@@ -41,7 +41,7 @@ impl DebugDisplay for CSSosSignMan {
         if ui.collapsing_header("Summon Requests", TreeNodeFlags::empty()) {
             ui.indent();
             self.summon_requests.iter().for_each(|entry| {
-                ui.text(format!("Summon Request ID: {}", entry));
+                ui.text(format!("Summon Request ID: {entry}"));
             });
             ui.unindent();
         }
@@ -69,7 +69,7 @@ impl DebugDisplay for CSSosSignMan {
                 .iter()
                 .enumerate()
                 .for_each(|(i, t)| {
-                    ui.text(format!("Cooldown {}: {:.2}s", i, t));
+                    ui.text(format!("Cooldown {i}: {t:.2}s"));
                 });
             ui.unindent();
         }
