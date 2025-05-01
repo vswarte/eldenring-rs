@@ -7,6 +7,7 @@ pub(crate) mod camera;
 pub(crate) mod chr;
 pub(crate) mod dlio;
 pub(crate) mod event_flag;
+pub(crate) mod event_man;
 pub(crate) mod fade;
 pub(crate) mod fe_man;
 pub(crate) mod field_area;
@@ -20,7 +21,6 @@ pub(crate) mod sfx;
 pub(crate) mod shared;
 pub(crate) mod task;
 pub(crate) mod world_chr_man;
-pub(crate) mod event_man;
 
 pub trait DebugDisplay {
     fn render_debug(&self, ui: &&mut Ui);

@@ -2,13 +2,25 @@ use std::time::Duration;
 
 use display::DebugDisplay;
 use game::cs::CSBulletManager;
-use game::cs::CSFeManImp;
+use game::cs::CSCamera;
+use game::cs::CSEventFlagMan;
 use game::cs::CSEventManImp;
+use game::cs::CSFade;
+use game::cs::CSFeManImp;
 use game::cs::CSGaitemImp;
+use game::cs::CSNetMan;
+use game::cs::CSSessionManager;
 use game::cs::CSSfxImp;
+use game::cs::CSTaskGroup;
+use game::cs::CSTaskImp;
 use game::cs::CSWindowImp;
+use game::cs::CSWorldGeomMan;
 use game::cs::CSWorldSceneDrawParamManager;
 use game::cs::FieldArea;
+use game::cs::WorldAreaTime;
+use game::cs::WorldChrMan;
+use game::fd4::FD4ParamRepository;
+
 use hudhook::eject;
 use hudhook::hooks::dx12::ImguiDx12Hooks;
 use hudhook::imgui::Condition;
@@ -18,18 +30,6 @@ use hudhook::Hudhook;
 use hudhook::ImguiRenderLoop;
 
 use pelite::pe64::Pe;
-
-use game::cs::CSCamera;
-use game::cs::CSEventFlagMan;
-use game::cs::CSFade;
-use game::cs::CSNetMan;
-use game::cs::CSSessionManager;
-use game::cs::CSTaskGroup;
-use game::cs::CSTaskImp;
-use game::cs::CSWorldGeomMan;
-use game::cs::WorldAreaTime;
-use game::cs::WorldChrMan;
-use game::fd4::FD4ParamRepository;
 
 use display::render_debug_singleton;
 use rva::RVA_GLOBAL_FIELD_AREA;
