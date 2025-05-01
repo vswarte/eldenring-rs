@@ -625,12 +625,16 @@ pub struct ChrCtrl {
     pub use_ik_normal_by_undulation: bool,
     unk32a: [u8; 0x2],
     /// Forward undulation correction angle.
+    /// Fetched from NpcParam
     pub forward_undulation_limit_radians: f32,
     /// Backward undulation correction angle.
+    /// Fetched from NpcParam
     pub backward_undulation_limit_radians: f32,
     /// Side undulation correction angle.
+    /// Fetched from NpcParam
     pub side_undulation: f32,
     /// Speed of undulation correction.
+    /// Fetched from NpcParam
     pub undulation_correction_gain: f32,
     unk33c: [u8; 0x14],
     unk350: FSVector4,

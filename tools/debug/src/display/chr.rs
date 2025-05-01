@@ -126,8 +126,6 @@ impl DebugDisplay for ChrAsmEquipEntries {
         ui.text(format!("Protector Hands: {:?}", self.protector_hands));
         ui.text(format!("Protector Legs: {:?}", self.protector_legs));
 
-        ui.text(format!("Unused: {:?}", self.unused));
-
         if ui.collapsing_header("Accessories", TreeNodeFlags::empty()) {
             ui.indent();
             if let Some(_t) = ui.begin_table_header(

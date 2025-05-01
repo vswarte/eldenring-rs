@@ -103,7 +103,7 @@ pub struct CSSessionManager {
     unk17b: u8,
     unk17c: u32,
     player_data_man: usize,
-    /// Object, used to warp players back to the latest valid multiplay area in case they step out of it.
+    /// Used to warp players back to the latest valid multiplay area in case they step out of it.
     pub stay_in_multiplay_area_warp_data: OwnedPtr<CSStayInMultiplayAreaWarpData>,
     unk190: usize,
     protocol_state_1_timeout: FD4Time,
@@ -135,8 +135,8 @@ pub struct CSSessionManager {
     unk250: u32,
     unk254: u32,
     unk258: u32,
-    /// This number set to 1 on init and never changed.
-    /// If it's more then 1, all sessions will be set to this size instead of what game requests.
+    /// This field is set to 1 on init and never changed.
+    /// If it's not 1, all sessions will use this value instead of the default session player limit.
     pub session_player_limit_override: u32,
     /// P2P Send queue? Seems unused? Maybe left-over from DS2?
     p2p_send_queue: CSSessionManagerP2PSendQueue,
