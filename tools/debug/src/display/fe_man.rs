@@ -55,11 +55,11 @@ impl DebugDisplay for CSFeManImp {
             ui.indent();
             ui.text(format!(
                 "Read Index: {}",
-                self.proc_status_messages_read_idx
+                self.proc_status_messages_read_index
             ));
             ui.text(format!(
                 "Write Index: {}",
-                self.proc_status_messages_write_idx
+                self.proc_status_messages_write_index
             ));
 
             if ui.collapsing_header("Message Buffer", TreeNodeFlags::empty()) {

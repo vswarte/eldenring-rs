@@ -10,6 +10,7 @@ use crate::{dltx::DLString, matrix::FSVector4, pointer::OwnedPtr, CSFixedList};
 use super::{CSMenuManImp, FieldInsHandle};
 
 #[repr(C)]
+/// Source of name: RTTI
 #[dlrf::singleton("CSFeMan")]
 pub struct CSFeManImp {
     vftable: usize,
@@ -27,7 +28,7 @@ pub struct CSFeManImp {
     /// Toggle, to enable/disable the HUD
     pub enable_hud: bool,
     unk79: [u8; 7],
-    /// Structure, holding intermidiate data FrontEndView
+    /// Used for holding intermediate data FrontEndView
     /// read from menu window jobs
     pub frontend_values: FrontEndViewValues,
     auto_hide_ctrl_ptr: usize,
@@ -40,10 +41,10 @@ pub struct CSFeManImp {
     pub proc_status_messages: [i32; 6],
     /// Index of the last proc status message
     /// Wraps around when it reaches 6
-    pub proc_status_messages_read_idx: u32,
+    pub proc_status_messages_read_index: u32,
     /// Index of the next proc status message slot
     /// Wraps around when it reaches 6
-    pub proc_status_messages_write_idx: u32,
+    pub proc_status_messages_write_index: u32,
     unk59c4: [u8; 12],
     unk59d0: FSVector4,
     unk59e0: u32,
@@ -60,15 +61,25 @@ pub struct CSFeManImp {
     /// Will be copied to the friendly character tags in FrontEndView
     /// and then passed to the scaleform
     pub friendly_chr_tag_displays: [ChrFriendTagEntry; 7],
-    unk6130: f32,
-    unk6134: [u8; 20],
-    fe_menu_chr_state_data: [u8; 0x168],
-    pub summon_msg_queue: SummonMsgQueue,
     /// Time in seconds, after which the damage number will be hidden
     /// Enemy tag will use constant value of 1.5f instead of this
     pub damage_number_decay_time: f32,
+    unk6134: [u8; 20],
+    fe_menu_chr_state_data: [u8; 0x168],
+    pub summon_msg_queue: SummonMsgQueue,
+    unk6530: u32,
+    /// Id of the fmg text entry for the area welcome message
+    /// Can be set by emevd DisplaySubareaWelcomeMessage 2007[13]
     pub subarea_name_popup_message_id: i32,
-    unk6538: [u8; 24],
+    unk6538: [u8; 4],
+    unk653c: u32,
+    unk6540: [u8; 8],
+    /// Id of the fmg text entry for the blinking message
+    /// Can be set by emevd DisplayBlinkingMessageWithPriority 2007[12]
+    pub blinking_message_id: i32,
+    /// Priority of the currently displayed blinking message
+    pub blinking_message_priority: u8,
+    pad654d: [u8; 3],
     unk6550: u32,
     /// Toggle, requesting the area welcome message
     /// to be displayed
@@ -109,7 +120,7 @@ pub struct SummonMsgData {
     pub priority: i16,
     pub force_play: bool,
     unkb: [u8; 5],
-    pub text: MenuLabelString,
+    pub text: MenuString,
     unk48: bool,
     unk49: [u8; 7],
 }
@@ -157,7 +168,7 @@ pub struct FrontEndViewValues {
     pub stamina_max: u32,
     unk38: [u8; 0xf74],
     /// String, containing the name of the current usable Ash of War
-    pub sword_arts_name_string: MenuLabelString,
+    pub sword_arts_name_string: MenuString,
     unkfe8: [u8; 0x19c],
     /// Number of eliminations in the arena
     pub quickmatch_elimination_count: i32,
@@ -167,10 +178,10 @@ pub struct FrontEndViewValues {
     pub boss_list_tag_data: [TagHudData; 3],
     pub friendly_chr_tag_data: [TagHudData; 7],
     unk26a0: [u8; 0xfb8],
-    unk3658: MenuLabelString,
+    unk3658: MenuString,
     unk3690: [u8; 0x10],
     /// String, containing name from the latest proc status message
-    pub proc_status_message: MenuLabelString,
+    pub proc_status_message: MenuString,
     /// When the timer exceeds 3.0f, the message will be removed
     /// and read counter will be increased
     pub proc_status_message_timer: f32,
@@ -179,11 +190,11 @@ pub struct FrontEndViewValues {
     /// Eg. "You Died", "Victory", "Defeat"
     pub full_screen_message_request_id: FullScreenMessage,
     unk36e4: [u8; 4],
-    unk36e8: MenuLabelString,
-    unk3720: MenuLabelString,
-    unk3758: MenuLabelString,
-    unk3790: MenuLabelString,
-    unk37c8: MenuLabelString,
+    unk36e8: MenuString,
+    unk3720: MenuString,
+    unk3758: MenuString,
+    unk3790: MenuString,
+    unk37c8: MenuString,
     unk3800: [u8; 0x1558],
     pub summoned_spirit_ash_count: u32,
     unk4d5c: [u8; 4],
@@ -242,14 +253,15 @@ pub struct CSFeSpiritAshDisplay {
 /// Custom string type used to interact with the scaleform
 /// If string value is static, it will be stored in the static_string pointer
 /// otherwise it will be stored in the DLString and the static_string pointer will be null
-pub struct MenuLabelString {
+/// Source of name: RTTI of std::function
+pub struct MenuString {
     pub static_string: *const u16,
     pub allocated_string: DLString,
 }
 
-impl Display for MenuLabelString {
+impl Display for MenuString {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        if !self.allocated_string.inner.length == 0 {
+        if self.allocated_string.inner.length != 0 {
             return write!(f, "{}", self.allocated_string);
         }
 
@@ -274,7 +286,7 @@ impl Display for MenuLabelString {
 }
 
 #[repr(C)]
-/// Structure used to display the tag on the screen
+/// Used to display the tag on the screen
 /// Read by menu window jobs and written by CSMenuManImp update task
 /// by copying the data from the ChrFriendTagEntry and ChrEnemyTagEntry on CSFeManImp
 pub struct TagHudData {
@@ -300,10 +312,10 @@ pub struct TagHudData {
     /// Uncapped max hp of the character
     pub hp_max_uncapped: u32,
     /// Name of the character
-    pub chr_name: MenuLabelString,
+    pub chr_name: MenuString,
     /// Role of the character
     /// eg. "Duelist"
-    pub role_string: MenuLabelString,
+    pub role_string: MenuString,
     unk98: [u8; 0x40],
     /// Is this character downscaled?
     /// True when character has the sp effect 590
@@ -326,7 +338,7 @@ pub struct TagHudData {
 }
 
 #[repr(C)]
-/// Structure used to store and update the tag data for friendly characters
+/// Used to store and update the tag data for friendly characters
 /// Data from here will be copied to the TagHudData in FrontEndViewValues
 /// and then passed to the scaleform
 pub struct ChrFriendTagEntry {
@@ -389,7 +401,7 @@ pub struct ChrFriendTagEntry {
 }
 
 #[repr(C)]
-/// Structure used to store and update the tag data for enemy
+/// Used to store and update the tag data for enemy
 /// (everyone you can lock on) characters
 /// Data from here will be copied to the TagHudData in FrontEndViewValues
 /// and then passed to the scaleform
@@ -430,6 +442,6 @@ mod test {
         assert_eq!(0x8420, size_of::<CSFeManImp>());
         assert_eq!(0x280, size_of::<SummonMsgQueue>());
         assert_eq!(0x25c08, size_of::<FrontEndView>());
-        assert_eq!(0x38, size_of::<MenuLabelString>());
+        assert_eq!(0x38, size_of::<MenuString>());
     }
 }
