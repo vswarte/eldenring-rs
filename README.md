@@ -108,4 +108,4 @@ Result:
  - Sfix (for coming up with the FD4 singleton finder approach at all).
  - Yui (for some structures as well as AOBs and hinting at some logic existing in the binary).
 
-<sup><sub>(Have you contributed to TGA in some manner and does this repository have your work in it? Reach out to @chainfailure on Discord for proper credit disclosure).</sub></sup>
+(Have you contributed to TGA in some manner and does this repository have your work in it? Reach out to @chainfailure on Discord for proper credit disclosure).
