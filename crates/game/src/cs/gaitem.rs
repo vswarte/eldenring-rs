@@ -2,9 +2,9 @@ use std::{fmt::Display, mem::transmute};
 
 use thiserror::Error;
 
+use crate::cs::ItemId;
 use crate::pointer::OwnedPtr;
 
-use super::ItemId;
 #[repr(C)]
 #[dlrf::singleton("CSGaitem")]
 pub struct CSGaitemImp {
@@ -89,7 +89,7 @@ pub struct CSGaitemImpEntry {
 
 #[repr(C)]
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash)]
-pub struct GaitemHandle(i32);
+pub struct GaitemHandle(pub u32);
 
 #[derive(Debug, Error)]
 pub enum GaitemHandleError {
@@ -98,22 +98,23 @@ pub enum GaitemHandleError {
 }
 
 impl GaitemHandle {
-    pub const fn from_parts(selector: i32, category: GaitemCategory) -> Self {
-        GaitemHandle(selector & 0x00FFFFFF | ((category as i32) | -8) << 28)
+    pub const fn from_parts(selector: u32, category: GaitemCategory) -> Self {
+        GaitemHandle(selector & 0x00FFFFFF | (((category as i32) | -8) as u32) << 28)
     }
 
     /// Indicates if the gaitem handle refers to a GaitemIns available in CSGaitemImp.
+    /// Will be true for Protectors, Weapons and Gems.
     pub const fn is_indexed(self) -> bool {
         self.0 >> 23 & 1 == 1
     }
 
     pub const fn selector(self) -> u32 {
-        (self.0 & 0x00ffffff) as u32
+        self.0 & 0x00ffffff
     }
 
-    /// Index of the GaitemIns inside of the CSGaitemImp  
+    /// Index of the GaitemIns inside of the CSGaitemImp
     pub const fn index(self) -> u32 {
-        (self.0 & 0xffff) as u32
+        self.0 & 0xffff
     }
 
     pub const fn category(self) -> Result<GaitemCategory, GaitemHandleError> {
@@ -144,6 +145,26 @@ impl GaitemCategory {
     }
 }
 
+impl Display for GaitemHandle {
+    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+        match self.category() {
+            Ok(category) => {
+                match self.is_indexed() {
+                    true => write!(
+                        f,
+                        "GaitemHandle({},0x{:x},{:?})",
+                        self.index(),
+                        self.selector(),
+                        category
+                    ),
+                    false => write!(f, "GaitemHandle(-1,0x{:x},{:?})", self.0, category),
+                }
+            }
+            Err(err) => write!(f, "GaitemHandle(0x{:x},{:?})", self.0, err),
+        }
+    }
+}
+
 #[repr(C)]
 pub struct CSWepGaitemIns {
     pub gaitem_ins: CSGaitemIns,
@@ -171,9 +192,7 @@ pub struct CSGemSlot {
 #[repr(C)]
 pub struct CSGemGaitemIns {
     pub gaitem_ins: CSGaitemIns,
-    gaitem_handle: GaitemHandle,
-    /// Item ID of the active gem.
-    pub item_id: u32,
+    pub weapon_handle: GaitemHandle,
 }
 
 #[cfg(test)]
