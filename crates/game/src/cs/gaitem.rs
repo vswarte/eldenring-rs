@@ -148,18 +148,16 @@ impl GaitemCategory {
 impl Display for GaitemHandle {
     fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
         match self.category() {
-            Ok(category) => {
-                match self.is_indexed() {
-                    true => write!(
-                        f,
-                        "GaitemHandle({},0x{:x},{:?})",
-                        self.index(),
-                        self.selector(),
-                        category
-                    ),
-                    false => write!(f, "GaitemHandle(-1,0x{:x},{:?})", self.0, category),
-                }
-            }
+            Ok(category) => match self.is_indexed() {
+                true => write!(
+                    f,
+                    "GaitemHandle({},0x{:x},{:?})",
+                    self.index(),
+                    self.selector(),
+                    category
+                ),
+                false => write!(f, "GaitemHandle(-1,0x{:x},{:?})", self.0, category),
+            },
             Err(err) => write!(f, "GaitemHandle(0x{:x},{:?})", self.0, err),
         }
     }
@@ -170,7 +168,7 @@ pub struct CSWepGaitemIns {
     pub gaitem_ins: CSGaitemIns,
     /// Item durability mechanic. Unused in ER.
     pub durability: u32,
-    _unk14: u32,
+    pad14: [u8; 0x4],
     /// Gem slots, used for ashes of war in ER.
     pub gem_slot_table: CSGemSlotTable,
 }
@@ -186,12 +184,12 @@ pub struct CSGemSlot {
     vtable: usize,
     /// Refers to the actual gem entry in the CSGaitemImp.
     pub gaitem_handle: GaitemHandle,
-    unkc: u32,
 }
 
 #[repr(C)]
 pub struct CSGemGaitemIns {
     pub gaitem_ins: CSGaitemIns,
+    /// Handle of the weapon this gem is attached to
     pub weapon_handle: GaitemHandle,
 }
 
