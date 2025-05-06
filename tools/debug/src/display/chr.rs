@@ -488,10 +488,10 @@ impl DebugDisplay for EquipInventoryData {
                         ui.text(index.to_string());
 
                         ui.table_next_column();
-                        ui.text(format!("{}", item.gaitem_handle));
+                        ui.text(item.gaitem_handle.to_string());
 
                         ui.table_next_column();
-                        ui.text(format!("{}", item.item_id));
+                        ui.text(item.item_id.to_string());
 
                         ui.table_next_column();
                         ui.text(item.quantity.to_string());
@@ -529,10 +529,10 @@ impl DebugDisplay for EquipInventoryData {
                         ui.text(index.to_string());
 
                         ui.table_next_column();
-                        ui.text(format!("{:x?}", item.gaitem_handle));
+                        ui.text(item.gaitem_handle.to_string());
 
                         ui.table_next_column();
-                        ui.text(format!("{:x?}", item.item_id));
+                        ui.text(item.item_id.to_string());
 
                         ui.table_next_column();
                         ui.text(item.quantity.to_string());
@@ -570,10 +570,10 @@ impl DebugDisplay for EquipInventoryData {
                         ui.text(index.to_string());
 
                         ui.table_next_column();
-                        ui.text(format!("{:x?}", item.gaitem_handle));
+                        ui.text(item.gaitem_handle.to_string());
 
                         ui.table_next_column();
-                        ui.text(format!("{:x?}", item.item_id));
+                        ui.text(item.item_id.to_string());
 
                         ui.table_next_column();
                         ui.text(item.quantity.to_string());
