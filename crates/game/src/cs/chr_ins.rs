@@ -21,6 +21,7 @@ use crate::cs::session_manager::{SessionManagerPlayerEntry, SessionManagerPlayer
 use crate::cs::task::{CSEzRabbitNoUpdateTask, CSEzVoidTask};
 use crate::cs::world_chr_man::{ChrSetEntry, WorldBlockChr};
 use crate::cs::world_geom_man::{CSMsbParts, CSMsbPartsEne};
+use crate::cs::ItemId;
 
 #[repr(C)]
 #[derive(Debug, Clone, PartialEq, Eq, Hash)]
@@ -128,7 +129,7 @@ pub struct ChrIns {
     unkc8: [u8; 0x8],
     pub lock_on_target_position: FSVector4,
     unkd8: [u8; 0x80],
-    pub last_used_item: i32,
+    pub last_used_item: ItemId,
     unk164: u32,
     unk168: u32,
     unk16c: u32,
