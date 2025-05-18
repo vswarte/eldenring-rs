@@ -57,13 +57,57 @@ pub unsafe fn get_instance<T: DLRFSingleton>() -> Result<Option<&'static mut T>,
 // JNZ +2e
 // LEA RCX, [runtime_class_metadata]
 // CALL get_singleton_name
+//
+// OR
+//
+// MOV REG, [MEM]
+// MOV REG, REG
+// TEST REG, REG
+// JNZ +2e
+// LEA RCX, [runtime_class_metadata]
+// CALL get_singleton_name
+//
+// OR
+//
+// MOV REG, [MEM]
+// TEST REG, REG
+// JNZ +2e
+// LEA R9, [s_SingletonName]
+// MOV REG, 0xaa
+// const NULL_CHECK_PATTERN: &[Atom] = pattern!(
+//     "
+//     48 8b ? $ { ' }
+//     (
+//         48 85 ?
+//         |
+//         48 8b ?
+//         48 85 ?
+//     )
+//     75 ?
+//     4c 8d 0d $ { ' }
+//     (
+//         e8 $ { ' }
+//         |
+//         ba u4
+//     )
+//     "
+// );
 const NULL_CHECK_PATTERN: &[Atom] = pattern!(
     "
     48 8b ? $ { ' }
-    48 85 ?
+    (
+        48 85 ?
+        |
+        48 8b ?
+        48 85 ?
+    )
     75 ?
-    48 8d 0d $ { ' }
-    e8 $ { ' }
+    (4c|48) 8d 0d $ { ' }
+    (
+        e8 $ { ' }
+        |
+        ba u4
+    )
     "
 );
 
@@ -71,7 +115,9 @@ const NULL_CHECK_PATTERN: &[Atom] = pattern!(
 /// in the game by using an instance pattern. It then cycles over all
 /// candidates and vets the involved pointers. We expect a pointer to the
 /// instance's static, a pointer to the reflection metadata and a pointer to
-/// the get_singleton_name fn. Once all checks out we call get_singleton_name
+/// the get_singleton_name fn. Some singletons don't have reflection metadata and
+/// use pointers to the singleton name instead. In this case we will check for
+/// 3rd match being empty. Once all checks out we call get_singleton_name
 /// with the metadata to obtain the instance's type name.
 pub fn build_singleton_table(program: &Program) -> Result<SingletonMap, SingletonMapError> {
     let text_range = program
@@ -86,6 +132,12 @@ pub fn build_singleton_table(program: &Program) -> Result<SingletonMap, Singleto
         .ok_or(SingletonMapError::Section(".data"))?
         .virtual_range();
 
+    let rdata_range = program
+        .section_headers()
+        .by_name(".rdata")
+        .ok_or(SingletonMapError::Section(".rdata"))?
+        .virtual_range();
+
     let mut matches = program.scanner().matches_code(NULL_CHECK_PATTERN);
     let mut captures: [Rva; 4] = [Rva::default(); 4];
     let mut results: SingletonMap = Default::default();
@@ -95,19 +147,53 @@ pub fn build_singleton_table(program: &Program) -> Result<SingletonMap, Singleto
         let metadata_rva = captures[2];
         let get_reflection_name_rva = captures[3];
 
-        // Check if all RVAs are plausible.
+        // in the case of second pattern type, the third capture is error code and for singletons they are 0xa0 or 0xaa
+        let is_simple_singleton =
+            get_reflection_name_rva == 0xa0 || get_reflection_name_rva == 0xaa;
+
+        // Basic checks: static_rva and metadata_rva must be in .data section
+        // Unless it's a pointer to the singleton name, in which case it must be in .rdata section
         if !data_range.contains(&static_rva)
-            || !data_range.contains(&metadata_rva)
-            || !text_range.contains(&get_reflection_name_rva)
+            || (is_simple_singleton && !rdata_range.contains(&metadata_rva))
+            || (!is_simple_singleton && !data_range.contains(&metadata_rva))
         {
             continue;
         }
 
         let metadata = program.rva_to_va(metadata_rva).unwrap();
-        let get_singleton_name: extern "C" fn(u64) -> *const i8 =
-            unsafe { std::mem::transmute(program.rva_to_va(get_reflection_name_rva).unwrap()) };
 
-        let cstr = unsafe { std::ffi::CStr::from_ptr(get_singleton_name(metadata)) };
+        let name_ptr: *const i8 = if !is_simple_singleton {
+            // Case 1: Standard singleton with metadata and get_singleton_name function call
+            // get_reflection_name_rva must point to executable code in .text section.
+            if !text_range.contains(&get_reflection_name_rva) {
+                continue;
+            }
+
+            let get_singleton_name: extern "C" fn(u64) -> *const i8 =
+                unsafe { std::mem::transmute(program.rva_to_va(get_reflection_name_rva).unwrap()) };
+
+            // metadata is the VA of the metadata struct in this branch
+            let name_ptr = get_singleton_name(metadata);
+
+            if name_ptr.is_null() {
+                // If the function returns a null pointer, we cannot get the name.
+                continue;
+            }
+            name_ptr
+        } else {
+            // Case 2: Singleton name is a direct string pointer (LEA R9, [s_SingletonName])
+            // metadata is the VA of the null-terminated string.
+            let name_ptr = metadata as *const i8;
+            if name_ptr.is_null() {
+                continue;
+            }
+            name_ptr
+        };
+
+        // Convert the C string pointer to a Rust String.
+        // This unsafe block relies on name_cstr_ptr being non-null (ensured by checks above)
+        // and pointing to a valid, null-terminated C string.
+        let cstr = unsafe { std::ffi::CStr::from_ptr(name_ptr) };
         let singleton_name = cstr
             .to_str()
             .map_err(|_| SingletonMapError::MalformedName)?
