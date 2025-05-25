@@ -1,10 +1,11 @@
 use std::ptr::NonNull;
 
+use bitflags::bitflags;
 use windows::Win32::Foundation::BOOL;
 
 use shared::OwnedPtr;
 
-use super::{CSEzTask, CSEzUpdateTask};
+use super::{CSEzTask, CSEzUpdateTask, ItemId};
 
 #[repr(C)]
 #[dlrf::singleton("CSMenuMan")]
@@ -71,10 +72,32 @@ pub struct CSPopupMenu {
 #[repr(C)]
 pub struct CSPlayerMenuCtrl {
     vftable: usize,
-    unk8: [u8; 0x10],
-    chr_menu_flags: [u8; 0x10],
+    pub selected_goods_item: ItemId,
+    pub selected_magic_item: ItemId,
+    unk10: i32,
+    unk14: i32,
+    pub chr_menu_flags: CSChrMenuFlags,
     unk28: [u8; 0x20],
 }
+
+#[repr(C)]
+pub struct CSChrMenuFlags {
+    vftable: usize,
+    pub flags: ChrMenuFlags,
+    // _padc: [u8; 0x4],
+}
+
+bitflags! {
+    #[repr(transparent)]
+    #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
+    pub struct ChrMenuFlags: u32 {
+        /// Set by TAE Event 0 (action 54 DISABLE_START_INPUTS)
+        /// Controls whether the player can open the pause menu
+        /// (Equipment, Crafting, Status, Messages, System, Multiplayer, Pouch, Gestures)
+        const PAUSE_MENU_STATE = 1 << 3;
+    }
+}
+
 
 #[repr(C)]
 pub struct BackScreenData {
