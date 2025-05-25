@@ -514,7 +514,7 @@ impl DebugDisplay for ChrIns {
         ui.text(format!("Map ID: {}", self.map_id_1));
         // ui.text(format!("Team Type: {}", self.team_type));
         ui.text(format!("Last hit by: {}", self.last_hit_by));
-        ui.text(format!("Last used item: {}", self.last_used_item));
+        ui.text(format!("Last used item: {:x?}", self.last_used_item));
 
         ui.text(format!(
             "Block center origin 1: {}",
