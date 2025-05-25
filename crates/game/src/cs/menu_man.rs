@@ -98,7 +98,6 @@ bitflags! {
     }
 }
 
-
 #[repr(C)]
 pub struct BackScreenData {
     vftable: usize,
