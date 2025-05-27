@@ -1069,7 +1069,7 @@ pub struct ChrCtrl {
     pub chr_collision: usize,
     unk38: [u8; 0x88],
     hkxpwv_res_cap: usize,
-    unkc8: usize,
+    pub modifier: OwnedPtr<ChrCtrlModifier>,
     hover_warp_ctrl: usize,
     ai_jump_move_ctrl: usize,
     chr_model_pos_easing: usize,
