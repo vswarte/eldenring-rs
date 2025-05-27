@@ -1,4 +1,4 @@
-use bitflags::bitflags;
+use bitfield::bitfield;
 use std::ffi;
 use std::ops::Index;
 use std::ptr::NonNull;
@@ -206,77 +206,74 @@ pub struct ChrIns {
     unk548: [u8; 0x38],
 }
 
-bitflags! {
-    #[repr(transparent)]
-    #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
-    pub struct ChrInsFlags1c4: u8 {
-        /// Skips omission mode updates
-        const SKIP_OMISSION_MODE_UPDATES = 1 << 0;
-        /// Disables gravity for this character.
-        const NO_GRAVITY = 1 << 5;
-    }
+bitfield! {
+    #[derive(Clone, Copy, PartialEq, Eq, Hash)]
+    pub struct ChrInsFlags1c4(u8);
+    impl Debug;
+    /// Skips omission mode updates
+    pub skip_omission_mode_updates, set_skip_omission_mode_updates: 0;
+    /// Disables gravity for this character.
+    pub no_gravity, set_no_gravity:                                 5;
+
 }
 
-bitflags! {
-    #[repr(transparent)]
-    #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
-    pub struct ChrInsFlags1c5: u8 {
-        /// Enables precision shooting camera mode, eg. when using a bow.
-        /// Will be reset every frame.
-        const PRECISION_SHOOTING = 1 << 1;
-        /// Enables rendering for this character.
-        const ENABLE_RENDER = 1 << 3;
-        /// Controls whether the character is dead or not.
-        const DEATH_FLAG = 1 << 7;
-    }
+bitfield! {
+    #[derive(Clone, Copy, PartialEq, Eq, Hash)]
+    pub struct ChrInsFlags1c5(u8);
+    impl Debug;
+    /// Enables precision shooting camera mode, eg. when using a bow.
+    /// Will be reset every frame.
+    pub precision_shooting, set_precision_shooting: 1;
+    /// Enables rendering for this character.
+    pub enable_render, set_enable_render:           3;
+    /// Controls whether the character is dead or not.
+    pub death_flag, set_death_flag:                 7;
 }
 
-bitflags! {
-    #[repr(transparent)]
-    #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
-    pub struct ChrInsFlags1c6: u8 {
-        /// This flag is used to determine if the character tag (name, hp, etc) should be
-        /// rendered on the side of the screen instead of above the character.
-        /// Works only on friendly characters tags, not lock on ones.
-        const DRAW_TAG_OFFSCREEN = 1 << 4;
-    }
+bitfield! {
+    #[derive(Clone, Copy, PartialEq, Eq, Hash)]
+    pub struct ChrInsFlags1c6(u8);
+    impl Debug;
+    /// This flag is used to determine if the character tag (name, hp, etc) should be
+    /// rendered on the side of the screen instead of above the character.
+    /// Works only on friendly characters tags, not lock on ones.
+    pub draw_tag_offscreen, set_draw_tag_offscreen: 4;
 }
 
-bitflags! {
-    #[repr(transparent)]
-    #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
-    pub struct ChrInsFlags1c7: u8 {}
+bitfield! {
+    #[derive(Clone, Copy, PartialEq, Eq, Hash)]
+    pub struct ChrInsFlags1c7(u8);
+    impl Debug;
 }
 
-bitflags! {
-    #[repr(transparent)]
-    #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
-    pub struct ChrInsFlags1c8: u8 {
-        /// Request the fall death camera to be enabled.
-        const REQUEST_FALLDEATH_CAMERA = 1 << 2;
-        /// This flag controls whether the character tag (name, hp, etc) should be rendered or not.
-        const ENABLE_CHARACTER_TAG = 1 << 4;
-    }
+bitfield! {
+    #[derive(Clone, Copy, PartialEq, Eq, Hash)]
+    pub struct ChrInsFlags1c8(u8);
+    impl Debug;
+    /// Request the fall death camera to be enabled.
+    pub request_falldeath_camera, set_request_falldeath_camera: 2;
+    /// This flag controls whether the character tag (name, hp, etc) should be rendered or not.
+    pub enable_character_tag, set_enable_character_tag:         4;
 }
 
-bitflags! {
-    #[repr(transparent)]
-    #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
-    pub struct NetChrSyncFlags: u8 {
-        const DISTANCE_BASED_NETWORK_UPDATE_AUTHORITY = 1 << 5;
-    }
+bitfield! {
+    #[derive(Clone, Copy, PartialEq, Eq, Hash)]
+    pub struct NetChrSyncFlags(u8);
+    impl Debug;
+    /// When set, the character will use distance-based network update authority.
+    pub distance_based_network_update_authority, set_distance_based_network_update_authority: 5;
 }
 
-bitflags! {
-    #[repr(transparent)]
-    #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
-    pub struct ChrInsFlags1ca: u8 {}
+bitfield! {
+    #[derive(Clone, Copy, PartialEq, Eq, Hash)]
+    pub struct ChrInsFlags1ca(u8);
+    impl Debug;
 }
 
-bitflags! {
-    #[repr(transparent)]
-    #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
-    pub struct ChrInsFlags1cc: u32 {}
+bitfield! {
+    #[derive(Clone, Copy, PartialEq, Eq, Hash)]
+    pub struct ChrInsFlags1cc(u32);
+    impl Debug;
 }
 
 #[repr(C)]
@@ -346,59 +343,59 @@ pub struct CSChrActionRequestModule {
     unk104: [u8; 0x3c],
 }
 
-bitflags! {
-    #[repr(transparent)]
-    #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
-    pub struct AiActionCancels: u32 {
-        /// Set by TAE Event 0 ChrActionFlag (action 1 CANCEL_LS_MOVEMENT)
-        const LS_MOVEMENT = 1 << 6;
-        /// Set by TAE Event 0 ChrActionFlag (action 32 CANCEL_JUMP_CROUCH_WEAPON_SWITCH)
-        const SLOT_SWITCH = 1 << 3;
-        /// Set by TAE Event 0 ChrActionFlag (action 4 CANCEL_RH_ATTACK & 23 CANCEL_AI_COMBOATTACK)
-        const RH_ATTACK = 1 << 4;
-        /// Set by TAE Event 0 ChrActionFlag (action 4 CANCEL_RH_ATTACK & 16 CANCEL_LH_ATTACK)
-        const ACTION_GENERAL = 1 << 9;
-    }
+bitfield! {
+    #[derive(Clone, Copy, PartialEq, Eq, Hash)]
+    pub struct AiActionCancels(u32);
+    impl Debug;
+
+    /// Set by TAE Event 0 ChrActionFlag (action 32 CANCEL_JUMP_CROUCH_WEAPON_SWITCH)
+    pub slot_switch, set_slot_switch:       3;
+    /// Set by TAE Event 0 ChrActionFlag (action 4 CANCEL_RH_ATTACK & 23 CANCEL_AI_COMBOATTACK)
+    pub rh_attack, set_rh_attack:           4;
+    /// Set by TAE Event 0 ChrActionFlag (action 1 CANCEL_LS_MOVEMENT)
+    pub ls_movement, set_ls_movement:       6;
+    /// Set by TAE Event 0 ChrActionFlag (action 4 CANCEL_RH_ATTACK & 16 CANCEL_LH_ATTACK)
+    pub action_general, set_action_general: 9;
 }
-bitflags! {
-    #[repr(transparent)]
-    #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
-    pub struct ChrActions: u64 {
-        const R1              = 1 << 0;
-        const R2              = 1 << 1;
-        const L1              = 1 << 2;
-        const L2              = 1 << 3;
-        const ACTION          = 1 << 4;
-        const SP_MOVE         = 1 << 5;
-        const CHANGE_STYLE    = 1 << 6;
-        const USE_ITEM        = 1 << 7;
-        const SWITCH_FORM     = 1 << 8;
-        const CHANGE_WEAPON_R = 1 << 9;
-        const CHANGE_WEAPON_L = 1 << 10;
-        const CHANGE_ITEM     = 1 << 11;
-        const R3              = 1 << 12;
-        const L3              = 1 << 13;
-        const TOUCH_R         = 1 << 14;
-        const TOUCH_L         = 1 << 15;
-        const BACKSTEP        = 1 << 16;
-        const ROLLING         = 1 << 17;
-        const MAGIC_R         = 1 << 19;
-        const MAGIC_L         = 1 << 20;
-        const GESTURE         = 1 << 21;
-        const LADDERUP        = 1 << 22;
-        const LADDERDOWN      = 1 << 23;
-        const GUARD           = 1 << 24;
-        const EMERGENCYSTEP   = 1 << 25;
-        const LIGHT_KICK      = 1 << 26;
-        const HEAVY_KICK      = 1 << 27;
-        const CHANGE_STYLE_R  = 1 << 28;
-        const CHANGE_STYLE_L  = 1 << 29;
-        const RIDEON          = 1 << 30;
-        const RIDEOFF         = 1 << 31;
-        const BUDDY_DISAPPEAR = 1 << 32;
-        const MAGIC_R2        = 1 << 33;
-        const MAGIC_L2        = 1 << 34;
-    }
+
+bitfield! {
+    #[derive(Clone, Copy, PartialEq, Eq, Hash)]
+    pub struct ChrActions(u64);
+    impl Debug;
+    pub r1, set_r1:                           0;
+    pub r2, set_r2:                           1;
+    pub l1, set_l1:                           2;
+    pub l2, set_l2:                           3;
+    pub action, set_action:                   4;
+    pub sp_move, set_sp_move:                 5;
+    pub change_style, set_change_style:       6;
+    pub use_item, set_use_item:               7;
+    pub switch_form, set_switch_form:         8;
+    pub change_weapon_r, set_change_weapon_r: 9;
+    pub change_weapon_l, set_change_weapon_l: 10;
+    pub change_item, set_change_item:         11;
+    pub r3, set_r3:                           12;
+    pub l3, set_l3:                           13;
+    pub touch_r, set_touch_r:                 14;
+    pub touch_l, set_touch_l:                 15;
+    pub backstep, set_backstep:               16;
+    pub rolling, set_rolling:                 17;
+    pub magic_r, set_magic_r:                 19;
+    pub magic_l, set_magic_l:                 20;
+    pub gesture, set_gesture:                 21;
+    pub ladderup, set_ladderup:               22;
+    pub ladderdown, set_ladderdown:           23;
+    pub guard, set_guard:                     24;
+    pub emergencystep, set_emergencystep:     25;
+    pub light_kick, set_light_kick:           26;
+    pub heavy_kick, set_heavy_kick:           27;
+    pub change_style_r, set_change_style_r:   28;
+    pub change_style_l, set_change_style_l:   29;
+    pub rideon, set_rideon:                   30;
+    pub rideoff, set_rideoff:                 31;
+    pub buddy_disappear, set_buddy_disappear: 32;
+    pub magic_r2, set_magic_r2:               33;
+    pub magic_l2, set_magic_l2:               34;
 }
 
 #[repr(C)]
@@ -546,95 +543,95 @@ pub enum WeaponModelChangeType {
     Unknown6 = 6,
 }
 
-bitflags! {
-    #[repr(transparent)]
-    #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
-    pub struct ChrActionAnimationFlags: u64 {}
+bitfield! {
+    #[derive(Clone, Copy, PartialEq, Eq, Hash)]
+    pub struct ChrActionAnimationFlags(u64);
+    impl Debug;
 }
 
-bitflags! {
-    #[repr(transparent)]
-    #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
-    pub struct ChrActionModifiersFlags: u64 {
-        /// Set by TAE Event 0 ChrActionFlag (action 94 PERFECT_INVINCIBILITY)
-        const PERFECT_INVINCIBILITY = 1 << 0;
-        /// Set by TAE Event 0 ChrActionFlag (action 8 FLAG_AS_DODGING)
-        const DODGING = 1 << 1;
-        /// Set by TAE Event 0 ChrActionFlag (action 68 INVINCIBLE_DURING_THROW_ATTACKER)
-        const INVINCIBLE_DURING_THROW_ATTACKER = 1 << 2;
-        /// Set by TAE Event 0 ChrActionFlag (action 67 INVINCIBLE_EXCLUDING_THROW_ATTACKS_DEFENDER)
-        const INVINCIBLE_EXCLUDING_THROW_ATTACKS_DEFENDER = 1 << 3;
-        /// Set by TAE Event 0 ChrActionFlag (action 132 JUMP_FRAMES_LOWER_BODY_IFRAMES)
-        const JUMP_FRAMES_LOWER_BODY_IFRAMES = 1 << 4;
-        /// Set by TAE Event 0 ChrActionFlag (action 143 PVE_ONLY_IFRAMES)
-        const PVE_ONLY_IFRAMES = 1 << 5;
-        /// Set by TAE Event 0 ChrActionFlag (action 3 SET_GUARD_TYPE)
-        const GUARD_TYPE_SET = 1 << 6;
-        /// Set by TAE Event 0 ChrActionFlag (action 18 CANCEL_THROW)
-        const CANCEL_THROW = 1 << 7;
-        /// Set by TAE Event 0 ChrActionFlag (action 24 SUPER_ARMOR)
-        const SUPER_ARMOR = 1 << 8;
-        /// Set by TAE Event 0 ChrActionFlag (action 72 INVOKEKNOCKBACK)
-        const INVOKEKNOCKBACKVALUE = 1 << 9;
-        /// Set by TAE Event 0 ChrActionFlag (action 5 SET_PARRYABLE_WINDOW)
-        /// When set, the character can be parried.
-        const PARRYABLE = 1 << 10;
-        /// Set by TAE Event 0 ChrActionFlag (action 42 SWEETSPOT_DEAL_12_5_MORE_DAMAGE)
-        const TAKE_12_5_PERCENT_MORE_DAMAGE = 1 << 11;
-        /// Set by TAE Event 0 ChrActionFlag (action 59 WEAKSPOT_DEAL_20_LESS_DAMAGE)
-        const WEAKSPOT_DEAL_20_LESS_DAMAGE = 1 << 12;
-        /// Set by TAE Event 0 ChrActionFlag (action 56 DISABLE_WALL_ATTACK_BOUND)
-        const DISABLE_WALL_ATTACK_BOUND = 1 << 13;
-        /// Set by TAE Event 0 ChrActionFlag (action 57 DISABLE_NPC_WALL_ATTACK_BOUND)
-        const DISABLE_NPC_WALL_ATTACK_BOUND = 1 << 14;
-        /// Set by TAE Event 0 ChrActionFlag (action 7 DISABLE_TURNING)
-        const DISABLE_TURNING = 1 << 15;
-        /// Set by TAE Event 704 ChrTurnSpeedEX
-        /// Additionally sets speed_default, speed_boost and speed_extra on CSChrActionFlagModule
-        const TURN_SPEED_MODIFIED = 1 << 16;
-        /// Set by TAE Event 0 ChrActionFlag (action 96 SET_IMMORTALITY)
-        const SET_IMMORTALITY = 1 << 17;
-        /// Set by TAE 760 BoostRootMotionToReachTarget
-        const ROOT_MOTION_MULTIPLIER_SET = 1 << 19;
-        /// Set by TAE 760 BoostRootMotionToReachTarget
-        /// Depends on `enable` argument of the event.
-        const ROOT_MOTION_MULTIPLIER_ENABLED = 1 << 20;
-        /// Set by TAE Event 0 ChrActionFlag (action 102 POISE_FORCED_BREAK)
-        const POISE_FORCED_BREAK = 1 << 21;
-        /// Set by TAE Event 197 DS3FadeOut
-        const FADE_OUT_APPLIED = 1 << 25;
-        /// Set by TAE Event 705 FacingAngleCorrection
-        const FACING_ANGLE_CORRECTION_SET = 1 << 26;
-        /// Set by TAE Event 0 ChrActionFlag (action 109 CAN_DOUBLE_CAST_ENV_331)
-        const CAN_DOUBLE_CAST = 1 << 26;
-        /// Set by TAE Event 790 DisableDefaultWeaponTrail
-        const DISABLE_DEFAULT_WEAPON_TRAIL = 1 << 27;
-        /// Set by TAE Event 791 PartDamageAdditiveBlendInvalid
-        const PART_DAMAGE_ADDITIVE_BLEND_INVALID = 1 << 31;
-        /// Set by TAE Event 0 ChrActionFlag (action 110 DISABLE_DIRECTION_CHANGE)
-        const DISABLE_DIRECTION_CHANGE = 1 << 32;
-        /// Set by TAE Event 0 ChrActionFlag (action 114 ENHANCED_CAMERA_TRACKING)
-        const ENHANCED_CAMERA_TRACKING = 1 << 33;
-        /// Set by TAE Event 0 ChrActionFlag (action 111 AI_PARRY_POSSIBLE_STATE)
-        const AI_PARRY_POSSIBLE_STATE = 1 << 35;
-        /// Set by TAE Event 0 ChrActionFlag (action 63 AI_PARRY_SIGNAL)
-        const AI_PARRY_SIGNAL = 1 << 36;
-        /// Set by TAE Event 0 ChrActionFlag (action 119 TRYTOINVOKEFORCEPARRYMODE)
-        const FORCE_PARRY_MODE = 1 << 37;
-        /// Set by TAE Event 782 AiReplanningCtrlReset
-        const AI_REPLANNING_CTRL_RESET = 1 << 39;
-        /// Set by TAE Event 707 ManualAttackAiming
-        const MANUAL_ATTACK_AIMING = 1 << 40;
-        /// Set by TAE Event 332 WeaponArtWeaponStyleCheck
-        const WEAPON_ART_WEAPON_STYLE_CHECK = 1 << 41;
-        /// Set by TAE Event 0 ChrActionFlag (action 53 DISABLE_FLOATING_GAUGE_DISPLAY)
-        const DISABLE_FLOATING_GAUGE_DISPLAY = 1 << 44;
-        /// Set by TAE Event 238 SetBulletAimAngle
-        /// Additionally, sets bullet_aim_angle limits on CSChrActionFlagModule
-        const BULLET_AIM_ANGLE_SET = 1 << 45;
-        /// Set by TAE Event 781
-        const TURN_LOWER_BODY = 1 << 46;
-    }
+bitfield! {
+    #[derive(Clone, Copy, PartialEq, Eq, Hash)]
+    pub struct ChrActionModifiersFlags(u64);
+    impl Debug;
+
+    /// Set by TAE Event 0 ChrActionFlag (action 94 PERFECT_INVINCIBILITY)
+    pub perfect_invincibility, set_perfect_invincibility:                                             0;
+    /// Set by TAE Event 0 ChrActionFlag (action 8 FLAG_AS_DODGING)
+    pub dodging, set_dodging:                                                                         1;
+    /// Set by TAE Event 0 ChrActionFlag (action 68 INVINCIBLE_DURING_THROW_ATTACKER)
+    pub invincible_during_throw_attacker, set_invincible_during_throw_attacker:                       2;
+    /// Set by TAE Event 0 ChrActionFlag (action 67 INVINCIBLE_EXCLUDING_THROW_ATTACKS_DEFENDER)
+    pub invincible_excluding_throw_attacks_defender, set_invincible_excluding_throw_attacks_defender: 3;
+    /// Set by TAE Event 0 ChrActionFlag (action 132 JUMP_FRAMES_LOWER_BODY_IFRAMES)
+    pub jump_frames_lower_body_iframes, set_jump_frames_lower_body_iframes:                           4;
+    /// Set by TAE Event 0 ChrActionFlag (action 143 PVE_ONLY_IFRAMES)
+    pub pve_only_iframes, set_pve_only_iframes:                                                       5;
+    /// Set by TAE Event 0 ChrActionFlag (action 3 SET_GUARD_TYPE)
+    pub guard_type_set, set_guard_type_set:                                                           6;
+    /// Set by TAE Event 0 ChrActionFlag (action 18 CANCEL_THROW)
+    pub cancel_throw, set_cancel_throw:                                                               7;
+    /// Set by TAE Event 0 ChrActionFlag (action 24 SUPER_ARMOR)
+    pub super_armor, set_super_armor:                                                                 8;
+    /// Set by TAE Event 0 ChrActionFlag (action 72 INVOKEKNOCKBACK)
+    pub invokeknockbackvalue, set_invokeknockbackvalue:                                               9;
+    /// Set by TAE Event 0 ChrActionFlag (action 5 SET_PARRYABLE_WINDOW)
+    /// When set, the character can be parried.
+    pub parryable, set_parryable:                                                                     10;
+    /// Set by TAE Event 0 ChrActionFlag (action 42 SWEETSPOT_DEAL_12_5_MORE_DAMAGE)
+    pub take_12_5_percent_more_damage, set_take_12_5_percent_more_damage:                             11;
+    /// Set by TAE Event 0 ChrActionFlag (action 59 WEAKSPOT_DEAL_20_LESS_DAMAGE)
+    pub weakspot_deal_20_less_damage, set_weakspot_deal_20_less_damage:                               12;
+    /// Set by TAE Event 0 ChrActionFlag (action 56 DISABLE_WALL_ATTACK_BOUND)
+    pub disable_wall_attack_bound, set_disable_wall_attack_bound:                                     13;
+    /// Set by TAE Event 0 ChrActionFlag (action 57 DISABLE_NPC_WALL_ATTACK_BOUND)
+    pub disable_npc_wall_attack_bound, set_disable_npc_wall_attack_bound:                             14;
+    /// Set by TAE Event 0 ChrActionFlag (action 7 DISABLE_TURNING)
+    pub disable_turning, set_disable_turning:                                                         15;
+    /// Set by TAE Event 704 ChrTurnSpeedEX
+    /// Additionally sets speed_default, speed_boost and speed_extra on CSChrActionFlagModule
+    pub turn_speed_modified, set_turn_speed_modified:                                                 16;
+    /// Set by TAE Event 0 ChrActionFlag (action 96 SET_IMMORTALITY)
+    pub set_immortality, set_set_immortality:                                                         17;
+    /// Set by TAE 760 BoostRootMotionToReachTarget
+    pub root_motion_multiplier_set, set_root_motion_multiplier_set:                                   19;
+    /// Set by TAE 760 BoostRootMotionToReachTarget
+    /// Depends on `enable` argument of the event.
+    pub root_motion_multiplier_enabled, set_root_motion_multiplier_enabled:                           20;
+    /// Set by TAE Event 0 ChrActionFlag (action 102 POISE_FORCED_BREAK)
+    pub poise_forced_break, set_poise_forced_break:                                                   21;
+    /// Set by TAE Event 197 DS3FadeOut
+    pub fade_out_applied, set_fade_out_applied:                                                       25;
+    /// Set by TAE Event 705 FacingAngleCorrection
+    pub facing_angle_correction_set, set_facing_angle_correction_set:                                 24;
+    /// Set by TAE Event 0 ChrActionFlag (action 109 CAN_DOUBLE_CAST_ENV_331)
+    pub can_double_cast, set_can_double_cast:                                                         26;
+    /// Set by TAE Event 790 DisableDefaultWeaponTrail
+    pub disable_default_weapon_trail, set_disable_default_weapon_trail:                               27;
+    /// Set by TAE Event 791 PartDamageAdditiveBlendInvalid
+    pub part_damage_additive_blend_invalid, set_part_damage_additive_blend_invalid:                   31;
+    /// Set by TAE Event 0 ChrActionFlag (action 110 DISABLE_DIRECTION_CHANGE)
+    pub disable_direction_change, set_disable_direction_change:                                       32;
+    /// Set by TAE Event 0 ChrActionFlag (action 114 ENHANCED_CAMERA_TRACKING)
+    pub enhanced_camera_tracking, set_enhanced_camera_tracking:                                       33;
+    /// Set by TAE Event 0 ChrActionFlag (action 111 AI_PARRY_POSSIBLE_STATE)
+    pub ai_parry_possible_state, set_ai_parry_possible_state:                                         35;
+    /// Set by TAE Event 0 ChrActionFlag (action 63 AI_PARRY_SIGNAL)
+    pub ai_parry_signal, set_ai_parry_signal:                                                         36;
+    /// Set by TAE Event 0 ChrActionFlag (action 119 TRYTOINVOKEFORCEPARRYMODE)
+    pub force_parry_mode, set_force_parry_mode:                                                       37;
+    /// Set by TAE Event 782 AiReplanningCtrlReset
+    pub ai_replanning_ctrl_reset, set_ai_replanning_ctrl_reset:                                       39;
+    /// Set by TAE Event 707 ManualAttackAiming
+    pub manual_attack_aiming, set_manual_attack_aiming:                                               40;
+    /// Set by TAE Event 332 WeaponArtWeaponStyleCheck
+    pub weapon_art_weapon_style_check, set_weapon_art_weapon_style_check:                             41;
+    /// Set by TAE Event 0 ChrActionFlag (action 53 DISABLE_FLOATING_GAUGE_DISPLAY)
+    pub disable_floating_gauge_display, set_disable_floating_gauge_display:                           44;
+    /// Set by TAE Event 238 SetBulletAimAngle
+    /// Additionally, sets bullet_aim_angle limits on CSChrActionFlagModule
+    pub bullet_aim_angle_set, set_bullet_aim_angle_set:                                               45;
+    /// Set by TAE Event 781
+    pub turn_lower_body, set_turn_lower_body:                                                         46;
 }
 
 #[repr(C)]
@@ -765,14 +762,13 @@ pub struct CSChrPhysicsModule {
     unk3f7: [u8; 0x29],
 }
 
-bitflags! {
-    #[repr(transparent)]
-    #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
-    pub struct MoveTypeFlags: u32 {
-        const USE_WORLD_Y_ALIGNMENT = 1 << 0;
-        const IS_SURFACE_CONSTRAINED = 1 << 1;
-        const IS_PAD_MANIPULATED = 1 << 4;
-    }
+bitfield! {
+    #[derive(Clone, Copy, PartialEq, Eq, Hash)]
+    pub struct MoveTypeFlags(u8);
+    impl Debug;
+    pub use_world_y_alignment, set_use_world_y_alignment:   0;
+    pub is_surface_constrained, set_is_surface_constrained: 1;
+    pub is_pad_manipulated, set_is_pad_manipulated:         4;
 }
 
 #[repr(C)]
@@ -1046,15 +1042,14 @@ pub struct CSChrThrowModule {
     unk28: [u8; 0x8],
 }
 
-bitflags! {
-    #[repr(transparent)]
-    #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
-    pub struct ThrowModuleFlags: u32 {
-        /// Set by TAE Event 0 ChrActionFlag (action 70 THROW_ESCAPE_TRANSITION_ATTACKER)
-        const ESCAPE_TRANSITION = 1 << 0;
-        /// Set by TAE Event 0 ChrActionFlag (action 69 THROW_DEATH_TRANSITION_DEFENDER)
-        const DEATH_TRANSITION = 1 << 1;
-    }
+bitfield! {
+    #[derive(Clone, Copy, PartialEq, Eq, Hash)]
+    pub struct ThrowModuleFlags(u32);
+    impl Debug;
+    /// Set by TAE Event 0 ChrActionFlag (action 70 THROW_ESCAPE_TRANSITION_ATTACKER)
+    pub escape_transition, set_escape_transition: 0;
+    /// Set by TAE Event 0 ChrActionFlag (action 69 THROW_DEATH_TRANSITION_DEFENDER)
+    pub death_transition, set_death_transition:   1;
 }
 
 #[repr(C)]
@@ -1187,87 +1182,76 @@ pub enum ChrMovementLimit {
     DisableAll = 3,
 }
 
-bitflags! {
-    #[repr(transparent)]
-    #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
-    pub struct ChrCtrlModifierActionFlags: u32 {
-        /// Set by TAE Event 0 ChrActionFlag (action 20 SEND_GHOST_INFO)
-        const SEND_GHOST_INFO_REQUESTED = 1 << 1;
-        /// Set by TAE Event 0 ChrActionFlag (action 55 DISABLE_ABILITY_TO_LOCK_ON)
-        /// Makes the character unable to lock on to other characters.
-        const DISABLE_ABILITY_TO_LOCK_ON = 1 << 3;
-        /// Set by TAE Event 0 ChrActionFlag (action 49 DISABLE_LOCK_ON)
-        /// Makes the character unable to be locked on to.
-        const DISABLE_LOCK_ON = 1 << 4;
-        /// Set by TAE Event 0 ChrActionFlag (action 40 TEMPORARY_DEATH_STATE)
-        const TEMPORARY_DEATH_STATE = 1 << 4;
-    }
+bitfield! {
+    #[derive(Clone, Copy, PartialEq, Eq, Hash)]
+    pub struct ChrCtrlModifierActionFlags(u32);
+    impl Debug;
+    /// Set by TAE Event 0 ChrActionFlag (action 20 SEND_GHOST_INFO)
+    pub send_ghost_info_requested, set_send_ghost_info_requested:   1;
+    /// Set by TAE Event 0 ChrActionFlag (action 49 DISABLE_LOCK_ON)
+    /// Makes the character unable to be locked on to.
+    pub disable_lock_on, set_disable_lock_on:                       2;
+    /// Set by TAE Event 0 ChrActionFlag (action 55 DISABLE_ABILITY_TO_LOCK_ON)
+    /// Makes the character unable to lock on to other characters.
+    pub disable_ability_to_lock_on, set_disable_ability_to_lock_on: 3;
+    /// Set by TAE Event 0 ChrActionFlag (action 40 TEMPORARY_DEATH_STATE)
+    pub temporary_death_state, set_temporary_death_state:           5;
 }
 
-bitflags! {
-    #[repr(transparent)]
-    #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
-    pub struct ChrCtrlModifierHksFlags: u32 {
-        /// Set by TAE Event 236 RootMotionReduction
-        const ROOT_MOTION_REDUCTION_APPLIED = 1 << 0;
-        /// Set by TAE Event 0 ChrActionFlag (action 61 DISABLE_Y_AXIS_OF_MOVEMENT_TARGET)
-        const DISABLE_Y_AXIS_OF_MOVEMENT_TARGET = 1 << 1;
-        /// Set by TAE Event 0 ChrActionFlag (action 65 EXTEND_SPEFFECT_LIFETIME)
-        const EXTEND_SPEFFECT_LIFETIME = 1 << 4;
-        /// Set by TAE Event 0 ChrActionFlag (action 66 SPECIAL_TRANSITION_ENV_271)
-        /// Controls whether the special transition to next weapon attack in chain is possible or not.
-        const SPECIAL_TRANSITION_POSSIBLE = 1 << 5;
-        /// Set by TAE Event 0 ChrActionFlag (action 75 CANCEL_ITEM_PICKUP)
-        /// If character queued item pickup action and this flag is set,
-        /// animation will be interrupted
-        const CANCEL_ITEM_PICKUP = 1 << 7;
-        /// Set by TAE Event 0 ChrActionFlag (action 80 INPUT_ITEM_PICKUP)
-        /// Makes the character able to queue item pickup action.
-        const INPUT_ITEM_PICKUP = 1 << 8;
-        /// Set by TAE Event 0 ChrActionFlag (action 81 DISABLE_ACTIONBUTTON_4400)
-        /// Disables action button 4400 (OK button).
-        const DISABLE_ACTIONBUTTON_4400 = 1 << 9;
-        /// Set by TAE Event 0 ChrActionFlag (action 82 LIGHT_LANTERN_WEAPON_STATEINFO_147)
-        /// Used by lantern and starlight sourcery.
-        const LIGHT_EFFECT = 1 << 10;
-        /// Set by TAE Event 0 ChrActionFlag (action 88 DISABLE_PRECISION_SHOOTING)
-        const DISABLE_PRECISION_SHOOTING = 1 << 13;
-    }
+bitfield! {
+    #[derive(Clone, Copy, PartialEq, Eq, Hash)]
+    pub struct ChrCtrlModifierHksFlags(u32);
+    impl Debug;
+    /// Set by TAE Event 236 RootMotionReduction
+    pub root_motion_reduction_applied, set_root_motion_reduction_applied:         0;
+    /// Set by TAE Event 0 ChrActionFlag (action 61 DISABLE_Y_AXIS_OF_MOVEMENT_TARGET)
+    pub disable_y_axis_of_movement_target, set_disable_y_axis_of_movement_target: 1;
+    /// Set by TAE Event 0 ChrActionFlag (action 65 EXTEND_SPEFFECT_LIFETIME)
+    pub extend_speffect_lifetime, set_extend_speffect_lifetime:                   4;
+    /// Set by TAE Event 0 ChrActionFlag (action 66 SPECIAL_TRANSITION_ENV_271)
+    pub special_transition_possible, set_special_transition_possible:             5;
+    /// Set by TAE Event 0 ChrActionFlag (action 75 CANCEL_ITEM_PICKUP)
+    pub cancel_item_pickup, set_cancel_item_pickup:                               7;
+    /// Set by TAE Event 0 ChrActionFlag (action 80 INPUT_ITEM_PICKUP)
+    pub input_item_pickup, set_input_item_pickup:                                 8;
+    /// Set by TAE Event 0 ChrActionFlag (action 81 DISABLE_ACTIONBUTTON_4400)
+    pub disable_actionbutton_4400, set_disable_actionbutton_4400:                 9;
+    /// Set by TAE Event 0 ChrActionFlag (action 82 LIGHT_LANTERN_WEAPON_STATEINFO_147)
+    pub light_effect, set_light_effect:                                           10;
+    /// Set by TAE Event 0 ChrActionFlag (action 88 DISABLE_PRECISION_SHOOTING)
+    pub disable_precision_shooting, set_disable_precision_shooting:               13;
 }
 
-bitflags! {
-    #[repr(transparent)]
-    #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
-    pub struct ChrCtrlFlags: u32 {
-        /// Disable player collision
-        const DISABLE_PLAYER_COLLISION = 1 << 0;
-        /// Disable hit
-        const DISABLE_HIT = 1 << 1;
-        /// Disable map collision
-        const DISABLE_MAP_COLLISION = 1 << 2;
-        /// Disable map collision
-        const DISABLE_MAP_COLLISION_2 = 1 << 3;
-        /// Set by TAE Event 0 (action 50 DISABLE_CHARACTER_CAPSULE_COLLISION)
-        const DISABLE_CHARACTER_CAPSULE_COLLISION = 1 << 17;
-        /// Disable object collision
-        /// Set by TAE Event 0 (action 44 DISABLE_OBJECT_COLLISION)
-        /// Reset every frame
-        const DISABLE_OBJECT_COLLISION = 1 << 19;
-        /// Set by TAE Event 0 (action 74 LADDER_COLLISION)
-        /// reset every frame
-        const LADDER_COLLISION = 1 << 20;
-    }
+bitfield! {
+    #[derive(Clone, Copy, PartialEq, Eq, Hash)]
+    pub struct ChrCtrlFlags(u32);
+    impl Debug;
+    /// Disables player to player collision.
+    pub disable_player_collision, set_disable_player_collision:                       0;
+    /// Disables hits
+    pub disable_hit, set_disable_hit:                                                 1;
+    /// Disables map collision
+    pub disable_map_collision, set_disable_map_collision:                             2;
+    /// Disables map collision 2
+    disable_map_collision_2, set_disable_map_collision_2:                             3;
+    /// Set by TAE Event 0 ChrActionFlag (action 50 DISABLE_CHARACTER_CAPSULE_COLLISION)
+    pub disable_character_capsule_collision, set_disable_character_capsule_collision: 17;
+    /// Set by TAE Event 0 ChrActionFlag (action 44 DISABLE_OBJECT_COLLISION)
+    /// Reset every frame
+    pub disable_object_collision, set_disable_object_collision:                       19;
+    /// Set by TAE Event 0 ChrActionFlag (action 74 LADDER_COLLISION)
+    /// Reset every frame
+    pub ladder_collision, set_ladder_collision:                                       20;
 }
 
-bitflags! {
-    #[repr(transparent)]
-    #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
-    pub struct ChrCtrlChrProxyFlags: u32 {
-        /// When 1, underlying havok character position will be updated with the position from the physics module.
-        const POSITION_SYNC_REQUESTED = 1 << 0;
-        /// When 1, underlying havok character rotation will be updated with the rotation from the physics module.
-        const ROTATION_SYNC_REQUESTED = 1 << 1;
-    }
+bitfield! {
+    #[derive(Clone, Copy, PartialEq, Eq, Hash)]
+    pub struct ChrCtrlChrProxyFlags(u32);
+    impl Debug;
+    /// When 1, underlying havok character position will be updated with the position from the physics module.
+    pub position_sync_requested, set_position_sync_requested: 0;
+    /// When 1, underlying havok character rotation will be updated with the rotation from the physics module.
+    pub rotation_sync_requested, set_rotation_sync_requested: 1;
 }
 
 #[repr(C)]

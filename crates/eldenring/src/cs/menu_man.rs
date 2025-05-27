@@ -1,6 +1,6 @@
 use std::ptr::NonNull;
 
-use bitflags::bitflags;
+use bitfield::bitfield;
 use windows::Win32::Foundation::BOOL;
 
 use shared::OwnedPtr;
@@ -87,15 +87,14 @@ pub struct CSChrMenuFlags {
     // _padc: [u8; 0x4],
 }
 
-bitflags! {
-    #[repr(transparent)]
-    #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
-    pub struct ChrMenuFlags: u32 {
-        /// Set by TAE Event 0 (action 54 DISABLE_START_INPUTS)
-        /// Controls whether the player can open the pause menu
-        /// (Equipment, Crafting, Status, Messages, System, Multiplayer, Pouch, Gestures)
-        const PAUSE_MENU_STATE = 1 << 3;
-    }
+bitfield! {
+    #[derive(Clone, Copy, PartialEq, Eq, Hash)]
+    pub struct ChrMenuFlags(u32);
+    impl Debug;
+    /// Set by TAE Event 0 (action 54 DISABLE_START_INPUTS)
+    /// Controls whether the player can open the pause menu
+    /// (Equipment, Crafting, Status, Messages, System, Multiplayer, Pouch, Gestures)
+    pub pause_menu_state, set_pause_menu_state: 3;
 }
 
 #[repr(C)]
