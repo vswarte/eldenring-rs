@@ -295,7 +295,7 @@ pub struct ChrInsModuleContainer {
     pub physics: OwnedPtr<CSChrPhysicsModule>,
     fall: usize,
     ladder: usize,
-    action_request: usize,
+    pub action_request: OwnedPtr<CSChrActionRequestModule>,
     pub throw: OwnedPtr<CSChrThrowModule>,
     hitstop: usize,
     damage: usize,
@@ -313,7 +313,7 @@ pub struct ChrInsModuleContainer {
     ride: usize,
     bonemove: usize,
     /// Describes if your character is wet for rendering as well as applying speffects.
-    wet: usize,
+    pub wet: OwnedPtr<CSChrWetModule>,
     auto_homing: usize,
     above_shadow_test: usize,
     sword_arts: usize,
@@ -380,6 +380,7 @@ bitfield! {
     pub touch_l, set_touch_l:                 15;
     pub backstep, set_backstep:               16;
     pub rolling, set_rolling:                 17;
+    pub jump, set_jump:                       18;
     pub magic_r, set_magic_r:                 19;
     pub magic_l, set_magic_l:                 20;
     pub gesture, set_gesture:                 21;
@@ -404,6 +405,7 @@ pub struct CSChrActionFlagModule {
     vftable: usize,
     pub owner: NonNull<ChrIns>,
     pub animation_action_flags: ChrActionAnimationFlags,
+    unk14: u32,
     unk18_flags: u32,
     unk1c: [u8; 0x18],
     unk34: u32,
@@ -545,7 +547,7 @@ pub enum WeaponModelChangeType {
 
 bitfield! {
     #[derive(Clone, Copy, PartialEq, Eq, Hash)]
-    pub struct ChrActionAnimationFlags(u64);
+    pub struct ChrActionAnimationFlags(u32);
     impl Debug;
 }
 
@@ -1070,7 +1072,7 @@ pub struct ChrCtrl {
     chr_model_pos_easing: usize,
     unke8: [u8; 0x8],
     pub flags: ChrCtrlFlags,
-    unkf4: u32,
+    pub flags_copy: ChrCtrlFlags,
     unkf8: u32,
     pub chr_proxy_flags: ChrCtrlChrProxyFlags,
     unk100: FSVector4,
@@ -1081,29 +1083,64 @@ pub struct ChrCtrl {
     pub ragdoll_revive_time: f32,
     unk130: [u8; 0x48],
     walk_twist: usize,
-    unk180: usize,
+    joint_modifier: usize,
     unk188: [u8; 0x4],
     pub weight_type: u32,
     unk190: [u8; 0x10],
     /// Offset from the character's dmypoly for the tag position (name, hp, etc).
     /// Will modify position of the resulting tag.
     pub lock_on_chr_tag_dmypoly_offset: FSVector4,
-    unk1b0: [u8; 0x80],
+    /// Stores the model matrix derived from `CSChrPhysicsModule::ConstructModelMatrix`.
+    /// Constructed from `CSChrPhysicsModule::position` and `CSChrPhysicsModule::orientation`.
+    pub physics_model_matrix: FSMatrix4x4,
+    /// Stores the `raw_physics_model_matrix` multiplied by itself.
+    pub physics_transform_matrix_squared: FSMatrix4x4,
+    /// The primary model matrix for the character.
+    /// It's initially constructed by combining:
+    /// - Translation from `raw_physics_model_matrix` and `vertical_position_offset`.
+    /// - Orientation from `raw_physics_model_matrix` combined with `additional_orientation_quat`.
+    /// - Scaling from `scale_size_x`, `scale_size_y`, and `scale_size_z`.
+    ///
+    /// This matrix is then processed by ChrEasingModule,
+    /// and the eased result is stored back into this field. It's the final matrix
+    /// propagated to components like `locationMtx44ChrEntity`.
     pub model_matrix: FSMatrix4x4,
-    unk270: [u8; 0x40],
+    /// Stores the `model_matrix` multiplied by itself after all modifications.
+    pub model_matrix_squared: FSMatrix4x4,
     unk2b0: FSVector4,
-    unk2c0: FSVector4,
-    unk2d0: [u8; 0x4],
+    /// An additional orientation (quaternion) that is multiplied with the orientation
+    /// derived from the `raw_physics_model_matrix` to produce the final orientation
+    /// for the `model_matrix`.
+    pub additional_orientation_quat: FSVector4,
+    /// An offset applied to the Y-component (vertical) of the character's position
+    /// when constructing the translation part of the `model_matrix`.
+    pub vertical_position_offset: f32,
+    /// Scaling factor applied along the X-axis during `model_matrix` construction.
     pub scale_size_x: f32,
+    /// Scaling factor applied along the Y-axis during `model_matrix` construction.
     pub scale_size_y: f32,
+    /// Scaling factor applied along the Z-axis during `model_matrix` construction.
     pub scale_size_z: f32,
     pub offset_y: f32,
     unk2e4: [u8; 0x14],
-    unk2f8: usize,
+    location_mtx44_chr_entity: usize,
     unk300: u8,
     /// Set by TAE Event 0 ChrActionFlag (action 113 INVOKEHEIGHTCORRECTION)
     pub height_correction_request: bool,
-    unk301: [u8; 0x26],
+    unk302: u8,
+    unk303: u8,
+    unk304: f32,
+    /// Limit for foot IK error height correction.
+    /// Fetched from NpcParam.
+    pub foot_ik_error_height_limit: f32,
+    /// Limit for foot IK error height correction when gain is on.
+    /// Fetched from NpcParam.
+    pub foot_ik_error_on_gain: f32,
+    /// Limit for foot IK error height correction when gain is off.
+    /// Fetched from NpcParam.
+    pub foot_ik_error_off_gain: f32,
+    unk314: f32,
+    unk318: [u8; 0x10],
     /// Should the character match undulation of the map?
     /// Fetched from NpcParam
     pub is_undulation: bool,
@@ -1162,6 +1199,7 @@ pub struct ChrCtrlModifierData {
     unk20: [u8; 0x4],
     /// Set by TAE Event 236 RootMotionReduction
     pub root_motion_reduction: f32,
+    unk28: [u8; 0x8],
     /// Character movement speed limit
     /// Set by TAE Event 0 ChrActionFlag (actions 90, 91, 89)
     pub movement_limit: ChrMovementLimit,
