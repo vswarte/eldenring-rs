@@ -5,7 +5,7 @@ use std::{
 };
 
 use game::{
-    cs::{CSEzTask, CSEzTaskProxy, CSEzUpdateTask, CSTaskGroupIndex, CSTaskImp},
+    cs::{CSEzRabbitTask, CSEzTask, CSEzTaskProxy, CSEzUpdateTask, CSTaskGroupIndex, CSTaskImp},
     fd4::{FD4TaskBase, FD4TaskData, FD4TaskRequestEntry},
 };
 use pelite::pe64::Pe;
@@ -97,9 +97,20 @@ fn label_task(task: &FD4TaskBase) -> Option<String> {
             let executor_addr = if proxied_task_classname.starts_with("CS::CSEzUpdateTask<")
                 || proxied_task_classname.starts_with("CS::CSEzVoidTask<")
             {
-                unsafe {
-                    transmute::<&CSEzTask, &CSEzUpdateTask<CSEzTask, usize>>(proxied_task).executor
-                        as usize
+                // check for the second type parameter and cast accordingly
+                match proxied_task_classname.split('<').nth(1) {
+                    Some(second_param) if second_param.contains("CSEzTask") => unsafe {
+                        transmute::<&CSEzTask, &CSEzUpdateTask<CSEzTask, usize>>(proxied_task)
+                            .executor as usize
+                    },
+                    Some(second_param)
+                        if second_param.contains("CSEzRabbitTask")
+                            || second_param.contains("CSEzRabbitNoUpdateTask") =>
+                    unsafe {
+                        transmute::<&CSEzTask, &CSEzUpdateTask<CSEzRabbitTask, usize>>(proxied_task)
+                            .executor as usize
+                    },
+                    _ => proxied_task_vftable as usize,
                 }
             } else {
                 proxied_task_vftable as usize
