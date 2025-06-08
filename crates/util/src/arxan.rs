@@ -1,3 +1,7 @@
+/// guardIT code restoration neuter utils.
+
+// This is my rust take on a cpp version made by tremwil. Yui noticed the original pattern to this afaict.
+
 use std::error::Error;
 
 use pelite::pattern::Atom;
