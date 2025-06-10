@@ -333,14 +333,63 @@ pub struct CSChrActionRequestModule {
     unk20: u64,
     unk28: [u8; 0x8],
     unk30: u64,
-    unk38: [u8; 0x60],
+    unk38: [u8; 0x8],
+    /// Controls what actions are currently can't be inputted by the player.
+    pub disabled_action_inputs: ChrActions,
+    unk48: [u8; 0x48],
+    unk90: u32,
+    unk94: [u8; 0x4],
     /// Controls what actions can be queued during current animation.
     pub possible_action_inputs: ChrActions,
     /// Controls what actions can interrupt current animation.
-    pub action_cancels: ChrActions,
-    unka8: [u8; 0x58],
+    pub possible_action_cancels: ChrActions,
+    unka8: [u8; 0x8],
+    /// Current action durations in seconds.
+    /// Corresponds to how long each action button is held down.
+    pub action_timers: ActionTimers,
+    /// For how long movement request buttons are held down.
+    /// Conflicting movement requests will be ignored (eg. W + S).
+    pub movement_request_duration: f32,
+    unkf4: [u8; 0x4],
+    /// Param ID of the requested gesture from PadManipulator.
+    pub requested_gesture: i32,
+    unkfc: [u8; 0x4],
     pub ai_cancels: AiActionCancels,
     unk104: [u8; 0x3c],
+}
+
+#[repr(C)]
+pub struct ActionTimers {
+    /// Main hand light attack
+    pub r1: f32,
+    /// Main hand heavy attack
+    pub r2: f32,
+    /// Offhand light attack
+    pub l1: f32,
+    /// Offhand heavy attack
+    pub l2: f32,
+    /// Pouch slot submenu and weapon switch button (E)
+    pub action: f32,
+    /// Roll and Backstep
+    pub roll: f32,
+    /// Jump button
+    pub jump: f32,
+    /// Consumable item use
+    pub use_item: f32,
+    /// Spell switch
+    pub switch_spell: f32,
+    /// Change weapon in right hand
+    pub change_weapon_r: f32,
+    /// Change weapon in left hand
+    pub change_weapon_l: f32,
+    /// Change to next consumable
+    pub change_item: f32,
+    /// Right stick click
+    pub r3: f32,
+    /// Left stick click
+    pub l3: f32,
+    pub touch_r: f32,
+    pub touch_l: f32,
 }
 
 bitfield! {
@@ -366,36 +415,46 @@ bitfield! {
     pub r2, set_r2:                           1;
     pub l1, set_l1:                           2;
     pub l2, set_l2:                           3;
+    /// Pouch slot submenu and weapon switch button (E)
     pub action, set_action:                   4;
+    /// Roll button
     pub sp_move, set_sp_move:                 5;
-    pub change_style, set_change_style:       6;
+    pub jump, set_jump:                       6;
     pub use_item, set_use_item:               7;
-    pub switch_form, set_switch_form:         8;
+    pub switch_spell, set_switch_spell:       8;
     pub change_weapon_r, set_change_weapon_r: 9;
     pub change_weapon_l, set_change_weapon_l: 10;
     pub change_item, set_change_item:         11;
+    /// Lock on
     pub r3, set_r3:                           12;
+    /// Crouch
     pub l3, set_l3:                           13;
     pub touch_r, set_touch_r:                 14;
     pub touch_l, set_touch_l:                 15;
     pub backstep, set_backstep:               16;
     pub rolling, set_rolling:                 17;
-    pub jump, set_jump:                       18;
+    /// Magic casted by the spellcasting item when in main hand.
     pub magic_r, set_magic_r:                 19;
+    /// Magic casted by the spellcasting item when in off hand.
     pub magic_l, set_magic_l:                 20;
     pub gesture, set_gesture:                 21;
     pub ladderup, set_ladderup:               22;
     pub ladderdown, set_ladderdown:           23;
     pub guard, set_guard:                     24;
     pub emergencystep, set_emergencystep:     25;
+    /// Forward + R1 + L1 (ds kick)
     pub light_kick, set_light_kick:           26;
+    /// Forward + R2 + L2 (ds kick)
     pub heavy_kick, set_heavy_kick:           27;
     pub change_style_r, set_change_style_r:   28;
     pub change_style_l, set_change_style_l:   29;
     pub rideon, set_rideon:                   30;
+    /// Torrent boost
     pub rideoff, set_rideoff:                 31;
     pub buddy_disappear, set_buddy_disappear: 32;
+    /// Magic casted by the spellcasting sword when in main hand.
     pub magic_r2, set_magic_r2:               33;
+    /// Magic casted by the spellcasting sword when in off hand.
     pub magic_l2, set_magic_l2:               34;
 }
 
@@ -407,8 +466,15 @@ pub struct CSChrActionFlagModule {
     pub animation_action_flags: ChrActionAnimationFlags,
     unk14: u32,
     unk18_flags: u32,
-    unk1c: [u8; 0x18],
-    unk34: u32,
+    /// Damage level of the last received attack.
+    /// Determines how much character will stagger when hit.
+    pub damage_level: u8,
+    // pad1d: [u8; 0x3],
+    /// Guard level from the params of the equipped weapon.
+    pub guard_level: u32,
+    unk24: [u8; 0x10],
+    /// Param ID of the last received attack.
+    pub received_damage_type: u32,
     unk38: [u8; 0x8],
     pub action_modifiers_flags: ChrActionModifiersFlags,
     unk48: u64,
@@ -549,6 +615,8 @@ bitfield! {
     #[derive(Clone, Copy, PartialEq, Eq, Hash)]
     pub struct ChrActionAnimationFlags(u32);
     impl Debug;
+
+    pub stay_state, set_stay_state: 0;
 }
 
 bitfield! {
@@ -601,10 +669,10 @@ bitfield! {
     pub root_motion_multiplier_enabled, set_root_motion_multiplier_enabled:                           20;
     /// Set by TAE Event 0 ChrActionFlag (action 102 POISE_FORCED_BREAK)
     pub poise_forced_break, set_poise_forced_break:                                                   21;
-    /// Set by TAE Event 197 DS3FadeOut
-    pub fade_out_applied, set_fade_out_applied:                                                       25;
     /// Set by TAE Event 705 FacingAngleCorrection
     pub facing_angle_correction_set, set_facing_angle_correction_set:                                 24;
+    /// Set by TAE Event 197 DS3FadeOut
+    pub fade_out_applied, set_fade_out_applied:                                                       25;
     /// Set by TAE Event 0 ChrActionFlag (action 109 CAN_DOUBLE_CAST_ENV_331)
     pub can_double_cast, set_can_double_cast:                                                         26;
     /// Set by TAE Event 790 DisableDefaultWeaponTrail
@@ -650,7 +718,8 @@ pub struct CSChrPhysicsModule {
     /// can be changed by tae and interpolated towards the target rotation
     pub interpolated_orientation: Quaternion,
     pub position: HavokPosition,
-    unk80_position: HavokPosition,
+    // unk80_position: HavokPosition,
+    pub last_update_position: HavokPosition,
     unk90: bool,
     pub chr_proxy_pos_update_requested: bool,
     pub standing_on_solid_ground: bool,
@@ -692,7 +761,8 @@ pub struct CSChrPhysicsModule {
     unk1c8: [u8; 0x4],
     pub gravity_multiplier: f32,
     pub is_falling: bool,
-    unk1d1: [u8; 0x2],
+    pub is_touching_ground: bool,
+    unk1d2: u8,
     no_gravity_unk: bool,
     unk1d4: u8,
     /// Set by TAE Event 0 ChrActionFlag (action 27 DISABLE_GRAVITY)
@@ -710,10 +780,11 @@ pub struct CSChrPhysicsModule {
     /// Only true for Watcher Stones character (stone sphere catapillars).
     pub is_watcher_stones: bool,
     unk1e2: [u8; 0xe],
-    unk1f0: [u8; 0x68],
-    unk258: [u8; 0x48],
-    unk2a0: usize,
-    unk2a8: [u8; 0x18],
+    /// Information about the slope the character is currently on
+    pub slope_info: ChrPhysicsSlopeInfo,
+    /// Information about character's sliding state
+    pub slide_info: ChrPhysicsSlideInfo,
+    unk290: [u8; 0x30],
     unkposition: FSVector4,
     pub orientation_euler: FSVector4,
     pub chr_hit_height: f32,
@@ -771,6 +842,35 @@ bitfield! {
     pub use_world_y_alignment, set_use_world_y_alignment:   0;
     pub is_surface_constrained, set_is_surface_constrained: 1;
     pub is_pad_manipulated, set_is_pad_manipulated:         4;
+}
+
+#[repr(C)]
+pub struct ChrPhysicsSlopeInfo {
+    unk0: FSVector4,
+    unk10: FSVector4,
+    unk20: f32,
+    unk24: f32,
+    unk28: f32,
+    unk2c: f32,
+    unk30: FSVector4,
+    /// Slope vector, used for slope detection.
+    pub slope_vector: FSVector4,
+    unk50: [u8; 0x20],
+}
+#[repr(C)]
+pub struct ChrPhysicsSlideInfo {
+    /// Slide direction vector
+    pub slide_vector: FSVector4,
+    /// Information about the slope the character is sliding on
+    pub slope_info: NonNull<ChrPhysicsSlopeInfo>,
+    /// Angle at which the character is starting to slide
+    pub max_slide_angle: f32,
+    /// Is character currently sliding?
+    pub is_sliding: bool,
+    unk1d: [u8; 0x3],
+    unk20: f32,
+    unk24: bool,
+    unk25: [u8; 0xb],
 }
 
 #[repr(C)]
@@ -958,7 +1058,7 @@ pub struct CSChrDataModule {
     pub world_block_chr: NonNull<WorldBlockChr<ChrIns>>,
     unk90: [u8; 0x30],
     pub draw_params: u32,
-    unkc4: u32,
+    pub chara_init_param_id: u32,
     // wchar_t[6]
     unkc8: [u8; 0xc],
     unkd4: [u8; 0x64],
