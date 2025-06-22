@@ -4,5 +4,7 @@ version.workspace = true
 edition.workspace = true
 repository.workspace = true
 license.workspace = true
+readme = false
+description = "Raw structures and bindings for From Software's title Elden Ring: Nightreign"
 
 [dependencies]
