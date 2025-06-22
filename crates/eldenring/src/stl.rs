@@ -4,8 +4,8 @@ use std::{
     ptr::{copy_nonoverlapping, NonNull},
 };
 
-use shared::OwnedPtr;
 use crate::dlkr::DLAllocatorBase;
+use shared::OwnedPtr;
 
 #[repr(C)]
 pub struct DoublyLinkedListNode<T> {

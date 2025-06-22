@@ -1,10 +1,10 @@
 use std::ptr::NonNull;
 
-use shared::OwnedPtr;
 use crate::{
     position::{BlockPosition, HavokPosition},
     Tree,
 };
+use shared::OwnedPtr;
 
 use super::MapId;
 

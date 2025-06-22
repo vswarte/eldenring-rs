@@ -1,9 +1,9 @@
 use std::ptr::NonNull;
 use vtable_rs::VPtr;
 
-use shared::FSVector4;
 use crate::position::HavokPosition;
 use crate::rotation::Quaternion;
+use shared::FSVector4;
 
 use super::{CSBulletIns, ChrIns, FieldInsHandle, SpecialEffect};
 

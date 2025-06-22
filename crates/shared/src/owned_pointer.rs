@@ -1,4 +1,7 @@
-use std::{ops::{Deref, DerefMut}, ptr::NonNull};
+use std::{
+    ops::{Deref, DerefMut},
+    ptr::NonNull,
+};
 
 /// Pointer to a structure that the containing structure owns. You will generally use this to model
 /// structures in foreign memory when extending the game libraries. Do not use this in your own

@@ -9,7 +9,7 @@ use crate::{
     fd4::FD4Time,
     DoublyLinkedList, Vector,
 };
-use shared::{OwnedPtr, FSVector4, FSVector3};
+use shared::{FSVector3, FSVector4, OwnedPtr};
 
 use super::{CSEzTask, CSEzUpdateTask, MapId, P2PEntityHandle};
 

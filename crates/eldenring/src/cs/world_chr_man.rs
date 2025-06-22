@@ -6,9 +6,9 @@ use std::ptr::NonNull;
 
 use vtable_rs::VPtr;
 
-use shared::{FSMatrix4x4, FSVector4, OwnedPtr};
 use crate::Tree;
 use crate::{cs::ChrIns, Vector};
+use shared::{FSMatrix4x4, FSVector4, OwnedPtr};
 
 use super::{ChrCam, FieldInsHandle, MapId, NetChrSync, PlayerIns};
 

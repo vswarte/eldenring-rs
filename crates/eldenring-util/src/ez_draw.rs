@@ -2,8 +2,8 @@ use eldenring::{
     cs::CSEzDraw,
     position::{HavokPosition, PositionDelta},
 };
-use shared::FSVector4;
 use pelite::pe64::Pe;
+use shared::FSVector4;
 
 use crate::{
     program::Program,

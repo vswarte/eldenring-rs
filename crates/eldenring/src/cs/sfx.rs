@@ -1,6 +1,6 @@
 use crate::gxffx::GXFfxSceneCtrl;
-use shared::{OwnedPtr, FSMatrix4x4};
 use crate::{Tree, Vector};
+use shared::{FSMatrix4x4, OwnedPtr};
 
 #[repr(C)]
 /// Source of name: RTTI
