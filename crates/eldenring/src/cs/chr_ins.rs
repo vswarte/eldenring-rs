@@ -7,10 +7,10 @@ use windows::core::PCWSTR;
 
 use crate::cs::MapId;
 use crate::fd4::FD4Time;
-use shared::{FSMatrix4x4, FSVector4, OwnedPtr};
 use crate::position::{BlockPosition, HavokPosition};
 use crate::rotation::Quaternion;
 use crate::Vector;
+use shared::{FSMatrix4x4, FSVector4, OwnedPtr};
 
 use crate::cs::field_ins::{FieldInsBaseVmt, FieldInsHandle};
 use crate::cs::gaitem::GaitemHandle;

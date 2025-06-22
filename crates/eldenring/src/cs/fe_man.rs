@@ -5,8 +5,8 @@ use std::{
     ptr::NonNull,
 };
 
-use shared::{FSVector4, OwnedPtr};
 use crate::{dltx::DLString, CSFixedList};
+use shared::{FSVector4, OwnedPtr};
 
 use super::{CSMenuManImp, FieldInsHandle};
 
