@@ -49,11 +49,11 @@ pub struct FSMatrix4x4(pub FSVector4, pub FSVector4, pub FSVector4, pub FSVector
 
 impl From<FSMatrix4x4> for Mat4 {
     fn from(val: FSMatrix4x4) -> Self {
-        Mat4::from_columns(&[
-            Vec4::new(val.0 .0, val.0 .1, val.0 .2, val.0 .3),
-            Vec4::new(val.1 .0, val.1 .1, val.1 .2, val.1 .3),
-            Vec4::new(val.2 .0, val.2 .1, val.2 .2, val.2 .3),
-            Vec4::new(val.3 .0, val.3 .1, val.3 .2, val.3 .3),
+        Mat4::from_rows(&[
+            RowVector4::new(val.0 .0, val.0 .1, val.0 .2, val.0 .3),
+            RowVector4::new(val.1 .0, val.1 .1, val.1 .2, val.1 .3),
+            RowVector4::new(val.2 .0, val.2 .1, val.2 .2, val.2 .3),
+            RowVector4::new(val.3 .0, val.3 .1, val.3 .2, val.3 .3),
         ])
     }
 }
@@ -61,10 +61,10 @@ impl From<FSMatrix4x4> for Mat4 {
 impl From<Mat4> for FSMatrix4x4 {
     fn from(value: Mat4) -> Self {
         Self(
-            FSVector4(value[(0, 0)], value[(1, 0)], value[(2, 0)], value[(3, 0)]),
-            FSVector4(value[(0, 1)], value[(1, 1)], value[(2, 1)], value[(3, 1)]),
-            FSVector4(value[(0, 2)], value[(1, 2)], value[(2, 2)], value[(3, 2)]),
-            FSVector4(value[(0, 3)], value[(1, 3)], value[(2, 3)], value[(3, 3)]),
+            FSVector4(value.m11, value.m12, value.m13, value.m14),
+            FSVector4(value.m21, value.m22, value.m23, value.m24),
+            FSVector4(value.m31, value.m32, value.m33, value.m34),
+            FSVector4(value.m41, value.m42, value.m43, value.m44),
         )
     }
 }
