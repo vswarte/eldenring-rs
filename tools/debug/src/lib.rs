@@ -2,6 +2,7 @@ use std::time::Duration;
 
 use display::DebugDisplay;
 use eldenring::cs::CSBulletManager;
+use eldenring::cs::CSFeManImp;
 use eldenring::cs::CSGaitemImp;
 use eldenring::cs::CSSfxImp;
 use eldenring::cs::CSWindowImp;
@@ -152,17 +153,18 @@ impl ImguiRenderLoop for EldenRingDebugGui {
                     render_debug_singleton::<CSWorldSceneDrawParamManager>(&ui);
                     item.end();
                 }
-                if let Some(item) = ui.tab_item("FrontEnd") {
+
+                if let Some(item) = ui.tab_item("Front End") {
                     render_debug_singleton::<CSFeManImp>(&ui);
                     item.end();
                 }
                 tabs.end();
-                if let Some(item) = ui.tab_item("Eject") {
-                    if ui.button("Eject") {
-                        eject();
-                    }
-                    item.end();
-                }
+                // if let Some(item) = ui.tab_item("Eject") {
+                //     if ui.button("Eject") {
+                //         eject();
+                //     }
+                //     item.end();
+                // }
             });
     }
 }
