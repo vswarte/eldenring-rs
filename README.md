@@ -1,4 +1,4 @@
-# FromSoftware-rs 🔩  From Software rust bindings
+# FromSoftware-rs 🔩  From Software runtime rust bindings
 Rust bindings to facilitate mod creation for From Software games.
 
 [![Build Status](https://github.com/vswarte/eldenring-rs/actions/workflows/rust.yml/badge.svg)](https://github.com/vswarte/eldenring-rs/actions)
