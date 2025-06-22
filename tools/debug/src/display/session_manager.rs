@@ -1,6 +1,6 @@
-use game::cs::{
-    CSSessionManager, CSStayInMultiplayAreaWarpData, SessionManagerPlayerEntry,
-    SessionManagerPlayerEntryBase,
+use eldenring::cs::{
+    CSSessionManager, CSSessionManagerPlayerEntry, CSSessionManagerPlayerEntryBase,
+    CSStayInMultiplayAreaWarpData,
 };
 use hudhook::imgui::{TableColumnSetup, TreeNodeFlags, Ui};
 

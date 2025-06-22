@@ -1,6 +1,6 @@
-use game::cs::{CSEventFlagMan, CSFD4VirtualMemoryFlag};
+use eldenring::cs::{CSEventFlagMan, CSFD4VirtualMemoryFlag};
 use hudhook::imgui::{TableColumnSetup, TreeNodeFlags, Ui};
-use util::singleton::get_instance;
+use eldenring_util::singleton::get_instance;
 
 use super::DebugDisplay;
 

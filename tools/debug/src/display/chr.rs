@@ -1,4 +1,4 @@
-use game::cs::{
+use eldenring::cs::{
     CSChrModelParamModifierModule, CSChrPhysicsModule, ChrAsm, ChrAsmEquipEntries, ChrAsmEquipment,
     ChrIns, ChrInsModuleContainer, EquipGameData, EquipInventoryData, EquipItemData,
     EquipMagicData, PlayerGameData, PlayerIns,

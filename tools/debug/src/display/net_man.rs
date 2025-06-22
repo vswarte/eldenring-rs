@@ -1,4 +1,4 @@
-use game::cs::{
+use eldenring::cs::{
     CSBattleRoyalContext, CSNetBloodMessageDb, CSNetBloodMessageDbItem, CSNetMan,
     CSQuickMatchingCtrl, QuickmatchManager,
 };

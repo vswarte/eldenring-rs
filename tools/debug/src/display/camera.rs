@@ -1,4 +1,4 @@
-use game::cs::{CSCam, CSCamera};
+use eldenring::cs::{CSCam, CSCamera};
 use hudhook::imgui::{TreeNodeFlags, Ui};
 
 use super::DebugDisplay;

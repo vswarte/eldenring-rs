@@ -1,4 +1,4 @@
-use game::cs::{
+use eldenring::cs::{
     ChrIns, ChrSet, NetChrSetSync, OpenFieldChrSet, PlayerIns, SummonBuddyManager,
     SummonBuddyWarpManager, WorldChrMan,
 };

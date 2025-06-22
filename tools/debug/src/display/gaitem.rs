@@ -1,4 +1,4 @@
-use game::cs::CSGaitemImp;
+use eldenring::cs::CSGaitemImp;
 use hudhook::imgui::{TableColumnSetup, TreeNodeFlags};
 
 use super::DebugDisplay;

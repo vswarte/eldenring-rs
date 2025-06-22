@@ -1,4 +1,4 @@
-use game::cs::{CSWorldGeomIns, CSWorldGeomMan, CSWorldGeomManBlockData};
+use eldenring::cs::{CSWorldGeomIns, CSWorldGeomMan, CSWorldGeomManBlockData};
 use hudhook::imgui::{TreeNodeFlags, Ui};
 
 use super::DebugDisplay;

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PARAMDEF XmlVersion="1">
+  <ParamType>SORTIE_STARTING_POINT_ST</ParamType>
+  <DataVersion>2</DataVersion>
+  <BigEndian>False</BigEndian>
+  <Unicode>True</Unicode>
+  <FormatVersion>0</FormatVersion>
+  <Fields>
+    
+    <Field Def="s32 unknown_0"/>
+    <Field Def="u8 unknown_1a"/>
+    <Field Def="u8 unknown_1b"/>
+    <Field Def="u8 unknown_1c"/>
+    <Field Def="u8 unknown_1d"/>
+    <Field Def="s32 unknown_2"/>
+    <Field Def="s32 unknown_3"/>
+    <Field Def="s32 unknown_4"/>
+    <Field Def="s32 unknown_5"/>
+    <Field Def="s32 unknown_6"/>
+    <Field Def="f32 unknown_7"/>
+  </Fields>
+</PARAMDEF>

@@ -1,4 +1,4 @@
-use game::fd4::FD4ParamRepository;
+use eldenring::fd4::FD4ParamRepository;
 use hudhook::imgui::{TableColumnSetup, TreeNodeFlags};
 
 use super::DebugDisplay;

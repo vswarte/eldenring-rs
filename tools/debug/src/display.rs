@@ -1,4 +1,5 @@
 use dlrf::DLRFSingleton;
+use eldenring_util::singleton;
 use hudhook::imgui::{TreeNodeFlags, Ui};
 
 pub(crate) mod area_time;
@@ -26,7 +27,7 @@ pub trait DebugDisplay {
 }
 
 pub fn render_debug_singleton<T: DLRFSingleton + DebugDisplay + 'static>(ui: &&mut Ui) {
-    let singleton = unsafe { util::singleton::get_instance::<T>() }
+    let singleton = unsafe { singleton::get_instance::<T>() }
         .unwrap_or_else(|_| panic!("Could not get reflection data for {}", T::DLRF_NAME));
 
     match singleton {
