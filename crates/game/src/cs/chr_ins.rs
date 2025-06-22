@@ -22,6 +22,8 @@ use crate::cs::task::{CSEzRabbitNoUpdateTask, CSEzVoidTask};
 use crate::cs::world_chr_man::{ChrSetEntry, WorldBlockChr};
 use crate::cs::world_geom_man::{CSMsbParts, CSMsbPartsEne};
 
+use super::{ItemId, NpcSpEffectEquipCtrl, SpecialEffect};
+
 #[repr(C)]
 #[derive(Debug, Clone, PartialEq, Eq, Hash)]
 /// Used for communicating about characters in the networking layer. This handle is essentially the
@@ -125,11 +127,12 @@ pub struct ChrIns {
     pub frames_per_update: OmissionMode,
     unkbc: OmissionMode,
     pub target_velocity_recorder: usize,
-    unkc8: [u8; 0x8],
+    unkc8: usize,
     pub lock_on_target_position: FSVector4,
-    unkd8: [u8; 0x80],
-    pub last_used_item: i32,
-    unk164: u32,
+    unke0: [u8; 0x80],
+    tae_unk_use_item: ItemId,
+    /// Used by TAE's UseGoods to figure out what item to actually apply.
+    pub tae_queued_use_item: ItemId,
     unk168: u32,
     unk16c: u32,
     unk170: u32,
@@ -162,10 +165,13 @@ pub struct ChrIns {
     pub event_entity_id: u32,
     unk1ec: f32,
     unk1f0: usize,
-    unk1f8: usize,
+    pub npc_sp_effect_equip_ctrl: OwnedPtr<NpcSpEffectEquipCtrl>,
     unk200: [u8; 0x18],
     pub character_creator_steam_id: u64,
+    /// What asset to use for the mimic veil.
     pub mimicry_asset: i32,
+    /// Row ID of the MAP_MIMICRY_ESTABLISHMENT_PARAM, determines stuff like entry and exit
+    /// sfx.
     pub mimicry_establishment_param_id: i32,
     unk228: u32,
     unk22c: u32,
@@ -185,30 +191,21 @@ pub struct ChrIns {
     unk348: [u8; 0x40],
     last_received_packet60: u32,
     unk38c: [u8; 0xc],
-    pose_importer: usize,
+    hka_pose_importer: usize,
     unk3a0: usize,
     anim_skeleton_to_model_modifier: usize,
     unk3b0: usize,
     cloth_state: [u8; 0x30],
-    unk3e8: i32,
-    unk3ec: u32,
-    unk3f0: f32,
-    unk3f4: f32,
-    unk3f8: f32,
-    unk3fc: f32,
-    unk400: f32,
-    unk404: f32,
-    unk408: f32,
-    unk40c: [u8; 0x4],
-    pub update_data_module_task: CSEzVoidTask<CSEzRabbitNoUpdateTask, ChrIns>,
-    pub update_chr_ctrl_task: CSEzVoidTask<CSEzRabbitNoUpdateTask, ChrIns>,
-    pub update_chr_model_task: CSEzVoidTask<CSEzRabbitNoUpdateTask, ChrIns>,
-    pub update_havok_task: CSEzVoidTask<CSEzRabbitNoUpdateTask, ChrIns>,
-    pub update_replay_recorder_task: CSEzVoidTask<CSEzRabbitNoUpdateTask, ChrIns>,
-    pub update_behavior_task: CSEzVoidTask<CSEzRabbitNoUpdateTask, ChrIns>,
-    unk530: [u8; 0x2],
-    unk532: u8,
-    unk533: [u8; 0x11],
+    unk3e8: [u8; 0x28],
+    update_data_module_task: CSEzVoidTask<CSEzRabbitNoUpdateTask, ChrIns>,
+    update_chr_ctrl_task: CSEzVoidTask<CSEzRabbitNoUpdateTask, ChrIns>,
+    update_chr_model_task: CSEzVoidTask<CSEzRabbitNoUpdateTask, ChrIns>,
+    update_havok_task: CSEzVoidTask<CSEzRabbitNoUpdateTask, ChrIns>,
+    update_replay_recorder_task: CSEzVoidTask<CSEzRabbitNoUpdateTask, ChrIns>,
+    update_behavior_task: CSEzVoidTask<CSEzRabbitNoUpdateTask, ChrIns>,
+    unk530_debug_flags: u64,
+    unk538: u64,
+    unk540: u32,
     pub role_param_id: i32,
     unk548: [u8; 0x38],
 }
@@ -278,63 +275,6 @@ impl ChrInsFlags {
     pub const fn enable_character_tag(&self) -> bool {
         self.0[4] & 0b00010000 != 0
     }
-}
-
-#[repr(C)]
-/// Source of name: RTTI
-pub struct SpecialEffect {
-    vftable: usize,
-    head: Option<OwnedPtr<SpecialEffectEntry>>,
-    /// ChrIns this SpecialEffect structure belongs to.
-    pub owner: NonNull<ChrIns>,
-    unk18: usize,
-    unk20: [u8; 0x118],
-}
-
-impl SpecialEffect {
-    /// Yields an iterator over all the SpEffect entries contained in this SpecialEffect instance.
-    pub fn entries(&self) -> impl Iterator<Item = &SpecialEffectEntry> {
-        let mut current = self.head.as_ref().map(|e| e.as_ptr());
-
-        std::iter::from_fn(move || {
-            let ret = current.and_then(|c| unsafe { c.as_ref() });
-            current = unsafe { ret?.next.map(|e| e.as_ptr()) };
-            ret
-        })
-    }
-}
-
-#[repr(C)]
-pub struct SpecialEffectEntry {
-    /// The param row this speffect entry uses.
-    param_data: usize,
-    /// The param ID for this speffect entry.
-    pub param_id: u32,
-    _padc: u32,
-    pub accumulator_info: SpecialEffectEntryAccumulatorInfo,
-    /// The next param entry in the doubly linked list.
-    next: Option<NonNull<SpecialEffectEntry>>,
-    /// The previous param entry in the doubly linked list.
-    previous: Option<NonNull<SpecialEffectEntry>>,
-    /// Time to go until the speffect is removed.
-    pub duration: f32,
-    pub duration2: f32,
-    /// How long it takes the speffect before removing itself.
-    pub total_duration: f32,
-    pub interval_timer: f32,
-    unk50: [u8; 0x28],
-}
-
-#[repr(C)]
-/// Source of name: RTTI
-pub struct SpecialEffectEntryAccumulatorInfo {
-    unk0: usize,
-    pub upper_trigger_count: i32,
-    pub effect_on_upper_or_higher: i32,
-    pub lower_trigger_count: i32,
-    pub effect_on_lower_or_below: i32,
-    unk18: i32,
-    unk1c: u32,
 }
 
 #[repr(C)]

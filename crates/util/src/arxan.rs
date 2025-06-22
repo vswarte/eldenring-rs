@@ -24,6 +24,7 @@ pub fn get_arxan_code_restoration_rvas(program: &Program) -> Vec<u32> {
     while matches.next(&mut captures) {
         result.push(captures[1]);
     }
+
     result
 }
 

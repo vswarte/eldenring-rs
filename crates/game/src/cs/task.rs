@@ -30,14 +30,25 @@ pub trait CSEzTaskProxyVmt: FD4TaskBaseVmt {
 
 #[repr(C)]
 pub struct CSEzTask {
-    /// Derived from FD4TaskBase
     pub vftable: VPtr<dyn CSEzTaskVmt, Self>,
     unk8: u32,
     _padc: u32,
-    // ----
     pub task_proxy: NonNull<CSEzTaskProxy>,
 }
 
+#[repr(C)]
+pub struct CSEzRabbitTaskBase {
+    pub ez_task: CSEzTask,
+    unk18: u32,
+    _pad1c: u32,
+}
+
+#[repr(C)]
+pub struct CSEzRabbitNoUpdateTask {
+    pub ez_rabbit_task_base: CSEzRabbitTaskBase,
+}
+
+/// Often used by the game to periodically run some update on a structure.
 #[repr(C)]
 pub struct CSEzUpdateTask<TEzTask, TSubject> {
     pub base_task: TEzTask,
@@ -49,8 +60,6 @@ pub struct CSEzUpdateTask<TEzTask, TSubject> {
     pub executor: fn(&TSubject, &FD4Time),
 }
 
-pub type CSEzVoidTask<TEzTask, TSubject> = CSEzUpdateTask<TEzTask, TSubject>;
-
 #[repr(C)]
 pub struct CSEzRabbitTask {
     pub base: CSEzTask,
@@ -58,7 +67,16 @@ pub struct CSEzRabbitTask {
     unk1c: u32,
 }
 
-pub type CSEzRabbitNoUpdateTask = CSEzRabbitTask;
+#[repr(C)]
+pub struct CSEzVoidTask<TEzTask, TSubject> {
+    pub base_task: TEzTask,
+
+    /// Whatever this update task is operating on
+    pub subject: NonNull<TSubject>,
+
+    /// Takes in the subject and the delta time
+    pub executor: fn(&TSubject, f32),
+}
 
 #[repr(C)]
 pub struct CSEzTaskProxy {

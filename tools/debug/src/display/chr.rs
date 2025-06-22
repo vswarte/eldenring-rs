@@ -514,7 +514,7 @@ impl DebugDisplay for ChrIns {
         ui.text(format!("Map ID: {}", self.map_id_1));
         // ui.text(format!("Team Type: {}", self.team_type));
         ui.text(format!("Last hit by: {}", self.last_hit_by));
-        ui.text(format!("Last used item: {}", self.last_used_item));
+        ui.text(format!("TAE use item: {:?}", self.tae_queued_use_item));
 
         ui.text(format!(
             "Block center origin 1: {}",
@@ -529,8 +529,8 @@ impl DebugDisplay for ChrIns {
                 [
                     TableColumnSetup::new("ID"),
                     TableColumnSetup::new("Timer"),
+                    TableColumnSetup::new("Removal timer"),
                     TableColumnSetup::new("Duration"),
-                    TableColumnSetup::new("Duration2"),
                     TableColumnSetup::new("Interval Timer"),
                 ],
                 TableFlags::RESIZABLE | TableFlags::SIZING_FIXED_FIT,
@@ -543,10 +543,10 @@ impl DebugDisplay for ChrIns {
                     ui.text(format!("{}", entry.interval_timer));
 
                     ui.table_next_column();
-                    ui.text(format!("{}", entry.duration));
+                    ui.text(format!("{}", entry.removal_timer));
 
                     ui.table_next_column();
-                    ui.text(format!("{}", entry.duration2));
+                    ui.text(format!("{}", entry.duration));
 
                     ui.table_next_column();
                     ui.text(format!("{}", entry.interval_timer));

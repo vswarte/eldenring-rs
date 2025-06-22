@@ -4,6 +4,7 @@ mod resource;
 mod step;
 mod task;
 mod time;
+mod slot;
 
 pub use basic_hash_string::*;
 pub use param_repository::*;
@@ -11,3 +12,4 @@ pub use resource::*;
 pub use step::*;
 pub use task::*;
 pub use time::*;
+pub use slot::*;
