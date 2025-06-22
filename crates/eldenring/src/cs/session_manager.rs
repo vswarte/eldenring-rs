@@ -7,10 +7,9 @@ use crate::{
     dlkr::{DLAllocatorBase, DLPlainLightMutex},
     dltx::{DLCodedString, DLInplaceStr},
     fd4::FD4Time,
-    matrix::{FSVector3, FSVector4},
-    pointer::OwnedPtr,
     DoublyLinkedList, Vector,
 };
+use shared::{OwnedPtr, FSVector4, FSVector3};
 
 use super::{CSEzTask, CSEzUpdateTask, MapId, P2PEntityHandle};
 

@@ -1,9 +1,13 @@
-use std::{
-    ops::{Deref, DerefMut},
-    ptr::NonNull,
-};
+use std::{ops::{Deref, DerefMut}, ptr::NonNull};
 
-/// Pointer to a structure that the containing structure owns.
+/// Pointer to a structure that the containing structure owns. You will generally use this to model
+/// structures in foreign memory when extending the game libraries. Do not use this in your own
+/// code as you're risking all rusts safety reasoning.
+///
+/// # Safety
+///
+/// User must ensure that it's safe for this pointer to be turned into a (potentially mutable)
+/// reference if a reference to its embedding structure is obtained.
 #[repr(C)]
 pub struct OwnedPtr<T>(NonNull<T>);
 

@@ -11,9 +11,9 @@ use crate::{
     dlkr::{DLAllocatorBase, DLPlainLightMutex},
     dltx::{DLBasicString, DLString},
     dlut::DLDateTime,
-    pointer::OwnedPtr,
     Vector,
 };
+use shared::OwnedPtr;
 
 use super::{DLFileSeekDirection, OpenFileMode};
 

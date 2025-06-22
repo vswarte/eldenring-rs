@@ -1,8 +1,8 @@
 use std::ops::Index;
 use std::ptr::NonNull;
 
-use crate::pointer::OwnedPtr;
 use crate::Vector;
+use shared::OwnedPtr;
 
 use crate::cs::{FieldInsHandle, GaitemHandle, ItemId};
 

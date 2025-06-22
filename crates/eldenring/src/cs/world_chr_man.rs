@@ -6,8 +6,7 @@ use std::ptr::NonNull;
 
 use vtable_rs::VPtr;
 
-use crate::matrix::FSVector4;
-use crate::pointer::OwnedPtr;
+use shared::{FSMatrix4x4, FSVector4, OwnedPtr};
 use crate::Tree;
 use crate::{cs::ChrIns, Vector};
 

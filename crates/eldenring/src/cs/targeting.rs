@@ -1,7 +1,7 @@
 use std::ptr::NonNull;
 use vtable_rs::VPtr;
 
-use crate::matrix::FSVector4;
+use shared::FSVector4;
 use crate::position::HavokPosition;
 use crate::rotation::Quaternion;
 

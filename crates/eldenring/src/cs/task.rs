@@ -6,7 +6,7 @@ use windows::core::PCWSTR;
 use crate::dlkr::DLPlainConditionSignal;
 use crate::dlrf::DLRuntimeClass;
 use crate::fd4::{FD4TaskBase, FD4TaskBaseVmt, FD4TaskData};
-use crate::pointer::OwnedPtr;
+use shared::OwnedPtr;
 use crate::{
     dlkr::DLPlainLightMutex,
     fd4::{FD4BasicHashString, FD4Time},

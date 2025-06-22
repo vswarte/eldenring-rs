@@ -233,8 +233,9 @@ name = "debug"
 version = "0.8.0"
 dependencies = [
  "eldenring",
- "eldenring-dlrf",
  "eldenring-util",
+ "fromsoftware-dlrf",
+ "fromsoftware-shared",
  "hudhook",
  "pelite",
  "tracing",
@@ -269,7 +270,8 @@ checksum = "48c757948c5ede0e46177b7add2e67155f70e33c07fea8284df6576da70b3719"
 name = "eldenring"
 version = "0.8.0"
 dependencies = [
- "eldenring-dlrf",
+ "fromsoftware-dlrf",
+ "fromsoftware-shared",
  "nalgebra",
  "nalgebra-glm",
  "pelite",
@@ -283,26 +285,12 @@ dependencies = [
 ]
 
 [[package]]
-name = "eldenring-dlrf"
-version = "0.8.0"
-dependencies = [
- "eldenring-dlrf-derive",
-]
-
-[[package]]
-name = "eldenring-dlrf-derive"
-version = "0.8.0"
-dependencies = [
- "quote",
- "syn",
-]
-
-[[package]]
 name = "eldenring-util"
 version = "0.8.0"
 dependencies = [
  "eldenring",
- "eldenring-dlrf",
+ "fromsoftware-dlrf",
+ "fromsoftware-shared",
  "pelite",
  "steamworks",
  "steamworks-sys",
@@ -318,6 +306,29 @@ name = "equivalent"
 version = "1.0.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "877a4ace8713b0bcf2a4e7eec82529c029f1d0619886d18145fea96c3ffe5c0f"
+
+[[package]]
+name = "fromsoftware-dlrf"
+version = "0.8.0"
+dependencies = [
+ "fromsoftware-dlrf-derive",
+]
+
+[[package]]
+name = "fromsoftware-dlrf-derive"
+version = "0.8.0"
+dependencies = [
+ "quote",
+ "syn",
+]
+
+[[package]]
+name = "fromsoftware-shared"
+version = "0.8.0"
+dependencies = [
+ "nalgebra",
+ "nalgebra-glm",
+]
 
 [[package]]
 name = "gl_generator"

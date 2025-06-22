@@ -1,7 +1,5 @@
-use eldenring::{
-    cs::{ChrIns, FieldInsHandle, WorldChrMan},
-    matrix::FSVector4,
-};
+use eldenring::cs::{ChrIns, FieldInsHandle, WorldChrMan};
+use shared::FSVector4;
 
 pub trait WorldChrManExt {
     fn chr_ins_by_handle(&mut self, handle: &FieldInsHandle) -> Option<&mut ChrIns>;

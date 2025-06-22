@@ -1,12 +1,14 @@
 [workspace]
 resolver = "2"
 members = [
+    "crates/shared",
+    "crates/dlrf",
     "crates/eldenring",
     "crates/eldenring-util",
-    "crates/dlrf",
+    "crates/nightreign",
     "tools/debug",
     "tools/binary-mapper",
-    "tools/param-generator", "crates/nightreign",
+    "tools/param-generator",
 ]
 
 [workspace.package]
@@ -16,8 +18,9 @@ repository = "https://github.com/vswarte/eldenring-rs"
 license = "MIT OR Apache-2.0"
 
 [workspace.dependencies]
-dlrf-derive = { path = "crates/dlrf/derive", version = "0.8.0", package = "eldenring-dlrf-derive" }
-dlrf = { path = "crates/dlrf", version = "0.8.0", package = "eldenring-dlrf" }
+shared = { path = "crates/shared", version = "0.8.0", package = "fromsoftware-shared" }
+dlrf-derive = { path = "crates/dlrf/derive", version = "0.8.0", package = "fromsoftware-dlrf-derive" }
+dlrf = { path = "crates/dlrf", version = "0.8.0", package = "fromsoftware-dlrf" }
 eldenring = { path = "crates/eldenring", version = "0.8.0", package = "eldenring" }
 eldenring-util = { path = "crates/eldenring-util", version = "0.8.0", package = "eldenring-util" }
 nightreign = { path = "crates/nightreign", version = "0.8.0", package = "nightreign" }

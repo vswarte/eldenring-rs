@@ -1,6 +1,5 @@
 use crate::gxffx::GXFfxSceneCtrl;
-use crate::matrix::FSMatrix4x4;
-use crate::pointer::OwnedPtr;
+use shared::{OwnedPtr, FSMatrix4x4};
 use crate::{Tree, Vector};
 
 #[repr(C)]

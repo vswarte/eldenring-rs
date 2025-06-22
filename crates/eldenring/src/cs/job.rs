@@ -1,6 +1,7 @@
 use vtable_rs::VPtr;
 
-use crate::{dlut::DLReferenceCountObjectVmt, fd4::FD4Time, pointer::OwnedPtr, DLFixedVector};
+use shared::OwnedPtr;
+use crate::{dlut::DLReferenceCountObjectVmt, fd4::FD4Time, DLFixedVector};
 
 #[repr(C)]
 pub struct MenuJobResult {}

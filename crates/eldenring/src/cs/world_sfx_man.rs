@@ -7,8 +7,6 @@ use std::ptr::NonNull;
 use vtable_rs::VPtr;
 
 use crate::cs::ChrIns;
-use crate::matrix::FSVector4;
-use crate::pointer::OwnedPtr;
 use crate::Tree;
 
 use super::{FieldInsHandle, MapId, NetChrSync, PlayerIns, WorldInfoOwner};

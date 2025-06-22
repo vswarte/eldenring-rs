@@ -1,7 +1,7 @@
 use std::ptr::NonNull;
 
+use shared::OwnedPtr;
 use crate::{
-    pointer::OwnedPtr,
     position::{BlockPosition, HavokPosition},
     Tree,
 };

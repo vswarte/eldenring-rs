@@ -2,7 +2,7 @@ use std::ptr::NonNull;
 
 use windows::Win32::Foundation::BOOL;
 
-use crate::pointer::OwnedPtr;
+use shared::OwnedPtr;
 
 use super::{CSEzTask, CSEzUpdateTask};
 

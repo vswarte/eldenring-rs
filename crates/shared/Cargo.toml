@@ -1,0 +1,10 @@
+[package]
+name = "fromsoftware-shared"
+version.workspace = true
+edition.workspace = true
+repository.workspace = true
+license.workspace = true
+
+[dependencies]
+nalgebra-glm.workspace = true
+nalgebra.workspace = true

@@ -2,7 +2,7 @@ use std::{fmt::Display, mem::transmute};
 
 use thiserror::Error;
 
-use crate::pointer::OwnedPtr;
+use shared::OwnedPtr;
 
 use super::ItemId;
 #[repr(C)]

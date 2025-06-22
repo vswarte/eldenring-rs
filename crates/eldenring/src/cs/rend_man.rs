@@ -1,4 +1,4 @@
-use crate::pointer::OwnedPtr;
+use shared::OwnedPtr;
 
 #[repr(C)]
 #[dlrf::singleton("RendMan")]

@@ -2,7 +2,8 @@ use std::{fmt::Formatter, ptr::NonNull};
 
 use windows::core::PCWSTR;
 
-use crate::{pointer::OwnedPtr, Tree, Vector};
+use shared::OwnedPtr;
+use crate::{Tree, Vector};
 
 use super::{FieldInsHandle, MapId, WorldInfoOwner};
 

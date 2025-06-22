@@ -2,7 +2,8 @@ use std::ptr::NonNull;
 
 use vtable_rs::VPtr;
 
-use crate::{dlkr::DLAllocatorBase, pointer::OwnedPtr};
+use shared::OwnedPtr;
+use crate::dlkr::DLAllocatorBase;
 
 use super::{DLFileOperatorContainer, DLFileSeekDirection, DLIOResult};
 

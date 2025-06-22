@@ -1,8 +1,8 @@
 /// Defines some helper methods around dealing with math
-use std::ops::{Add, Mul, MulAssign, Sub};
+use std::ops::{Add, Mul, Sub};
 
 use nalgebra::RowVector4;
-use nalgebra_glm::{Mat4, Vec3, Vec4};
+use nalgebra_glm::{Mat4, Vec3};
 
 #[repr(C, align(16))]
 #[derive(Debug, Clone, Copy)]

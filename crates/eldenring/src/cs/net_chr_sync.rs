@@ -1,6 +1,6 @@
 use std::ptr::NonNull;
 
-use crate::pointer::OwnedPtr;
+use shared::OwnedPtr;
 
 use super::{ChrIns, ChrSet};
 

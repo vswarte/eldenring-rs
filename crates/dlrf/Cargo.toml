@@ -1,5 +1,5 @@
 [package]
-name = "eldenring-dlrf"
+name = "fromsoftware-dlrf"
 version.workspace = true
 edition.workspace = true
 repository.workspace = true

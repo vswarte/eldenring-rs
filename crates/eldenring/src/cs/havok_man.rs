@@ -1,4 +1,4 @@
-use crate::pointer::OwnedPtr;
+use shared::OwnedPtr;
 
 // Source of name: RTTI
 #[dlrf::singleton("CSHavokMan")]

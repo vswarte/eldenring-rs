@@ -1,6 +1,6 @@
 use std::ffi;
 
-use crate::pointer::OwnedPtr;
+use shared::OwnedPtr;
 
 #[repr(C)]
 /// Part of the DLRF namespace, describes some aspects of a tracked class.

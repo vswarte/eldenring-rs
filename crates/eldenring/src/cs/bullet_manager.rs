@@ -1,7 +1,6 @@
 use std::ptr::NonNull;
 
-use crate::matrix::FSVector4;
-use crate::pointer::OwnedPtr;
+use shared::{FSVector4, OwnedPtr};
 
 use super::{CSBulletIns, ChrCam, FieldInsHandle};
 

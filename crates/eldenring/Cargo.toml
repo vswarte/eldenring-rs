@@ -11,6 +11,7 @@ description = "Raw structures and bindings for From Software's title Elden Ring"
 unused = "allow"
 
 [dependencies]
+shared.workspace = true
 dlrf.workspace = true
 tracing.workspace = true
 thiserror.workspace = true

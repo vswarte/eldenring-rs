@@ -1,7 +1,6 @@
 use std::ptr::NonNull;
 
-use crate::matrix::{FSMatrix4x4, FSVector4};
-use crate::pointer::OwnedPtr;
+use shared::{FSMatrix4x4, FSVector4, OwnedPtr};
 
 use super::ChrIns;
 

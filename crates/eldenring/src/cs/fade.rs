@@ -1,5 +1,5 @@
+use shared::OwnedPtr;
 use crate::fd4::FD4Time;
-use crate::pointer::OwnedPtr;
 
 #[repr(C)]
 /// Controls fades in the game. Used for cutscene transitions and such.

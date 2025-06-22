@@ -5,9 +5,9 @@ use windows::core::PCWSTR;
 use crate::{
     dltx::DLString,
     fd4::{FD4StepBaseInterface, FD4Time},
-    pointer::OwnedPtr,
     stl::DoublyLinkedList,
 };
+use shared::OwnedPtr;
 
 use super::{CSEzTask, CSEzUpdateTask, MapId, PlayerIns};
 
