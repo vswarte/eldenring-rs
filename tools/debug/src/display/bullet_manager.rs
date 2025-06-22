@@ -1,4 +1,4 @@
-use game::cs::{CSBulletIns, CSBulletManager};
+use eldenring::cs::{CSBulletIns, CSBulletManager};
 use hudhook::imgui::{TreeNodeFlags, Ui};
 
 use super::DebugDisplay;

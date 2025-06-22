@@ -1,5 +1,5 @@
-use game::matrix::{FSMatrix4x4, FSVector4};
 use hudhook::imgui::Ui;
+use shared::{FSMatrix4x4, FSVector4};
 
 use super::DebugDisplay;
 

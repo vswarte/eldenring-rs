@@ -1,4 +1,4 @@
-use game::cs::{FieldArea, WorldInfoOwner};
+use eldenring::cs::{FieldArea, WorldInfoOwner};
 use hudhook::imgui::{TreeNodeFlags, Ui};
 
 use super::DebugDisplay;

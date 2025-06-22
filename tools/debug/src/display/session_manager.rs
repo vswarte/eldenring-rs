@@ -1,4 +1,4 @@
-use game::cs::{
+use eldenring::cs::{
     CSSessionManager, CSStayInMultiplayAreaWarpData, SessionManagerPlayerEntry,
     SessionManagerPlayerEntryBase,
 };

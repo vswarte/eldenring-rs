@@ -1,25 +1,29 @@
 [workspace]
 resolver = "2"
 members = [
-    "crates/game",
-    "crates/util",
+    "crates/shared",
     "crates/dlrf",
+    "crates/eldenring",
+    "crates/eldenring-util",
+    "crates/nightreign",
     "tools/debug",
     "tools/binary-mapper",
     "tools/param-generator",
 ]
 
 [workspace.package]
-version = "0.7.0"
+version = "0.8.0"
 edition = "2021"
-repository = "https://github.com/vswarte/chains-bindings"
+repository = "https://github.com/vswarte/eldenring-rs"
 license = "MIT OR Apache-2.0"
 
 [workspace.dependencies]
-dlrf-derive = { path = "crates/dlrf/derive", version = "0.7.0", package = "eldenring-dlrf-derive" }
-dlrf = { path = "crates/dlrf", version = "0.7.0", package = "eldenring-dlrf" }
-game = { path = "crates/game", version = "0.7.0", package = "eldenring" }
-util = { path = "crates/util", version = "0.7.0", package = "eldenring-util" }
+shared = { path = "crates/shared", version = "0.8.0", package = "fromsoftware-shared" }
+dlrf-derive = { path = "crates/dlrf/derive", version = "0.8.0", package = "fromsoftware-dlrf-derive" }
+dlrf = { path = "crates/dlrf", version = "0.8.0", package = "fromsoftware-dlrf" }
+eldenring = { path = "crates/eldenring", version = "0.8.0", package = "eldenring" }
+eldenring-util = { path = "crates/eldenring-util", version = "0.8.0", package = "eldenring-util" }
+nightreign = { path = "crates/nightreign", version = "0.8.0", package = "nightreign" }
 binary_mapper = { path = "crates/binary-mapper" }
 thiserror = "1"
 tracing = "0.1"

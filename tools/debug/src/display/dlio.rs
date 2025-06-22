@@ -1,4 +1,4 @@
-use game::dlio::DLFileDeviceManager;
+use eldenring::dlio::DLFileDeviceManager;
 use hudhook::imgui::{TableColumnSetup, TreeNodeFlags};
 
 use super::DebugDisplay;

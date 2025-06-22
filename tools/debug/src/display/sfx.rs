@@ -1,4 +1,4 @@
-use game::{
+use eldenring::{
     cs::CSSfxImp,
     gxffx::{FxrListNode, FxrWrapper, GXFfxGraphicsResourceManager, GXFfxSceneCtrl},
 };

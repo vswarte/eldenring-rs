@@ -1,4 +1,6 @@
-use game::cs::{CSFeManImp, ChrEnemyTagEntry, ChrFriendTagEntry, FrontEndViewValues, TagHudData};
+use eldenring::cs::{
+    CSFeManImp, ChrEnemyTagEntry, ChrFriendTagEntry, FrontEndViewValues, TagHudData,
+};
 use hudhook::imgui::{TreeNodeFlags, Ui};
 
 use super::DebugDisplay;

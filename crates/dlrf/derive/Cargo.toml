@@ -1,11 +1,11 @@
 [package]
-name = "eldenring-dlrf-derive"
+name = "fromsoftware-dlrf-derive"
 version.workspace = true
 edition.workspace = true
 repository.workspace = true
 license.workspace = true
 readme = false
-description = "Macro for generating singleton specifier for usage with the DLRF singleton finder. Depend on eldenring-dlrf instead."
+description = "Macro for generating singleton specifier for usage with the DLRF singleton finder. Depend on fromsoftware-dlrf instead."
 
 [lib]
 proc-macro = true

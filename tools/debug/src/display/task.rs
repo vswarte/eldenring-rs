@@ -1,4 +1,4 @@
-use game::cs::{CSTaskGroup, CSTaskImp};
+use eldenring::cs::{CSTaskGroup, CSTaskImp};
 use hudhook::imgui::*;
 
 use super::DebugDisplay;

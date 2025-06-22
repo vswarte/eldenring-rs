@@ -1,13 +1,15 @@
 use std::time::Duration;
 
 use display::DebugDisplay;
-use game::cs::CSBulletManager;
-use game::cs::CSFeManImp;
-use game::cs::CSGaitemImp;
-use game::cs::CSSfxImp;
-use game::cs::CSWindowImp;
-use game::cs::CSWorldSceneDrawParamManager;
-use game::cs::FieldArea;
+use eldenring::cs::CSBulletManager;
+use eldenring::cs::CSFeManImp;
+use eldenring::cs::CSGaitemImp;
+use eldenring::cs::CSSfxImp;
+use eldenring::cs::CSWindowImp;
+use eldenring::cs::CSWorldSceneDrawParamManager;
+use eldenring::cs::FieldArea;
+use eldenring_util::program::Program;
+use eldenring_util::system::wait_for_system_init;
 use hudhook::eject;
 use hudhook::hooks::dx12::ImguiDx12Hooks;
 use hudhook::imgui::Condition;
@@ -18,23 +20,21 @@ use hudhook::ImguiRenderLoop;
 
 use pelite::pe64::Pe;
 
-use game::cs::CSCamera;
-use game::cs::CSEventFlagMan;
-use game::cs::CSFade;
-use game::cs::CSNetMan;
-use game::cs::CSSessionManager;
-use game::cs::CSTaskGroup;
-use game::cs::CSTaskImp;
-use game::cs::CSWorldGeomMan;
-use game::cs::WorldAreaTime;
-use game::cs::WorldChrMan;
-use game::fd4::FD4ParamRepository;
+use eldenring::cs::CSCamera;
+use eldenring::cs::CSEventFlagMan;
+use eldenring::cs::CSFade;
+use eldenring::cs::CSNetMan;
+use eldenring::cs::CSSessionManager;
+use eldenring::cs::CSTaskGroup;
+use eldenring::cs::CSTaskImp;
+use eldenring::cs::CSWorldGeomMan;
+use eldenring::cs::WorldAreaTime;
+use eldenring::cs::WorldChrMan;
+use eldenring::fd4::FD4ParamRepository;
 
 use display::render_debug_singleton;
 use rva::RVA_GLOBAL_FIELD_AREA;
 use tracing_panic::panic_hook;
-use util::program::Program;
-use util::system::wait_for_system_init;
 
 mod display;
 mod rva;
@@ -84,7 +84,9 @@ impl EldenRingDebugGui {
 
 impl ImguiRenderLoop for EldenRingDebugGui {
     fn initialize(&mut self, ctx: &mut Context, _render_context: &mut dyn hudhook::RenderContext) {
-        if let Ok(Some(window)) = unsafe { util::singleton::get_instance::<CSWindowImp>() } {
+        if let Ok(Some(window)) =
+            unsafe { eldenring_util::singleton::get_instance::<CSWindowImp>() }
+        {
             if window.screen_width > 1920 {
                 self.scale = window.screen_width as f32 / 1920.0;
                 self.size[0] *= self.scale;
@@ -153,17 +155,18 @@ impl ImguiRenderLoop for EldenRingDebugGui {
                     render_debug_singleton::<CSWorldSceneDrawParamManager>(&ui);
                     item.end();
                 }
-                if let Some(item) = ui.tab_item("FrontEnd") {
+
+                if let Some(item) = ui.tab_item("Front End") {
                     render_debug_singleton::<CSFeManImp>(&ui);
                     item.end();
                 }
                 tabs.end();
-                if let Some(item) = ui.tab_item("Eject") {
-                    if ui.button("Eject") {
-                        eject();
-                    }
-                    item.end();
-                }
+                // if let Some(item) = ui.tab_item("Eject") {
+                //     if ui.button("Eject") {
+                //         eject();
+                //     }
+                //     item.end();
+                // }
             });
     }
 }

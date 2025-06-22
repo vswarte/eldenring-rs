@@ -1,4 +1,4 @@
-use game::cs::{CSFD4FadePlate, CSFade};
+use eldenring::cs::{CSFD4FadePlate, CSFade};
 use hudhook::imgui::Ui;
 
 use super::DebugDisplay;

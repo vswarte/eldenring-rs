@@ -1,4 +1,4 @@
-use game::cs::WorldAreaTime;
+use eldenring::cs::WorldAreaTime;
 use hudhook::imgui::Ui;
 
 use super::DebugDisplay;
