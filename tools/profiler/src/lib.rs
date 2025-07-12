@@ -4,15 +4,15 @@ use std::{
     sync::{LazyLock, RwLock},
 };
 
-use game::{
+use eldenring::{
     cs::{CSEzRabbitTask, CSEzTask, CSEzTaskProxy, CSEzUpdateTask, CSTaskGroupIndex, CSTaskImp},
     fd4::{FD4TaskBase, FD4TaskData, FD4TaskRequestEntry},
 };
-use pelite::pe64::Pe;
-use retour::static_detour;
-use util::{
+use eldenring_util::{
     program::Program, rtti::vftable_classname, singleton::get_instance, task::CSTaskImpExt,
 };
+use pelite::pe64::Pe;
+use retour::static_detour;
 
 static_detour! {
     static FD4_EXECUTE_TASK_DETOUR: extern "C" fn(usize, *const FD4TaskRequestEntry, u32, u32);

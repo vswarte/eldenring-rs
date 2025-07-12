@@ -6,8 +6,8 @@ repository.workspace = true
 license.workspace = true
 
 [dependencies]
-game.workspace = true
-util.workspace = true
+eldenring.workspace = true
+eldenring-util.workspace = true
 pelite.workspace = true
 retour = { version = "0.3", features = ["static-detour"] }
 
