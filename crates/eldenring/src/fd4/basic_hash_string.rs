@@ -1,6 +1,6 @@
 use std::{ffi, fmt::Display};
 
-use crate::dltx::DLBasicString;
+use crate::dltx::DLString;
 
 #[repr(C)]
 /// Wraps a string to make it easier to use with hashmaps. Seemingly mostly used in the resource
@@ -9,18 +9,17 @@ use crate::dltx::DLBasicString;
 /// Source of name: RTTI
 pub struct FD4BasicHashString {
     vftable: usize,
-    allocator: usize,
     /// The contained string we're hashing for.
-    inner: DLBasicString,
+    pub inner: DLString,
     /// Hashed representation of the string field.
     pub hash: u32,
     /// Indicates whether or not the hash field is populated.
     pub needs_hashing: u8,
-    _pad35: [u8; 0xB],
+    _pad3d: [u8; 0x3],
 }
 
-impl AsRef<DLBasicString> for FD4BasicHashString {
-    fn as_ref(&self) -> &DLBasicString {
+impl AsRef<DLString> for FD4BasicHashString {
+    fn as_ref(&self) -> &DLString {
         &self.inner
     }
 }
