@@ -8,21 +8,41 @@ Rust bindings to facilitate mod creation for From Software games.
 
 <summary>Example Elden Ring mod code: render debug line</summary>
 
+Your project's Cargo.toml should contain the following lines (substitute the paths for where you unpacked the library):
+```toml
+[lib]
+crate-type = ["cdylib"] # Compiles a DLL that will run in the game
+
+[dependencies.eldenring]
+path = "dependencies/fromsoftware-rs/crates/eldenring"
+[dependencies.eldenring-util]
+path = "dependencies/fromsoftware-rs/crates/eldenring-util"
+[dependencies.fromsoftware-shared]
+path = "dependencies/fromsoftware-rs/crates/shared"
+[dependencies.nalgebra-glm]
+version = "0.19.0"
+```
+
 ```rust
 use std::time::Duration;
 
 use eldenring::{
     cs::{CSTaskImp, RendMan, WorldChrMan},
     fd4::FD4TaskData,
-    matrix::FSVector4,
     position::PositionDelta,
 };
 use eldenring_util::{
+    program::Program,
     ez_draw::CSEzDrawExt, singleton::get_instance, system::wait_for_system_init, task::CSTaskImpExt,
+};
+
+use fromsoftware_shared::{
+    FSVector4,
 };
 use nalgebra_glm as glm;
 
-#[no_mangle]
+#[unsafe(no_mangle)]
+#[allow(unsafe_op_in_unsafe_fn)]
 pub unsafe extern "C" fn DllMain(_hmodule: usize, reason: u32) -> bool {
     // Check if we're attaching to the game
     if reason == 1 {
@@ -75,10 +95,10 @@ pub unsafe extern "C" fn DllMain(_hmodule: usize, reason: u32) -> bool {
                         &physics.position,
                         &(physics.position
                             + PositionDelta(
-                                directional_vector.x,
-                                directional_vector.y,
-                                directional_vector.z,
-                            )),
+                            directional_vector.x,
+                            directional_vector.y,
+                            directional_vector.z,
+                        )),
                     );
                 },
                 eldenring::cs::CSTaskGroupIndex::ChrIns_PostPhysics,
