@@ -17,11 +17,11 @@ use crate::cs::gaitem::GaitemHandle;
 use crate::cs::network_session::PlayerNetworkSession;
 use crate::cs::player_game_data::{ChrAsm, PlayerGameData};
 use crate::cs::session_manager::{SessionManagerPlayerEntry, SessionManagerPlayerEntryBase};
+use crate::cs::sp_effect::{NpcSpEffectEquipCtrl, SpecialEffect};
 use crate::cs::task::{CSEzRabbitNoUpdateTask, CSEzVoidTask};
 use crate::cs::world_chr_man::{ChrSetEntry, WorldBlockChr};
 use crate::cs::world_geom_man::{CSMsbParts, CSMsbPartsEne};
-
-use super::{ItemId, NpcSpEffectEquipCtrl, SpecialEffect};
+use crate::cs::ItemId;
 
 #[repr(C)]
 #[derive(Debug, Clone, PartialEq, Eq, Hash)]
@@ -128,10 +128,10 @@ pub struct ChrIns {
     pub target_velocity_recorder: usize,
     unkc8: usize,
     pub lock_on_target_position: FSVector4,
-    unke0: [u8; 0x80],
-    tae_unk_use_item: ItemId,
+    unkd8: [u8; 0x80],
     /// Used by TAE's UseGoods to figure out what item to actually apply.
     pub tae_queued_use_item: ItemId,
+    unk164: u32,
     unk168: u32,
     unk16c: u32,
     unk170: u32,
