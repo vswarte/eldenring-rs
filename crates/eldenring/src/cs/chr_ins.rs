@@ -19,13 +19,12 @@ use crate::cs::gaitem::GaitemHandle;
 use crate::cs::network_session::PlayerNetworkSession;
 use crate::cs::player_game_data::{ChrAsm, PlayerGameData};
 use crate::cs::session_manager::{SessionManagerPlayerEntry, SessionManagerPlayerEntryBase};
+use crate::cs::sp_effect::{NpcSpEffectEquipCtrl, SpecialEffect};
 use crate::cs::task::{CSEzRabbitNoUpdateTask, CSEzVoidTask};
 use crate::cs::world_chr_man::{ChrSetEntry, WorldBlockChr};
 use crate::cs::world_geom_man::{CSMsbParts, CSMsbPartsEne};
 use crate::cs::CSPlayerMenuCtrl;
 use crate::cs::ItemId;
-
-use super::{ItemId, NpcSpEffectEquipCtrl, SpecialEffect};
 
 #[repr(C)]
 #[derive(Debug, Clone, PartialEq, Eq, Hash)]
