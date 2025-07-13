@@ -250,7 +250,6 @@ impl DebugDisplay for EquipGameData {
                 ],
             ) {
                 self.qm_item_backup_vector
-                    .items()
                     .iter()
                     .enumerate()
                     .for_each(|(index, item)| {
@@ -592,7 +591,7 @@ impl DebugDisplay for CSChrModelParamModifierModule {
             "chr-ins-model-param-modifier",
             [TableColumnSetup::new("Name")],
         ) {
-            self.modifiers.items().iter().for_each(|modifier| {
+            self.modifiers.iter().for_each(|modifier| {
                 ui.table_next_column();
                 ui.text(unsafe { modifier.name.to_string() }.unwrap());
             });

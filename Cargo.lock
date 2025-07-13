@@ -220,6 +220,20 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "d0a5c400df2834b80a4c3327b3aad3a4c4cd4de0629063962b03235697506a28"
 
 [[package]]
+name = "cstl-sys"
+version = "2.4.0"
+dependencies = [
+ "cc",
+]
+
+[[package]]
+name = "cxx-stl"
+version = "3.4.0"
+dependencies = [
+ "cstl-sys",
+]
+
+[[package]]
 name = "dataview"
 version = "1.0.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -270,6 +284,7 @@ checksum = "48c757948c5ede0e46177b7add2e67155f70e33c07fea8284df6576da70b3719"
 name = "eldenring"
 version = "0.8.0"
 dependencies = [
+ "cxx-stl",
  "fromsoftware-dlrf",
  "fromsoftware-shared",
  "nalgebra",

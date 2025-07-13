@@ -21,7 +21,7 @@ impl DebugDisplay for CSSessionManager {
 
         if ui.collapsing_header("Members", TreeNodeFlags::empty()) {
             ui.indent();
-            for player in self.players.items() {
+            for player in self.players.iter() {
                 player.render_debug(ui);
             }
             ui.unindent();
@@ -85,7 +85,6 @@ impl DebugDisplay for CSStayInMultiplayAreaWarpData {
                 ],
             ) {
                 self.player_fade_tracker
-                    .items()
                     .iter()
                     .enumerate()
                     .for_each(|(index, item)| {
