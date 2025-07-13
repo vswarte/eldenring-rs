@@ -73,6 +73,7 @@ pub struct DLAllocatorBase {
 }
 
 #[repr(transparent)]
+#[derive(Clone)]
 pub struct DLAllocatorRef(NonNull<DLAllocatorBase>);
 
 unsafe impl GlobalAlloc for DLAllocatorRef {
