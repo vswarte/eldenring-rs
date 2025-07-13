@@ -1,3 +1,6 @@
+use std::{alloc::GlobalAlloc, ptr::NonNull};
+
+use shared::OwnedPtr;
 use vtable_rs::VPtr;
 
 #[vtable_rs::vtable]
@@ -67,6 +70,21 @@ pub trait DLAllocatorVmt {
 
 pub struct DLAllocatorBase {
     pub vftable: VPtr<dyn DLAllocatorVmt, Self>,
+}
+
+#[repr(transparent)]
+pub struct DLAllocatorRef(NonNull<DLAllocatorBase>);
+
+unsafe impl GlobalAlloc for DLAllocatorRef {
+    unsafe fn alloc(&self, layout: std::alloc::Layout) -> *mut u8 {
+        let allocator = self.0.as_ptr();
+        ((*allocator).vftable.allocate)(&mut *allocator, layout.size()) as *mut u8
+    }
+
+    unsafe fn dealloc(&self, ptr: *mut u8, layout: std::alloc::Layout) {
+        let allocator = self.0.as_ptr();
+        ((*allocator).vftable.deallocate)(&mut *allocator, ptr);
+    }
 }
 
 impl DLAllocatorVmt for DLAllocatorBase {
