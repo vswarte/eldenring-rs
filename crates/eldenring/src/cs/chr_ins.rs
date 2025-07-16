@@ -718,7 +718,6 @@ pub struct CSChrPhysicsModule {
     /// can be changed by tae and interpolated towards the target rotation
     pub interpolated_orientation: Quaternion,
     pub position: HavokPosition,
-    // unk80_position: HavokPosition,
     pub last_update_position: HavokPosition,
     unk90: bool,
     pub chr_proxy_pos_update_requested: bool,
@@ -771,7 +770,7 @@ pub struct CSChrPhysicsModule {
     unk1d7: u8,
     unk1d8: u8,
     /// Set by TAE Event 0 ChrActionFlag (action 38 FLYING_CHARACTER_FALL)
-    pub flying_character_fall_requested: u8,
+    pub flying_character_fall_requested: bool,
     unk1da: u8,
     /// Should the character's rotation use world Y alignment logic.
     pub use_world_y_alignment_logic: bool,
