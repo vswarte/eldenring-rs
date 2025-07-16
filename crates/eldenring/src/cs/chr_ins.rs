@@ -97,9 +97,10 @@ pub struct ChrIns {
     pad6d: [u8; 3],
     pub p2p_entity_handle: P2PEntityHandle,
     unk78: usize,
-    unk80_position: FSVector4,
+    /// Position in global map chunk coordinates.
+    pub chunk_position: FSVector4,
     /// Initial position of the character when it was created.
-    pub initial_position: FSVector4,
+    pub initial_position: HavokPosition,
     /// Initial orientation of the character when it was created (in euler angles).
     pub initial_orientation_euler: FSVector4,
     /// Time in seconds since last update ran for the ChrIns.
